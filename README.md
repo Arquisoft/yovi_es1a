@@ -11,6 +11,7 @@ This project is a template with some basic functionality for the ASW labs.
 
 - José Iván Díaz Potenciano UO302531.
 - Adrián Gutiérrez García UO300627.
+- Fernando Remis Figueroa UO302109.
 
 ## Project Structure
 
