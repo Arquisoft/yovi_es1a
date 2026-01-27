@@ -13,6 +13,7 @@ This project is a template with some basic functionality for the ASW labs.
 - Adrián Gutiérrez García UO300627.
 - Fernando Remis Figueroa UO302109.
 - Hugo Carbajales Quintana UO300051.
+- Sergio Argüelles Huerta UO299741.
 
 ## Project Structure
 
