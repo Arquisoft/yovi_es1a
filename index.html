@@ -1269,9 +1269,17 @@ building block instances depicted in this diagram.&gt;</em></p>
 <div class="paragraph">
 <p>It is possible to use a sequence diagram:</p>
 </div>
-<div class="imageblock">
+<div class="listingblock">
 <div class="content">
-<img src="./images/Sequence%20diagram.png" alt="Sequence diagram" width="332" height="335">
+<pre>Failed to generate image: Could not load PlantUML. Either require 'asciidoctor-diagram-plantuml' or specify the location of the PlantUML JAR(s) using the 'DIAGRAM_PLANTUML_CLASSPATH' environment variable. Alternatively a PlantUML binary can be provided (plantuml-native in $PATH).
+actor Alice
+actor Bob
+database Pod as "Bob's Pod"
+Alice -&gt; Bob: Authentication Request
+Bob --&gt; Alice: Authentication Response
+Alice  --&gt; Pod: Store route
+Alice -&gt; Bob: Another authentication Request
+Alice &lt;-- Bob: another authentication Response</pre>
 </div>
 </div>
 </div>
@@ -1804,7 +1812,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2026-01-26 17:11:00 +0100
+Last updated 2026-01-30 02:02:40 +0100
 </div>
 </div>
 </body>
