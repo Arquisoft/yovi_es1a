@@ -458,7 +458,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_technical_context">3.2. Technical Context</a></li>
 </ul>
 </li>
-<li><a href="#section-solution-strategy">4. Solution Strategy</a></li>
+<li><a href="#section-solution-strategy">4. Solution Strategy</a>
+<ul class="sectlevel2">
+<li><a href="#_decisiones_tecnológicas">4.1. Decisiones tecnológicas</a></li>
+<li><a href="#_descomposición_de_alto_nivel">4.2. Descomposición de alto nivel</a></li>
+<li><a href="#_estrategias_para_objetivos_de_calidad">4.3. Estrategias para objetivos de calidad</a></li>
+<li><a href="#_4_3_enfoques_para_alcanzar_los_objetivos_de_calidad">4.4. 4.3. Enfoques para alcanzar los objetivos de calidad</a></li>
+<li><a href="#_decisiones_organizativas">4.5. Decisiones organizativas</a></li>
+</ul>
+</li>
 <li><a href="#section-building-block-view">5. Building Block View</a>
 <ul class="sectlevel2">
 <li><a href="#_whitebox_overall_system">5.1. Whitebox Overall System</a></li>
@@ -905,7 +913,237 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_decisiones_tecnológicas">4.1. Decisiones tecnológicas</h3>
+<div class="sect3">
+<h4 id="_frontend">4.1.1. Frontend</h4>
+<div class="paragraph">
+<p>Elegimos React combinado con TypeScript para el desarrollo de la interfaz de usuario. La arquitectura basada en componentes de React es ideal para modularizar la visualización compleja del tablero de juego y gestionar el estado reactivo de la partida. La adopción de TypeScript añade un sistema de tipado estático que reduce drásticamente los errores en tiempo de compilación, especialmente al manipular las estructuras de datos del juego, garantizando un código más robusto y auto-documentado.</p>
+</div>
+<div class="paragraph">
+<p><strong>Objetivos de calidad:</strong> usabilidad, mantenibilidad, robustez.</p>
+</div>
+<div class="paragraph">
+<p><strong>Limitaciones clave:</strong> El sistema debe ser accesible desde cualquier navegador web moderno, gestionando la comunicación con el backend de forma asíncrona mediante JSON.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_backend">4.1.2. Backend</h4>
+<div class="paragraph">
+<p>Para el backend por una parte escogimos Rust ya ofrece rendimiento nativo, aprovechando al 100% la potencia de la CPU, lo que garantiza tiempos de respuesta predecibles y bajos, ademas previene errores comunes como null pointers o condiciones de carrera en tiempo de compilación. Esto es crucial para un servidor que debe ser robusto y no romper en medio de una partida.
+El sistema de tipos de Rust  permite representar estados del juego inválidos como errores de compilación o errores controlados, en lugar de excepciones en tiempo de ejecución. Por otra parte también utilizamos Node.js para la gestión de usuarios y PIs web estándar. Node.js es excelente para crear APIs REST rápidas (como registrar usuarios), mientras que Rust es superior
+para la lógica algorítmica del juego.</p>
+</div>
+<div class="paragraph">
+<p><strong>Objetivos de calidad:</strong> interoperabilidad, escalabilidad y robustez.</p>
+</div>
+<div class="paragraph">
+<p><strong>Limitaciones clave:</strong> El sistema está restringido a usar el formato de cadena YEN para representar el estado del juego. Esto es el contrato estricto entre cliente y servidor.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_base_de_datos">4.1.3. Base de datos</h4>
+<div class="paragraph">
+<p>Por el momento no se ha utilizado ninguna base de datos para almacenar información.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_contenedores">4.1.4. Contenedores</h4>
+<div class="paragraph">
+<p>Se seleccionó Docker para la contenerización de los servicios ya que combina tanto Node.js como Rust. Además, Docker garantiza la consistencia absoluta del entorno entre las máquinas de desarrollo y el servidor de producción. También facilita enormemente la coordinación de la arquitectura de microservicios, aislando las dependencias específicas de cada lenguaje para evitar conflictos y simplificar el despliegue conjunto.</p>
+</div>
+<div class="paragraph">
+<p><strong>Objetivos de calidad:</strong> portabilidad, desplegabilidad, escalabilidad, reproducibilidad.</p>
+</div>
+<div class="paragraph">
+<p><strong>Limitaciones clave:</strong> El entorno de host debe contar con un runtime de contenedores compatible y con capacidad para coordinar múltiples contenedores simultáneamente.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_motorización">4.1.5. Motorización</h4>
+<div class="paragraph">
+<p>Elegimos la combinación de Prometheus y Grafana para implementar la estrategia de motorización y observabilidad del sistema. Prometheus actúa como base de datos de series temporales, encargada de recolectar métricas técnicas del backend. Grafana se conecta a estos datos para visualizarlos en tableros gráficos en tiempo real. Esta decisión es crítica para poder validar cuantitativamente nuestros requisitos de rendimiento y detectar que esta ralentizando la arquitectura de microservicios.</p>
+</div>
+<div class="paragraph">
+<p><strong>Objetivos de calidad:</strong> observabilidad, rendimiento, disponibilidad.</p>
+</div>
+<div class="paragraph">
+<p><strong>Limitaciones clave:</strong> Los servicios (tanto el de Node.js como el motor en Rust) deben programarse para exponer sus métricas en una dirección web con un formato estándar que Prometheus pueda leer periódicamente.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_herramientas_de_modelado">4.1.6. Herramientas de modelado</h4>
+<div class="paragraph">
+<p>Se seleccionó PlantUML para garantizar la agilidad en la creación de diagramas UML (Secuencia, Clases, Componentes). A diferencia de las herramientas visuales de "arrastrar y soltar", PlantUML asegura una estética consistente y estandarizada para todos los diagramas del proyecto, independientemente de quién los cree, permitiendo a los desarrolladores centrarse en el contenido lógico y no en el diseño gráfico.</p>
+</div>
+<div class="paragraph">
+<p><strong>Objetivos de calidad:</strong> consistencia, eficiencia, claridad.</p>
+</div>
+<div class="paragraph">
+<p><strong>Limitaciones clave:</strong> El formato fuente debe ser texto plano editable con cualquier IDE estándar y renderizable sin licencias de software privativo.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_control_de_versiones">4.1.7. Control de versiones</h4>
+<div class="paragraph">
+<p>Utilizamos GitHub para centralizar el código y facilitar el trabajo en equipo. Nos permite desarrollar nuevas funciones en paralelo utilizando ramas, evitando conflictos entre compañeros. Además, protege la calidad del proyecto mediante el uso de Pull Requests, asegurando que todo código nuevo sea revisado y aprobado por otro compañero antes de integrarse en la versión principal.</p>
+</div>
+<div class="paragraph">
+<p><strong>Objetivos de calidad:</strong> colaboración, integridad del código, mantenibilidad.</p>
+</div>
+<div class="paragraph">
+<p><strong>Limitaciones clave:</strong> Todo cambio debe pasar por una revisión obligatoria (Pull Request) y tener los tests en verde antes de poder fusionarse.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_descomposición_de_alto_nivel">4.2. Descomposición de alto nivel</h3>
+<div class="paragraph">
+<p>A continuación se describen los patrones arquitectónicos fundamentales que estructuran la comunicación y organización del sistema.
+==== Arquitectura de microservicios
+Se ha optado por dividir el sistema backend en servicios autónomos (<strong>Users Service</strong> y <strong>Gamey Service</strong>) en lugar de utilizar un monolito. Esta decisión permite desacoplar la lógica de gestión de usuarios de la lógica del juego, facilitando el uso de tecnologías especializadas para cada tarea. Además, mejora la tolerancia a fallos: si el servicio de usuarios cae, el juego podría seguir funcionando (y viceversa).</p>
+</div>
+<div class="paragraph">
+<p><strong>Objetivos de calidad:</strong> modificabilidad, escalabilidad, independencia tecnológica.</p>
+</div>
+<div class="paragraph">
+<p><strong>Limitaciones clave:</strong> Cada microservicio debe ser dueño de sus propios datos y ejecutarse en un contenedor aislado, comunicándose con los demás únicamente a través de la red.</p>
+</div>
+<div class="sect3">
+<h4 id="_single_page_aplication_spa">4.2.1. Single Page Aplication (SPA)</h4>
+<div class="paragraph">
+<p>El frontend se ha diseñado siguiendo el patrón SPA utilizando React. Esto separa completamente la capa de presentación de la lógica de negocio. Al cargar la aplicación una sola vez y actualizar el contenido dinámicamente, ofrecemos una experiencia de usuario mucho más fluida y rápida, similar a una aplicación de escritorio, evitando recargas constantes de página.</p>
+</div>
+<div class="paragraph">
+<p><strong>Objetivos de calidad:</strong> usabilidad, interoperabilidad, rendimiento.</p>
+</div>
+<div class="paragraph">
+<p><strong>Limitaciones clave:</strong> El cliente es responsable de gestionar el enrutamiento y el estado de la vista, descargando al servidor de la tarea de renderizar HTML.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_estilo_arquitectónico_rest">4.2.2. Estilo arquitectónico REST</h4>
+<div class="paragraph">
+<p>Para conectar el Frontend con los Microservicios, utilizamos una arquitectura REST. El uso del protocolo estándar HTTP y el formato JSON garantiza que el sistema sea fácil de entender y probar. Al ser un estándar universal, permite que nuestro frontend en TypeScript se comunique sin problemas con un backend en Rust y otro en Node.js, sin necesidad de adaptadores complejos.</p>
+</div>
+<div class="paragraph">
+<p><strong>Objetivos de calidad:</strong> simplicidad, interoperabilidad, desacoplamiento.</p>
+</div>
+<div class="paragraph">
+<p><strong>Limitaciones clave:</strong> La comunicación debe ser sin estado. Esto significa que el servidor no guarda información sobre la petición anterior; cada mensaje del cliente debe contener toda la información necesaria para ser procesada.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_estrategias_para_objetivos_de_calidad">4.3. Estrategias para objetivos de calidad</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_4_3_enfoques_para_alcanzar_los_objetivos_de_calidad">4.4. 4.3. Enfoques para alcanzar los objetivos de calidad</h3>
+<div class="paragraph">
+<p>La siguiente tabla relaciona nuestros objetivos de calidad con los escenarios específicos y las estrategias arquitectónicas implementadas para resolverlos.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Objetivo de Calidad</th>
+<th class="tableblock halign-left valign-top">Escenario</th>
+<th class="tableblock halign-left valign-top">Estrategia de Solución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Rendimiento</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">El juego requiere cálculos complejos de IA para desarrollar la partida sin congelar el servidor ni aumentar la latencia.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Motor en Rust:</strong> Usamos Rust para procesar las jugadas complejas al instante</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Interoperabilidad</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">El Frontend (TypeScript), el Servicio de Usuarios (Node.js) y el Motor de Juego (Rust) deben intercambiar datos sin fricción.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Estándar REST &amp; JSON:</strong> Uso estricto de protocolos HTTP estándar. La <strong>notación YEN</strong> actúa como contrato de datos universal, evitando formatos binarios específicos de un lenguaje.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Modificabilidad</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">El equipo necesita actualizar la estrategia de la IA sin riesgo de introducir errores en el sistema de Login de usuarios.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Microservicios:</strong> Separación estricta de responsabilidades. El Motor y el Servicio de Usuarios son contenedores aislados; cambiar uno no requiere recompilar ni redesplegar el otro.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Usabilidad</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Los jugadores esperan una experiencia fluida, similar a una app nativa, sin recargas de página durante la partida.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>React SPA (Single Page Application):</strong> La interfaz se carga una sola vez y se actualiza dinámicamente. TypeScript garantiza la seguridad de tipos, previniendo errores en tiempo de ejecución.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Robustez</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Una partida específica provoca un error crítico debido a un estado ilegal o un fallo del servidor.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Diseño Stateless &amp; Docker:</strong> Como el motor Rust no guarda estado, un fallo en una petición no corrompe la memoria del servidor. Docker permite reinicios inmediatos sin pérdida de datos (la persistencia la maneja Node.js).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Observabilidad</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Los desarrolladores necesitan identificar por qué un movimiento específico tardó más de lo esperado o falló.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Prometheus &amp; Grafana:</strong> Los servicios exponen métricas técnicas (ejem: tiempo de cálculo). Los paneles de Grafana visualizan estos datos en tiempo real para detectar problemas.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Portabilidad</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nuevos desarrolladores necesitan levantar el proyecto en diferentes sistemas operativos.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker Compose:</strong> Toda la infraestructura está definida como código. Un solo comando ("docker-compose up") replica el entorno de producción localmente.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_decisiones_organizativas">4.5. Decisiones organizativas</h3>
+<div class="paragraph">
+<p>Para organizarnos bien y asegurar que el trabajo salga adelante sin problemas, hemos acordado las siguientes normas de equipo.</p>
+</div>
+<div class="sect3">
+<h4 id="_gestión_del_código_y_tareas_github">4.5.1. Gestión del código y tareas (GitHub)</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Rama principal (master):</strong> La rama master contiene siempre la versión definitiva y funcional del proyecto. Solo añadimos cambios aquí cuando estamos seguros de que funcionan bien.</p>
+</li>
+<li>
+<p><strong>Organización del trabajo:</strong> Usamos las herramientas de GitHub Projects para asignarnos el trabajo y ver qué falta por hacer. Así todos sabemos en qué está trabajando cada uno.</p>
+</li>
+<li>
+<p><strong>Documentación de reuniones:</strong> Usamos la Wiki de GitHub para guardar las actas de nuestras reuniones. Así queda constancia de lo que decidimos cada semana.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_control_de_calidad">4.5.2. Control de Calidad</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Revisiones de Código:</strong> Para evitar errores, hemos decidido que nadie puede subir código a la rama principal sin que otro compañero lo revise antes.</p>
+</li>
+<li>
+<p><strong>Objetivo:</strong> Esto nos sirve para dos cosas: evitar fallos tontos y asegurar que todos entendemos el código de los demás, para que nadie sea imprescindible en una parte concreta de la aplicación.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comunicación">4.5.3. Comunicación</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Reuniones Semanales:</strong> Nos reunimos una vez a la semana (presencialmente en las clase de laboratorio) para ver qué hemos avanzado y planificar las tareas de la semana siguiente. Es el momento donde discutimos las decisiones importantes de diseño.</p>
+</li>
+<li>
+<p><strong>WhatsApp y Discord:</strong> Usamos estos grupos para dudas rápidas del día a día. Si alguien se atasca programando, pide ayuda por aquí para solucionarlo rápido sin tener que esperar a la reunión semanal.</p>
+</li>
+</ul>
+</div>
 <div style="page-break-after: always;"></div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1608,7 +1846,7 @@ on this list.</p>
 <p><strong>YEN Notation (Y Notation)</strong>: The primary format for persisting game state and exchanging messages between subsystems (Web &lt;&#8594; Rust). It uses JSON to represent board size, player turns, and board layout.</p>
 </li>
 <li>
-<p><strong>Serialization/Deserialization</strong>: The system uses <code>serde</code> (in Rust) to strictly map the YEN JSON format to internal memory structures. This ensures that any saved game or network message can be reconstructed into a valid object at runtime.</p>
+<p><strong>Serialization/Deserialization</strong>: The system uses serde (in Rust) to strictly map the YEN JSON format to internal memory structures. This ensures that any saved game or network message can be reconstructed into a valid object at runtime.</p>
 </li>
 </ul>
 </div>
@@ -1621,13 +1859,13 @@ on this list.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Strategy Pattern</strong>: Used for the AI ​​system. The <code>YBot</code> trait acts as a strategy interface, allowing different algorithms (Random, LLM) to be swapped at runtime via <code>YBotRegistry</code> without modifying the game logic.</p>
+<p><strong>Strategy Pattern</strong>: Used for the AI ​​system. The YBot trait acts as a strategy interface, allowing different algorithms (Random, LLM) to be swapped at runtime via YBotRegistry without modifying the game logic.</p>
 </li>
 <li>
-<p><strong>State Machine</strong>: The game flow is modeled as a finite state machine (FSM) represented by the <code>GameStatus</code> enumeration (e.g., <code>Ongoing</code>, <code>Finished</code>). Transitions are strictly controlled by the results of the moves.</p>
+<p><strong>State Machine</strong>: The game flow is modeled as a finite state machine (FSM) represented by the GameStatus enumeration (e.g., Ongoing, Finished). Transitions are strictly controlled by the results of the moves.</p>
 </li>
 <li>
-<p><strong>Result Pattern</strong>: Operations that can fail (such as placing a piece on an occupied cell) return a <code>Result&lt;T, GameYError&gt;</code> type, requiring explicit error handling at the compiler level.</p>
+<p><strong>Result Pattern</strong>: Operations that can fail (such as placing a piece on an occupied cell) return a Result&lt;T, GameYError&gt; type, requiring explicit error handling at the compiler level.</p>
 </li>
 </ul>
 </div>
@@ -1640,10 +1878,10 @@ on this list.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Typed Errors</strong>: The <code>GameYError</code> enumeration defines possible failure states (e.g., <code>InvalidPlayerTurn</code>, <code>Occupied</code>, <code>IoError</code>). This allows the API to return meaningful HTTP/JSON error codes to the client instead of generic server errors.</p>
+<p><strong>Typed Errors</strong>: The GameYError enumeration defines possible failure states (e.g., InvalidPlayerTurn, Occupied, IoError). This allows the API to return meaningful HTTP/JSON error codes to the client instead of generic server errors.</p>
 </li>
 <li>
-<p><strong>Structured Logging</strong>: The system uses the <code>tracing</code> library to instrument key operations. This provides a detailed log of game events (movements, state changes, errors), essential for debugging asynchronous bot interactions and API calls.</p>
+<p><strong>Structured Logging</strong>: The system uses the tracing library to instrument key operations. This provides a detailed log of game events (movements, state changes, errors), essential for debugging asynchronous bot interactions and API calls.</p>
 </li>
 </ul>
 </div>
@@ -1656,7 +1894,7 @@ on this list.</p>
 <p><strong>Dual Coordinate System</strong>: To reduce the gap between technical efficiency and user usability:</p>
 </li>
 <li>
-<p><strong>Internal Logic</strong>: Uses 3D barycentric coordinates <code>(x, y, z)</code> to calculate adjacency and winning paths.</p>
+<p><strong>Internal Logic</strong>: Uses 3D barycentric coordinates (x, y, z) to calculate adjacency and winning paths.</p>
 </li>
 <li>
 <p><strong>Visual/Input</strong>: Uses a linear index (0 to N) or a visual grid mapping for user interactions, simplifying the input process for humans while the backend converts them to 3D coordinates.</p>
@@ -1747,6 +1985,11 @@ concrete and measurable.</p>
 </div>
 <div class="sect2">
 <h3 id="_quality_tree">10.1. Quality Tree</h3>
+<div class="imageblock plantuml">
+<div class="content">
+<img src="https://www.plantuml.com/plantuml/png/RP51JyCm38Nl_HK-ThqmxSnX4vj4fGt69YGukesRHMgIoN4OyEjnMpPnu18fp_Bdz-nb4cJnBXYFvwA2buozaw-Ygc0NZUiSDcuGe7nqzZHJlO9zdwt5fYTOrN0KHY7hA8srXnWwPpEFvKFkHndg8CJnJFmFxIWO3B9ntsJWVVC4gtqz5hOOR4PBscteJFe46M2lwKgvW_KRb3ioBlihZ7ChcHMrOOuCEqf96PCv9SCwjjah2SN5CE2UcqJySJFsbwPXX3v5LmBRQAqBTf8PqmaEbBI5Gai3PK_SHVQeNoYtyNBB9he6QcD8exDffcQB5yqdsgqZxs4nd_iqAvOQylSKFm00" alt="quality-tree">
+</div>
+</div>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -1779,6 +2022,60 @@ concrete and measurable.</p>
 </div>
 <div class="sect2">
 <h3 id="_quality_scenarios">10.2. Quality Scenarios</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 20%;">
+<col style="width: 30%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Priority (Imp, Diff)</th>
+<th class="tableblock halign-left valign-top">Quality Attribute</th>
+<th class="tableblock halign-left valign-top">Scenario</th>
+<th class="tableblock halign-left valign-top">Expected Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>High, Low</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Modifiability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A developer wants to implement a new AI strategy <strong>during the design phase</strong> (Environment).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The developer implements the YBot trait, requiring <strong>no changes (0 lines)</strong> in the core GameY logic (Measure).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>High, Med</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Modifiability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The requirements change <strong>during a maintenance cycle</strong> (Environment) to include a new game variant.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system allows rule injection via configuration, ensuring <strong>100% backward compatibility</strong> with existing YEN save files (Measure).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>High, Med</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Interoperability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An external bot (Source) sends a generic JSON move request <strong>during runtime execution</strong> (Environment).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system processes the YEN string directly <strong>without requiring language-specific adapters</strong> (Measure).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Med, Low</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Usability (DX)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A frontend developer (Source) sends invalid coordinates to the API <strong>during integration testing</strong> (Environment).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The API returns a structured 400 error, allowing the developer to identify the bug source in <strong>less than 1 minute</strong> (Measure).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Med, Low</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Observability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A player or bot sends an illegal move (e.g., placing a piece on top of another) <strong>during a live production game</strong> (Environment).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system logs the specific <strong>GameID and invalid YEN string</strong> for debugging, returning a handled error <strong>without crashing the session</strong> (Measure).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Low, High</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Performance</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A user refreshes the browser to resume a long match <strong>during an active game session</strong> (Environment).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system parses the YEN string and reconstructs the full board state in <strong>less than 200ms</strong> (Measure).</p></td>
+</tr>
+</tbody>
+</table>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
