@@ -10,6 +10,7 @@
 //! # Example
 //! ```no_run
 //! use gamey::run_bot_server;
+//! 
 //!
 //! #[tokio::main]
 //! async fn main() {
@@ -23,7 +24,8 @@ pub mod choose;
 pub mod error;
 pub mod state;
 pub mod version;
-use axum::response::IntoResponse;
+use axum::response::IntoResponse; // Required to manage API responses.
+use tower_http::cors::CorsLayer;
 use std::sync::Arc;
 pub use choose::MoveResponse;
 pub use error::ErrorResponse;
@@ -65,7 +67,8 @@ pub fn create_default_state() -> AppState {
 /// - The server encounters an error while running
 pub async fn run_bot_server(port: u16) -> Result<(), GameYError> {
     let state = create_default_state();
-    let app = create_router(state);
+    //let app = create_router(state);
+    let app = create_router(state).layer(CorsLayer::permissive()); // Enable CORS so that the Frontend (React) can connect to this port without being blocked.
 
     let addr = format!("0.0.0.0:{}", port);
     let listener = tokio::net::TcpListener::bind(&addr)

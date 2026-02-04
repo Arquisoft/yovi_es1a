@@ -1,5 +1,6 @@
 import './App.css'
 import RegisterForm from './RegisterForm';
+import BotTester from './BotTester'; 
 import reactLogo from './assets/react.svg'
 
 function App() {
@@ -16,6 +17,8 @@ function App() {
 
       <h2>Welcome to the Software Arquitecture 2025-2026 course</h2>
       <RegisterForm />
+
+      <BotTester />  {/* Temporary component to test the connection with the Rust Bot (port 4000) */}
     </div>
   );
 }
