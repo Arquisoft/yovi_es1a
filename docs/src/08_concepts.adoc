@@ -57,18 +57,42 @@ See https://docs.arc42.org/section-8/[Concepts] in the arc42 documentation.
 ****
 endif::arc42help[]
 
-=== _<Concept 1>_
+=== Domain concepts
+The domain model revolves around the game of Y, a connection strategy game.
 
-_<explanation>_
+* **GameY**: The central entity representing a game session. It holds the state of the triangular board, tracks the current player, and validates rules. It uses a Union-Find data structure to efficiently detect winning paths (connected components touching all three sides) in real-time.
+* **Player**: A participant in the game. In this system, a player can be a human (via CLI) or an automated agent (Bot/LLM).
+* **Board**: A triangular grid where the game takes place.
+* **Coordinates**: A 3-dimensional coordinate system used to uniquely identify cells on the triangular grid.
+* **Movement**: Represents a player's turn, which can be placing a piece at a specific point or performing a game action (for example, leaving).
+* **Bot**: An AI opponent. The architecture supports pluggable bot strategies, including random moves or integration with Large Language Models (LLMs).
 
+=== Security
+* **Input validation and sanitization**: Since the main logic receives external data (via API or CLI), all inputs, especially coordinates and YEN notation strings, are strictly validated before processing to prevent invalid game states.
+* **Server authoritativeness**: The frontend (web or CLI) is simply a display layer, and the backend is the game engine. All checks for the legality of moves are applied by the backend to prevent cheating by modified clients.
 
+=== Data persistence and exchange
+The system relies on a standardized text format for both data transport and storage.
 
-=== _<Concept 2>_
+* **YEN Notation (Y Notation)**: The primary format for persisting game state and exchanging messages between subsystems (Web <-> Rust). It uses JSON to represent board size, player turns, and board layout.
+* **Serialization/Deserialization**: The system uses `serde` (in Rust) to strictly map the YEN JSON format to internal memory structures. This ensures that any saved game or network message can be reconstructed into a valid object at runtime.
 
-_<explanation>_
+=== Architecture and Design Patterns
+The implementation leverages standard software design patterns to ensure modularity and testability, specifically within the Rust core:
 
-...
+* **Strategy Pattern**: Used for the AI ​​system. The `YBot` trait acts as a strategy interface, allowing different algorithms (Random, LLM) to be swapped at runtime via `YBotRegistry` without modifying the game logic.
+* **State Machine**: The game flow is modeled as a finite state machine (FSM) represented by the `GameStatus` enumeration (e.g., `Ongoing`, `Finished`). Transitions are strictly controlled by the results of the moves.
+* **Result Pattern**: Operations that can fail (such as placing a piece on an occupied cell) return a `Result<T, GameYError>` type, requiring explicit error handling at the compiler level.
 
-=== _<Concept n>_
+=== Error Handling and Logging
+To meet availability and observability requirements, the system implements structured logging and typed errors:
 
-_<explanation>_
+* **Typed Errors**: The `GameYError` enumeration defines possible failure states (e.g., `InvalidPlayerTurn`, `Occupied`, `IoError`). This allows the API to return meaningful HTTP/JSON error codes to the client instead of generic server errors.
+* **Structured Logging**: The system uses the `tracing` library to instrument key operations. This provides a detailed log of game events (movements, state changes, errors), essential for debugging asynchronous bot interactions and API calls.
+
+=== User Interface and UX Concepts
+
+* **Dual Coordinate System**: To reduce the gap between technical efficiency and user usability:
+* **Internal Logic**: Uses 3D barycentric coordinates `(x, y, z)` to calculate adjacency and winning paths.
+* **Visual/Input**: Uses a linear index (0 to N) or a visual grid mapping for user interactions, simplifying the input process for humans while the backend converts them to 3D coordinates.
+* **Feedback Loop**: The user interface provides immediate feedback on the validity of the move through the "Result" types returned by the core logic, ensuring that users understand why a move might be rejected (e.g., "Cell Occupied").
