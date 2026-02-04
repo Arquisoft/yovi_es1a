@@ -13,6 +13,9 @@ include::src/config.adoc[]
 // toc-title definition MUST follow document title without blank line!
 :toc-title: Table of Contents
 
+//añadido para el uml
+:plantuml-server-url: https://www.plantuml.com/plantuml
+
 //additional style for arc42 help callouts
 ifdef::backend-html5[]
 ++++

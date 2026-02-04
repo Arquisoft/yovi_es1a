@@ -25,3 +25,26 @@ See https://docs.arc42.org/section-11/[Risks and Technical Debt] in the arc42 do
 
 ****
 endif::arc42help[]
+
+[cols="1,3", options="header"]
+|===
+| Risk | Description
+
+| **Inexperience in Microservices Architectures**
+| The team has limited experience in designing large-scale software architectures with multiple interconnected modules. This introduces the risk of defining incorrect boundaries between services or creating circular dependencies that complicate development.
+
+| **Rust learning curve**
+| Rust is a language we've never used before, so the learning curve is going to be very steep. There's a risk that implementing even simple features will take longer than expected due to the language's complexity and our inexperience.
+
+| **Inexperience in using Docker**
+| Setting up internal networks, volumes, and container communication (with Node.js and Rust) can create deployment and configuration problems that delay integration testing or implementation.
+|===
+
+[cols="1,3", options="header"]
+|===
+| Technical debt | Description 
+
+| **In-memory storage instead of a database**
+| The current state of the games is stored in the Gamey service's RAM instead of in an external database.
+If the container restarts or fails, all active saves are lost. This is being accepted for now to avoid the complexity of managing an additional database at this stage of the project.
+|===
