@@ -1588,7 +1588,7 @@ on this list.</p>
 <p><strong>YEN Notation (Y Notation)</strong>: The primary format for persisting game state and exchanging messages between subsystems (Web &lt;&#8594; Rust). It uses JSON to represent board size, player turns, and board layout.</p>
 </li>
 <li>
-<p><strong>Serialization/Deserialization</strong>: The system uses <code>serde</code> (in Rust) to strictly map the YEN JSON format to internal memory structures. This ensures that any saved game or network message can be reconstructed into a valid object at runtime.</p>
+<p><strong>Serialization/Deserialization</strong>: The system uses serde (in Rust) to strictly map the YEN JSON format to internal memory structures. This ensures that any saved game or network message can be reconstructed into a valid object at runtime.</p>
 </li>
 </ul>
 </div>
@@ -1601,13 +1601,13 @@ on this list.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Strategy Pattern</strong>: Used for the AI ​​system. The <code>YBot</code> trait acts as a strategy interface, allowing different algorithms (Random, LLM) to be swapped at runtime via <code>YBotRegistry</code> without modifying the game logic.</p>
+<p><strong>Strategy Pattern</strong>: Used for the AI ​​system. The YBot trait acts as a strategy interface, allowing different algorithms (Random, LLM) to be swapped at runtime via YBotRegistry without modifying the game logic.</p>
 </li>
 <li>
-<p><strong>State Machine</strong>: The game flow is modeled as a finite state machine (FSM) represented by the <code>GameStatus</code> enumeration (e.g., <code>Ongoing</code>, <code>Finished</code>). Transitions are strictly controlled by the results of the moves.</p>
+<p><strong>State Machine</strong>: The game flow is modeled as a finite state machine (FSM) represented by the GameStatus enumeration (e.g., Ongoing, Finished). Transitions are strictly controlled by the results of the moves.</p>
 </li>
 <li>
-<p><strong>Result Pattern</strong>: Operations that can fail (such as placing a piece on an occupied cell) return a <code>Result&lt;T, GameYError&gt;</code> type, requiring explicit error handling at the compiler level.</p>
+<p><strong>Result Pattern</strong>: Operations that can fail (such as placing a piece on an occupied cell) return a Result&lt;T, GameYError&gt; type, requiring explicit error handling at the compiler level.</p>
 </li>
 </ul>
 </div>
@@ -1620,10 +1620,10 @@ on this list.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Typed Errors</strong>: The <code>GameYError</code> enumeration defines possible failure states (e.g., <code>InvalidPlayerTurn</code>, <code>Occupied</code>, <code>IoError</code>). This allows the API to return meaningful HTTP/JSON error codes to the client instead of generic server errors.</p>
+<p><strong>Typed Errors</strong>: The GameYError enumeration defines possible failure states (e.g., InvalidPlayerTurn, Occupied, IoError). This allows the API to return meaningful HTTP/JSON error codes to the client instead of generic server errors.</p>
 </li>
 <li>
-<p><strong>Structured Logging</strong>: The system uses the <code>tracing</code> library to instrument key operations. This provides a detailed log of game events (movements, state changes, errors), essential for debugging asynchronous bot interactions and API calls.</p>
+<p><strong>Structured Logging</strong>: The system uses the tracing library to instrument key operations. This provides a detailed log of game events (movements, state changes, errors), essential for debugging asynchronous bot interactions and API calls.</p>
 </li>
 </ul>
 </div>
@@ -1636,7 +1636,7 @@ on this list.</p>
 <p><strong>Dual Coordinate System</strong>: To reduce the gap between technical efficiency and user usability:</p>
 </li>
 <li>
-<p><strong>Internal Logic</strong>: Uses 3D barycentric coordinates <code>(x, y, z)</code> to calculate adjacency and winning paths.</p>
+<p><strong>Internal Logic</strong>: Uses 3D barycentric coordinates (x, y, z) to calculate adjacency and winning paths.</p>
 </li>
 <li>
 <p><strong>Visual/Input</strong>: Uses a linear index (0 to N) or a visual grid mapping for user interactions, simplifying the input process for humans while the backend converts them to 3D coordinates.</p>
@@ -1727,6 +1727,11 @@ concrete and measurable.</p>
 </div>
 <div class="sect2">
 <h3 id="_quality_tree">10.1. Quality Tree</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/quality-tree.png" alt="quality tree" width="613" height="527">
+</div>
+</div>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -1759,6 +1764,60 @@ concrete and measurable.</p>
 </div>
 <div class="sect2">
 <h3 id="_quality_scenarios">10.2. Quality Scenarios</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 20%;">
+<col style="width: 30%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Priority</th>
+<th class="tableblock halign-left valign-top">Quality Attribute</th>
+<th class="tableblock halign-left valign-top">Scenario</th>
+<th class="tableblock halign-left valign-top">Expected Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>1</strong> (High)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Modifiability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A developer wants to implement a new AI strategy to play against users.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The developer creates a struct implementing the <code>YBot</code> trait and registers it in <code>YBotRegistry</code>. No changes are required in the core <code>GameY</code> logic.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>1</strong> (High)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Modifiability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The requirements change to include a new variant.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>GameY</code> struct logic can be extended to validate these new constraints without breaking the existing API or the YEN serialization format.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>2</strong> (High)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Interoperability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An external bot sends a generic JSON request using YEN notation to the API to check the game state.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system parses the JSON, validates the move using the internal Rust logic, and returns the new board state in standard YEN format.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>3</strong> (Medium)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Usability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A human player clicks on a specific cell in the triangular grid on the web interface or selects a number on the board in the CLI.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The visual coordinate system is automatically translated to internal 3D coordinates <code>(x, y, z)</code>. If the move is valid, visual feedback is instantaneous.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>4</strong> (Medium)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Observability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">During a game with a LLM`s bot, sends an illegal move (e.g., placing a piece on an occupied cell).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system captures the event via the <code>tracing</code> library, logs the exact game state (YEN) and error type, and returns a standard HTTP 400 error without crashing the server.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>5</strong> (Low)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Performance</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The game board is set to size 7 (large), and the engine must check for a winning path.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Rust backend calculates the connectivity graph and returns the win status in less than 200ms to ensure the UI feels responsive.</p></td>
+</tr>
+</tbody>
+</table>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
