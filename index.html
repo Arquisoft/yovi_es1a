@@ -482,9 +482,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#section-concepts">8. Cross-cutting Concepts</a>
 <ul class="sectlevel2">
-<li><a href="#_concept_1">8.1. <em>&lt;Concept 1&gt;</em></a></li>
-<li><a href="#_concept_2">8.2. <em>&lt;Concept 2&gt;</em></a></li>
-<li><a href="#_concept_n">8.3. <em>&lt;Concept n&gt;</em></a></li>
+<li><a href="#_domain_concepts">8.1. Domain concepts</a></li>
+<li><a href="#_security">8.2. Security</a></li>
+<li><a href="#_data_persistence_and_exchange">8.3. Data persistence and exchange</a></li>
+<li><a href="#_architecture_and_design_patterns">8.4. Architecture and Design Patterns</a></li>
+<li><a href="#_error_handling_and_logging">8.5. Error Handling and Logging</a></li>
+<li><a href="#_user_interface_and_ux_concepts">8.6. User Interface and UX Concepts</a></li>
 </ul>
 </li>
 <li><a href="#section-design-decisions">9. Architecture Decisions</a></li>
@@ -798,11 +801,26 @@ The title of the table is the name of your system, the three columns contain the
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>&lt;Diagram or Table&gt;</strong></p>
+<div class="imageblock plantuml">
+<div class="content">
+<img src="https://www.plantuml.com/plantuml/png/JOyn2y9G38Jt_8hGIOSYE8iK79m4GHm4bzZ6zc5V8dcfqd_lquAwX8Flxi9LoSbyY3saMv0x6KMiDTvLMFpWOy-OuVAFNgY-jQQ3D1ljrV3P1MU0dg-EhcYXxHoRO5nxK06WshEhE2Qs0YdXa0LyNs1nqaVuW36BVx1J2JaQfCN3c9pZMMPxqyZUyP0MMwCh2Sq_sJXv0TxjM9RhgGtU5rTb-JDKB4rUz080" alt="business-context-diagram">
+</div>
 </div>
 <div class="paragraph">
-<p><strong>&lt;optionally: Explanation of external domain interfaces&gt;</strong></p>
+<p>Diagram elements:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>User: Represents the player or client who actively interacts with the system to use its functionalities.</p>
+</li>
+<li>
+<p>Yovi: It is the core of the system (the scope of this project). It acts as a central intermediary managing the business logic.</p>
+</li>
+<li>
+<p>Monitoring System (Prometheus/Grafana): This is the external component responsible for observability. It does not participate in the game, but audits the technical status of the system.</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
@@ -824,14 +842,20 @@ together with a mapping table showing the relationships between channels and inp
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>&lt;Diagram or Table&gt;</strong></p>
+<div class="imageblock plantuml">
+<div class="content">
+<img src="https://www.plantuml.com/plantuml/png/ZP9BJ-Cm483l_XMZdDf3HVTneGS4AWWMiMoN5d403bDdQAp6TjOUmoB4VsTicXMF7ZQN-F5zyqhs8sFWP5iLryPr6D22zhRpZXpF-R4baCklRswNgDUhu9Ehfxxr0HuQmwHQkcDW3y6i6eRQ1D9il5CADGjKNKOA5M24ckwLShucgAQjaIGLF2cGvrzMg1OKh77OmY1hW2iv7HPR5qKzzo4ElLuBSU8Zm-3CQsmRMGvpp1Aqas95XyfwPwIGaIC1DzOvyOCFws5VmOSgSku8SmhtHbF9dlB9DlGOBJs-GrVvH6rZPy5RuePIB60dswqX0zwXmzTWiYxCS-vSoGXXDDhR30CcSFINT6AACFNMegiZ3EILP83oqH8FbTgWsIfDY3Id31xCVi05_KaKETwuwvF5OhPpElzr3fDlu_7uzgrOMleFyVidKSeNxq1hYb6gFCJOB3s6klUkQ0cJtV7kbrkb2fojF1YnVYSAfaYC6xxaphoaATIxjdJ0JlYVnC7elZGuFbhqBQbzQK1-wXS0" alt="technical-context-diagram">
+</div>
 </div>
 <div class="paragraph">
-<p><strong>&lt;optionally: Explanation of technical interfaces&gt;</strong></p>
-</div>
-<div class="paragraph">
-<p><strong>&lt;Mapping Input/Output to Channels&gt;</strong></p>
+<p>The Yovi system uses a set of HTTP interfaces for communication between microservices and for exposing data to the client. The communication channels represented in the architecture diagram are detailed below:
+1. External access interfaces:
+    - User management and game logic API: The HTTP client interacts with the Users Service (port 3000) and the Gamey Service (port 4000) by sending and receiving data exclusively in JSON format. These interfaces manage authentication and game mechanics using the HTTP protocol, without including visual elements.
+    - Visualization interface: This connection delivers the Grafana graphical interface to the client via port 9091. It uses the HTTP (Web) standard to serve the necessary HTML and CSS code that allows the administrator to view the control panels.
+2. Internal interfaces:
+    - Collection and query channel within the private network: Prometheus makes periodic HTTP GET requests to the Users Service&#8217;s internal port 3000 to collect technical health metrics. Simultaneously, Grafana queries the Prometheus database on port 9090 to retrieve historical data and generate graphs.
+3. Control Interfaces:
+    - Command Input: The user uses the terminal as a manual control interface. By executing commands, they make requests to the system to simulate user behavior and verify the functionality of the services.</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1014,11 +1038,11 @@ responsibility according to the following schema:</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;black box 1&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"> <em>&lt;Text&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Text&gt;</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;black box 2&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"> <em>&lt;Text&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Text&gt;</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -1268,9 +1292,9 @@ building block instances depicted in this diagram.&gt;</em></p>
 <div class="paragraph">
 <p>It is possible to use a sequence diagram:</p>
 </div>
-<div class="imageblock">
+<div class="imageblock plantuml">
 <div class="content">
-<img src="./images/Sequence%20diagram.png" alt="Sequence diagram" width="366" height="326">
+<img src="https://www.plantuml.com/plantuml/png/TS_13i8W30RWEq_HxEA95rYCsNm2eq_GGHD99bLQtj-ESJBp1kNB_vT958lMr-emA1UOrnIedw-yk8YA2mh1ZIEWm633asotmJKB_hB14UQgJygQ0chY37VwL19rzWRUJCC7IjwSXNfMavOzmiCM82XSbNvxCbj40Jpks_7P-rtZFzrx9yhHVly5" alt="Sequence diagram">
 </div>
 </div>
 </div>
@@ -1533,24 +1557,114 @@ on this list.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_concept_1">8.1. <em>&lt;Concept 1&gt;</em></h3>
+<h3 id="_domain_concepts">8.1. Domain concepts</h3>
 <div class="paragraph">
-<p><em>&lt;explanation&gt;</em></p>
+<p>The domain model revolves around the game of Y, a connection strategy game.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>GameY</strong>: The central entity representing a game session. It holds the state of the triangular board, tracks the current player, and validates rules. It uses a Union-Find data structure to efficiently detect winning paths (connected components touching all three sides) in real-time.</p>
+</li>
+<li>
+<p><strong>Player</strong>: A participant in the game. In this system, a player can be a human (via CLI) or an automated agent (Bot/LLM).</p>
+</li>
+<li>
+<p><strong>Board</strong>: A triangular grid where the game takes place.</p>
+</li>
+<li>
+<p><strong>Coordinates</strong>: A 3-dimensional coordinate system used to uniquely identify cells on the triangular grid.</p>
+</li>
+<li>
+<p><strong>Movement</strong>: Represents a player&#8217;s turn, which can be placing a piece at a specific point or performing a game action (for example, leaving).</p>
+</li>
+<li>
+<p><strong>Bot</strong>: An AI opponent. The architecture supports pluggable bot strategies, including random moves or integration with Large Language Models (LLMs).</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_concept_2">8.2. <em>&lt;Concept 2&gt;</em></h3>
-<div class="paragraph">
-<p><em>&lt;explanation&gt;</em></p>
-</div>
-<div class="paragraph">
-<p>&#8230;&#8203;</p>
+<h3 id="_security">8.2. Security</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Input validation and sanitization</strong>: Since the main logic receives external data (via API or CLI), all inputs, especially coordinates and YEN notation strings, are strictly validated before processing to prevent invalid game states.</p>
+</li>
+<li>
+<p><strong>Server authoritativeness</strong>: The frontend (web or CLI) is simply a display layer, and the backend is the game engine. All checks for the legality of moves are applied by the backend to prevent cheating by modified clients.</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_concept_n">8.3. <em>&lt;Concept n&gt;</em></h3>
+<h3 id="_data_persistence_and_exchange">8.3. Data persistence and exchange</h3>
 <div class="paragraph">
-<p><em>&lt;explanation&gt;</em></p>
+<p>The system relies on a standardized text format for both data transport and storage.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>YEN Notation (Y Notation)</strong>: The primary format for persisting game state and exchanging messages between subsystems (Web &lt;&#8594; Rust). It uses JSON to represent board size, player turns, and board layout.</p>
+</li>
+<li>
+<p><strong>Serialization/Deserialization</strong>: The system uses <code>serde</code> (in Rust) to strictly map the YEN JSON format to internal memory structures. This ensures that any saved game or network message can be reconstructed into a valid object at runtime.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_architecture_and_design_patterns">8.4. Architecture and Design Patterns</h3>
+<div class="paragraph">
+<p>The implementation leverages standard software design patterns to ensure modularity and testability, specifically within the Rust core:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Strategy Pattern</strong>: Used for the AI ​​system. The <code>YBot</code> trait acts as a strategy interface, allowing different algorithms (Random, LLM) to be swapped at runtime via <code>YBotRegistry</code> without modifying the game logic.</p>
+</li>
+<li>
+<p><strong>State Machine</strong>: The game flow is modeled as a finite state machine (FSM) represented by the <code>GameStatus</code> enumeration (e.g., <code>Ongoing</code>, <code>Finished</code>). Transitions are strictly controlled by the results of the moves.</p>
+</li>
+<li>
+<p><strong>Result Pattern</strong>: Operations that can fail (such as placing a piece on an occupied cell) return a <code>Result&lt;T, GameYError&gt;</code> type, requiring explicit error handling at the compiler level.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_error_handling_and_logging">8.5. Error Handling and Logging</h3>
+<div class="paragraph">
+<p>To meet availability and observability requirements, the system implements structured logging and typed errors:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Typed Errors</strong>: The <code>GameYError</code> enumeration defines possible failure states (e.g., <code>InvalidPlayerTurn</code>, <code>Occupied</code>, <code>IoError</code>). This allows the API to return meaningful HTTP/JSON error codes to the client instead of generic server errors.</p>
+</li>
+<li>
+<p><strong>Structured Logging</strong>: The system uses the <code>tracing</code> library to instrument key operations. This provides a detailed log of game events (movements, state changes, errors), essential for debugging asynchronous bot interactions and API calls.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_user_interface_and_ux_concepts">8.6. User Interface and UX Concepts</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Dual Coordinate System</strong>: To reduce the gap between technical efficiency and user usability:</p>
+</li>
+<li>
+<p><strong>Internal Logic</strong>: Uses 3D barycentric coordinates <code>(x, y, z)</code> to calculate adjacency and winning paths.</p>
+</li>
+<li>
+<p><strong>Visual/Input</strong>: Uses a linear index (0 to N) or a visual grid mapping for user interactions, simplifying the input process for humans while the backend converts them to 3D coordinates.</p>
+</li>
+<li>
+<p><strong>Feedback Loop</strong>: The user interface provides immediate feedback on the validity of the move through the "Result" types returned by the core logic, ensuring that users understand why a move might be rejected (e.g., "Cell Occupied").</p>
+</li>
+</ul>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1733,6 +1847,51 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 </div>
 </div>
 </div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Risk</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Inexperience in Microservices Architectures</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The team has limited experience in designing large-scale software architectures with multiple interconnected modules. This introduces the risk of defining incorrect boundaries between services or creating circular dependencies that complicate development.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Rust learning curve</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rust is a language we&#8217;ve never used before, so the learning curve is going to be very steep. There&#8217;s a risk that implementing even simple features will take longer than expected due to the language&#8217;s complexity and our inexperience.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Inexperience in using Docker</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Setting up internal networks, volumes, and container communication (with Node.js and Rust) can create deployment and configuration problems that delay integration testing or implementation.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Technical debt</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>In-memory storage instead of a database</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The current state of the games is stored in the Gamey service&#8217;s RAM instead of in an external database.
+If the container restarts or fails, all active saves are lost. This is being accepted for now to avoid the complexity of managing an additional database at this stage of the project.</p></td>
+</tr>
+</tbody>
+</table>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -1803,7 +1962,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2026-01-29 17:01:38 +0100
+Last updated 2026-02-04 12:13:09 +0100
 </div>
 </div>
 </body>
