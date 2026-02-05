@@ -39,29 +39,95 @@ See https://docs.arc42.org/section-6/[Runtime View] in the arc42 documentation.
 ****
 endif::arc42help[]
 
-=== <Runtime Scenario 1>
+This section displays sequence diagrams. These show the interaction of objects in different scenarios.
 
+=== Game lifecycle against the computer
 
-* _<insert runtime diagram or textual description of the scenario>_
-* _<insert description of the notable aspects of the interactions between the
-building block instances depicted in this diagram.>_
+This diagram shows the game life cycle in its standard form (playing against the machine).
 
-It is possible to use a sequence diagram:
-
-[plantuml,"Sequence diagram",png]
+[plantuml, "Sequence diagram",png]
 ----
-actor Alice
-actor Bob
-database Pod as "Bob's Pod"
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
-Alice  --> Pod: Store route
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+@startuml
+actor User
+participant WebApp
+participant GameLogic
+database Db
+
+User -> WebApp: Log in
+WebApp -> Db: Check user credentials
+Db --> WebApp: Returns user data
+User -> WebApp: Select strategy, Y game type, difficulty, and board size
+WebApp -> GameLogic: Create board
+GameLogic --> WebApp: Board validated
+loop
+    User -> WebApp: Movement
+    WebApp -> GameLogic: Check if game has ended
+    alt Game ended
+        GameLogic --> WebApp: Return result
+        WebApp --> User: Show game result
+        break
+    else Game continues
+        WebApp -> GameLogic: Requests machine movement
+        GameLogic --> WebApp: Returns movement
+        WebApp --> User: Shows machine movement
+    end
+end
+WebApp -> Db: Save statistics
+@enduml
 ----
 
-=== <Runtime Scenario 2>
+=== Bot against Application
 
-=== ...
+This diagram shows the life cycle of the game in which a bot participates against the machine.
 
-=== <Runtime Scenario n>
+[plantuml, "Sequence diagram",png]
+----
+@startuml
+actor Bot
+participant API
+participant GameLogic
+
+Bot -> API: Select strategy, Y game type, difficulty, and board size
+API -> GameLogic: Create board
+GameLogic --> API: Board validated
+
+loop
+    Bot -> API: Movement
+    API -> GameLogic: Check if game has ended
+    alt Game ended
+        GameLogic --> API: Return result
+        API --> Bot: Show game result
+        break
+    else Game continues
+        API -> GameLogic: Requests machine movement
+        GameLogic --> API: Returns movement
+        API --> Bot: Shows machine movement
+    end
+end
+@enduml
+----
+
+=== User registration
+
+This diagram shows the different interactions that take place when a user registers.
+
+[plantuml, "Sequence diagram",png]
+----
+@startuml
+actor User
+participant WebApp
+database Db
+
+User -> WebApp: Register account
+WebApp -> Db: Check if credentials exists
+alt User already exists
+    Db --> WebApp: Send denegation
+    WebApp --> User: Shows denegation
+else New user
+    Db --> WebApp: Credentials validation successful
+    WebApp -> Db: Save new user credentials
+    Db --> WebApp: Send confirmation
+    WebApp --> User: Shows confirmation
+end
+@enduml
+----

@@ -17,6 +17,8 @@ These include
 ****
 endif::arc42help[]
 
+The game development company Micrati has decided to begin developing a web-based system where users can play different variations of Game Y, an existing strategic board game. The initial idea is to offer an entertaining and intuitive experience to users. It will also provide several different strategies with different difficulty levels to attract user interest.
+
 === Requirements Overview
 
 ifdef::arc42help[]
@@ -45,6 +47,20 @@ See https://docs.arc42.org/section-1/[Introduction and Goals] in the arc42 docum
 ****
 endif::arc42help[]
 
+The main requirements of the system are:
+
+- Provide a usable and functional version of the game with a variable board.
+
+- Available on the web.
+
+- Offer different strategies for playing the game with different difficulty levels selectable by the player.
+
+- Allow users to register on the system.
+
+- Allow users to view their game history (statistical data such as the number of games played, win/loss statistics, etc.).
+
+- Offer the option to play against a computer or a bot with an API.
+
 === Quality Goals
 
 ifdef::arc42help[]
@@ -68,6 +84,29 @@ If you as an architect do not know how the quality of your work will be judged..
 A table with quality goals and concrete scenarios, ordered by priorities
 ****
 endif::arc42help[]
+
+[options="header",cols="1,2"]
+|===
+|Quality goal|Description
+| **Usability**
+| The system should be easy for users to use and learn how to use correctly. This will encourage them to use the application again and enjoy the experience.
+
+| **Functionality**
+| The system must consider and implement the requirements correctly, allowing users to play the game Y with different strategies, register in the application, consult their statistics...
+
+| **Accessibility**
+| The application must be available from the Web.
+
+| **Performance**
+| The app should respond to user requests within a reasonable timeframe. This prevents users from abandoning the app and ensures a positive experience that encourages them to return.
+
+| **Maintainability**
+| The system should be easy to maintain and extend. This is achieved by following good programming practices, maintaining excellent communication within the development team...
+
+| **Security**
+| The private data of registered users must be kept safe.
+
+|===
 
 === Stakeholders
 
@@ -96,6 +135,21 @@ endif::arc42help[]
 [options="header",cols="1,2,2"]
 |===
 |Role/Name|Contact|Expectations
-| _<Role-1>_ | _<Contact-1>_ | _<Expectation-1>_
-| _<Role-2>_ | _<Contact-2>_ | _<Expectation-2>_
+| **Development team**
+| José Iván Díaz Potenciano uo302531@uniovi.es - Adrián Gutiérrez García uo300627@uniovi.es - Fernando Remis Figueroa uo302109@uniovi.es - Hugo Carbajales Quintana uo300051@uniovi.es - Sergio Argüelles Huerta uo299741@uniovi.es 
+| Responsible for developing the assigned application using good techniques, working properly as a team, and achieving a solution that is as maintainable and usable as possible.
+
+| **Users**
+| Application users
+| Having a good experience using the application, where they can play the game using different strategies and check their statistics.
+
+| **Micrati**
+| Micrati company
+| Expects to obtain an application that aligns with its ideas and objectives.
+
+| **Professor of the ASW subject**
+| Jose Emilio Labra Gayo - labra@uniovi.es
+| Assume the role of Product Owner, defining high-level requirements, providing feedback to the development team, and evaluating the developed product.
+
+
 |===
