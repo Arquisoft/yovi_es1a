@@ -1373,94 +1373,26 @@ building block instances depicted in this diagram.&gt;</em></p>
 <div class="paragraph">
 <p>A PARTIR DE AQUI:</p>
 </div>
-<hr>
-<div class="paragraph">
-<p>@startuml
-actor User
-participant WebApp
-participant GameLogic
-database Db</p>
+<div class="imageblock plantuml">
+<div class="content">
+<img src="https://www.plantuml.com/plantuml/png/XL91JWCn3Bpd5Nv0-u4UK85ANE3I2Y6EJk9sesQJ9SukAg_7sK2rsnOHAOVOu_6CupLdJBbllKAJOu9NfgGw2JdZEWmPtaZVTzqiz8GjFSU3CyfYHerCiD5AbL9OtlrKh40Wu8AgpvBOw1KyDcIEq1UeIMGfP8UUrKR3SbAwfTodm1LNcboHxyYJoS0vOQR3QG7lS11Pa4yTBS2w_TwPtcT9OB2W8oOBxBve8kTiGrGb4feAK-VuJDB3I36WTwA7hF8nTWhaN2fxYGErucjCtkuspi3jg-866IXOeIm5wEjy9w5oRckgOu94B5RFsD-U0YpQP5PD_AozBf1QR1_75tdvnB6lYV8beIU-ufjvsDA7O393YwPnWQ2TslvFCb_3Rwh-WrvceygThzOE1vA5mEnOLfNLMY2osDy0" alt="Sequence diagram">
 </div>
-<div class="paragraph">
-<p>User &#8594; WebApp: Log in
-WebApp &#8594; Db: Check user credentials
-Db -&#8594; WebApp: Returns user data
-User &#8594; WebApp: Select strategy, Y game type, difficulty, and board size
-WebApp &#8594; GameLogic: Create board
-GameLogic -&#8594; WebApp: Board validated
-loop
-    User &#8594; WebApp: Movement
-    WebApp &#8594; GameLogic: Check if game has ended
-    alt Game ended
-        GameLogic -&#8594; WebApp: Return result
-        WebApp -&#8594; User: Show game result
-        break
-    else Game continues
-        WebApp &#8594; GameLogic: Requests machine movement
-        GameLogic -&#8594; WebApp: Returns movement
-        WebApp -&#8594; User: Shows machine movement
-    end
-end
-WebApp &#8594; Db: Save statistics
-@enduml
----</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_bot_against_application">6.2. Bot against Application</h3>
-<hr>
-<div class="paragraph">
-<p>@startuml
-actor Bot
-participant API
-participant GameLogic</p>
+<div class="imageblock plantuml">
+<div class="content">
+<img src="https://www.plantuml.com/plantuml/png/VP9DRiCW48Ntd68Ea5mWYofD5rMbLghILPSJ6Die_BWmJfISleDHBRj9YmGImyTxRn3Rp9Xuy4wXvfXW5rdrKh7QzXWO7jzV5ljdzFGQMwkL4XJM3uNOm0SvqWoP4pArbnLyGYiayAMd5HZRD5OFZkK0Wu53n6GWsoifkLr49jaDF2KIZSgegGxh7wlTUFc4pXhXZ58knbw1Z7cWjtWYJu77Wpic7UaZsAQcx3031IDYXKPNsvoLohWJPKyyf029ilGsWQER81977gQBvshoYpf8cyTnHovJDTGni0q3vQNM8lcUlWJW31vrPmE1dtVwRz1yozva_KDNdaALkPL5Fiit" alt="Sequence diagram">
 </div>
-<div class="paragraph">
-<p>Bot &#8594; API: Select strategy, Y game type, difficulty, and board size
-API &#8594; GameLogic: Create board
-GameLogic -&#8594; API: Board validated</p>
-</div>
-<div class="paragraph">
-<p>loop
-    Bot &#8594; API: Movement
-    API &#8594; GameLogic: Check if game has ended
-    alt Game ended
-        GameLogic -&#8594; API: Return result
-        API -&#8594; Bot: Show game result
-        break
-    else Game continues
-        API &#8594; GameLogic: Requests machine movement
-        GameLogic -&#8594; API: Returns movement
-        API -&#8594; Bot: Shows machine movement
-    end
-end
-@enduml
----</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_user_registration">6.3. User registration</h3>
-<hr>
-<div class="paragraph">
-<p>@startuml
-actor User
-participant WebApp
-database Db</p>
+<div class="imageblock plantuml">
+<div class="content">
+<img src="https://www.plantuml.com/plantuml/png/XP4nZW8n34NxdC8Nu08KAn1JKonQKJkE1w8DoIXsWBtzUWQG1Wb4YXJs-_xVyaeKgxPJSaXQAlm8LpTOAL8SC2lisQ-7mGLKz2WCdNTkX63nTUyjuPiFKTHgI5HQLdThZ4Zdbx0vClr2x84g1yuQCGdmrIJYCEda2PWgO_XxrC5Uvs4nSzbn3c1wFg36aYVaOMJOECMWOxd8dE9aeRTyWJPkzcBiPXRgZ2c6IGVIY5YaR-d9wBRH3iyC-JvqljRRt5Ho7-lfO_8dpeHkPP-Tvny0" alt="Sequence diagram">
 </div>
-<div class="paragraph">
-<p>User &#8594; WebApp: Register account
-WebApp &#8594; Db: Check if credentials exists
-alt User already exists
-    Db -&#8594; WebApp: Send denegation
-    WebApp -&#8594; User: Shows denegation
-else New user
-    Db -&#8594; WebApp: Credentials validation successful
-    WebApp &#8594; Db: Save new user credentials
-    Db -&#8594; WebApp: Send confirmation
-    WebApp -&#8594; User: Shows confirmation
-end
-@enduml
----</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
