@@ -468,37 +468,37 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#section-runtime-view">6. Runtime View</a>
 <ul class="sectlevel2">
-<li><a href="#_runtime_scenario_1">6.1. &lt;Runtime Scenario 1&gt;</a></li>
-<li><a href="#_runtime_scenario_2">6.2. &lt;Runtime Scenario 2&gt;</a></li>
-<li><a href="#">6.3. &#8230;&#8203;</a></li>
-<li><a href="#_runtime_scenario_n">6.4. &lt;Runtime Scenario n&gt;</a></li>
+<li><a href="#_ciclo_de_vida_del_juego_contra_la_máquina">6.1. Ciclo de vida del juego contra la máquina</a></li>
+<li><a href="#_bot_against_application">6.2. Bot against Application</a></li>
+<li><a href="#_user_registration">6.3. User registration</a></li>
 </ul>
 </li>
-<li><a href="#section-deployment-view">7. Deployment View</a>
+<li><a href="#_user_registration_2">7. User registration</a></li>
+<li><a href="#section-deployment-view">8. Deployment View</a>
 <ul class="sectlevel2">
-<li><a href="#_infrastructure_level_1">7.1. Infrastructure Level 1</a></li>
-<li><a href="#_infrastructure_level_2">7.2. Infrastructure Level 2</a></li>
+<li><a href="#_infrastructure_level_1">8.1. Infrastructure Level 1</a></li>
+<li><a href="#_infrastructure_level_2">8.2. Infrastructure Level 2</a></li>
 </ul>
 </li>
-<li><a href="#section-concepts">8. Cross-cutting Concepts</a>
+<li><a href="#section-concepts">9. Cross-cutting Concepts</a>
 <ul class="sectlevel2">
-<li><a href="#_domain_concepts">8.1. Domain concepts</a></li>
-<li><a href="#_security">8.2. Security</a></li>
-<li><a href="#_data_persistence_and_exchange">8.3. Data persistence and exchange</a></li>
-<li><a href="#_architecture_and_design_patterns">8.4. Architecture and Design Patterns</a></li>
-<li><a href="#_error_handling_and_logging">8.5. Error Handling and Logging</a></li>
-<li><a href="#_user_interface_and_ux_concepts">8.6. User Interface and UX Concepts</a></li>
+<li><a href="#_domain_concepts">9.1. Domain concepts</a></li>
+<li><a href="#_security">9.2. Security</a></li>
+<li><a href="#_data_persistence_and_exchange">9.3. Data persistence and exchange</a></li>
+<li><a href="#_architecture_and_design_patterns">9.4. Architecture and Design Patterns</a></li>
+<li><a href="#_error_handling_and_logging">9.5. Error Handling and Logging</a></li>
+<li><a href="#_user_interface_and_ux_concepts">9.6. User Interface and UX Concepts</a></li>
 </ul>
 </li>
-<li><a href="#section-design-decisions">9. Architecture Decisions</a></li>
-<li><a href="#section-quality-scenarios">10. Quality Requirements</a>
+<li><a href="#section-design-decisions">10. Architecture Decisions</a></li>
+<li><a href="#section-quality-scenarios">11. Quality Requirements</a>
 <ul class="sectlevel2">
-<li><a href="#_quality_tree">10.1. Quality Tree</a></li>
-<li><a href="#_quality_scenarios">10.2. Quality Scenarios</a></li>
+<li><a href="#_quality_tree">11.1. Quality Tree</a></li>
+<li><a href="#_quality_scenarios">11.2. Quality Scenarios</a></li>
 </ul>
 </li>
-<li><a href="#section-technical-risks">11. Risks and Technical Debts</a></li>
-<li><a href="#section-glossary">12. Glossary</a></li>
+<li><a href="#section-technical-risks">12. Risks and Technical Debts</a></li>
+<li><a href="#section-glossary">13. Glossary</a></li>
 </ul>
 </div>
 </div>
@@ -1352,18 +1352,16 @@ You will mainly capture scenarios in your documentation to communicate your arch
 </div>
 </div>
 </div>
+<div class="paragraph">
+<p>This section displays sequence diagrams. These show the interaction of objects in different scenarios.</p>
+</div>
 <div class="sect2">
-<h3 id="_runtime_scenario_1">6.1. &lt;Runtime Scenario 1&gt;</h3>
-<div class="ulist">
-<ul>
-<li>
-<p><em>&lt;insert runtime diagram or textual description of the scenario&gt;</em></p>
-</li>
-<li>
-<p><em>&lt;insert description of the notable aspects of the interactions between the
+<h3 id="_ciclo_de_vida_del_juego_contra_la_máquina">6.1. Ciclo de vida del juego contra la máquina</h3>
+<div class="paragraph">
+<p>EXPLICACION Y EJEMPLO:
+* <em>&lt;insert runtime diagram or textual description of the scenario&gt;</em>
+* <em>&lt;insert description of the notable aspects of the interactions between the
 building block instances depicted in this diagram.&gt;</em></p>
-</li>
-</ul>
 </div>
 <div class="paragraph">
 <p>It is possible to use a sequence diagram:</p>
@@ -1373,23 +1371,102 @@ building block instances depicted in this diagram.&gt;</em></p>
 <img src="https://www.plantuml.com/plantuml/png/TS_13i8W30RWEq_HxEA95rYCsNm2eq_GGHD99bLQtj-ESJBp1kNB_vT958lMr-emA1UOrnIedw-yk8YA2mh1ZIEWm633asotmJKB_hB14UQgJygQ0chY37VwL19rzWRUJCC7IjwSXNfMavOzmiCM82XSbNvxCbj40Jpks_7P-rtZFzrx9yhHVly5" alt="Sequence diagram">
 </div>
 </div>
+<div class="paragraph">
+<p>A PARTIR DE AQUI:</p>
+</div>
+<hr>
+<div class="paragraph">
+<p>actor User
+participant WebApp
+participant GameLogic
+database Db</p>
+</div>
+<div class="paragraph">
+<p>User &#8594; WebApp: Log in
+WebApp &#8594; Db: Check user credentials
+Db -&#8594; WebApp: Returns user data
+User &#8594; WebApp: Select strategy, Y game type, difficulty, and board size
+WebApp &#8594; GameLogic: Create board
+GameLogic -&#8594; WebApp: Board validated
+loop
+    User &#8594; WebApp: Movement
+    WebApp &#8594; GameLogic: Check if game has ended
+    alt Game ended
+        GameLogic -&#8594; WebApp: Return result
+        WebApp -&#8594; User: Show game result
+        break
+    else Game continues
+        WebApp &#8594; GameLogic: Requests machine movement
+        GameLogic -&#8594; WebApp: Returns movement
+        WebApp -&#8594; User: Shows machine movement
+    end
+end
+WebApp &#8594; Db: Save statistics
+---</p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_runtime_scenario_2">6.2. &lt;Runtime Scenario 2&gt;</h3>
-
+<h3 id="_bot_against_application">6.2. Bot against Application</h3>
+<hr>
+<div class="paragraph">
+<p>actor Bot
+participant API
+participant GameLogic</p>
+</div>
+<div class="paragraph">
+<p>Bot &#8594; API: Select strategy, Y game type, difficulty, and board size
+API &#8594; GameLogic: Create board
+GameLogic -&#8594; API: Board validated</p>
+</div>
+<div class="paragraph">
+<p>loop
+    Bot &#8594; API: Movement
+    API &#8594; GameLogic: Check if game has ended
+    alt Game ended
+        GameLogic -&#8594; API: Return result
+        API -&#8594; Bot: Show game result
+        break
+    else Game continues
+        API &#8594; GameLogic: Requests machine movement
+        GameLogic -&#8594; API: Returns movement
+        API -&#8594; Bot: Shows machine movement
+    end
+end
+---</p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="">6.3. &#8230;&#8203;</h3>
-
+<h3 id="_user_registration">6.3. User registration</h3>
+<div class="paragraph">
+<p>actor User
+participant WebApp
+database Db</p>
 </div>
-<div class="sect2">
-<h3 id="_runtime_scenario_n">6.4. &lt;Runtime Scenario n&gt;</h3>
-<div style="page-break-after: always;"></div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-deployment-view">7. Deployment View</h2>
+<h2 id="_user_registration_2">7. User registration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>User &#8594; WebApp: Register account
+WebApp &#8594; Db: Check if credentials exists
+alt User already exists
+    Db -&#8594; WebApp: Send denegation
+    WebApp -&#8594; User: Shows denegation
+else New user
+    Db -&#8594; WebApp: Credentials validation successful
+    WebApp &#8594; Db: Save new user credentials
+    Db -&#8594; WebApp: Send confirmation
+    WebApp -&#8594; User: Shows confirmation
+end
+---</p>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="section-deployment-view">8. Deployment View</h2>
 <div class="sectionbody">
 <div class="sidebarblock arc42help">
 <div class="content">
@@ -1446,7 +1523,7 @@ when your infrastructure is more complex.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_infrastructure_level_1">7.1. Infrastructure Level 1</h3>
+<h3 id="_infrastructure_level_1">8.1. Infrastructure Level 1</h3>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -1494,7 +1571,7 @@ when your infrastructure is more complex.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_infrastructure_level_2">7.2. Infrastructure Level 2</h3>
+<h3 id="_infrastructure_level_2">8.2. Infrastructure Level 2</h3>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -1506,13 +1583,13 @@ when your infrastructure is more complex.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_infrastructure_element_1">7.2.1. <em>&lt;Infrastructure Element 1&gt;</em></h4>
+<h4 id="_infrastructure_element_1">8.2.1. <em>&lt;Infrastructure Element 1&gt;</em></h4>
 <div class="paragraph">
 <p><em>&lt;diagram + explanation&gt;</em></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_infrastructure_element_2">7.2.2. <em>&lt;Infrastructure Element 2&gt;</em></h4>
+<h4 id="_infrastructure_element_2">8.2.2. <em>&lt;Infrastructure Element 2&gt;</em></h4>
 <div class="paragraph">
 <p><em>&lt;diagram + explanation&gt;</em></p>
 </div>
@@ -1521,7 +1598,7 @@ when your infrastructure is more complex.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_infrastructure_element_n">7.2.3. <em>&lt;Infrastructure Element n&gt;</em></h4>
+<h4 id="_infrastructure_element_n">8.2.3. <em>&lt;Infrastructure Element n&gt;</em></h4>
 <div class="paragraph">
 <p><em>&lt;diagram + explanation&gt;</em></p>
 </div>
@@ -1531,7 +1608,7 @@ when your infrastructure is more complex.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-concepts">8. Cross-cutting Concepts</h2>
+<h2 id="section-concepts">9. Cross-cutting Concepts</h2>
 <div class="sectionbody">
 <div class="sidebarblock arc42help">
 <div class="content">
@@ -1633,7 +1710,7 @@ on this list.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_domain_concepts">8.1. Domain concepts</h3>
+<h3 id="_domain_concepts">9.1. Domain concepts</h3>
 <div class="paragraph">
 <p>The domain model revolves around the game of Y, a connection strategy game.</p>
 </div>
@@ -1661,7 +1738,7 @@ on this list.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_security">8.2. Security</h3>
+<h3 id="_security">9.2. Security</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1674,7 +1751,7 @@ on this list.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_data_persistence_and_exchange">8.3. Data persistence and exchange</h3>
+<h3 id="_data_persistence_and_exchange">9.3. Data persistence and exchange</h3>
 <div class="paragraph">
 <p>The system relies on a standardized text format for both data transport and storage.</p>
 </div>
@@ -1690,7 +1767,7 @@ on this list.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_architecture_and_design_patterns">8.4. Architecture and Design Patterns</h3>
+<h3 id="_architecture_and_design_patterns">9.4. Architecture and Design Patterns</h3>
 <div class="paragraph">
 <p>The implementation leverages standard software design patterns to ensure modularity and testability, specifically within the Rust core:</p>
 </div>
@@ -1709,7 +1786,7 @@ on this list.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_error_handling_and_logging">8.5. Error Handling and Logging</h3>
+<h3 id="_error_handling_and_logging">9.5. Error Handling and Logging</h3>
 <div class="paragraph">
 <p>To meet availability and observability requirements, the system implements structured logging and typed errors:</p>
 </div>
@@ -1725,7 +1802,7 @@ on this list.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_user_interface_and_ux_concepts">8.6. User Interface and UX Concepts</h3>
+<h3 id="_user_interface_and_ux_concepts">9.6. User Interface and UX Concepts</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1747,7 +1824,7 @@ on this list.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-design-decisions">9. Architecture Decisions</h2>
+<h2 id="section-design-decisions">10. Architecture Decisions</h2>
 <div class="sectionbody">
 <div class="sidebarblock arc42help">
 <div class="content">
@@ -1797,7 +1874,7 @@ There you will find links and examples about ADR.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-quality-scenarios">10. Quality Requirements</h2>
+<h2 id="section-quality-scenarios">11. Quality Requirements</h2>
 <div class="sectionbody">
 <div class="sidebarblock arc42help">
 <div class="content">
@@ -1822,7 +1899,7 @@ concrete and measurable.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_quality_tree">10.1. Quality Tree</h3>
+<h3 id="_quality_tree">11.1. Quality Tree</h3>
 <div class="imageblock plantuml">
 <div class="content">
 <img src="https://www.plantuml.com/plantuml/png/RP51JyCm38Nl_HK-ThqmxSnX4vj4fGt69YGukesRHMgIoN4OyEjnMpPnu18fp_Bdz-nb4cJnBXYFvwA2buozaw-Ygc0NZUiSDcuGe7nqzZHJlO9zdwt5fYTOrN0KHY7hA8srXnWwPpEFvKFkHndg8CJnJFmFxIWO3B9ntsJWVVC4gtqz5hOOR4PBscteJFe46M2lwKgvW_KRb3ioBlihZ7ChcHMrOOuCEqf96PCv9SCwjjah2SN5CE2UcqJySJFsbwPXX3v5LmBRQAqBTf8PqmaEbBI5Gai3PK_SHVQeNoYtyNBB9he6QcD8exDffcQB5yqdsgqZxs4nd_iqAvOQylSKFm00" alt="quality-tree">
@@ -1859,7 +1936,7 @@ concrete and measurable.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_quality_scenarios">10.2. Quality Scenarios</h3>
+<h3 id="_quality_scenarios">11.2. Quality Scenarios</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 10%;">
@@ -1957,7 +2034,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-technical-risks">11. Risks and Technical Debts</h2>
+<h2 id="section-technical-risks">12. Risks and Technical Debts</h2>
 <div class="sectionbody">
 <div class="sidebarblock arc42help">
 <div class="content">
@@ -2031,7 +2108,7 @@ If the container restarts or fails, all active saves are lost. This is being acc
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-glossary">12. Glossary</h2>
+<h2 id="section-glossary">13. Glossary</h2>
 <div class="sectionbody">
 <div class="sidebarblock arc42help">
 <div class="content">
