@@ -581,6 +581,9 @@ These include</p>
 </div>
 </div>
 </div>
+<div class="paragraph">
+<p>The game development company Micrati has decided to begin developing a web-based system where users can play different variations of Game Y, an existing strategic board game. The initial idea is to offer an entertaining and intuitive experience to users. It will also provide several different strategies with different difficulty levels to attract user interest.</p>
+</div>
 <div class="sect2">
 <h3 id="_requirements_overview">1.1. Requirements Overview</h3>
 <div class="sidebarblock arc42help">
@@ -609,6 +612,31 @@ If requirements documents exist this overview should refer to these documents.</
 <p>See <a href="https://docs.arc42.org/section-1/">Introduction and Goals</a> in the arc42 documentation.</p>
 </div>
 </div>
+</div>
+<div class="paragraph">
+<p>The main requirements of the system are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Provide a usable and functional version of the game with a variable board.</p>
+</li>
+<li>
+<p>Available on the web.</p>
+</li>
+<li>
+<p>Offer different strategies for playing the game with different difficulty levels selectable by the player.</p>
+</li>
+<li>
+<p>Allow users to register on the system.</p>
+</li>
+<li>
+<p>Allow users to view their game history (statistical data such as the number of games played, win/loss statistics, etc.).</p>
+</li>
+<li>
+<p>Offer the option to play against a computer or a bot with an API.</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
@@ -641,6 +669,37 @@ If you as an architect do not know how the quality of your work will be judged&#
 </div>
 </div>
 </div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Quality goal</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top"><strong>Usability</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system should be easy for users to use and learn how to use correctly. This will encourage them to use the application again and enjoy the experience.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Functionality</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system must consider and implement the requirements correctly, allowing users to play the game Y with different strategies, register in the application, consult their statistics&#8230;&#8203;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Accessibility</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application must be available from the Web.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Performance</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The app should respond to user requests within a reasonable timeframe. This prevents users from abandoning the app and ensures a positive experience that encourages them to return.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Maintainability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system should be easy to maintain and extend. This is achieved by following good programming practices, maintaining excellent communication within the development team&#8230;&#8203;</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_stakeholders">1.3. Stakeholders</h3>
@@ -699,14 +758,24 @@ These stakeholders determine the extent and the level of detail of your work and
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Development team</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Contact-1&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Expectation-1&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Development team</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">José Iván Díaz Potenciano <a href="mailto:uo302531@uniovi.es">uo302531@uniovi.es</a> - Adrián Gutiérrez García <a href="mailto:uo300627@uniovi.es">uo300627@uniovi.es</a> - Fernando Remis Figueroa <a href="mailto:uo302109@uniovi.es">uo302109@uniovi.es</a> - Hugo Carbajales Quintana <a href="mailto:uo300051@uniovi.es">uo300051@uniovi.es</a> - Sergio Argüelles Huerta <a href="mailto:uo299741@uniovi.es">uo299741@uniovi.es</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Responsible for developing the assigned application using good techniques, working properly as a team, and achieving a solution that is as maintainable and usable as possible.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Role-2&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Contact-2&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Expectation-2&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Users</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application users</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Having a good experience using the application, where they can play the game using different strategies and check their statistics.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Micrati</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Micrati company</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Expects to obtain an application that aligns with its ideas and objectives.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Professor of the ASW subject</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jose Emilio Labra Gayo - <a href="mailto:labra@uniovi.es">labra@uniovi.es</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Assume the role of Product Owner, defining high-level requirements, providing feedback to the development team, and evaluating the developed product.</p></td>
 </tr>
 </tbody>
 </table>
