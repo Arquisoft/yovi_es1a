@@ -451,7 +451,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_stakeholders">1.3. Stakeholders</a></li>
 </ul>
 </li>
-<li><a href="#section-architecture-constraints">2. Architecture Constraints</a></li>
+<li><a href="#section-architecture-constraints">2. Architecture Constraints</a>
+<ul class="sectlevel2">
+<li><a href="#_technical_constraints">2.1. Technical Constraints</a></li>
+<li><a href="#_organizational_constraints">2.2. Organizational Constraints</a></li>
+<li><a href="#_political_and_convention_constraints">2.3. Political and Convention Constraints</a></li>
+</ul>
+</li>
 <li><a href="#section-context-and-scope">3. Context and Scope</a>
 <ul class="sectlevel2">
 <li><a href="#_business_context">3.1. Business Context</a></li>
@@ -461,9 +467,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#section-solution-strategy">4. Solution Strategy</a></li>
 <li><a href="#section-building-block-view">5. Building Block View</a>
 <ul class="sectlevel2">
-<li><a href="#_whitebox_overall_system">5.1. Whitebox Overall System</a></li>
+<li><a href="#_whitebox_overall_system_level_1">5.1. Whitebox Overall System (Level 1)</a></li>
 <li><a href="#_level_2">5.2. Level 2</a></li>
-<li><a href="#_level_3">5.3. Level 3</a></li>
 </ul>
 </li>
 <li><a href="#section-runtime-view">6. Runtime View</a>
@@ -795,25 +800,108 @@ These stakeholders determine the extent and the level of detail of your work and
 <div class="title">Contents</div>
 <p>Any requirement that constraints software architects in their freedom of design and implementation decisions or decision about the development process. These constraints sometimes go beyond individual systems and are valid for whole organizations and companies.</p>
 </div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>Architects should know exactly where they are free in their design decisions and where they must adhere to constraints.
-Constraints must always be dealt with; they may be negotiable, though.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>Simple tables of constraints with explanations.
-If needed you can subdivide them into
-technical constraints, organizational and political constraints and
-conventions (e.g. programming or versioning guidelines, documentation or naming conventions)</p>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-2/">Architecture Constraints</a> in the arc42 documentation.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_technical_constraints">2.1. Technical Constraints</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Constraint</th>
+<th class="tableblock halign-left valign-top">Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>React &amp; TypeScript</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The frontend must be developed using React and TypeScript.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Node.js &amp; Express</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The user management service will be implemented using Node.js and Express.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Rust Game Engine</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The core logic for the "Game of Y" must be implemented in Rust to ensure performance.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system must be containerized using Docker and orchestrated with Docker Compose.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GitHub Actions</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD pipelines must be managed using GitHub Actions for automated testing and deployment.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>YEN Notation</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Game moves and state must follow the standard YEN (Y-Game Extended Notation).</p></td>
+</tr>
+</tbody>
+</table>
 </div>
+<div class="sect2">
+<h3 id="_organizational_constraints">2.2. Organizational Constraints</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Constraint</th>
+<th class="tableblock halign-left valign-top">Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Team Size</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The team consists of 5 members: José Iván, Adrián, Fernando, Hugo, and Sergio.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Timeframe</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The project must be tested, code completed and discussed before the final submission.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Meetings</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Weekly meetings will be held during laboratory sessions to track progress, besides possible meetings to discuss some issues or problems throught the week.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Version Control</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GitHub is the chosen platform for repository hosting and version control.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_political_and_convention_constraints">2.3. Political and Convention Constraints</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Constraint</th>
+<th class="tableblock halign-left valign-top">Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Arc42</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The documentation must follow the Arc42 template structure.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Language</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The documentation and code comments must be written in English, as it&#8217;s the standard.</p></td>
+</tr>
+</tbody>
+</table>
 <div style="page-break-after: always;"></div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -878,7 +966,7 @@ The title of the table is the name of your system, the three columns contain the
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/JOsnYW9H34NxV4MOoYs61MjPX2siX0Mn46ooCt4c-5uYUNaky_UBCw0sjpdtdhijGHur9oXNqHivPUmitqnPun1JOgmvhT_eBtNNmQrg_st97Fz62GP8V0aCGvTX3Ep5kGin1Q0kpB4v5lO6gM0jxF2ymEPaTvd1P7Tv1tjJ2NFH0GzJ2SvdNVsuPOwHQ_dSELr8wMFUvgKByB1ZstujDdWaRjhsLTYozZMdVm00" alt="business-context-diagram">
+<img src="https://www.plantuml.com/plantuml/png/JOyn2y9G38Jt_8hGIOSYE8iK79m4GHm4bzZ6zc5V8dcfqd_lquAwX8Flxi9LoSbyY3saMv0x6KMiDTvLMFpWOy-OuVAFNgY-jQQ3D1ljrV3P1MU0dg-EhcYXxHoRO5nxK06WshEhE2Qs0YdXa0LyNs1nqaVuW36BVx1J2JaQfCN3c9pZMMPxqyZUyP0MMwCh2Sq_sJXv0TxjM9RhgGtU5rTb-JDKB4rUz080" alt="business-context-diagram">
 </div>
 </div>
 <div class="paragraph">
@@ -919,7 +1007,7 @@ together with a mapping table showing the relationships between channels and inp
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/ZP1DRnCn48Rl_XMZFIM7YENZqZsWLcdLWg044iI1vZ3nJdQj-6CPZrEggl-ziicA5dBerNwUT-QTqoZ8afnLSMVyW8mET713yEHbANUM83dxvidl1lMkuv1yEmysCDpsHaXPsWf803PTBz0Q9YqcUALGIs2elaVY2Z12ItkbV6W9gharvAM2UmK0VwT2jI9sngE5ITO0E_8oBROkYdeO8yw3tX73LOW2aqz1e-r3pEozAg43wXrs19KBtaZWcIU1oS6w9haDl9kE6_opHPuTOKcyDvhAz9HVZg6NwEZk6Thb5tMCNN1m93sbMC21WpiQoRX5Zt_26BU5USZDLKjxcCtU7uu13Lpy9fs48io3S-ZR21E7Fg45uuSaKwKEQBPA2MXWIHayMto0R_GhKPHuutzUhLQBLn-NNwwXULlNzVgfM2gzG7ptdyYuXGREjAOOAS8vnduJaDlH-q4RQ4xgazThfGgShNmOQE1h8ZP54ZpmPNRcwxKgrBDQcd6W29z9sEXnDRYyM8sLr2dvDZdx2000" alt="technical-context-diagram">
+<img src="https://www.plantuml.com/plantuml/png/ZP9BJ-Cm483l_XMZdDf3HVTneGS4AWWMiMoN5d403bDdQAp6TjOUmoB4VsTicXMF7ZQN-F5zyqhs8sFWP5iLryPr6D22zhRpZXpF-R4baCklRswNgDUhu9Ehfxxr0HuQmwHQkcDW3y6i6eRQ1D9il5CADGjKNKOA5M24ckwLShucgAQjaIGLF2cGvrzMg1OKh77OmY1hW2iv7HPR5qKzzo4ElLuBSU8Zm-3CQsmRMGvpp1Aqas95XyfwPwIGaIC1DzOvyOCFws5VmOSgSku8SmhtHbF9dlB9DlGOBJs-GrVvH6rZPy5RuePIB60dswqX0zwXmzTWiYxCS-vSoGXXDDhR30CcSFINT6AACFNMegiZ3EILP83oqH8FbTgWsIfDY3Id31xCVi05_KaKETwuwvF5OhPpElzr3fDlu_7uzgrOMleFyVidKSeNxq1hYb6gFCJOB3s6klUkQ0cJtV7kbrkb2fojF1YnVYSAfaYC6xxaphoaATIxjdJ0JlYVnC7elZGuFbhqBQbzQK1-wXS0" alt="technical-context-diagram">
 </div>
 </div>
 <div class="paragraph">
@@ -990,114 +1078,28 @@ Refer to details in the following sections.</p>
 <div class="content">
 <div class="paragraph">
 <div class="title">Content</div>
-<p>The building block view shows the static decomposition of the system into building blocks (modules, components, subsystems, classes, interfaces, packages, libraries, frameworks, layers, partitions, tiers, functions, macros, operations, data structures, &#8230;&#8203;) as well as their dependencies (relationships, associations, &#8230;&#8203;)</p>
-</div>
-<div class="paragraph">
-<p>This view is mandatory for every architecture documentation.
-In analogy to a house this is the <em>floor plan</em>.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>Maintain an overview of your source code by making its structure understandable through
-abstraction.</p>
-</div>
-<div class="paragraph">
-<p>This allows you to communicate with your stakeholder on an abstract level without disclosing implementation details.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>The building block view is a hierarchical collection of black boxes and white boxes
-(see figure below) and their descriptions.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="./images/05_building_blocks-EN.png" alt="Hierarchy of building blocks">
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Level 1</strong> is the white box description of the overall system together with black
-box descriptions of all contained building blocks.</p>
-</div>
-<div class="paragraph">
-<p><strong>Level 2</strong> zooms into some building blocks of level 1.
-Thus it contains the white box description of selected building blocks of level 1, together with black box descriptions of their internal building blocks.</p>
-</div>
-<div class="paragraph">
-<p><strong>Level 3</strong> zooms into selected building blocks of level 2, and so on.</p>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-5/">Building Block View</a> in the arc42 documentation.</p>
+<p>The building block view shows the static decomposition of the system into building blocks&#8230;&#8203;</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_whitebox_overall_system">5.1. Whitebox Overall System</h3>
-<div class="sidebarblock arc42help">
+<h3 id="_whitebox_overall_system_level_1">5.1. Whitebox Overall System (Level 1)</h3>
+<div class="paragraph">
+<p>The following diagram shows the main interaction between the user and the system.</p>
+</div>
+<div class="imageblock plantuml">
 <div class="content">
-<div class="paragraph">
-<p>Here you describe the decomposition of the overall system using the following white box template. It contains</p>
+<img src="https://www.plantuml.com/plantuml/png/SoWkIImgAStDuKfCBialKb0ABKujKb98B5Oe1JAualDp2_BpKlDA59GYyyio5O8hYqjISy7obK0-5nT8bO9UKMPwHecU7LXCmKe1Q4OnbqDgNWhGN000" alt="level1_diagram">
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>an overview diagram</p>
-</li>
-<li>
-<p>a motivation for the decomposition</p>
-</li>
-<li>
-<p>black box descriptions of the contained building blocks. For these we offer you alternatives:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>use <em>one</em> table for a short and pragmatic overview of all contained building blocks and their interfaces</p>
-</li>
-<li>
-<p>use a list of black box descriptions of the building blocks according to the black box template (see below).
-Depending on your choice of tool this list could be sub-chapters (in text files), sub-pages (in a Wiki) or nested elements (in a modeling tool).</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>(optional:) important interfaces, that are not explained in the black box templates of a building block, but are very important for understanding the white box.
-Since there are so many ways to specify interfaces why do not provide a specific template for them.
- In the worst case you have to specify and describe syntax, semantics, protocols, error handling,
- restrictions, versions, qualities, necessary compatibilities and many things more.
-In the best case you will get away with examples or simple signatures.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p><em><strong>&lt;Overview Diagram&gt;</strong></em></p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Motivation</dt>
 <dd>
-<p><em>&lt;text explanation&gt;</em></p>
+<p>Yovi (refering to our group game) is a web application that allows users to play the "Game of Y". The system acts as a single unit for the end user, providing registration, game logic, and history tracking.</p>
 </dd>
 <dt class="hdlist1">Contained Building Blocks</dt>
-<dd>
-<p><em>&lt;Description of contained building block (black boxes)&gt;</em></p>
-</dd>
-<dt class="hdlist1">Important Interfaces</dt>
-<dd>
-<p><em>&lt;Description of important interfaces&gt;</em></p>
-</dd>
 </dl>
-</div>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>Insert your explanations of black boxes from level 1:</p>
-</div>
-<div class="paragraph">
-<p>If you use tabular form you will only describe your black boxes with name and
-responsibility according to the following schema:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1112,177 +1114,88 @@ responsibility according to the following schema:</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;black box 1&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Text&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>User</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">End-user interacting with the application via a web browser.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;black box 2&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Text&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Yovi System</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The complete software solution handling the game logic and user data.</p></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>If you use a list of black box descriptions then you fill in a separate black box template for every important building block .
-Its headline is the name of the black box.</p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_black_box_1">5.1.1. &lt;Name black box 1&gt;</h4>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>Here you describe &lt;black box 1&gt;
-according the the following black box template:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Purpose/Responsibility</p>
-</li>
-<li>
-<p>Interface(s), when they are not extracted as separate paragraphs. This interfaces may include qualities and performance characteristics.</p>
-</li>
-<li>
-<p>(Optional) Quality-/Performance characteristics of the black box, e.g.availability, run time behavior, &#8230;&#8203;.</p>
-</li>
-<li>
-<p>(Optional) directory/file location</p>
-</li>
-<li>
-<p>(Optional) Fulfilled requirements (if you need traceability to requirements).</p>
-</li>
-<li>
-<p>(Optional) Open issues/problems/risks</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p><em>&lt;Purpose/Responsibility&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;Interface(s)&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;(Optional) Quality/Performance Characteristics&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;(Optional) Directory/File Location&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;(Optional) Fulfilled Requirements&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;(optional) Open Issues/Problems/Risks&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_black_box_2">5.1.2. &lt;Name black box 2&gt;</h4>
-<div class="paragraph">
-<p><em>&lt;black box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_black_box_n">5.1.3. &lt;Name black box n&gt;</h4>
-<div class="paragraph">
-<p><em>&lt;black box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_interface_1">5.1.4. &lt;Name interface 1&gt;</h4>
-<div class="paragraph">
-<p>&#8230;&#8203;</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_interface_m">5.1.5. &lt;Name interface m&gt;</h4>
-
-</div>
 </div>
 <div class="sect2">
 <h3 id="_level_2">5.2. Level 2</h3>
-<div class="sidebarblock arc42help">
+<div class="paragraph">
+<p>This level shows the decomposition of the system into the three main services defined in the project structure.</p>
+</div>
+<div class="imageblock plantuml">
 <div class="content">
-<div class="paragraph">
-<p>Here you can specify the inner structure of (some) building blocks from level 1 as white boxes.</p>
+<img src="https://www.plantuml.com/plantuml/png/RP3B2i8m44Nt-OgX-zQzYrABhuqWMYakfybGYZO9IQg8-EzEMtmWPfNSkVVCJ38Vq8MkFGkByeGrGRHqHWVIAeAx03xIjDPeqW6YaggPjH6WXojLQAruY4ymvmldO4_kqaZoVm07Jyw_30EdwvLVsmfREi92ruqUNJKBjxwPme0LUkwsCResytmegqg8SI28utHamXJMHR65YNI4WNhjspCGtvx-9SPOagJCuygEKFb9wPf0NcIy6F_I4m00" alt="level2_diagram">
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Motivation</dt>
+<dd>
+<p>The system follows a modular architecture to separate the user interface from the logic services.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>WebApp</strong>: Handles UI and client-side logic.</p>
+</li>
+<li>
+<p><strong>Users Service</strong>: Manages user registration and data.</p>
+</li>
+<li>
+<p><strong>GameY Engine</strong>: Handles the specific rules and logic of the board game.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
 </div>
 <div class="paragraph">
-<p>You have to decide which building blocks of your system are important enough to justify such a detailed description.
-Please prefer relevance over completeness. Specify important, surprising, risky, complex or volatile building blocks.
-Leave out normal, simple, boring or standardized parts of your system</p>
+<p>Contained Building Blocks</p>
 </div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_1">5.2.1. White Box <em>&lt;building block 1&gt;</em></h4>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>&#8230;&#8203;describes the internal structure of <em>building block 1</em>.</p>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_2">5.2.2. White Box <em>&lt;building block 2&gt;</em></h4>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-<div class="paragraph">
-<p>&#8230;&#8203;</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_m">5.2.3. White Box <em>&lt;building block m&gt;</em></h4>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_level_3">5.3. Level 3</h3>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>Here you can specify the inner structure of (some) building blocks from level 2 as white boxes.</p>
-</div>
-<div class="paragraph">
-<p>When you need more detailed levels of your architecture please copy this
-part of arc42 for additional levels.</p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_x_1">5.3.1. White Box &lt;_building block x.1_&gt;</h4>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>Specifies the internal structure of <em>building block x.1</em>.</p>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_x_2">5.3.2. White Box &lt;_building block x.2_&gt;</h4>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_y_1">5.3.3. White Box &lt;_building block y.1_&gt;</h4>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Building Block</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>WebApp</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Provides the graphical interface for the user. It communicates with the backend services to perform actions.<br>
+<strong>Technology:</strong> React, Vite, TypeScript.<br>
+<strong>Location:</strong> <code>/webapp</code> directory.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Users Service</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Manages user registration and stores user information. It exposes a REST API.<br>
+<strong>Technology:</strong> Node.js, Express.<br>
+<strong>Location:</strong> <code>/users</code> directory.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GameY Engine</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Implements the core logic of the Game of Y, including move validation and bot strategies using Rust for performance.<br>
+<strong>Technology:</strong> Rust.<br>
+<strong>Location:</strong> <code>/gamey</code> directory.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MongoDB</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Database used to persist user data and game history.<br>
+<strong>Technology:</strong> MongoDB.</p></td>
+</tr>
+</tbody>
+</table>
 <div style="page-break-after: always;"></div>
-</div>
 </div>
 </div>
 </div>
@@ -1361,7 +1274,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/XLBDJiCm3BxdAVm0smlqC0qsYSkuC274qKs-jT7IfCJkq7Xwr1QcTXiYKWwnlpzRMOjorgu9XgscJA-2R5hEwgrlEIgzeNnesrdfYHliKkMjSQnSie2sfJ4zbPQh7qP1krIHZsPyzerjMT2cXZrIrqDjXaDKpq7CjgJbXFe2xNAK4TURt8Zl4M2LH3ChglE2tgdY1gJd5Wjo_d3mjWjwNX17HsNYx4Zy5oPnBcCKjCbWnGWpb_eiqkCWSUBW7IkS2IcrXeZeEjbpEg51rA5vtstOWJ-CYMiMGdHm0u73kDz9gJ_tCurheWpfWbwmlvxBrP2je7sTFaUlAsIPmSVXXI0OVMsAwcC7kT6RpV22ZmwYGWtRsaTGCntxlyXo2x-R-WzvH6VwE_zQUpw1H5czgBTYreYkQy8t" alt="Sequence diagram">
+<img src="https://www.plantuml.com/plantuml/png/XL91JWCn3Bpd5Nv0-u4UK85ANE3I2Y6EJk9sesQJ9SukAg_7sK2rsnOHAOVOu_6CupLdJBbllKAJOu9NfgGw2JdZEWmPtaZVTzqiz8GjFSU3CyfYHerCiD5AbL9OtlrKh40Wu8AgpvBOw1KyDcIEq1UeIMGfP8UUrKR3SbAwfTodm1LNcboHxyYJoS0vOQR3QG7lS11Pa4yTBS2w_TwPtcT9OB2W8oOBxBve8kTiGrGb4feAK-VuJDB3I36WTwA7hF8nTWhaN2fxYGErucjCtkuspi3jg-866IXOeIm5wEjy9w5oRckgOu94B5RFsD-U0YpQP5PD_AozBf1QR1_75tdvnB6lYV8beIU-ufjvsDA7O393YwPnWQ2TslvFCb_3Rwh-WrvceygThzOE1vA5mEnOLfNLMY2osDy0" alt="Sequence diagram">
 </div>
 </div>
 </div>
@@ -1372,7 +1285,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/VOzDRi8m48NtFiKSW5o01O9qKI6r4e9LbuFz81R-2VQOYfw-Ig96IQ4ToOiPltdlctKMJbAyKwmb9ggZg9QJM6rR3aARtNRMlxB7MpnRhLGTXQfLfrZI0GvQA4jYmVc-e0ywimV9lSM2Z3sTh2vExWlYOEWOEHdAzWjgizjs9gFjabuIM31er3YdwYUgxfTlxAnXWL7AnTWg8g8fq7kymID8__4af86-a3qDb0rdGZ0mlPhTSEParDKJb3saf409kJWPXNrQjUfmbdHeukSGyajrJE1Bty5b384w1h6X8C-zPkHxN0koPFAi6nj0Vdhflw3vKVl0-eSlWb7TMoEOujqt" alt="Sequence diagram">
+<img src="https://www.plantuml.com/plantuml/png/VP9DRiCW48Ntd68Ea5mWYofD5rMbLghILPSJ6Die_BWmJfISleDHBRj9YmGImyTxRn3Rp9Xuy4wXvfXW5rdrKh7QzXWO7jzV5ljdzFGQMwkL4XJM3uNOm0SvqWoP4pArbnLyGYiayAMd5HZRD5OFZkK0Wu53n6GWsoifkLr49jaDF2KIZSgegGxh7wlTUFc4pXhXZ58knbw1Z7cWjtWYJu77Wpic7UaZsAQcx3031IDYXKPNsvoLohWJPKyyf029ilGsWQER81977gQBvshoYpf8cyTnHovJDTGni0q3vQNM8lcUlWJW31vrPmE1dtVwRz1yozva_KDNdaALkPL5Fiit" alt="Sequence diagram">
 </div>
 </div>
 </div>
@@ -1383,7 +1296,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/XOyzRiCm38LtdU9Tm1Vm4AI8vmmrYiwKH2T2PTeGgQIzVM0d0HoWHLU-Z-zdhqR5wfWT1PiAFfIBcwbO2cacCNooVvjd5yd8ap8wxzm2eTazj1RlV4fgN40XJ5NCtOK5wNoBmvd35zA0K3YoMAAiuE-afewohPcWN9ZYp_CE09r7iqdfMI8Y2v_8qYGhyWngTgjBY_uyNNLBSLR6aQ-eox9VR0-RKXVAAQv_q1e2gmurlmJT5_LqOSZ3T3lhpzvXaY6LyT_cBnnBT7kMMCTy0m00" alt="Sequence diagram">
+<img src="https://www.plantuml.com/plantuml/png/XP4nZW8n34NxdC8Nu08KAn1JKonQKJkE1w8DoIXsWBtzUWQG1Wb4YXJs-_xVyaeKgxPJSaXQAlm8LpTOAL8SC2lisQ-7mGLKz2WCdNTkX63nTUyjuPiFKTHgI5HQLdThZ4Zdbx0vClr2x84g1yuQCGdmrIJYCEda2PWgO_XxrC5Uvs4nSzbn3c1wFg36aYVaOMJOECMWOxd8dE9aeRTyWJPkzcBiPXRgZ2c6IGVIY5YaR-d9wBRH3iyC-JvqljRRt5Ho7-lfO_8dpeHkPP-Tvny0" alt="Sequence diagram">
 </div>
 </div>
 <div style="page-break-after: always;"></div>
@@ -1731,6 +1644,9 @@ on this list.</p>
 <div class="ulist">
 <ul>
 <li>
+<p><strong>Dual Coordinate System</strong>: To reduce the gap between technical efficiency and user usability:</p>
+</li>
+<li>
 <p><strong>Internal Logic</strong>: Uses 3D barycentric coordinates (x, y, z) to calculate adjacency and winning paths.</p>
 </li>
 <li>
@@ -1824,7 +1740,7 @@ concrete and measurable.</p>
 <h3 id="_quality_tree">10.1. Quality Tree</h3>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/RT5FQy9040NmUpx57EDUAZtteAZGG6nJfT0Un-ou3YIpCZjRQpzzIVn33xs-1xzvoywIeLhFudiy5WxUCdPivy8vM4VFUyOT3m6KpnmEay8v1qsNGy1THp2lO6kAHe4fZTqYofv3rh7Uv6wCeH8ZZKVIVxIjeNXKpp_auNFr0lEc6eiQ9MGC19LuEf9u4XkmztHJ7c3v0UMQFEV-XcbkBIjvMAb6XJMbXE4wRjvKi8njxaaCZQCCtEikaNxTX_tL5b6ClYrZ1tKCWILSOiLqW0qbxfYafK5fIFTHUvIMeApZwVus8zXG6oMDoout7TJn13KQINk6yWaUfzC-JOePYRz-nIy0" alt="quality-tree">
+<img src="https://www.plantuml.com/plantuml/png/RP51JyCm38Nl_HK-ThqmxSnX4vj4fGt69YGukesRHMgIoN4OyEjnMpPnu18fp_Bdz-nb4cJnBXYFvwA2buozaw-Ygc0NZUiSDcuGe7nqzZHJlO9zdwt5fYTOrN0KHY7hA8srXnWwPpEFvKFkHndg8CJnJFmFxIWO3B9ntsJWVVC4gtqz5hOOR4PBscteJFe46M2lwKgvW_KRb3ioBlihZ7ChcHMrOOuCEqf96PCv9SCwjjah2SN5CE2UcqJySJFsbwPXX3v5LmBRQAqBTf8PqmaEbBI5Gai3PK_SHVQeNoYtyNBB9he6QcD8exDffcQB5yqdsgqZxs4nd_iqAvOQylSKFm00" alt="quality-tree">
 </div>
 </div>
 <div class="sidebarblock arc42help">
@@ -2096,7 +2012,7 @@ If the container restarts or fails, all active saves are lost. This is being acc
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2026-02-04 15:30:25 +0100
+Last updated 2026-02-06 18:37:21 +0100
 </div>
 </div>
 </body>
