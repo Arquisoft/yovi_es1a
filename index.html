@@ -451,7 +451,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_stakeholders">1.3. Stakeholders</a></li>
 </ul>
 </li>
-<li><a href="#section-architecture-constraints">2. Architecture Constraints</a></li>
+<li><a href="#section-architecture-constraints">2. Architecture Constraints</a>
+<ul class="sectlevel2">
+<li><a href="#_technical_constraints">2.1. Technical Constraints</a></li>
+<li><a href="#_organizational_constraints">2.2. Organizational Constraints</a></li>
+<li><a href="#_political_and_convention_constraints">2.3. Political and Convention Constraints</a></li>
+</ul>
+</li>
 <li><a href="#section-context-and-scope">3. Context and Scope</a>
 <ul class="sectlevel2">
 <li><a href="#_business_context">3.1. Business Context</a></li>
@@ -461,9 +467,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#section-solution-strategy">4. Solution Strategy</a></li>
 <li><a href="#section-building-block-view">5. Building Block View</a>
 <ul class="sectlevel2">
-<li><a href="#_whitebox_overall_system">5.1. Whitebox Overall System</a></li>
+<li><a href="#_whitebox_overall_system_level_1">5.1. Whitebox Overall System (Level 1)</a></li>
 <li><a href="#_level_2">5.2. Level 2</a></li>
-<li><a href="#_level_3">5.3. Level 3</a></li>
 </ul>
 </li>
 <li><a href="#section-runtime-view">6. Runtime View</a>
@@ -795,25 +800,108 @@ These stakeholders determine the extent and the level of detail of your work and
 <div class="title">Contents</div>
 <p>Any requirement that constraints software architects in their freedom of design and implementation decisions or decision about the development process. These constraints sometimes go beyond individual systems and are valid for whole organizations and companies.</p>
 </div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>Architects should know exactly where they are free in their design decisions and where they must adhere to constraints.
-Constraints must always be dealt with; they may be negotiable, though.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>Simple tables of constraints with explanations.
-If needed you can subdivide them into
-technical constraints, organizational and political constraints and
-conventions (e.g. programming or versioning guidelines, documentation or naming conventions)</p>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-2/">Architecture Constraints</a> in the arc42 documentation.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_technical_constraints">2.1. Technical Constraints</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Constraint</th>
+<th class="tableblock halign-left valign-top">Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>React &amp; TypeScript</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The frontend must be developed using React and TypeScript.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Node.js &amp; Express</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The user management service will be implemented using Node.js and Express.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Rust Game Engine</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The core logic for the "Game of Y" must be implemented in Rust to ensure performance.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system must be containerized using Docker and orchestrated with Docker Compose.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GitHub Actions</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD pipelines must be managed using GitHub Actions for automated testing and deployment.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>YEN Notation</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Game moves and state must follow the standard YEN (Y-Game Extended Notation).</p></td>
+</tr>
+</tbody>
+</table>
 </div>
+<div class="sect2">
+<h3 id="_organizational_constraints">2.2. Organizational Constraints</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Constraint</th>
+<th class="tableblock halign-left valign-top">Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Team Size</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The team consists of 5 members: José Iván, Adrián, Fernando, Hugo, and Sergio.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Timeframe</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The project must be tested, code completed and discussed before the final submission.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Meetings</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Weekly meetings will be held during laboratory sessions to track progress, besides possible meetings to discuss some issues or problems throught the week.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Version Control</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GitHub is the chosen platform for repository hosting and version control.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_political_and_convention_constraints">2.3. Political and Convention Constraints</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Constraint</th>
+<th class="tableblock halign-left valign-top">Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Arc42</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The documentation must follow the Arc42 template structure.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Language</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The documentation and code comments must be written in English, as it&#8217;s the standard.</p></td>
+</tr>
+</tbody>
+</table>
 <div style="page-break-after: always;"></div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -990,114 +1078,28 @@ Refer to details in the following sections.</p>
 <div class="content">
 <div class="paragraph">
 <div class="title">Content</div>
-<p>The building block view shows the static decomposition of the system into building blocks (modules, components, subsystems, classes, interfaces, packages, libraries, frameworks, layers, partitions, tiers, functions, macros, operations, data structures, &#8230;&#8203;) as well as their dependencies (relationships, associations, &#8230;&#8203;)</p>
-</div>
-<div class="paragraph">
-<p>This view is mandatory for every architecture documentation.
-In analogy to a house this is the <em>floor plan</em>.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>Maintain an overview of your source code by making its structure understandable through
-abstraction.</p>
-</div>
-<div class="paragraph">
-<p>This allows you to communicate with your stakeholder on an abstract level without disclosing implementation details.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>The building block view is a hierarchical collection of black boxes and white boxes
-(see figure below) and their descriptions.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="./images/05_building_blocks-EN.png" alt="Hierarchy of building blocks">
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Level 1</strong> is the white box description of the overall system together with black
-box descriptions of all contained building blocks.</p>
-</div>
-<div class="paragraph">
-<p><strong>Level 2</strong> zooms into some building blocks of level 1.
-Thus it contains the white box description of selected building blocks of level 1, together with black box descriptions of their internal building blocks.</p>
-</div>
-<div class="paragraph">
-<p><strong>Level 3</strong> zooms into selected building blocks of level 2, and so on.</p>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-5/">Building Block View</a> in the arc42 documentation.</p>
+<p>The building block view shows the static decomposition of the system into building blocks&#8230;&#8203;</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_whitebox_overall_system">5.1. Whitebox Overall System</h3>
-<div class="sidebarblock arc42help">
+<h3 id="_whitebox_overall_system_level_1">5.1. Whitebox Overall System (Level 1)</h3>
+<div class="paragraph">
+<p>The following diagram shows the main interaction between the user and the system.</p>
+</div>
+<div class="imageblock plantuml">
 <div class="content">
-<div class="paragraph">
-<p>Here you describe the decomposition of the overall system using the following white box template. It contains</p>
+<img src="https://www.plantuml.com/plantuml/png/7Sh12O0m343HUwO87Q03U11ta1uybXgqq3IIf8BRYrx_-ujvLX_S81SNnP2CD60s74OAHVYIJjqnR79NN1zpujyVkIl0Ts7KUfmUvx_XXCd8OA6-3sul" alt="level1_diagram">
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>an overview diagram</p>
-</li>
-<li>
-<p>a motivation for the decomposition</p>
-</li>
-<li>
-<p>black box descriptions of the contained building blocks. For these we offer you alternatives:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>use <em>one</em> table for a short and pragmatic overview of all contained building blocks and their interfaces</p>
-</li>
-<li>
-<p>use a list of black box descriptions of the building blocks according to the black box template (see below).
-Depending on your choice of tool this list could be sub-chapters (in text files), sub-pages (in a Wiki) or nested elements (in a modeling tool).</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>(optional:) important interfaces, that are not explained in the black box templates of a building block, but are very important for understanding the white box.
-Since there are so many ways to specify interfaces why do not provide a specific template for them.
- In the worst case you have to specify and describe syntax, semantics, protocols, error handling,
- restrictions, versions, qualities, necessary compatibilities and many things more.
-In the best case you will get away with examples or simple signatures.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p><em><strong>&lt;Overview Diagram&gt;</strong></em></p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Motivation</dt>
 <dd>
-<p><em>&lt;text explanation&gt;</em></p>
+<p>Yovi (refering to our group game) is a web application that allows users to play the "Game of Y". The system acts as a single unit for the end user, providing registration, game logic, and history tracking.</p>
 </dd>
 <dt class="hdlist1">Contained Building Blocks</dt>
-<dd>
-<p><em>&lt;Description of contained building block (black boxes)&gt;</em></p>
-</dd>
-<dt class="hdlist1">Important Interfaces</dt>
-<dd>
-<p><em>&lt;Description of important interfaces&gt;</em></p>
-</dd>
 </dl>
-</div>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>Insert your explanations of black boxes from level 1:</p>
-</div>
-<div class="paragraph">
-<p>If you use tabular form you will only describe your black boxes with name and
-responsibility according to the following schema:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1112,177 +1114,88 @@ responsibility according to the following schema:</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;black box 1&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Text&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>User</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">End-user interacting with the application via a web browser.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;black box 2&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Text&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Yovi System</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The complete software solution handling the game logic and user data.</p></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>If you use a list of black box descriptions then you fill in a separate black box template for every important building block .
-Its headline is the name of the black box.</p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_black_box_1">5.1.1. &lt;Name black box 1&gt;</h4>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>Here you describe &lt;black box 1&gt;
-according the the following black box template:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Purpose/Responsibility</p>
-</li>
-<li>
-<p>Interface(s), when they are not extracted as separate paragraphs. This interfaces may include qualities and performance characteristics.</p>
-</li>
-<li>
-<p>(Optional) Quality-/Performance characteristics of the black box, e.g.availability, run time behavior, &#8230;&#8203;.</p>
-</li>
-<li>
-<p>(Optional) directory/file location</p>
-</li>
-<li>
-<p>(Optional) Fulfilled requirements (if you need traceability to requirements).</p>
-</li>
-<li>
-<p>(Optional) Open issues/problems/risks</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p><em>&lt;Purpose/Responsibility&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;Interface(s)&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;(Optional) Quality/Performance Characteristics&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;(Optional) Directory/File Location&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;(Optional) Fulfilled Requirements&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;(optional) Open Issues/Problems/Risks&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_black_box_2">5.1.2. &lt;Name black box 2&gt;</h4>
-<div class="paragraph">
-<p><em>&lt;black box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_black_box_n">5.1.3. &lt;Name black box n&gt;</h4>
-<div class="paragraph">
-<p><em>&lt;black box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_interface_1">5.1.4. &lt;Name interface 1&gt;</h4>
-<div class="paragraph">
-<p>&#8230;&#8203;</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_interface_m">5.1.5. &lt;Name interface m&gt;</h4>
-
-</div>
 </div>
 <div class="sect2">
 <h3 id="_level_2">5.2. Level 2</h3>
-<div class="sidebarblock arc42help">
+<div class="paragraph">
+<p>This level shows the decomposition of the system into the three main services defined in the project structure.</p>
+</div>
+<div class="imageblock plantuml">
 <div class="content">
-<div class="paragraph">
-<p>Here you can specify the inner structure of (some) building blocks from level 1 as white boxes.</p>
+<img src="https://www.plantuml.com/plantuml/png/ROwxQWCn44LxVSL5lUtUXN5CNaqWn0ucvKYwB8kjaP2q3Y7atyFkaWSXvTmvzyniQvFIXdWsMVn9EiBUbgID6YpU3G3u57DIQeCzqbtbR24LhtIIi_amFyMT-1CrOCzowJthFuBdobA_WCapZCbVx4uYNt2ZNQyprKdastWiI1CdbR0FIRjqlPlMmHapFuJ5OZCxiSRzuV28bI-KnZ7xpKp6RsQSp5nRBZS83ciyKK9T7KlVMCsM6ePu_WG0" alt="level2_diagram">
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Motivation</dt>
+<dd>
+<p>The system follows a modular architecture to separate the user interface from the logic services.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>WebApp</strong>: Handles UI and client-side logic.</p>
+</li>
+<li>
+<p><strong>Users Service</strong>: Manages user registration and data.</p>
+</li>
+<li>
+<p><strong>GameY Engine</strong>: Handles the specific rules and logic of the board game.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
 </div>
 <div class="paragraph">
-<p>You have to decide which building blocks of your system are important enough to justify such a detailed description.
-Please prefer relevance over completeness. Specify important, surprising, risky, complex or volatile building blocks.
-Leave out normal, simple, boring or standardized parts of your system</p>
+<p>Contained Building Blocks</p>
 </div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_1">5.2.1. White Box <em>&lt;building block 1&gt;</em></h4>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>&#8230;&#8203;describes the internal structure of <em>building block 1</em>.</p>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_2">5.2.2. White Box <em>&lt;building block 2&gt;</em></h4>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-<div class="paragraph">
-<p>&#8230;&#8203;</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_m">5.2.3. White Box <em>&lt;building block m&gt;</em></h4>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_level_3">5.3. Level 3</h3>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>Here you can specify the inner structure of (some) building blocks from level 2 as white boxes.</p>
-</div>
-<div class="paragraph">
-<p>When you need more detailed levels of your architecture please copy this
-part of arc42 for additional levels.</p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_x_1">5.3.1. White Box &lt;_building block x.1_&gt;</h4>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>Specifies the internal structure of <em>building block x.1</em>.</p>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_x_2">5.3.2. White Box &lt;_building block x.2_&gt;</h4>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_y_1">5.3.3. White Box &lt;_building block y.1_&gt;</h4>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Building Block</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>WebApp</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Provides the graphical interface for the user. It communicates with the backend services to perform actions.<br>
+<strong>Technology:</strong> React, Vite, TypeScript.<br>
+<strong>Location:</strong> <code>/webapp</code> directory.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Users Service</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Manages user registration and stores user information. It exposes a REST API.<br>
+<strong>Technology:</strong> Node.js, Express.<br>
+<strong>Location:</strong> <code>/users</code> directory.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GameY Engine</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Implements the core logic of the Game of Y, including move validation and bot strategies using Rust for performance.<br>
+<strong>Technology:</strong> Rust.<br>
+<strong>Location:</strong> <code>/gamey</code> directory.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MongoDB</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Database used to persist user data and game history.<br>
+<strong>Technology:</strong> MongoDB.</p></td>
+</tr>
+</tbody>
+</table>
 <div style="page-break-after: always;"></div>
-</div>
 </div>
 </div>
 </div>
@@ -1476,24 +1389,83 @@ when your infrastructure is more complex.</p>
 </div>
 </div>
 <div class="paragraph">
-<p><em><strong>&lt;Overview Diagram&gt;</strong></em></p>
+<p><em><strong>Overview Diagram</strong></em></p>
+</div>
+<div class="imageblock plantuml">
+<div class="content">
+<img src="https://www.plantuml.com/plantuml/png/VP51RnCn48Nl_XMZd993n3q7rDAW0eAs4A2gMWuJxyl6YZtUshCD4Uf_H_Qc8HLIRgDvtpo_6PzbvQHzy4QTUj0SdO-x057wwR2bATt59qVZpz6oNyUi4sFonad7YGFbDJTnwwIb5VkC8yN6q4M1w49t7fHWbQNrC8QjnaG_Cf8n4XlGwC8xY8w8CzbQqXz3TFyTAJXXJ-C24xSGdVmgbEuLy_nYCOzsWqGVOjRZhDMpLDLnbJY0HY6AqvYc0gNnVl0AkerfCmmKeV14zxTOddTTVNIB9NVTq2w1CYsGdfn5LVlI6SHB3hXx9ROSi1l4cnG3T8q-LwLBCUod4gzOUE0JhsgtOUKbPz3eIvGspj_LVA7KXkYvx5zlCvs-FHo5PlJ-DsoloEKN0akJ7sGSM7hsvAJhonyUw38wh4OpMa2QJ0cFFRAMgK-Bwwk9sUi5hNiUoFERZoVfklXfsWoEXQvxqOo-WPitjyafwW7Cu7AACELYbIW7fHbzxP4Syg3Mtd7uY-Wzh6OAqEHi_aUy1FwFE8CqVV1_0G00" alt="deployment-level1">
+</div>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Motivation</dt>
 <dd>
-<p><em>&lt;explanation in text form&gt;</em></p>
+<p>Yovi is executed locally on a single host machine using Docker and Docker Compose. The system is deployed as a set of containers connected through a private Docker network ("monitor-net"). This deployment shows where each container runs and the main communication paths between them, including the monitoring stack (Prometheus and Grafana).</p>
 </dd>
 <dt class="hdlist1">Quality and/or Performance Features</dt>
 <dd>
-<p><em>&lt;explanation in text form&gt;</em></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Modularity: each service is deployed as an independent container, allowing isolated development and replacement.</p>
+</li>
+<li>
+<p>Portability: the deployment can be reproduced consistently on different machines that support Docker.</p>
+</li>
+<li>
+<p>Observability: Prometheus and Grafana enable basic monitoring of the backend services.</p>
+</li>
+<li>
+<p>Maintainability: the separation of responsibilities across containers simplifies troubleshooting and updates.</p>
+</li>
+</ul>
+</div>
 </dd>
 <dt class="hdlist1">Mapping of Building Blocks to Infrastructure</dt>
-<dd>
-<p><em>&lt;description of the mapping&gt;</em></p>
-</dd>
 </dl>
 </div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Building Block</th>
+<th class="tableblock halign-left valign-top">Infrastructure Element</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Terminal (User agent)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Runs on the client side and is used to execute commands that interact with the system.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WebApp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host, connected to the internal Docker network.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Users Service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host, connected to the internal Docker network.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GameY Service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host, connected to the internal Docker network.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MongoDB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host, connected to the internal Docker network.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prometheus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host, connected to the internal Docker network. Collects metrics from the services.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Grafana</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host, connected to the internal Docker network. Visualizes metrics queried from Prometheus.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_infrastructure_level_2">7.2. Infrastructure Level 2</h3>
@@ -1508,24 +1480,36 @@ when your infrastructure is more complex.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_infrastructure_element_1">7.2.1. <em>&lt;Infrastructure Element 1&gt;</em></h4>
+<h4 id="_docker_host_localhost">7.2.1. <em>Docker Host (Localhost)</em></h4>
+<div class="imageblock plantuml">
+<div class="content">
+<img src="https://www.plantuml.com/plantuml/png/VOzFImD13CNlyob2J-sX21vxa2e5_w1LB2AY7jBTR3jqPx8cMOk8trrcHgK5zHRoU-_bPQg6OdredNbh2SvZ8wWcVMMz45pIAxLm26EOSRKXWJDMW-4bLzYkMMtad6vyx50mWAwnvgsFAsYmLTeX5OUE8qLRs5jB85GPnbLBpaMk2GP_X0y05T84xmwW4Gm4Wy3H6yiuai7mopWdsx9iYY61f0TulAVbSTSzf-sMbjXrPNsd90eBabTVKQPzsXHuYe4Uzk0A0xrbMAFX4fLWSCLnnREJV32akPXlX0FPcdhDpauuVAKADXYnv0as3k33VJXNQi5uV5Gwm0HkwQKdDJsu9UquAkbJ75uihkUZNNKkzR_QbSIapXLX0ZSawjNohVoDApc_QHB96XZw9ZdgaNFfexssLsJYAorXF_IxtHvDVsUQPHEOeQwNZ5B3Iq_YITsKOjs7zXC0" alt="deployment-level2-host">
+</div>
+</div>
 <div class="paragraph">
-<p><em>&lt;diagram + explanation&gt;</em></p>
+<p>This diagram zooms into the Docker Host and the internal Docker network. All components are deployed as containers within the same private network, allowing direct communication between services. WebApp interacts with backend services (Users Service and GameY Service) using JSON messages. MongoDB stores persistent data. Prometheus and Grafana run alongside the services to provide basic monitoring and visualization.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_infrastructure_element_2">7.2.2. <em>&lt;Infrastructure Element 2&gt;</em></h4>
-<div class="paragraph">
-<p><em>&lt;diagram + explanation&gt;</em></p>
+<h4 id="_client_terminal">7.2.2. <em>Client (Terminal)</em></h4>
+<div class="imageblock plantuml">
+<div class="content">
+<img src="https://www.plantuml.com/plantuml/png/JOynJyD038Nt-nLFdP8X2sC7L0H8W2eO2c801lVYjb4lld3sKH3YlwDBQCLc-RttFNkXHibo7vnr5XYtiacabhAtd1XB_k20CpIu31sBeNhar7T2eNPEzvqCbAY7xgYDXqwss51G_gVus0zHM6nbNu6Hs1l9Dh1pv2qcp9wKqmoaoCh9EOajOpQLZMi_zNuxuENOZQgaG5iMgz-Ao_uKztD4N4M_vuIRg8Pg6Js5NLIhHsQP9k8pho-6OKGSU4t3K03b4ZJD-OcAEQu_sMTZBG_r9AswarYSKnXph5XQHUBtp6hwAjNTwk6-TWkMDlVX5m00" alt="deployment-level2-client">
+</div>
 </div>
 <div class="paragraph">
-<p>&#8230;&#8203;</p>
+<p>This diagram isolates the client-side element used during development/testing. The user executes commands via a terminal. Those commands generate requests toward the WebApp, which acts as the entry point to the deployed system.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_infrastructure_element_n">7.2.3. <em>&lt;Infrastructure Element n&gt;</em></h4>
+<h4 id="_monitoring_stack_prometheus_grafana">7.2.3. <em>Monitoring Stack (Prometheus + Grafana)</em></h4>
+<div class="imageblock plantuml">
+<div class="content">
+<img src="https://www.plantuml.com/plantuml/png/ROv1ImD138NlyoiUFTN3NZps80K55QeenOE8Xp3DjiFEJ4ecqrAa_rrcjw22jv3lUtbP5YErcgApO97nc7kbObgzLMMi-C0Hr-Zm93cOQCXRh8tyu5mPGjwJKaBPqKQE3VKK2_yYNj9UCcTRsoaobBrHtaPsBik6CRiJFx3YGOfXlX9FSIV5hcQWWZRXom6zKcBCqlH1bzamlmIVsOwYmnHeeFd0nrjXBLYp7eBdpmPhsqpmdXA__u5RIdoQu8jAOjjnBIFPgwHBIgcdJ9Elr3lWxCxEDGDTTpCrO85RYP6z5IGs3Rxy66FDVqQxDngZki1hPGtymvUSDpN5Rm00" alt="deployment-level2-monitoring">
+</div>
+</div>
 <div class="paragraph">
-<p><em>&lt;diagram + explanation&gt;</em></p>
+<p>This diagram focuses on observability. Prometheus collects technical metrics exposed by the backend services and stores them internally. Grafana queries Prometheus to display dashboards. This setup supports troubleshooting and performance monitoring during development.</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -2081,12 +2065,196 @@ If the container restarts or fails, all active saves are lost. This is being acc
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Term-1&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;definition-1&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Yovi</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Web-based system that provides access to the “Game of Y” and related services (registration, gameplay, and history tracking).</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Term-2&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;definition-2&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Game of Y</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Strategic connection board game supported by the system, played on a triangular board.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Micrati</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Game development company that requested the development of the system.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>User</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Person interacting with the system to register, play games, and consult game information.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Web-based system</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Application accessible through a web browser.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>WebApp</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Client-facing application that provides the graphical user interface and communicates with backend services.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Users Service</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Backend service responsible for user registration and user-related data management, exposing a REST API.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>GameY Engine</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Core service implementing the rules and validation of the Game of Y, including bot strategies.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Frontend</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Client-side part of the system responsible for the user interface and interaction.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Backend</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Server-side part of the system responsible for game logic, user management, validation, and data access.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>React</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Frontend library used to build the user interface.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>TypeScript</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Typed superset of JavaScript used to implement the frontend.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Node.js</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>JavaScript runtime used to implement server-side services.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Express</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Node.js framework used to build the user management REST service.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Rust</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Programming language used to implement the core game engine to achieve high performance and reliability.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>MongoDB</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Database used to persist user data and game history.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>REST API</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>HTTP-based interface exposing service endpoints to perform operations (e.g., user management and gameplay actions).</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>HTTP</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Protocol used for communication between the client and the services, and between internal components.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>JSON</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Data interchange format used in HTTP requests and responses between system components.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Docker</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Containerization platform used to package and run the system components in isolated environments.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Docker Compose</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Tool used to define and run multi-container applications.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>GitHub</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Platform used for source code hosting and version control.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>GitHub Actions</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>CI/CD solution used to automate workflows such as building, testing, and integration tasks.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>CI/CD</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Practices for continuous integration and continuous delivery/deployment, supporting automated build and testing pipelines.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>YEN (Y-Game Extended Notation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Standard notation used to represent game moves and game state for storage and exchange.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Serialization / Deserialization</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Process of converting game state between in-memory structures and a transport/storage representation (e.g., JSON).</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>serde</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Rust serialization framework used to map YEN JSON format to internal Rust data structures.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Union-Find</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Data structure used to detect connected components and determine winning paths efficiently.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Bot</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Automated player that interacts with the system via an API and performs moves according to a strategy.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>LLM (Large Language Model)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Type of AI model that can be integrated as a bot strategy to generate moves or decisions.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Strategy Pattern</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Design pattern enabling multiple interchangeable bot strategies through a common interface.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>State Machine (FSM)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Model used to represent the game flow using explicit states and controlled transitions.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Result Pattern</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Approach where operations return typed success/error results, requiring explicit error handling.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>GameStatus</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Enumeration representing the current state of a game (e.g., ongoing or finished).</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>GameYError</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Enumeration representing typed error conditions produced by the game engine.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Input validation and sanitization</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Security measure ensuring coordinates and notation strings are checked before processing to prevent invalid states.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Server authoritativeness</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Principle where the backend enforces all rules and move legality to prevent client-side manipulation.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Structured logging</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Logging approach that captures consistent, queryable event information for debugging and observability.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>tracing</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Rust instrumentation/logging library used to record events such as moves, errors, and state changes.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Prometheus</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Monitoring component that collects health and technical metrics from services via HTTP endpoints.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Grafana</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Visualization tool used to display dashboards based on metrics retrieved from Prometheus.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Observability</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Ability to understand system behavior via logs and metrics (e.g., identifying errors, performance issues).</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>CLI (Terminal)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Command-line interface used as a manual control interface for executing commands and simulating user behavior.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>3D barycentric coordinates (x, y, z)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Internal coordinate representation used to compute adjacency and winning paths on the triangular board.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Linear index</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Simplified coordinate representation used for user interaction (e.g., indexing cells from 0 to N).</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Deployment view</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Architecture view describing how software building blocks are mapped to infrastructure elements.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Building Block View</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Architecture view describing the decomposition of the system into building blocks and their responsibilities.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Sequence diagram</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>UML diagram representing the runtime interaction between components in a scenario.</em></p></td>
 </tr>
 </tbody>
 </table>
