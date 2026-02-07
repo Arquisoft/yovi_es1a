@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.20">
+<meta name="generator" content="Asciidoctor 2.0.26">
 <title>yovi_es1a</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -116,7 +116,6 @@ h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title str
 :not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
 pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
 pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
-pre>code{display:block}
 pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
 em em{font-style:normal}
 strong strong{font-weight:400}
@@ -140,7 +139,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #content::before{content:none}
 #header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
 #header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
-#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header>h1:only-child{border-bottom:1px solid #dddddf;padding-bottom:8px}
 #header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
 #header .details span:first-child{margin-left:-.125em}
 #header .details span.email a{color:rgba(0,0,0,.85)}
@@ -162,6 +161,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #toctitle{color:#7a2518;font-size:1.2em}
 @media screen and (min-width:768px){#toctitle{font-size:1.375em}
 body.toc2{padding-left:15em;padding-right:0}
+body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
 #toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
 #toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
 #toc.toc2>ul{font-size:.9em;margin-bottom:0}
@@ -218,6 +218,7 @@ table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
 .literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class=highlight],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
 .listingblock>.content{position:relative}
+.listingblock pre>code{display:block}
 .listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
 .listingblock:hover code[data-lang]::before{display:block}
 .listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
@@ -327,7 +328,7 @@ a.image{text-decoration:none;display:inline-block}
 a.image object{pointer-events:none}
 sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
 sup.footnote a,sup.footnoteref a{text-decoration:none}
-sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+sup.footnote a:active,sup.footnoteref a:active,#footnotes .footnote a:first-of-type:active{text-decoration:underline}
 #footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
 #footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
 #footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
@@ -451,13 +452,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_stakeholders">1.3. Stakeholders</a></li>
 </ul>
 </li>
-<li><a href="#section-architecture-constraints">2. Architecture Constraints</a>
-<ul class="sectlevel2">
-<li><a href="#_technical_constraints">2.1. Technical Constraints</a></li>
-<li><a href="#_organizational_constraints">2.2. Organizational Constraints</a></li>
-<li><a href="#_political_and_convention_constraints">2.3. Political and Convention Constraints</a></li>
-</ul>
-</li>
+<li><a href="#section-architecture-constraints">2. Architecture Constraints</a></li>
 <li><a href="#section-context-and-scope">3. Context and Scope</a>
 <ul class="sectlevel2">
 <li><a href="#_business_context">3.1. Business Context</a></li>
@@ -467,15 +462,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#section-solution-strategy">4. Solution Strategy</a></li>
 <li><a href="#section-building-block-view">5. Building Block View</a>
 <ul class="sectlevel2">
-<li><a href="#_whitebox_overall_system_level_1">5.1. Whitebox Overall System (Level 1)</a></li>
+<li><a href="#_whitebox_overall_system">5.1. Whitebox Overall System</a></li>
 <li><a href="#_level_2">5.2. Level 2</a></li>
+<li><a href="#_level_3">5.3. Level 3</a></li>
 </ul>
 </li>
 <li><a href="#section-runtime-view">6. Runtime View</a>
 <ul class="sectlevel2">
-<li><a href="#_game_lifecycle_against_the_computer">6.1. Game lifecycle against the computer</a></li>
-<li><a href="#_bot_against_application">6.2. Bot against Application</a></li>
-<li><a href="#_user_registration">6.3. User registration</a></li>
+<li><a href="#_runtime_scenario_1">6.1. &lt;Runtime Scenario 1&gt;</a></li>
+<li><a href="#_runtime_scenario_2">6.2. &lt;Runtime Scenario 2&gt;</a></li>
+<li><a href="#">6.3. &#8230;&#8203;</a></li>
+<li><a href="#_runtime_scenario_n">6.4. &lt;Runtime Scenario n&gt;</a></li>
 </ul>
 </li>
 <li><a href="#section-deployment-view">7. Deployment View</a>
@@ -486,12 +483,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#section-concepts">8. Cross-cutting Concepts</a>
 <ul class="sectlevel2">
-<li><a href="#_domain_concepts">8.1. Domain concepts</a></li>
-<li><a href="#_security">8.2. Security</a></li>
-<li><a href="#_data_persistence_and_exchange">8.3. Data persistence and exchange</a></li>
-<li><a href="#_architecture_and_design_patterns">8.4. Architecture and Design Patterns</a></li>
-<li><a href="#_error_handling_and_logging">8.5. Error Handling and Logging</a></li>
-<li><a href="#_user_interface_and_ux_concepts">8.6. User Interface and UX Concepts</a></li>
+<li><a href="#_concept_1">8.1. <em>&lt;Concept 1&gt;</em></a></li>
+<li><a href="#_concept_2">8.2. <em>&lt;Concept 2&gt;</em></a></li>
+<li><a href="#_concept_n">8.3. <em>&lt;Concept n&gt;</em></a></li>
 </ul>
 </li>
 <li><a href="#section-design-decisions">9. Architecture Decisions</a></li>
@@ -585,9 +579,6 @@ These include</p>
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p>The game development company Micrati has decided to begin developing a web-based system where users can play different variations of Game Y, an existing strategic board game. The initial idea is to offer an entertaining and intuitive experience to users. It will also provide several different strategies with different difficulty levels to attract user interest.</p>
-</div>
 <div class="sect2">
 <h3 id="_requirements_overview">1.1. Requirements Overview</h3>
 <div class="sidebarblock arc42help">
@@ -616,31 +607,6 @@ If requirements documents exist this overview should refer to these documents.</
 <p>See <a href="https://docs.arc42.org/section-1/">Introduction and Goals</a> in the arc42 documentation.</p>
 </div>
 </div>
-</div>
-<div class="paragraph">
-<p>The main requirements of the system are:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Provide a usable and functional version of the game with a variable board.</p>
-</li>
-<li>
-<p>Available on the web.</p>
-</li>
-<li>
-<p>Offer different strategies for playing the game with different difficulty levels selectable by the player.</p>
-</li>
-<li>
-<p>Allow users to register on the system.</p>
-</li>
-<li>
-<p>Allow users to view their game history (statistical data such as the number of games played, win/loss statistics, etc.).</p>
-</li>
-<li>
-<p>Offer the option to play against a computer or a bot with an API.</p>
-</li>
-</ul>
 </div>
 </div>
 <div class="sect2">
@@ -673,44 +639,6 @@ If you as an architect do not know how the quality of your work will be judged&#
 </div>
 </div>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Quality goal</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Usability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system should be easy for users to use and learn how to use correctly. This will encourage them to use the application again and enjoy the experience.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Functionality</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system must consider and implement the requirements correctly, allowing users to play the game Y with different strategies, register in the application, consult their statistics&#8230;&#8203;</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Accessibility</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application must be available from the Web.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Performance</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The app should respond to user requests within a reasonable timeframe. This prevents users from abandoning the app and ensures a positive experience that encourages them to return.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Maintainability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system should be easy to maintain and extend. This is achieved by following good programming practices, maintaining excellent communication within the development team&#8230;&#8203;</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Security</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The private data of registered users must be kept safe.</p></td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="sect2">
 <h3 id="_stakeholders">1.3. Stakeholders</h3>
@@ -766,24 +694,14 @@ These stakeholders determine the extent and the level of detail of your work and
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Development team</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">José Iván Díaz Potenciano <a href="mailto:uo302531@uniovi.es">uo302531@uniovi.es</a> - Adrián Gutiérrez García <a href="mailto:uo300627@uniovi.es">uo300627@uniovi.es</a> - Fernando Remis Figueroa <a href="mailto:uo302109@uniovi.es">uo302109@uniovi.es</a> - Hugo Carbajales Quintana <a href="mailto:uo300051@uniovi.es">uo300051@uniovi.es</a> - Sergio Argüelles Huerta <a href="mailto:uo299741@uniovi.es">uo299741@uniovi.es</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Responsible for developing the assigned application using good techniques, working properly as a team, and achieving a solution that is as maintainable and usable as possible.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Role-1&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Contact-1&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Expectation-1&gt;</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Users</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Application users</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Having a good experience using the application, where they can play the game using different strategies and check their statistics.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Micrati</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Micrati company</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Expects to obtain an application that aligns with its ideas and objectives.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Professor of the ASW subject</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jose Emilio Labra Gayo - <a href="mailto:labra@uniovi.es">labra@uniovi.es</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Assume the role of Product Owner, defining high-level requirements, providing feedback to the development team, and evaluating the developed product.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Role-2&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Contact-2&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Expectation-2&gt;</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -800,108 +718,25 @@ These stakeholders determine the extent and the level of detail of your work and
 <div class="title">Contents</div>
 <p>Any requirement that constraints software architects in their freedom of design and implementation decisions or decision about the development process. These constraints sometimes go beyond individual systems and are valid for whole organizations and companies.</p>
 </div>
+<div class="paragraph">
+<div class="title">Motivation</div>
+<p>Architects should know exactly where they are free in their design decisions and where they must adhere to constraints.
+Constraints must always be dealt with; they may be negotiable, though.</p>
+</div>
+<div class="paragraph">
+<div class="title">Form</div>
+<p>Simple tables of constraints with explanations.
+If needed you can subdivide them into
+technical constraints, organizational and political constraints and
+conventions (e.g. programming or versioning guidelines, documentation or naming conventions)</p>
+</div>
+<div class="paragraph">
+<div class="title">Further Information</div>
+<p>See <a href="https://docs.arc42.org/section-2/">Architecture Constraints</a> in the arc42 documentation.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_technical_constraints">2.1. Technical Constraints</h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Constraint</th>
-<th class="tableblock halign-left valign-top">Explanation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>React &amp; TypeScript</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The frontend must be developed using React and TypeScript.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Node.js &amp; Express</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The user management service will be implemented using Node.js and Express.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Rust Game Engine</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The core logic for the "Game of Y" must be implemented in Rust to ensure performance.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system must be containerized using Docker and orchestrated with Docker Compose.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GitHub Actions</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD pipelines must be managed using GitHub Actions for automated testing and deployment.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>YEN Notation</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Game moves and state must follow the standard YEN (Y-Game Extended Notation).</p></td>
-</tr>
-</tbody>
-</table>
 </div>
-<div class="sect2">
-<h3 id="_organizational_constraints">2.2. Organizational Constraints</h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Constraint</th>
-<th class="tableblock halign-left valign-top">Explanation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Team Size</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The team consists of 5 members: José Iván, Adrián, Fernando, Hugo, and Sergio.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Timeframe</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The project must be tested, code completed and discussed before the final submission.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Meetings</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Weekly meetings will be held during laboratory sessions to track progress, besides possible meetings to discuss some issues or problems throught the week.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Version Control</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">GitHub is the chosen platform for repository hosting and version control.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_political_and_convention_constraints">2.3. Political and Convention Constraints</h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Constraint</th>
-<th class="tableblock halign-left valign-top">Explanation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Arc42</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The documentation must follow the Arc42 template structure.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Language</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The documentation and code comments must be written in English, as it&#8217;s the standard.</p></td>
-</tr>
-</tbody>
-</table>
 <div style="page-break-after: always;"></div>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -964,26 +799,11 @@ The title of the table is the name of your system, the three columns contain the
 </div>
 </div>
 </div>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/JOyn2y9G38Jt_8hGIOSYE8iK79m4GHm4bzZ6zc5V8dcfqd_lquAwX8Flxi9LoSbyY3saMv0x6KMiDTvLMFpWOy-OuVAFNgY-jQQ3D1ljrV3P1MU0dg-EhcYXxHoRO5nxK06WshEhE2Qs0YdXa0LyNs1nqaVuW36BVx1J2JaQfCN3c9pZMMPxqyZUyP0MMwCh2Sq_sJXv0TxjM9RhgGtU5rTb-JDKB4rUz080" alt="business-context-diagram">
-</div>
+<div class="paragraph">
+<p><strong>&lt;Diagram or Table&gt;</strong></p>
 </div>
 <div class="paragraph">
-<p>Diagram elements:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>User: Represents the player or client who actively interacts with the system to use its functionalities.</p>
-</li>
-<li>
-<p>Yovi: It is the core of the system (the scope of this project). It acts as a central intermediary managing the business logic.</p>
-</li>
-<li>
-<p>Monitoring System (Prometheus/Grafana): This is the external component responsible for observability. It does not participate in the game, but audits the technical status of the system.</p>
-</li>
-</ul>
+<p><strong>&lt;optionally: Explanation of external domain interfaces&gt;</strong></p>
 </div>
 </div>
 <div class="sect2">
@@ -1005,20 +825,14 @@ together with a mapping table showing the relationships between channels and inp
 </div>
 </div>
 </div>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/ZP9BJ-Cm483l_XMZdDf3HVTneGS4AWWMiMoN5d403bDdQAp6TjOUmoB4VsTicXMF7ZQN-F5zyqhs8sFWP5iLryPr6D22zhRpZXpF-R4baCklRswNgDUhu9Ehfxxr0HuQmwHQkcDW3y6i6eRQ1D9il5CADGjKNKOA5M24ckwLShucgAQjaIGLF2cGvrzMg1OKh77OmY1hW2iv7HPR5qKzzo4ElLuBSU8Zm-3CQsmRMGvpp1Aqas95XyfwPwIGaIC1DzOvyOCFws5VmOSgSku8SmhtHbF9dlB9DlGOBJs-GrVvH6rZPy5RuePIB60dswqX0zwXmzTWiYxCS-vSoGXXDDhR30CcSFINT6AACFNMegiZ3EILP83oqH8FbTgWsIfDY3Id31xCVi05_KaKETwuwvF5OhPpElzr3fDlu_7uzgrOMleFyVidKSeNxq1hYb6gFCJOB3s6klUkQ0cJtV7kbrkb2fojF1YnVYSAfaYC6xxaphoaATIxjdJ0JlYVnC7elZGuFbhqBQbzQK1-wXS0" alt="technical-context-diagram">
-</div>
+<div class="paragraph">
+<p><strong>&lt;Diagram or Table&gt;</strong></p>
 </div>
 <div class="paragraph">
-<p>The Yovi system uses a set of HTTP interfaces for communication between microservices and for exposing data to the client. The communication channels represented in the architecture diagram are detailed below:
-1. External access interfaces:
-    - User management and game logic API: The HTTP client interacts with the Users Service (port 3000) and the Gamey Service (port 4000) by sending and receiving data exclusively in JSON format. These interfaces manage authentication and game mechanics using the HTTP protocol, without including visual elements.
-    - Visualization interface: This connection delivers the Grafana graphical interface to the client via port 9091. It uses the HTTP (Web) standard to serve the necessary HTML and CSS code that allows the administrator to view the control panels.
-2. Internal interfaces:
-    - Collection and query channel within the private network: Prometheus makes periodic HTTP GET requests to the Users Service&#8217;s internal port 3000 to collect technical health metrics. Simultaneously, Grafana queries the Prometheus database on port 9090 to retrieve historical data and generate graphs.
-3. Control Interfaces:
-    - Command Input: The user uses the terminal as a manual control interface. By executing commands, they make requests to the system to simulate user behavior and verify the functionality of the services.</p>
+<p><strong>&lt;optionally: Explanation of technical interfaces&gt;</strong></p>
+</div>
+<div class="paragraph">
+<p><strong>&lt;Mapping Input/Output to Channels&gt;</strong></p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1078,28 +892,114 @@ Refer to details in the following sections.</p>
 <div class="content">
 <div class="paragraph">
 <div class="title">Content</div>
-<p>The building block view shows the static decomposition of the system into building blocks&#8230;&#8203;</p>
+<p>The building block view shows the static decomposition of the system into building blocks (modules, components, subsystems, classes, interfaces, packages, libraries, frameworks, layers, partitions, tiers, functions, macros, operations, data structures, &#8230;&#8203;) as well as their dependencies (relationships, associations, &#8230;&#8203;)</p>
+</div>
+<div class="paragraph">
+<p>This view is mandatory for every architecture documentation.
+In analogy to a house this is the <em>floor plan</em>.</p>
+</div>
+<div class="paragraph">
+<div class="title">Motivation</div>
+<p>Maintain an overview of your source code by making its structure understandable through
+abstraction.</p>
+</div>
+<div class="paragraph">
+<p>This allows you to communicate with your stakeholder on an abstract level without disclosing implementation details.</p>
+</div>
+<div class="paragraph">
+<div class="title">Form</div>
+<p>The building block view is a hierarchical collection of black boxes and white boxes
+(see figure below) and their descriptions.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/05_building_blocks-EN.png" alt="Hierarchy of building blocks">
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Level 1</strong> is the white box description of the overall system together with black
+box descriptions of all contained building blocks.</p>
+</div>
+<div class="paragraph">
+<p><strong>Level 2</strong> zooms into some building blocks of level 1.
+Thus it contains the white box description of selected building blocks of level 1, together with black box descriptions of their internal building blocks.</p>
+</div>
+<div class="paragraph">
+<p><strong>Level 3</strong> zooms into selected building blocks of level 2, and so on.</p>
+</div>
+<div class="paragraph">
+<div class="title">Further Information</div>
+<p>See <a href="https://docs.arc42.org/section-5/">Building Block View</a> in the arc42 documentation.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_whitebox_overall_system_level_1">5.1. Whitebox Overall System (Level 1)</h3>
-<div class="paragraph">
-<p>The following diagram shows the main interaction between the user and the system.</p>
-</div>
-<div class="imageblock plantuml">
+<h3 id="_whitebox_overall_system">5.1. Whitebox Overall System</h3>
+<div class="sidebarblock arc42help">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/SoWkIImgAStDuKfCBialKb0ABKujKb98B5Oe1JAualDp2_BpKlDA59GYyyio5O8hYqjISy7obK0-5nT8bO9UKMPwHecU7LXCmKe1Q4OnbqDgNWhGN000" alt="level1_diagram">
+<div class="paragraph">
+<p>Here you describe the decomposition of the overall system using the following white box template. It contains</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>an overview diagram</p>
+</li>
+<li>
+<p>a motivation for the decomposition</p>
+</li>
+<li>
+<p>black box descriptions of the contained building blocks. For these we offer you alternatives:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>use <em>one</em> table for a short and pragmatic overview of all contained building blocks and their interfaces</p>
+</li>
+<li>
+<p>use a list of black box descriptions of the building blocks according to the black box template (see below).
+Depending on your choice of tool this list could be sub-chapters (in text files), sub-pages (in a Wiki) or nested elements (in a modeling tool).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>(optional:) important interfaces, that are not explained in the black box templates of a building block, but are very important for understanding the white box.
+Since there are so many ways to specify interfaces why do not provide a specific template for them.
+ In the worst case you have to specify and describe syntax, semantics, protocols, error handling,
+ restrictions, versions, qualities, necessary compatibilities and many things more.
+In the best case you will get away with examples or simple signatures.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><em><strong>&lt;Overview Diagram&gt;</strong></em></p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Motivation</dt>
 <dd>
-<p>Yovi (refering to our group game) is a web application that allows users to play the "Game of Y". The system acts as a single unit for the end user, providing registration, game logic, and history tracking.</p>
+<p><em>&lt;text explanation&gt;</em></p>
 </dd>
 <dt class="hdlist1">Contained Building Blocks</dt>
+<dd>
+<p><em>&lt;Description of contained building block (black boxes)&gt;</em></p>
+</dd>
+<dt class="hdlist1">Important Interfaces</dt>
+<dd>
+<p><em>&lt;Description of important interfaces&gt;</em></p>
+</dd>
 </dl>
+</div>
+<div class="sidebarblock arc42help">
+<div class="content">
+<div class="paragraph">
+<p>Insert your explanations of black boxes from level 1:</p>
+</div>
+<div class="paragraph">
+<p>If you use tabular form you will only describe your black boxes with name and
+responsibility according to the following schema:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1114,88 +1014,177 @@ Refer to details in the following sections.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>User</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">End-user interacting with the application via a web browser.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;black box 1&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"> <em>&lt;Text&gt;</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Yovi System</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The complete software solution handling the game logic and user data.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;black box 2&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"> <em>&lt;Text&gt;</em></p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_level_2">5.2. Level 2</h3>
 <div class="paragraph">
-<p>This level shows the decomposition of the system into the three main services defined in the project structure.</p>
+<p>If you use a list of black box descriptions then you fill in a separate black box template for every important building block .
+Its headline is the name of the black box.</p>
 </div>
-<div class="imageblock plantuml">
+</div>
+</div>
+<div class="sect3">
+<h4 id="_name_black_box_1">5.1.1. &lt;Name black box 1&gt;</h4>
+<div class="sidebarblock arc42help">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/RP3B2i8m44Nt-OgX-zQzYrABhuqWMYakfybGYZO9IQg8-EzEMtmWPfNSkVVCJ38Vq8MkFGkByeGrGRHqHWVIAeAx03xIjDPeqW6YaggPjH6WXojLQAruY4ymvmldO4_kqaZoVm07Jyw_30EdwvLVsmfREi92ruqUNJKBjxwPme0LUkwsCResytmegqg8SI28utHamXJMHR65YNI4WNhjspCGtvx-9SPOagJCuygEKFb9wPf0NcIy6F_I4m00" alt="level2_diagram">
+<div class="paragraph">
+<p>Here you describe &lt;black box 1&gt;
+according the the following black box template:</p>
 </div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Motivation</dt>
-<dd>
-<p>The system follows a modular architecture to separate the user interface from the logic services.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>WebApp</strong>: Handles UI and client-side logic.</p>
+<p>Purpose/Responsibility</p>
 </li>
 <li>
-<p><strong>Users Service</strong>: Manages user registration and data.</p>
+<p>Interface(s), when they are not extracted as separate paragraphs. This interfaces may include qualities and performance characteristics.</p>
 </li>
 <li>
-<p><strong>GameY Engine</strong>: Handles the specific rules and logic of the board game.</p>
+<p>(Optional) Quality-/Performance characteristics of the black box, e.g.availability, run time behavior, &#8230;&#8203;.</p>
+</li>
+<li>
+<p>(Optional) directory/file location</p>
+</li>
+<li>
+<p>(Optional) Fulfilled requirements (if you need traceability to requirements).</p>
+</li>
+<li>
+<p>(Optional) Open issues/problems/risks</p>
 </li>
 </ul>
 </div>
-</dd>
-</dl>
+</div>
 </div>
 <div class="paragraph">
-<p>Contained Building Blocks</p>
+<p><em>&lt;Purpose/Responsibility&gt;</em></p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 80%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top"><strong>Building Block</strong></th>
-<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>WebApp</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Provides the graphical interface for the user. It communicates with the backend services to perform actions.<br>
-<strong>Technology:</strong> React, Vite, TypeScript.<br>
-<strong>Location:</strong> <code>/webapp</code> directory.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Users Service</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Manages user registration and stores user information. It exposes a REST API.<br>
-<strong>Technology:</strong> Node.js, Express.<br>
-<strong>Location:</strong> <code>/users</code> directory.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GameY Engine</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Implements the core logic of the Game of Y, including move validation and bot strategies using Rust for performance.<br>
-<strong>Technology:</strong> Rust.<br>
-<strong>Location:</strong> <code>/gamey</code> directory.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MongoDB</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Database used to persist user data and game history.<br>
-<strong>Technology:</strong> MongoDB.</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><em>&lt;Interface(s)&gt;</em></p>
+</div>
+<div class="paragraph">
+<p><em>&lt;(Optional) Quality/Performance Characteristics&gt;</em></p>
+</div>
+<div class="paragraph">
+<p><em>&lt;(Optional) Directory/File Location&gt;</em></p>
+</div>
+<div class="paragraph">
+<p><em>&lt;(Optional) Fulfilled Requirements&gt;</em></p>
+</div>
+<div class="paragraph">
+<p><em>&lt;(optional) Open Issues/Problems/Risks&gt;</em></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_name_black_box_2">5.1.2. &lt;Name black box 2&gt;</h4>
+<div class="paragraph">
+<p><em>&lt;black box template&gt;</em></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_name_black_box_n">5.1.3. &lt;Name black box n&gt;</h4>
+<div class="paragraph">
+<p><em>&lt;black box template&gt;</em></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_name_interface_1">5.1.4. &lt;Name interface 1&gt;</h4>
+<div class="paragraph">
+<p>&#8230;&#8203;</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_name_interface_m">5.1.5. &lt;Name interface m&gt;</h4>
+
+</div>
+</div>
+<div class="sect2">
+<h3 id="_level_2">5.2. Level 2</h3>
+<div class="sidebarblock arc42help">
+<div class="content">
+<div class="paragraph">
+<p>Here you can specify the inner structure of (some) building blocks from level 1 as white boxes.</p>
+</div>
+<div class="paragraph">
+<p>You have to decide which building blocks of your system are important enough to justify such a detailed description.
+Please prefer relevance over completeness. Specify important, surprising, risky, complex or volatile building blocks.
+Leave out normal, simple, boring or standardized parts of your system</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_white_box_building_block_1">5.2.1. White Box <em>&lt;building block 1&gt;</em></h4>
+<div class="sidebarblock arc42help">
+<div class="content">
+<div class="paragraph">
+<p>&#8230;&#8203;describes the internal structure of <em>building block 1</em>.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><em>&lt;white box template&gt;</em></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_white_box_building_block_2">5.2.2. White Box <em>&lt;building block 2&gt;</em></h4>
+<div class="paragraph">
+<p><em>&lt;white box template&gt;</em></p>
+</div>
+<div class="paragraph">
+<p>&#8230;&#8203;</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_white_box_building_block_m">5.2.3. White Box <em>&lt;building block m&gt;</em></h4>
+<div class="paragraph">
+<p><em>&lt;white box template&gt;</em></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_level_3">5.3. Level 3</h3>
+<div class="sidebarblock arc42help">
+<div class="content">
+<div class="paragraph">
+<p>Here you can specify the inner structure of (some) building blocks from level 2 as white boxes.</p>
+</div>
+<div class="paragraph">
+<p>When you need more detailed levels of your architecture please copy this
+part of arc42 for additional levels.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_white_box_building_block_x_1">5.3.1. White Box &lt;_building block x.1_&gt;</h4>
+<div class="sidebarblock arc42help">
+<div class="content">
+<div class="paragraph">
+<p>Specifies the internal structure of <em>building block x.1</em>.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><em>&lt;white box template&gt;</em></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_white_box_building_block_x_2">5.3.2. White Box &lt;_building block x.2_&gt;</h4>
+<div class="paragraph">
+<p><em>&lt;white box template&gt;</em></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_white_box_building_block_y_1">5.3.3. White Box &lt;_building block y.1_&gt;</h4>
+<div class="paragraph">
+<p><em>&lt;white box template&gt;</em></p>
+</div>
 <div style="page-break-after: always;"></div>
+</div>
 </div>
 </div>
 </div>
@@ -1264,41 +1253,46 @@ You will mainly capture scenarios in your documentation to communicate your arch
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_runtime_scenario_1">6.1. &lt;Runtime Scenario 1&gt;</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><em>&lt;insert runtime diagram or textual description of the scenario,  Raiman maricon&gt;</em></p>
+</li>
+<li>
+<p><em>&lt;insert description of the notable aspects of the interactions between the
+building block instances depicted in this diagram.&gt;</em></p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
-<p>This section displays sequence diagrams. These show the interaction of objects in different scenarios.</p>
+<p>It is possible to use a sequence diagram:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Failed to generate image: Could not load PlantUML. Either require 'asciidoctor-diagram-plantuml' or specify the location of the PlantUML JAR(s) using the 'DIAGRAM_PLANTUML_CLASSPATH' environment variable. Alternatively a PlantUML binary can be provided (plantuml-native in $PATH).
+actor Alice
+actor Bob
+database Pod as "Bob's Pod"
+Alice -&gt; Bob: Authentication Request
+Bob --&gt; Alice: Authentication Response
+Alice  --&gt; Pod: Store route
+Alice -&gt; Bob: Another authentication Request
+Alice &lt;-- Bob: another authentication Response</pre>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_game_lifecycle_against_the_computer">6.1. Game lifecycle against the computer</h3>
-<div class="paragraph">
-<p>This diagram shows the game life cycle in its standard form (playing against the machine).</p>
-</div>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/XL91JWCn3Bpd5Nv0-u4UK85ANE3I2Y6EJk9sesQJ9SukAg_7sK2rsnOHAOVOu_6CupLdJBbllKAJOu9NfgGw2JdZEWmPtaZVTzqiz8GjFSU3CyfYHerCiD5AbL9OtlrKh40Wu8AgpvBOw1KyDcIEq1UeIMGfP8UUrKR3SbAwfTodm1LNcboHxyYJoS0vOQR3QG7lS11Pa4yTBS2w_TwPtcT9OB2W8oOBxBve8kTiGrGb4feAK-VuJDB3I36WTwA7hF8nTWhaN2fxYGErucjCtkuspi3jg-866IXOeIm5wEjy9w5oRckgOu94B5RFsD-U0YpQP5PD_AozBf1QR1_75tdvnB6lYV8beIU-ufjvsDA7O393YwPnWQ2TslvFCb_3Rwh-WrvceygThzOE1vA5mEnOLfNLMY2osDy0" alt="Sequence diagram">
-</div>
-</div>
+<h3 id="_runtime_scenario_2">6.2. &lt;Runtime Scenario 2&gt;</h3>
+
 </div>
 <div class="sect2">
-<h3 id="_bot_against_application">6.2. Bot against Application</h3>
-<div class="paragraph">
-<p>This diagram shows the life cycle of the game in which a bot participates against the machine.</p>
-</div>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/VP9DRiCW48Ntd68Ea5mWYofD5rMbLghILPSJ6Die_BWmJfISleDHBRj9YmGImyTxRn3Rp9Xuy4wXvfXW5rdrKh7QzXWO7jzV5ljdzFGQMwkL4XJM3uNOm0SvqWoP4pArbnLyGYiayAMd5HZRD5OFZkK0Wu53n6GWsoifkLr49jaDF2KIZSgegGxh7wlTUFc4pXhXZ58knbw1Z7cWjtWYJu77Wpic7UaZsAQcx3031IDYXKPNsvoLohWJPKyyf029ilGsWQER81977gQBvshoYpf8cyTnHovJDTGni0q3vQNM8lcUlWJW31vrPmE1dtVwRz1yozva_KDNdaALkPL5Fiit" alt="Sequence diagram">
-</div>
-</div>
+<h3 id="">6.3. &#8230;&#8203;</h3>
+
 </div>
 <div class="sect2">
-<h3 id="_user_registration">6.3. User registration</h3>
-<div class="paragraph">
-<p>This diagram shows the different interactions that take place when a user registers.</p>
-</div>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/XP4nZW8n34NxdC8Nu08KAn1JKonQKJkE1w8DoIXsWBtzUWQG1Wb4YXJs-_xVyaeKgxPJSaXQAlm8LpTOAL8SC2lisQ-7mGLKz2WCdNTkX63nTUyjuPiFKTHgI5HQLdThZ4Zdbx0vClr2x84g1yuQCGdmrIJYCEda2PWgO_XxrC5Uvs4nSzbn3c1wFg36aYVaOMJOECMWOxd8dE9aeRTyWJPkzcBiPXRgZ2c6IGVIY5YaR-d9wBRH3iyC-JvqljRRt5Ho7-lfO_8dpeHkPP-Tvny0" alt="Sequence diagram">
-</div>
-</div>
+<h3 id="_runtime_scenario_n">6.4. &lt;Runtime Scenario n&gt;</h3>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -1548,114 +1542,24 @@ on this list.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_domain_concepts">8.1. Domain concepts</h3>
+<h3 id="_concept_1">8.1. <em>&lt;Concept 1&gt;</em></h3>
 <div class="paragraph">
-<p>The domain model revolves around the game of Y, a connection strategy game.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>GameY</strong>: The central entity representing a game session. It holds the state of the triangular board, tracks the current player, and validates rules. It uses a Union-Find data structure to efficiently detect winning paths (connected components touching all three sides) in real-time.</p>
-</li>
-<li>
-<p><strong>Player</strong>: A participant in the game. In this system, a player can be a human (via CLI) or an automated agent (Bot/LLM).</p>
-</li>
-<li>
-<p><strong>Board</strong>: A triangular grid where the game takes place.</p>
-</li>
-<li>
-<p><strong>Coordinates</strong>: A 3-dimensional coordinate system used to uniquely identify cells on the triangular grid.</p>
-</li>
-<li>
-<p><strong>Movement</strong>: Represents a player&#8217;s turn, which can be placing a piece at a specific point or performing a game action (for example, leaving).</p>
-</li>
-<li>
-<p><strong>Bot</strong>: An AI opponent. The architecture supports pluggable bot strategies, including random moves or integration with Large Language Models (LLMs).</p>
-</li>
-</ul>
+<p><em>&lt;explanation&gt;</em></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_security">8.2. Security</h3>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Input validation and sanitization</strong>: Since the main logic receives external data (via API or CLI), all inputs, especially coordinates and YEN notation strings, are strictly validated before processing to prevent invalid game states.</p>
-</li>
-<li>
-<p><strong>Server authoritativeness</strong>: The frontend (web or CLI) is simply a display layer, and the backend is the game engine. All checks for the legality of moves are applied by the backend to prevent cheating by modified clients.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_data_persistence_and_exchange">8.3. Data persistence and exchange</h3>
+<h3 id="_concept_2">8.2. <em>&lt;Concept 2&gt;</em></h3>
 <div class="paragraph">
-<p>The system relies on a standardized text format for both data transport and storage.</p>
+<p><em>&lt;explanation&gt;</em></p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>YEN Notation (Y Notation)</strong>: The primary format for persisting game state and exchanging messages between subsystems (Web &lt;&#8594; Rust). It uses JSON to represent board size, player turns, and board layout.</p>
-</li>
-<li>
-<p><strong>Serialization/Deserialization</strong>: The system uses serde (in Rust) to strictly map the YEN JSON format to internal memory structures. This ensures that any saved game or network message can be reconstructed into a valid object at runtime.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_architecture_and_design_patterns">8.4. Architecture and Design Patterns</h3>
 <div class="paragraph">
-<p>The implementation leverages standard software design patterns to ensure modularity and testability, specifically within the Rust core:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Strategy Pattern</strong>: Used for the AI ​​system. The YBot trait acts as a strategy interface, allowing different algorithms (Random, LLM) to be swapped at runtime via YBotRegistry without modifying the game logic.</p>
-</li>
-<li>
-<p><strong>State Machine</strong>: The game flow is modeled as a finite state machine (FSM) represented by the GameStatus enumeration (e.g., Ongoing, Finished). Transitions are strictly controlled by the results of the moves.</p>
-</li>
-<li>
-<p><strong>Result Pattern</strong>: Operations that can fail (such as placing a piece on an occupied cell) return a Result&lt;T, GameYError&gt; type, requiring explicit error handling at the compiler level.</p>
-</li>
-</ul>
+<p>&#8230;&#8203;</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_error_handling_and_logging">8.5. Error Handling and Logging</h3>
+<h3 id="_concept_n">8.3. <em>&lt;Concept n&gt;</em></h3>
 <div class="paragraph">
-<p>To meet availability and observability requirements, the system implements structured logging and typed errors:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Typed Errors</strong>: The GameYError enumeration defines possible failure states (e.g., InvalidPlayerTurn, Occupied, IoError). This allows the API to return meaningful HTTP/JSON error codes to the client instead of generic server errors.</p>
-</li>
-<li>
-<p><strong>Structured Logging</strong>: The system uses the tracing library to instrument key operations. This provides a detailed log of game events (movements, state changes, errors), essential for debugging asynchronous bot interactions and API calls.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_user_interface_and_ux_concepts">8.6. User Interface and UX Concepts</h3>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Dual Coordinate System</strong>: To reduce the gap between technical efficiency and user usability:</p>
-</li>
-<li>
-<p><strong>Internal Logic</strong>: Uses 3D barycentric coordinates (x, y, z) to calculate adjacency and winning paths.</p>
-</li>
-<li>
-<p><strong>Visual/Input</strong>: Uses a linear index (0 to N) or a visual grid mapping for user interactions, simplifying the input process for humans while the backend converts them to 3D coordinates.</p>
-</li>
-<li>
-<p><strong>Feedback Loop</strong>: The user interface provides immediate feedback on the validity of the move through the "Result" types returned by the core logic, ensuring that users understand why a move might be rejected (e.g., "Cell Occupied").</p>
-</li>
-</ul>
+<p><em>&lt;explanation&gt;</em></p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1738,11 +1642,6 @@ concrete and measurable.</p>
 </div>
 <div class="sect2">
 <h3 id="_quality_tree">10.1. Quality Tree</h3>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/RP51JyCm38Nl_HK-ThqmxSnX4vj4fGt69YGukesRHMgIoN4OyEjnMpPnu18fp_Bdz-nb4cJnBXYFvwA2buozaw-Ygc0NZUiSDcuGe7nqzZHJlO9zdwt5fYTOrN0KHY7hA8srXnWwPpEFvKFkHndg8CJnJFmFxIWO3B9ntsJWVVC4gtqz5hOOR4PBscteJFe46M2lwKgvW_KRb3ioBlihZ7ChcHMrOOuCEqf96PCv9SCwjjah2SN5CE2UcqJySJFsbwPXX3v5LmBRQAqBTf8PqmaEbBI5Gai3PK_SHVQeNoYtyNBB9he6QcD8exDffcQB5yqdsgqZxs4nd_iqAvOQylSKFm00" alt="quality-tree">
-</div>
-</div>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -1775,60 +1674,6 @@ concrete and measurable.</p>
 </div>
 <div class="sect2">
 <h3 id="_quality_scenarios">10.2. Quality Scenarios</h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 10%;">
-<col style="width: 20%;">
-<col style="width: 30%;">
-<col style="width: 40%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Priority (Imp, Diff)</th>
-<th class="tableblock halign-left valign-top">Quality Attribute</th>
-<th class="tableblock halign-left valign-top">Scenario</th>
-<th class="tableblock halign-left valign-top">Expected Outcome</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>High, Low</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Modifiability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A developer wants to implement a new AI strategy <strong>during the design phase</strong> (Environment).</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The developer implements the YBot trait, requiring <strong>no changes (0 lines)</strong> in the core GameY logic (Measure).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>High, Med</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Modifiability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The requirements change <strong>during a maintenance cycle</strong> (Environment) to include a new game variant.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system allows rule injection via configuration, ensuring <strong>100% backward compatibility</strong> with existing YEN save files (Measure).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>High, Med</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Interoperability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An external bot (Source) sends a generic JSON move request <strong>during runtime execution</strong> (Environment).</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system processes the YEN string directly <strong>without requiring language-specific adapters</strong> (Measure).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Med, Low</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Usability (DX)</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A frontend developer (Source) sends invalid coordinates to the API <strong>during integration testing</strong> (Environment).</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The API returns a structured 400 error, allowing the developer to identify the bug source in <strong>less than 1 minute</strong> (Measure).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Med, Low</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Observability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A player or bot sends an illegal move (e.g., placing a piece on top of another) <strong>during a live production game</strong> (Environment).</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system logs the specific <strong>GameID and invalid YEN string</strong> for debugging, returning a handled error <strong>without crashing the session</strong> (Measure).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Low, High</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Performance</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A user refreshes the browser to resume a long match <strong>during an active game session</strong> (Environment).</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system parses the YEN string and reconstructs the full board state in <strong>less than 200ms</strong> (Measure).</p></td>
-</tr>
-</tbody>
-</table>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -1897,51 +1742,6 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 </div>
 </div>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Risk</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Inexperience in Microservices Architectures</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The team has limited experience in designing large-scale software architectures with multiple interconnected modules. This introduces the risk of defining incorrect boundaries between services or creating circular dependencies that complicate development.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Rust learning curve</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Rust is a language we&#8217;ve never used before, so the learning curve is going to be very steep. There&#8217;s a risk that implementing even simple features will take longer than expected due to the language&#8217;s complexity and our inexperience.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Inexperience in using Docker</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Setting up internal networks, volumes, and container communication (with Node.js and Rust) can create deployment and configuration problems that delay integration testing or implementation.</p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Technical debt</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>In-memory storage instead of a database</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The current state of the games is stored in the Gamey service&#8217;s RAM instead of in an external database.
-If the container restarts or fails, all active saves are lost. This is being accepted for now to avoid the complexity of managing an additional database at this stage of the project.</p></td>
-</tr>
-</tbody>
-</table>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -2012,7 +1812,7 @@ If the container restarts or fails, all active saves are lost. This is being acc
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2026-02-06 18:37:21 +0100
+Last updated 2026-01-30 02:02:40 +0100
 </div>
 </div>
 </body>
