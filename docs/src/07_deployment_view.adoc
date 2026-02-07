@@ -60,18 +60,85 @@ For multiple environments or alternative deployments please copy and adapt this 
 ****
 endif::arc42help[]
 
-_**<Overview Diagram>**_
+_**Overview Diagram**_
+
+[plantuml, "deployment-level1", png]
+----
+@startuml
+title Deployment View - Yovi (Localhost)
+
+skinparam shadowing false
+skinparam componentStyle rectangle
+
+actor User
+
+node "Client" as client {
+  [Terminal (User agent)] as terminal
+}
+
+node "Docker Host (Localhost)" as host {
+  frame "monitor-net (Docker Network)" as net {
+    [WebApp] as webapp
+    [Users Service] as users
+    [GameY Service] as gamey
+    [Prometheus] as prom
+    [Grafana] as graf
+    database "MongoDB" as mongo
+  }
+}
+
+User --> terminal : Executes commands\n(manual input)
+
+terminal --> webapp : Sends requests\n(JSON)
+webapp --> users : Sends API requests\n(JSON)
+webapp --> gamey : Sends API requests\n(JSON)
+
+users --> mongo : Read/Write data
+gamey --> mongo : Read/Write data
+
+graf --> prom : Queries data
+prom --> users : Collects metrics
+prom --> gamey : Collects metrics
+@enduml
+----
 
 Motivation::
 
-_<explanation in text form>_
+Yovi is executed locally on a single host machine using Docker and Docker Compose. The system is deployed as a set of containers connected through a private Docker network ("monitor-net"). This deployment shows where each container runs and the main communication paths between them, including the monitoring stack (Prometheus and Grafana).
 
 Quality and/or Performance Features::
 
-_<explanation in text form>_
+* Modularity: each service is deployed as an independent container, allowing isolated development and replacement.
+* Portability: the deployment can be reproduced consistently on different machines that support Docker.
+* Observability: Prometheus and Grafana enable basic monitoring of the backend services.
+* Maintainability: the separation of responsibilities across containers simplifies troubleshooting and updates.
 
 Mapping of Building Blocks to Infrastructure::
-_<description of the mapping>_
+[cols="1,2", options="header"]
+|===
+|Building Block |Infrastructure Element
+
+|Terminal (User agent)
+|Runs on the client side and is used to execute commands that interact with the system.
+
+|WebApp
+|Container deployed on the Docker Host, connected to the internal Docker network.
+
+|Users Service
+|Container deployed on the Docker Host, connected to the internal Docker network.
+
+|GameY Service
+|Container deployed on the Docker Host, connected to the internal Docker network.
+
+|MongoDB
+|Container deployed on the Docker Host, connected to the internal Docker network.
+
+|Prometheus
+|Container deployed on the Docker Host, connected to the internal Docker network. Collects metrics from the services.
+
+|Grafana
+|Container deployed on the Docker Host, connected to the internal Docker network. Visualizes metrics queried from Prometheus.
+|===
 
 
 === Infrastructure Level 2
@@ -85,16 +152,91 @@ Please copy the structure from level 1 for each selected element.
 ****
 endif::arc42help[]
 
-==== _<Infrastructure Element 1>_
+==== _Docker Host (Localhost)_
 
-_<diagram + explanation>_
+[plantuml, "deployment-level2-host", png]
+----
+@startuml
+title Infrastructure Level 2 - Docker Host (Localhost)
 
-==== _<Infrastructure Element 2>_
+skinparam shadowing false
+skinparam componentStyle rectangle
 
-_<diagram + explanation>_
+node "Docker Host (Localhost)" as host {
+  frame "monitor-net (Docker Network)" as net {
+    [WebApp] as webapp
+    [Users Service] as users
+    [GameY Service] as gamey
+    database "MongoDB" as mongo
+    [Prometheus] as prom
+    [Grafana] as graf
+  }
+}
 
-...
+webapp --> users : Requests/Responses\n(JSON)
+webapp --> gamey : Requests/Responses\n(JSON)
 
-==== _<Infrastructure Element n>_
+users --> mongo : Persist user data
+gamey --> mongo : Persist game data (if used)
 
-_<diagram + explanation>_
+prom --> users : Metrics data
+prom --> gamey : Metrics data
+graf --> prom : Dashboard queries
+@enduml
+----
+
+This diagram zooms into the Docker Host and the internal Docker network. All components are deployed as containers within the same private network, allowing direct communication between services. WebApp interacts with backend services (Users Service and GameY Service) using JSON messages. MongoDB stores persistent data. Prometheus and Grafana run alongside the services to provide basic monitoring and visualization.
+
+==== _Client (Terminal)_
+
+[plantuml, "deployment-level2-client", png]
+----
+@startuml
+title Infrastructure Level 2 - Client (Terminal)
+
+skinparam shadowing false
+skinparam componentStyle rectangle
+
+actor "User" as user
+
+node "Client" as client {
+  [Terminal (User agent)] as terminal
+}
+
+node "Docker Host (Localhost)" as host {
+  [WebApp] as webapp
+}
+
+user --> terminal : Executes commands
+terminal --> webapp : Sends requests\n(JSON)
+@enduml
+----
+
+This diagram isolates the client-side element used during development/testing. The user executes commands via a terminal. Those commands generate requests toward the WebApp, which acts as the entry point to the deployed system.
+
+==== _Monitoring Stack (Prometheus + Grafana)_
+
+[plantuml, "deployment-level2-monitoring", png]
+----
+@startuml
+title Infrastructure Level 2 - Monitoring Stack
+
+skinparam shadowing false
+skinparam componentStyle rectangle
+
+node "Docker Host (Localhost)" as host {
+  frame "monitor-net (Docker Network)" as net {
+    [Users Service] as users
+    [GameY Service] as gamey
+    [Prometheus] as prom
+    [Grafana] as graf
+  }
+}
+
+prom --> users : Collects metrics
+prom --> gamey : Collects metrics
+graf --> prom : Queries metrics
+@enduml
+----
+
+This diagram focuses on observability. Prometheus collects technical metrics exposed by the backend services and stores them internally. Grafana queries Prometheus to display dashboards. This setup supports troubleshooting and performance monitoring during development.
