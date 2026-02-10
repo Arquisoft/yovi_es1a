@@ -55,28 +55,24 @@ endif::arc42help[]
 ----
 @startuml
 skinparam componentStyle uml2
-skinparam backgroundColor white
 
-left to right direction
+actor "User" as player
+actor "Administrator" as admin
 
-actor "User" as user
-component "Yovi" as yovi
-component "Monitoring System\n(Prometheus/Grafana)" as monitor
+component  "Yovi System" as yovi
 
-user --> yovi
-
-yovi <-- monitor
+player --> yovi : Play games
+admin --> yovi : Monitors the system status
 
 @enduml
 ----
 
 Diagram elements:
 
-- User: Represents the player or client who actively interacts with the system to use its functionalities.
+* **User:** Represents the end-user who interacts with the web application to play games and manage their profile.
+* **Admin:** Represents the technical user responsible for overseeing the system's stability and performance via the internal monitoring dashboards.
+* **Yovi:** Represents the complete system boundary (the scope of this project). It acts as a unified solution that encapsulates the game engine, user management, data persistence, and the observability infrastructure (Prometheus & Grafana).
 
-- Yovi: It is the core of the system (the scope of this project). It acts as a central intermediary managing the business logic.
-
-- Monitoring System (Prometheus/Grafana): This is the external component responsible for observability. It does not participate in the game, but audits the technical status of the system.
 
 === Technical Context
 
@@ -101,44 +97,61 @@ endif::arc42help[]
 ----
 @startuml
 skinparam componentStyle uml2
-skinparam backgroundColor white
-left to right direction
+skinparam componentBackgroundColor white
+skinparam packageBackgroundColor #F2F2F2
+skinparam defaultTextAlignment center
 
-actor "User" as dev
+' Ponemos a los actores en los extremos para abrir el diagrama
+actor "Player" as player
+actor "Administrator" as admin
 
-node "Client" {
-    component "Terminal (User agent)" as client
+rectangle "Web Browser (Game Client)" as browser {
+    component "React App (SPA)" as spa
 }
 
 node "Docker Host (Localhost)" {
-    
     package "monitor-net (Docker Network)" {
+        component "WebApp (Frontend)" as webapp
         component "Users Service" as users
         component "Gamey Service" as gamey
-        
-        component "Prometheus" as prom
+        database "MongoDB" as mongo
+
         component "Grafana" as graf
+        component "Prometheus" as prom
     }
 }
 
+player -> browser : Plays Game
+browser ..> webapp : Loads HTML/JS\n[HTTP:80]
 
-dev --> client : Executes Commands (manual input)
+spa ---> users : API Requests\n[HTTP/JSON :3000]
+spa ---> gamey : API Requests\n[HTTP/JSON :4000]
 
-client --> users : Sends API Requests\n[HTTP/JSON :3000]
-client --> gamey : Sends API Requests\n[HTTP/JSON :4000]
-client --> graf : Accesses Dashboard\n[HTTP/Web :9091]
+users --> mongo : Reads/Writes Data
 
-graf --> prom : Queries Data\n[HTTP API :9090]
-prom --> users : Scrapes Metrics\n[HTTP GET :3000]
+
+admin --> graf : View Dashboards\n[HTTP :9091]
+
+
+graf -> prom : Queries Data\n[:9090]
+prom -up-> users : Scrapes Metrics\n[:3000]
 
 @enduml
 ----
 
-The Yovi system uses a set of HTTP interfaces for communication between microservices and for exposing data to the client. The communication channels represented in the architecture diagram are detailed below:
-1. External access interfaces:
-    - User management and game logic API: The HTTP client interacts with the Users Service (port 3000) and the Gamey Service (port 4000) by sending and receiving data exclusively in JSON format. These interfaces manage authentication and game mechanics using the HTTP protocol, without including visual elements.
-    - Visualization interface: This connection delivers the Grafana graphical interface to the client via port 9091. It uses the HTTP (Web) standard to serve the necessary HTML and CSS code that allows the administrator to view the control panels.
-2. Internal interfaces:
-    - Collection and query channel within the private network: Prometheus makes periodic HTTP GET requests to the Users Service's internal port 3000 to collect technical health metrics. Simultaneously, Grafana queries the Prometheus database on port 9090 to retrieve historical data and generate graphs.
-3. Control Interfaces:
-    - Command Input: The user uses the terminal as a manual control interface. By executing commands, they make requests to the system to simulate user behavior and verify the functionality of the services.
+
+The Yovi system uses a set of HTTP interfaces for communication between microservices and to expose data to the actors (Player and Administrator). The communication channels represented in the architecture diagram are detailed below:
+
+* **External access interfaces:**
+
+** **Frontend Delivery Interface:** The Player's browser connects to the WebApp service via port 80 to download the static files (HTML, CSS, JavaScript) needed to run the Single Page Application (React).
+
+** **User management API and game logic:** The React App (SPA) running in the browser interacts with the Users Service (port 3000) and the Game Service (port 4000), sending and receiving data exclusively in JSON format. These interfaces manage authentication and game mechanics using the HTTP protocol.
+
+** **Display Interface:** This connection delivers the Grafana graphical interface to the Administrator via port 9091. It uses standard HTTP to serve the control panels for system monitoring.
+
+* **Internal interfaces:**
+
+** **Collection and consultation channel within the private network:** Prometheus makes periodic HTTP GET requests to the Users Service's internal port 3000 to collect technical health metrics. Simultaneously, Grafana queries the Prometheus database on port 9090 to retrieve historical data and generate graphs.
+
+** **Data Persistence Interface:** The Users Service communicates directly with the internal MongoDB database to read and write persistent data (user profiles and game history). This connection is strictly internal to the backend environment.

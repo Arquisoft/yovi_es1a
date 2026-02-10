@@ -44,7 +44,6 @@ endif::arc42help[]
 |===
 | Technical debt | Description 
 
-| **In-memory storage instead of a database**
-| The current state of the games is stored in the Gamey service's RAM instead of in an external database.
-If the container restarts or fails, all active saves are lost. This is being accepted for now to avoid the complexity of managing an additional database at this stage of the project.
+| **Non-persistent Game State**
+| The current architecture manages active game sessions entirely in-memory within the Gamey Service. There is no real-time persistence layer for the game state (MongoDB is currently restricted to User management), meaning that any service restart or crash results in the immediate loss of all active matches.
 |===
