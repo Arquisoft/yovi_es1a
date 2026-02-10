@@ -2,9 +2,9 @@
   "name": "users",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "users-service.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node users-service.js",
     "test": "vitest",
     "test:coverage": "vitest run --coverage"
   },
