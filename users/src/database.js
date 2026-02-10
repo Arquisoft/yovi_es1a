@@ -11,4 +11,4 @@ const conectarBD = async () => {
     }
 };
 
-module.exports = conectarBD;
+module.exports = conectarBD; //It allows other files to import and run this function.
