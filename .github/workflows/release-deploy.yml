@@ -153,6 +153,8 @@ jobs:
           user: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           command: |
-            wget https://raw.githubusercontent.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/master/docker-compose.yml -O docker-compose.yml
+            cd yovi_es1a
+            git pull origin master
             docker compose down
-            docker compose up -d --pull always
+            docker compose pull
+            docker compose up -d

@@ -92,7 +92,6 @@ To meet availability and observability requirements, the system implements struc
 
 === User Interface and UX Concepts
 
-* **Dual Coordinate System**: To reduce the gap between technical efficiency and user usability:
 * **Internal Logic**: Uses 3D barycentric coordinates (x, y, z) to calculate adjacency and winning paths.
 * **Visual/Input**: Uses a linear index (0 to N) or a visual grid mapping for user interactions, simplifying the input process for humans while the backend converts them to 3D coordinates.
 * **Feedback Loop**: The user interface provides immediate feedback on the validity of the move through the "Result" types returned by the core logic, ensuring that users understand why a move might be rejected (e.g., "Cell Occupied").
