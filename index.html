@@ -974,7 +974,7 @@ The title of the table is the name of your system, the three columns contain the
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/JOyn2y9G38Jt_8hGIOSYE8iK79m4GHm4bzZ6zc5V8dcfqd_lquAwX8Flxi9LoSbyY3saMv0x6KMiDTvLMFpWOy-OuVAFNgY-jQQ3D1ljrV3P1MU0dg-EhcYXxHoRO5nxK06WshEhE2Qs0YdXa0LyNs1nqaVuW36BVx1J2JaQfCN3c9pZMMPxqyZUyP0MMwCh2Sq_sJXv0TxjM9RhgGtU5rTb-JDKB4rUz080" alt="business-context-diagram">
+<img src="https://www.plantuml.com/plantuml/png/JOz12i9034NtESMd-svSkf1w044eBbo6DkXWPwPCKc5kRnnHNFxtmqiog76nBIwaZv1MBXmnvRZc9Cb6gul0onqHJvOBkejAwS2ATU4gvOkFSmmfg1Nss7f-4wAV2-Yk-HamLZM9RQHw9lg8qFU71h37sGbk74MfMVwxKqx1LoZiBj3cWhzWcn8DacO_zWK0" alt="business-context-diagram">
 </div>
 </div>
 <div class="paragraph">
@@ -983,13 +983,13 @@ The title of the table is the name of your system, the three columns contain the
 <div class="ulist">
 <ul>
 <li>
-<p>User: Represents the player or client who actively interacts with the system to use its functionalities.</p>
+<p><strong>User:</strong> Represents the end-user who interacts with the web application to play games and manage their profile.</p>
 </li>
 <li>
-<p>Yovi: It is the core of the system (the scope of this project). It acts as a central intermediary managing the business logic.</p>
+<p><strong>Admin:</strong> Represents the technical user responsible for overseeing the system&#8217;s stability and performance via the internal monitoring dashboards.</p>
 </li>
 <li>
-<p>Monitoring System (Prometheus/Grafana): This is the external component responsible for observability. It does not participate in the game, but audits the technical status of the system.</p>
+<p><strong>Yovi:</strong> Represents the complete system boundary (the scope of this project). It acts as a unified solution that encapsulates the game engine, user management, data persistence, and the observability infrastructure (Prometheus &amp; Grafana).</p>
 </li>
 </ul>
 </div>
@@ -1015,11 +1015,11 @@ together with a mapping table showing the relationships between channels and inp
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/ZPDFJ-Cm4CNl_XIZdk1GKPOzB3sig82bk-9F8KKS5WuJPsYi9hPtx6o5KB_xZjsc0gc7zScnVs_clKbo5Y9oxDf6XQMn7XbRqAxrpfADHNnh2EJoouVR4lLomQwprRbh7CEgDf5KGwyHeWCsYpf2PPXqDCugXJeAD7WCn0F009ribBAk8XWyKGabkrL_jzs_Av2rSm631v8gCF4U3ehPv32pmQDQzuKkd5uImzI520VNJcDJorR0TvLhUV6C2m5RPutu6LeISAkwfRXolCmqRDU7vc8oT_x1paQorQRzYahqNkqJfAW12kA_HjCkSzY7Nc5BRv_GHJhPMtR6hgLOKnSowELnRqd6LxIuAIRxpApJg5Io0SFXztxEC0Rn2b8pnL7zQI8syGGuhv5bSDFvpVNHhm9-J-VpsVZRw4KfUG4PpU64B6Gs0IQpd_10VpeACJpRZ8lkxXR69wEHo7fLplaVggzPjNEU4ebgeZM5G04kCDIbGwvwLVgangUZqsDncE6aIhCIrNr7RB8eufRFdHClJJBrAP5czCBVK6IZUsDmTJdlqoXr9lxb1_a7" alt="technical-context-diagram">
+<img src="https://www.plantuml.com/plantuml/png/VPDHRzCm4CVV_IbEvO7oqAqC7bWVfhMhHa7j26jX3y339RcbLXCxd1rAXVRTEJjfLQQAH8fit-_-T_xRkNOUsJTLgTn6cnePAyXiLLj3nY_zhYIGuCMfw0IpJS6sCVcDBIt3Tgqz7O6rnB6WvzYBsulm7e4vFM9J-XNzzkDI5wOISSZaGwpKIqYaMcKT89JXctdBv81Cd4eEnsYG0anPCr09kSP2f55577f9YJlY7g20SRWFZFDA6-qyeqnZ7CEAKaoPHrF8_diFbCA4xTOHG_yzLWGtfPRsNaK-xI9_5CXpS0TwzoGrO5pNq5ycunPsDQedfOpDHNTgiuqapgppq9_R3Ckr30LifJh_e5TPewMxWI7XkgGxyblBcmFyhBQq70lViXKRJTvMtrAATNsA_o8xSB0a_gKpYcmJLawXmO3TFsWHLWveZXvJTDBtmfh2JYUHgS9OdTHZV4I3hPACJp49suhycXhN7g5C8_OKp6mF50PNXwCOGJXl1w5LjLyyExlg393ut6BkOBPQpCy_Bh-RRxFLAXcz6_vGIau81WCHYmO8Eau-m3tzRCXvrv6Iy-aEHc-6Gyau94GR_flmDYQeLZcaH5SaHQvAxiuVM7uW1rCnK2aLxs6aWYi2VTMqbQ1RfnOvtql3w79u-LfKLSG43-u8_haXrfsSi06JuZ4uQEgZ3Iupnbh01NdMMT3jTgQkvUR8t_yN" alt="technical-context-diagram">
 </div>
 </div>
 <div class="paragraph">
-<p>The Yovi system uses a set of HTTP interfaces for communication between microservices and for exposing data to the client. The communication channels represented in the architecture diagram are detailed below:</p>
+<p>The Yovi system uses a set of HTTP interfaces for communication between microservices and to expose data to the actors (Player and Administrator). The communication channels represented in the architecture diagram are detailed below:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1028,13 +1028,13 @@ together with a mapping table showing the relationships between channels and inp
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Frontend Delivery Interface:</strong> The user&#8217;s browser connects to the WebApp service via <strong>port 80</strong> to download the static assets (HTML, CSS, JavaScript) required to run the Single Page Application (React).</p>
+<p><strong>Frontend Delivery Interface:</strong> The Player&#8217;s browser connects to the WebApp service via port 80 to download the static files (HTML, CSS, JavaScript) needed to run the Single Page Application (React).</p>
 </li>
 <li>
-<p><strong>User management and game logic API:</strong> The <strong>React App (SPA)</strong> running in the browser interacts with the Users Service (<strong>port 3000</strong>) and the Gamey Service (<strong>port 4000</strong>) by sending and receiving data exclusively in JSON format. These interfaces manage authentication and game mechanics using the HTTP protocol.</p>
+<p><strong>User management API and game logic:</strong> The React App (SPA) running in the browser interacts with the Users Service (port 3000) and the Game Service (port 4000), sending and receiving data exclusively in JSON format. These interfaces manage authentication and game mechanics using the HTTP protocol.</p>
 </li>
 <li>
-<p><strong>Visualization interface:</strong> This connection delivers the Grafana graphical interface to the administrator via <strong>port 9091</strong>. It uses standard HTTP to serve the dashboards for system monitoring.</p>
+<p><strong>Display Interface:</strong> This connection delivers the Grafana graphical interface to the Administrator via port 9091. It uses standard HTTP to serve the control panels for system monitoring.</p>
 </li>
 </ul>
 </div>
@@ -1044,7 +1044,10 @@ together with a mapping table showing the relationships between channels and inp
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Collection and query channel within the private network:</strong> Prometheus makes periodic HTTP GET requests to the Users Service&#8217;s internal <strong>port 3000</strong> to collect technical health metrics. Simultaneously, Grafana queries the Prometheus database on <strong>port 9090</strong> to retrieve historical data and generate graphs.</p>
+<p><strong>Collection and consultation channel within the private network:</strong> Prometheus makes periodic HTTP GET requests to the Users Service&#8217;s internal port 3000 to collect technical health metrics. Simultaneously, Grafana queries the Prometheus database on port 9090 to retrieve historical data and generate graphs.</p>
+</li>
+<li>
+<p><strong>Data Persistence Interface:</strong> The Users Service communicates directly with the internal MongoDB database to read and write persistent data (user profiles and game history). This connection is strictly internal to the backend environment.</p>
 </li>
 </ul>
 </div>
@@ -2297,9 +2300,8 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>In-memory storage instead of a database</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The current state of the games is stored in the Gamey service&#8217;s RAM instead of in an external database.
-If the container restarts or fails, all active saves are lost. This is being accepted for now to avoid the complexity of managing an additional database at this stage of the project.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Non-persistent Game State</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The current architecture manages active game sessions entirely in-memory within the Gamey Service. There is no real-time persistence layer for the game state (MongoDB is currently restricted to User management), meaning that any service restart or crash results in the immediate loss of all active matches.</p></td>
 </tr>
 </tbody>
 </table>
