@@ -4,7 +4,6 @@ const userService = require('../services/user-service');
 
 router.post('/createuser', async (req, res) => {
     try {
-        // Le pasamos (username, email, password) al servicio
         const result = await userService.createUser(req.body);
         res.status(201).json({ message: 'User created successfully!', user: result });
     } catch (error) {
