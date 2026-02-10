@@ -9,9 +9,13 @@ RUN npm ci --silent
 # Copy sources
 COPY . .
 
-# Accept build-time API url (defaults to localhost:3000)
 ARG VITE_API_URL="http://localhost:3000"
-RUN export VITE_API_URL=${VITE_API_URL} && npm run build
+ARG VITE_API_ENDPOINT="http://localhost:4000"
+
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_API_ENDPOINT=$VITE_API_ENDPOINT
+
+RUN npm run build
 
 # Production image
 FROM nginx:stable-alpine

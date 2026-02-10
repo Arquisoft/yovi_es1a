@@ -13,7 +13,8 @@ services:
     build:
       context: ./webapp
       args:
-        - VITE_API_URL=http://localhost:3000
+        - VITE_API_URL=http://20.199.88.71:3000
+        - VITE_API_ENDPOINT=http://20.199.88.71:4000
     container_name: webapp
     image: ghcr.io/arquisoft/yovi_es1a-webapp:latest
     ports:
