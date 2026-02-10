@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 //Connection and data model.
 const conectDB = require('./src/database');
-const User = require('./src/models/User');
+const User = require('./src/models/user');
 
 require('dotenv').config();
 
