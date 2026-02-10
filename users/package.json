@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node users-service.js",
+    "start": "node index.js",
     "test": "vitest",
     "test:coverage": "vitest run --coverage"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors" : "^2.8.5",
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
     "express-prom-bundle": "^8.0.0",
