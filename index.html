@@ -464,7 +464,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_technical_context">3.2. Technical Context</a></li>
 </ul>
 </li>
-<li><a href="#section-solution-strategy">4. Solution Strategy</a></li>
+<li><a href="#section-solution-strategy">4. Solution Strategy</a>
+<ul class="sectlevel2">
+<li><a href="#_technology_decisions">4.1. Technology Decisions</a></li>
+<li><a href="#_high_level_decomposition">4.2. High-level Decomposition</a></li>
+<li><a href="#_strategies_for_quality_goals">4.3. Strategies for Quality Goals</a></li>
+<li><a href="#_4_3_approaches_to_achieve_quality_goals">4.4. 4.3. Approaches to Achieve Quality Goals</a></li>
+<li><a href="#_organizational_decisions">4.5. Organizational Decisions</a></li>
+</ul>
+</li>
 <li><a href="#section-building-block-view">5. Building Block View</a>
 <ul class="sectlevel2">
 <li><a href="#_whitebox_overall_system_level_1">5.1. Whitebox Overall System (Level 1)</a></li>
@@ -1011,14 +1019,44 @@ together with a mapping table showing the relationships between channels and inp
 </div>
 </div>
 <div class="paragraph">
-<p>The Yovi system uses a set of HTTP interfaces for communication between microservices and for exposing data to the client. The communication channels represented in the architecture diagram are detailed below:
-1. External access interfaces:
-    - User management and game logic API: The HTTP client interacts with the Users Service (port 3000) and the Gamey Service (port 4000) by sending and receiving data exclusively in JSON format. These interfaces manage authentication and game mechanics using the HTTP protocol, without including visual elements.
-    - Visualization interface: This connection delivers the Grafana graphical interface to the client via port 9091. It uses the HTTP (Web) standard to serve the necessary HTML and CSS code that allows the administrator to view the control panels.
-2. Internal interfaces:
-    - Collection and query channel within the private network: Prometheus makes periodic HTTP GET requests to the Users Service&#8217;s internal port 3000 to collect technical health metrics. Simultaneously, Grafana queries the Prometheus database on port 9090 to retrieve historical data and generate graphs.
-3. Control Interfaces:
-    - Command Input: The user uses the terminal as a manual control interface. By executing commands, they make requests to the system to simulate user behavior and verify the functionality of the services.</p>
+<p>The Yovi system uses a set of HTTP interfaces for communication between microservices and for exposing data to the client. The communication channels represented in the architecture diagram are detailed below:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>External access interfaces:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>User management and game logic API:</strong> The HTTP client interacts with the Users Service (port 3000) and the Gamey Service (port 4000) by sending and receiving data exclusively in JSON format. These interfaces manage authentication and game mechanics using the HTTP protocol, without including visual elements.</p>
+</li>
+<li>
+<p><strong>Visualization interface:</strong> This connection delivers the Grafana graphical interface to the client via port 9091. It uses the HTTP (Web) standard to serve the necessary HTML and CSS code that allows the administrator to view the control panels.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Internal interfaces:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Collection and query channel within the private network:</strong> Prometheus makes periodic HTTP GET requests to the Users Service&#8217;s internal port 3000 to collect technical health metrics. Simultaneously, Grafana queries the Prometheus database on port 9090 to retrieve historical data and generate graphs.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Control Interfaces:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Command Input:</strong> The user uses the terminal as a manual control interface. By executing commands, they make requests to the system to simulate user behavior and verify the functionality of the services.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1068,7 +1106,240 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_technology_decisions">4.1. Technology Decisions</h3>
+<div class="sect3">
+<h4 id="_frontend">4.1.1. Frontend</h4>
+<div class="paragraph">
+<p>We chose React combined with TypeScript for the user interface development. React&#8217;s component-based architecture is ideal for modularizing the complex visualization of the game board and managing the reactive state of the match. The adoption of TypeScript adds a static typing system that drastically reduces compile-time errors, especially when manipulating game data structures, guaranteeing more robust and self-documenting code.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> usability, maintainability, robustness.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> The system must be accessible from any modern web browser, managing communication with the backend asynchronously via JSON.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_backend">4.1.2. Backend</h4>
+<div class="paragraph">
+<p>For the backend, on one hand, we chose Rust as it offers native performance, utilizing 100% of the CPU power, which guarantees low and predictable response times. Additionally, it prevents common errors such as null pointers or race conditions at compile time. This is crucial for a server that must be robust and not crash in the middle of a match.
+Rust&#8217;s type system allows invalid game states to be represented as compilation errors or controlled errors, rather than runtime exceptions. On the other hand, we also use Node.js for user management and standard web APIs. Node.js is excellent for creating fast REST APIs (such as user registration), while Rust is superior for the algorithmic logic of the game.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> interoperability, scalability, and robustness.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> The system is restricted to using the YEN string format to represent the game state. This is the strict contract between client and server.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_database">4.1.3. Database</h4>
+<div class="paragraph">
+<p>At the moment, no database has been used to store information.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_containers">4.1.4. Containers</h4>
+<div class="paragraph">
+<p>Docker was selected for service containerization as it combines both Node.js and Rust. Furthermore, Docker guarantees absolute consistency of the environment between development machines and the production server. It also greatly facilitates the coordination of the microservices architecture, isolating the specific dependencies of each language to avoid conflicts and simplify joint deployment.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> portability, deployability, scalability, reproducibility.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> The host environment must have a compatible container runtime capable of coordinating multiple containers simultaneously.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_monitoring">4.1.5. Monitoring</h4>
+<div class="paragraph">
+<p>We chose the combination of Prometheus and Grafana to implement the system&#8217;s monitoring and observability strategy. Prometheus acts as a time-series database, responsible for collecting technical metrics from the backend. Grafana connects to this data to visualize it on graphical dashboards in real-time. This decision is critical to quantitatively validate our performance requirements and detect what is slowing down the microservices architecture.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> observability, performance, availability.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> The services (both the Node.js one and the Rust engine) must be programmed to expose their metrics at a web address with a standard format that Prometheus can read periodically.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_modeling_tools">4.1.6. Modeling Tools</h4>
+<div class="paragraph">
+<p>PlantUML was selected to ensure agility in creating UML diagrams (Sequence, Class, Component). Unlike "drag and drop" visual tools, PlantUML ensures consistent and standardized aesthetics for all project diagrams, regardless of who creates them, allowing developers to focus on logical content rather than graphic design.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> consistency, efficiency, clarity.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> The source format must be plain text editable with any standard IDE and renderable without proprietary software licenses.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_version_control">4.1.7. Version Control</h4>
+<div class="paragraph">
+<p>We use GitHub to centralize code and facilitate teamwork. It allows us to develop new features in parallel using branches, avoiding conflicts between colleagues. Additionally, it protects project quality through the use of Pull Requests, ensuring that all new code is reviewed and approved by another colleague before being integrated into the main version.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> collaboration, code integrity, maintainability.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> Every change must undergo a mandatory review (Pull Request) and have passing tests (green tests) before it can be merged.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_high_level_decomposition">4.2. High-level Decomposition</h3>
+<div class="paragraph">
+<p>The following describes the fundamental architectural patterns that structure the communication and organization of the system.</p>
+</div>
+<div class="sect3">
+<h4 id="_microservices_architecture">4.2.1. Microservices Architecture</h4>
+<div class="paragraph">
+<p>We opted to divide the backend system into autonomous services (<strong>Users Service</strong> and <strong>Gamey Service</strong>) instead of using a monolith. This decision allows decoupling the user management logic from the game logic, facilitating the use of specialized technologies for each task. Furthermore, it improves fault tolerance: if the user service goes down, the game could continue functioning (and vice versa).</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> modifiability, scalability, technological independence.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> Each microservice must own its own data and run in an isolated container, communicating with others solely over the network.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_single_page_application_spa">4.2.2. Single Page Application (SPA)</h4>
+<div class="paragraph">
+<p>The frontend has been designed following the SPA pattern using React. This completely separates the presentation layer from the business logic. By loading the application once and updating content dynamically, we offer a much more fluid and fast user experience, similar to a desktop application, avoiding constant page reloads.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> usability, interoperability, performance.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> The client is responsible for managing routing and view state, offloading the task of rendering HTML from the server.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_rest_architectural_style">4.2.3. REST Architectural Style</h4>
+<div class="paragraph">
+<p>To connect the Frontend with the Microservices, we use a REST architecture. The use of the standard HTTP protocol and JSON format ensures the system is easy to understand and test. As a universal standard, it allows our TypeScript frontend to communicate seamlessly with a Rust backend and a Node.js backend without the need for complex adapters.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> simplicity, interoperability, decoupling.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> Communication must be stateless. This means the server does not save information about the previous request; each message from the client must contain all necessary information to be processed.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_strategies_for_quality_goals">4.3. Strategies for Quality Goals</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_4_3_approaches_to_achieve_quality_goals">4.4. 4.3. Approaches to Achieve Quality Goals</h3>
+<div class="paragraph">
+<p>The following table relates our quality goals to specific scenarios and the architectural strategies implemented to resolve them.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Quality Goal</th>
+<th class="tableblock halign-left valign-top">Scenario</th>
+<th class="tableblock halign-left valign-top">Solution Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Performance</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The game requires complex AI calculations to develop the match without freezing the server or increasing latency.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Rust Engine:</strong> We use Rust to process complex moves instantly.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Interoperability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Frontend (TypeScript), User Service (Node.js), and Game Engine (Rust) must exchange data without friction.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>REST &amp; JSON Standard:</strong> Strict use of standard HTTP protocols. The <strong>YEN notation</strong> acts as a universal data contract, avoiding language-specific binary formats.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Modifiability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The team needs to update the AI strategy without the risk of introducing errors into the User Login system.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Microservices:</strong> Strict separation of concerns. The Engine and User Service are isolated containers; changing one does not require recompiling or redeploying the other.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Usabilidad</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Players expect a fluid experience, similar to a native app, without page reloads during the game.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>React SPA (Single Page Application):</strong> The interface loads once and updates dynamically. TypeScript ensures type safety, preventing runtime errors.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Robustness</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A specific match causes a critical error due to an illegal state or server failure.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Stateless Design &amp; Docker:</strong> Since the Rust engine saves no state, a request failure does not corrupt server memory. Docker allows immediate restarts without data loss (persistence is handled by Node.js).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Observability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Developers need to identify why a specific move took longer than expected or failed.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Prometheus &amp; Grafana:</strong> Services expose technical metrics (e.g., calculation time). Grafana dashboards visualize this data in real-time to detect problems.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Portability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">New developers need to spin up the project on different operating systems.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker Compose:</strong> All infrastructure is defined as code. A single command ("docker-compose up") replicates the production environment locally.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_organizational_decisions">4.5. Organizational Decisions</h3>
+<div class="paragraph">
+<p>To organize ourselves well and ensure work proceeds without issues, we have agreed upon the following team rules.</p>
+</div>
+<div class="sect3">
+<h4 id="_code_and_task_management_github">4.5.1. Code and Task Management (GitHub)</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Main Branch (master):</strong> The master branch always contains the definitive and functional version of the project. We only add changes here when we are sure they work well.</p>
+</li>
+<li>
+<p><strong>Work Organization:</strong> We use GitHub Projects tools to assign work and see what remains to be done. This way, we all know what everyone is working on.</p>
+</li>
+<li>
+<p><strong>Meeting Documentation:</strong> We use the GitHub Wiki to store the minutes of our meetings. This creates a record of what we decide each week.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_quality_control">4.5.2. Quality Control</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Code Reviews:</strong> To avoid errors, we have decided that no one can upload code to the main branch without another colleague reviewing it first.</p>
+</li>
+<li>
+<p><strong>Goal:</strong> This serves two purposes: avoiding silly mistakes and ensuring everyone understands everyone else&#8217;s code, so that no one becomes indispensable in a specific part of the application.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_communication">4.5.3. Communication</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Weekly Meetings:</strong> We meet once a week (in person during laboratory classes) to see what progress we have made and plan the following week&#8217;s tasks. This is when we discuss important design decisions.</p>
+</li>
+<li>
+<p><strong>WhatsApp and Discord:</strong> We use these groups for quick day-to-day questions. If someone gets stuck programming, they ask for help here to solve it quickly without having to wait for the weekly meeting.</p>
+</li>
+</ul>
+</div>
 <div style="page-break-after: always;"></div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -2293,7 +2564,7 @@ If the container restarts or fails, all active saves are lost. This is being acc
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2026-02-04 19:29:01 +0100
+Last updated 2026-02-04 12:13:09 +0100
 </div>
 </div>
 </body>
