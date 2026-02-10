@@ -2,15 +2,16 @@
   "name": "users",
   "version": "1.0.0",
   "description": "",
-  "main": "users-service.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node users-service.js",
+    "start": "node src/index.js",
     "test": "vitest",
     "test:coverage": "vitest run --coverage"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors" : "^2.8.5",
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
