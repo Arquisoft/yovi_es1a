@@ -32,3 +32,132 @@ See https://docs.arc42.org/section-4/[Solution Strategy] in the arc42 documentat
 
 ****
 endif::arc42help[]
+
+=== Technology Decisions
+
+==== Frontend
+We chose React combined with TypeScript for the user interface development. React's component-based architecture is ideal for modularizing the complex visualization of the game board and managing the reactive state of the match. The adoption of TypeScript adds a static typing system that drastically reduces compile-time errors, especially when manipulating game data structures, guaranteeing more robust and self-documenting code.
+
+*Quality goals:* usability, maintainability, robustness.
+
+*Key constraints:* The system must be accessible from any modern web browser, managing communication with the backend asynchronously via JSON.
+
+==== Backend
+For the backend, on one hand, we chose Rust as it offers native performance, utilizing 100% of the CPU power, which guarantees low and predictable response times. Additionally, it prevents common errors such as null pointers or race conditions at compile time. This is crucial for a server that must be robust and not crash in the middle of a match.
+Rust's type system allows invalid game states to be represented as compilation errors or controlled errors, rather than runtime exceptions. On the other hand, we also use Node.js for user management and standard web APIs. Node.js is excellent for creating fast REST APIs (such as user registration), while Rust is superior for the algorithmic logic of the game.
+
+*Quality goals:* interoperability, scalability, and robustness.
+
+*Key constraints:* The system is restricted to using the YEN string format to represent the game state. This is the strict contract between client and server.
+
+==== Database
+At the moment, no database has been used to store information.
+
+==== Containers
+Docker was selected for service containerization as it combines both Node.js and Rust. Furthermore, Docker guarantees absolute consistency of the environment between development machines and the production server. It also greatly facilitates the coordination of the microservices architecture, isolating the specific dependencies of each language to avoid conflicts and simplify joint deployment.
+
+*Quality goals:* portability, deployability, scalability, reproducibility.
+
+*Key constraints:* The host environment must have a compatible container runtime capable of coordinating multiple containers simultaneously.
+
+==== Monitoring
+We chose the combination of Prometheus and Grafana to implement the system's monitoring and observability strategy. Prometheus acts as a time-series database, responsible for collecting technical metrics from the backend. Grafana connects to this data to visualize it on graphical dashboards in real-time. This decision is critical to quantitatively validate our performance requirements and detect what is slowing down the microservices architecture.
+
+*Quality goals:* observability, performance, availability.
+
+*Key constraints:* The services (both the Node.js one and the Rust engine) must be programmed to expose their metrics at a web address with a standard format that Prometheus can read periodically.
+
+==== Modeling Tools
+PlantUML was selected to ensure agility in creating UML diagrams (Sequence, Class, Component). Unlike "drag and drop" visual tools, PlantUML ensures consistent and standardized aesthetics for all project diagrams, regardless of who creates them, allowing developers to focus on logical content rather than graphic design.
+
+*Quality goals:* consistency, efficiency, clarity.
+
+*Key constraints:* The source format must be plain text editable with any standard IDE and renderable without proprietary software licenses.
+
+==== Version Control
+We use GitHub to centralize code and facilitate teamwork. It allows us to develop new features in parallel using branches, avoiding conflicts between colleagues. Additionally, it protects project quality through the use of Pull Requests, ensuring that all new code is reviewed and approved by another colleague before being integrated into the main version.
+
+*Quality goals:* collaboration, code integrity, maintainability.
+
+*Key constraints:* Every change must undergo a mandatory review (Pull Request) and have passing tests (green tests) before it can be merged.
+
+
+=== High-level Decomposition
+The following describes the fundamental architectural patterns that structure the communication and organization of the system.
+
+==== Microservices Architecture
+We opted to divide the backend system into autonomous services (*Users Service* and *Gamey Service*) instead of using a monolith. This decision allows decoupling the user management logic from the game logic, facilitating the use of specialized technologies for each task. Furthermore, it improves fault tolerance: if the user service goes down, the game could continue functioning (and vice versa).
+
+*Quality goals:* modifiability, scalability, technological independence.
+
+*Key constraints:* Each microservice must own its own data and run in an isolated container, communicating with others solely over the network.
+
+==== Single Page Application (SPA)
+The frontend has been designed following the SPA pattern using React. This completely separates the presentation layer from the business logic. By loading the application once and updating content dynamically, we offer a much more fluid and fast user experience, similar to a desktop application, avoiding constant page reloads.
+
+*Quality goals:* usability, interoperability, performance.
+
+*Key constraints:* The client is responsible for managing routing and view state, offloading the task of rendering HTML from the server.
+
+==== REST Architectural Style
+To connect the Frontend with the Microservices, we use a REST architecture. The use of the standard HTTP protocol and JSON format ensures the system is easy to understand and test. As a universal standard, it allows our TypeScript frontend to communicate seamlessly with a Rust backend and a Node.js backend without the need for complex adapters.
+
+*Quality goals:* simplicity, interoperability, decoupling.
+
+*Key constraints:* Communication must be stateless. This means the server does not save information about the previous request; each message from the client must contain all necessary information to be processed.
+
+
+=== Strategies for Quality Goals
+=== 4.3. Approaches to Achieve Quality Goals
+
+The following table relates our quality goals to specific scenarios and the architectural strategies implemented to resolve them.
+
+[options="header", cols="1,2,3"]
+|===
+|Quality Goal |Scenario |Solution Strategy
+
+| **Performance**
+| The game requires complex AI calculations to develop the match without freezing the server or increasing latency.
+| **Rust Engine:** We use Rust to process complex moves instantly.
+
+| **Interoperability**
+| The Frontend (TypeScript), User Service (Node.js), and Game Engine (Rust) must exchange data without friction.
+| **REST & JSON Standard:** Strict use of standard HTTP protocols. The **YEN notation** acts as a universal data contract, avoiding language-specific binary formats.
+
+| **Modifiability**
+| The team needs to update the AI strategy without the risk of introducing errors into the User Login system.
+| **Microservices:** Strict separation of concerns. The Engine and User Service are isolated containers; changing one does not require recompiling or redeploying the other.
+
+| **Usabilidad**
+| Players expect a fluid experience, similar to a native app, without page reloads during the game.
+| **React SPA (Single Page Application):** The interface loads once and updates dynamically. TypeScript ensures type safety, preventing runtime errors.
+
+| **Robustness**
+| A specific match causes a critical error due to an illegal state or server failure.
+| **Stateless Design & Docker:** Since the Rust engine saves no state, a request failure does not corrupt server memory. Docker allows immediate restarts without data loss (persistence is handled by Node.js).
+
+| **Observability**
+| Developers need to identify why a specific move took longer than expected or failed.
+| **Prometheus & Grafana:** Services expose technical metrics (e.g., calculation time). Grafana dashboards visualize this data in real-time to detect problems.
+
+| **Portability**
+| New developers need to spin up the project on different operating systems.
+| **Docker Compose:** All infrastructure is defined as code. A single command ("docker-compose up") replicates the production environment locally.
+|===
+
+
+=== Organizational Decisions
+To organize ourselves well and ensure work proceeds without issues, we have agreed upon the following team rules.
+
+==== Code and Task Management (GitHub)
+- *Main Branch (master):* The master branch always contains the definitive and functional version of the project. We only add changes here when we are sure they work well.
+- *Work Organization:* We use GitHub Projects tools to assign work and see what remains to be done. This way, we all know what everyone is working on.
+- *Meeting Documentation:* We use the GitHub Wiki to store the minutes of our meetings. This creates a record of what we decide each week.
+
+==== Quality Control
+- *Code Reviews:* To avoid errors, we have decided that no one can upload code to the main branch without another colleague reviewing it first.
+- *Goal:* This serves two purposes: avoiding silly mistakes and ensuring everyone understands everyone else's code, so that no one becomes indispensable in a specific part of the application.
+
+==== Communication
+- *Weekly Meetings:* We meet once a week (in person during laboratory classes) to see what progress we have made and plan the following week's tasks. This is when we discuss important design decisions.
+- *WhatsApp and Discord:* We use these groups for quick day-to-day questions. If someone gets stuck programming, they ask for help here to solve it quickly without having to wait for the weekly meeting.
