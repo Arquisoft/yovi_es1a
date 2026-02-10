@@ -16,6 +16,7 @@ function App() {
       </div>
 
       <h2>Welcome to the Software Arquitecture 2025-2026 course</h2>
+      <h3>Please, create an account</h3>
       <RegisterForm />
 
       <BotTester />  {/* Temporary component to test the connection with the Rust Bot (port 4000) */}

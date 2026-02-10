@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 
 const RegisterForm: React.FC = () => {
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [responseMessage, setResponseMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -11,8 +13,8 @@ const RegisterForm: React.FC = () => {
     setResponseMessage(null);
     setError(null);
 
-    if (!username.trim()) {
-      setError('Please enter a username.');
+    if (!username.trim() || !email.trim() || !password.trim()) {
+      setError('Please enter valid data.');
       return;
     }
 
@@ -24,13 +26,15 @@ const RegisterForm: React.FC = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ username })
+        body: JSON.stringify({ username, email, password })
       });
 
       const data = await res.json();
       if (res.ok) {
         setResponseMessage(data.message);
         setUsername('');
+        setEmail('');
+        setPassword('');
       } else {
         setError(data.error || 'Server error');
       }
@@ -44,15 +48,41 @@ const RegisterForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit} className="register-form">
       <div className="form-group">
-        <label htmlFor="username">Whats your name?</label>
+        <label htmlFor="username">Username</label>
         <input
           type="text"
           id="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="form-input"
+          required
         />
       </div>
+
+      <div className="form-group">
+        <label htmlFor="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="form-input"
+          required
+        />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="form-input"
+          required
+        />
+      </div>
+
       <button type="submit" className="submit-button" disabled={loading}>
         {loading ? 'Entering...' : 'Lets go!'}
       </button>
