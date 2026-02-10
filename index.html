@@ -1015,7 +1015,7 @@ together with a mapping table showing the relationships between channels and inp
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/ZP9BJ-Cm483l_XMZdDf3HVTneGS4AWWMiMoN5d403bDdQAp6TjOUmoB4VsTicXMF7ZQN-F5zyqhs8sFWP5iLryPr6D22zhRpZXpF-R4baCklRswNgDUhu9Ehfxxr0HuQmwHQkcDW3y6i6eRQ1D9il5CADGjKNKOA5M24ckwLShucgAQjaIGLF2cGvrzMg1OKh77OmY1hW2iv7HPR5qKzzo4ElLuBSU8Zm-3CQsmRMGvpp1Aqas95XyfwPwIGaIC1DzOvyOCFws5VmOSgSku8SmhtHbF9dlB9DlGOBJs-GrVvH6rZPy5RuePIB60dswqX0zwXmzTWiYxCS-vSoGXXDDhR30CcSFINT6AACFNMegiZ3EILP83oqH8FbTgWsIfDY3Id31xCVi05_KaKETwuwvF5OhPpElzr3fDlu_7uzgrOMleFyVidKSeNxq1hYb6gFCJOB3s6klUkQ0cJtV7kbrkb2fojF1YnVYSAfaYC6xxaphoaATIxjdJ0JlYVnC7elZGuFbhqBQbzQK1-wXS0" alt="technical-context-diagram">
+<img src="https://www.plantuml.com/plantuml/png/ZPDFJ-Cm4CNl_XIZdk1GKPOzB3sig82bk-9F8KKS5WuJPsYi9hPtx6o5KB_xZjsc0gc7zScnVs_clKbo5Y9oxDf6XQMn7XbRqAxrpfADHNnh2EJoouVR4lLomQwprRbh7CEgDf5KGwyHeWCsYpf2PPXqDCugXJeAD7WCn0F009ribBAk8XWyKGabkrL_jzs_Av2rSm631v8gCF4U3ehPv32pmQDQzuKkd5uImzI520VNJcDJorR0TvLhUV6C2m5RPutu6LeISAkwfRXolCmqRDU7vc8oT_x1paQorQRzYahqNkqJfAW12kA_HjCkSzY7Nc5BRv_GHJhPMtR6hgLOKnSowELnRqd6LxIuAIRxpApJg5Io0SFXztxEC0Rn2b8pnL7zQI8syGGuhv5bSDFvpVNHhm9-J-VpsVZRw4KfUG4PpU64B6Gs0IQpd_10VpeACJpRZ8lkxXR69wEHo7fLplaVggzPjNEU4ebgeZM5G04kCDIbGwvwLVgangUZqsDncE6aIhCIrNr7RB8eufRFdHClJJBrAP5czCBVK6IZUsDmTJdlqoXr9lxb1_a7" alt="technical-context-diagram">
 </div>
 </div>
 <div class="paragraph">
@@ -1028,10 +1028,13 @@ together with a mapping table showing the relationships between channels and inp
 <div class="ulist">
 <ul>
 <li>
-<p><strong>User management and game logic API:</strong> The HTTP client interacts with the Users Service (port 3000) and the Gamey Service (port 4000) by sending and receiving data exclusively in JSON format. These interfaces manage authentication and game mechanics using the HTTP protocol, without including visual elements.</p>
+<p><strong>Frontend Delivery Interface:</strong> The user&#8217;s browser connects to the WebApp service via <strong>port 80</strong> to download the static assets (HTML, CSS, JavaScript) required to run the Single Page Application (React).</p>
 </li>
 <li>
-<p><strong>Visualization interface:</strong> This connection delivers the Grafana graphical interface to the client via port 9091. It uses the HTTP (Web) standard to serve the necessary HTML and CSS code that allows the administrator to view the control panels.</p>
+<p><strong>User management and game logic API:</strong> The <strong>React App (SPA)</strong> running in the browser interacts with the Users Service (<strong>port 3000</strong>) and the Gamey Service (<strong>port 4000</strong>) by sending and receiving data exclusively in JSON format. These interfaces manage authentication and game mechanics using the HTTP protocol.</p>
+</li>
+<li>
+<p><strong>Visualization interface:</strong> This connection delivers the Grafana graphical interface to the administrator via <strong>port 9091</strong>. It uses standard HTTP to serve the dashboards for system monitoring.</p>
 </li>
 </ul>
 </div>
@@ -1041,17 +1044,7 @@ together with a mapping table showing the relationships between channels and inp
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Collection and query channel within the private network:</strong> Prometheus makes periodic HTTP GET requests to the Users Service&#8217;s internal port 3000 to collect technical health metrics. Simultaneously, Grafana queries the Prometheus database on port 9090 to retrieve historical data and generate graphs.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><strong>Control Interfaces:</strong></p>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Command Input:</strong> The user uses the terminal as a manual control interface. By executing commands, they make requests to the system to simulate user behavior and verify the functionality of the services.</p>
+<p><strong>Collection and query channel within the private network:</strong> Prometheus makes periodic HTTP GET requests to the Users Service&#8217;s internal <strong>port 3000</strong> to collect technical health metrics. Simultaneously, Grafana queries the Prometheus database on <strong>port 9090</strong> to retrieve historical data and generate graphs.</p>
 </li>
 </ul>
 </div>
