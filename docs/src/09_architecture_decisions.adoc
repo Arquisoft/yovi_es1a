@@ -48,5 +48,8 @@ endif::arc42help[]
 | **Rust**
 | The language we will use is Rust because it was one of the required conditions.
 
+| **MongoDB**
+| As a database, MongoDB makes data handling easy due to its flexibility, performance, and scalability.
+
 
 |===
