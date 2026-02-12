@@ -122,13 +122,13 @@ node "Docker Host (Localhost)" {
 }
 
 player -> browser : Plays Game
-browser ..> webapp : Loads HTML/JS\n[HTTP:80]
+browser --> webapp : Loads HTML/JS\n[HTTP:80]
 
 spa ---> users : API Requests\n[HTTP/JSON :3000]
 spa ---> gamey : API Requests\n[HTTP/JSON :4000]
 
 users --> mongo : Reads/Writes Data
-
+gamey --> mongo : Reads/Writes Data
 
 admin --> graf : View Dashboards\n[HTTP :9091]
 
@@ -154,4 +154,4 @@ The Yovi system uses a set of HTTP interfaces for communication between microser
 
 ** **Collection and consultation channel within the private network:** Prometheus makes periodic HTTP GET requests to the Users Service's internal port 3000 to collect technical health metrics. Simultaneously, Grafana queries the Prometheus database on port 9090 to retrieve historical data and generate graphs.
 
-** **Data Persistence Interface:** The Users Service communicates directly with the internal MongoDB database to read and write persistent data (user profiles and game history). This connection is strictly internal to the backend environment.
+** **Data Persistence Interface:** Both the Users Service and the Gamey Service communicate directly with the internal MongoDB database. The Users Service manages user profiles and authentication, while the Gamey Service persists game logs and match history. These connections are strictly internal to the backend environment.

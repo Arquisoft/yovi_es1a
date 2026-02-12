@@ -51,8 +51,12 @@ Rust's type system allows invalid game states to be represented as compilation e
 *Key constraints:* The system is restricted to using the YEN string format to represent the game state. This is the strict contract between client and server.
 
 ==== Database
-At the moment, no database has been used to store information.
+We chose MongoDB as our primary database because of its flexibility. Unlike traditional databases that use rigid tables, MongoDB stores information in "documents," a format that perfectly complements our coding technologies (Node.js and React).
+This choice allows us to achieve two key things: first, agility, as we can change what data we store about users or games without having to restructure the entire system each time. And second, speed, ensuring that saving game histories is fast and doesn't interrupt the player experience.
 
+*Quality goals:* Agility in development and speed of response.
+
+*Key constraints:* The system must be able to store varied game data without a fixed structure, while maintaining security for user account data.
 ==== Containers
 Docker was selected for service containerization as it combines both Node.js and Rust. Furthermore, Docker guarantees absolute consistency of the environment between development machines and the production server. It also greatly facilitates the coordination of the microservices architecture, isolating the specific dependencies of each language to avoid conflicts and simplify joint deployment.
 
