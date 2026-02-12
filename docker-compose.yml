@@ -1,26 +1,16 @@
 version: "3.3"
 services:
-  mongodb:
-    image: mongo:latest
-    container_name: mongodb
-    ports:
-      - "27017:27017"
-    networks:
-      - monitor-net
-    volumes:
-      - mongodb-data:/data/db
+  
   users:
     build: ./users
     container_name: users
-    depends_on:
-      - mongodb
     image: ghcr.io/arquisoft/yovi_es1a-users:latest
     ports:
       - "3000:3000"
     networks:
       - monitor-net
-    environment:
-      - MONGODB_URI=mongodb://mongodb:27017/userdb
+    env_file:
+      - ./users/.env
 
   webapp:
     build:
