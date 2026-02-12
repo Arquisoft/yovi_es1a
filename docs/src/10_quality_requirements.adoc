@@ -32,21 +32,21 @@ endif::arc42help[]
 ....
 @startmindmap
 * Quality
-** Modifiability (High)
-*** Pluggable AI Strategies
-*** Configurable Rules
 ** Interoperability (High)
-*** Standardized YEN API
-*** Language Independent
-** Usability / DX (Medium)
-*** Structured Error Messages
-*** API Documentation
+*** Standardized YEN Format
+*** No Data Adapters (Direct Mapping)
+** Security (High)
+*** Server Authority (Anti-Cheat)
+*** Input Validation
+** Modifiability (High)
+*** Interface AI Strategies
+*** Decoupled Game Engine
 ** Observability (Medium)
-*** Contextual Logging
-*** Crash Resilience
-** Performance (Low)
-*** State Reconstruction
-*** Low Latency (< 200ms)
+*** Contextual Logging (GameID)
+*** Structured Error Responses
+** Performance (Medium)
+*** Fast State Reconstruction (<200ms)
+*** Low Latency Parsing (<50ms)
 @endmindmap
 ....
 
@@ -72,40 +72,22 @@ In any case the tree should include links to the scenarios of the following sect
 endif::arc42help[]
 
 === Quality Scenarios
-[options="header", cols="1,2,3,4"]
+
+[options="header", cols="1,2,2,3,2,2,3,3,2"]
 |===
-|Priority (Imp, Diff) |Quality Attribute |Scenario |Expected Outcome
+|Ref |Attribute |Source |Stimulus |Artifact |Environment |Response |Measure |Priority (Imp, Diff)
 
-| **High, Low**
-| **Modifiability**
-| A developer wants to implement a new AI strategy **during the design phase** (Environment).
-| The developer implements the YBot trait, requiring **no changes (0 lines)** in the core GameY logic (Measure).
+| SC-01 | Interoperability | Backend | Sends a move request in YEN format | Rust game engine | Normal operation (runtime) | The engine processes the string directly without data mapping adapters | Processing time < 50 ms | High, Low
 
-| **High, Med**
-| **Modifiability**
-| The requirements change **during a maintenance cycle** (Environment) to include a new game variant.
-| The system allows rule injection via configuration, ensuring **100% backward compatibility** with existing YEN save files (Measure).
+| SC-02 | Modifiability | Developer | Wants to add a new AI strategy | Rust source code (AI module) | Design/Maintenance time | The new strategy is added by implementing an existing interface | 0 lines of code modified in the main game engine | High, Medium
 
-| **High, Med**
-| **Interoperability**
-| An external bot (Source) sends a generic JSON move request **during runtime execution** (Environment).
-| The system processes the YEN string directly **without requiring language-specific adapters** (Measure).
+| SC-03 | Performance | User | Refreshes the webpage to resume a game | Complete System (Frontend + Backend + Rust) | Normal Operation | The system analyzes the YEN string and reconstructs the 3D board | Interaction Time < 200 ms | Medium, High
 
-| **Med, Low**
-| **Usability (DX)**
-| A frontend developer (Source) sends invalid coordinates to the API **during integration testing** (Environment).
-| The API returns a structured 400 error, allowing the developer to identify the bug source in **less than 1 minute** (Measure).
+| SC-04 | Observability | Malicious User/Bot Error | Sends out-of-bounds coordinates (e.g., "Z: 99") | Server (Backend) | Normal Operation | The system logs the incident with context and returns a 400 error | The log includes GameID and the YEN string; Server uptime: 100% (no crashes) | Medium, Low
 
-| **Med, Low**
-| **Observability**
-| A player or bot sends an illegal move (e.g., placing a piece on top of another) **during a live production game** (Environment).
-| The system logs the specific **GameID and invalid YEN string** for debugging, returning a handled error **without crashing the session** (Measure).
-
-| **Low, High**
-| **Performance**
-| A user refreshes the browser to resume a long match **during an active game session** (Environment).
-| The system parses the YEN string and reconstructs the full board state in **less than 200ms** (Measure).
+| SC-05 | Security | Cheater User | Sends a fake request claiming victory ("winner": true) without playing | Backend (Validation Logic) | Normal Operation | The server ignores the client data, checks the move history, and rejects the request | 0% of corrupted games in the database; Server authority is maintained | High, Medium
 |===
+
 ifdef::arc42help[]
 [role="arc42help"]
 ****

@@ -8,12 +8,12 @@ router.post('/createuser', async (req, res) => {
     const user = await createUser(userData);
     
     res.status(201).json({ 
-      message: 'Usuario creado exitosamente',
+      message: 'User successfully created',
       userId: user._id,
       username: user.username
     });
   } catch (error) {
-    console.error('Error al crear usuario:', error);
+    console.error('Error creating user:', error);
     
     if (error.message === 'All fields are required') {
       return res.status(400).json({ error: error.message });

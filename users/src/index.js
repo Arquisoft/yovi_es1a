@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose'); //conect and talk with mongodb
 const cors = require('cors'); //allow extern peticions
@@ -21,7 +22,7 @@ app.use(express.json());
 const metricsMiddleware = promBundle({ includeMethod: true });
 app.use(metricsMiddleware);
 
-const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/userdb';
+const mongoUri = process.env.MONGODB_URI;
 
 mongoose.connect(mongoUri)
   .then(() => console.log('MongoDB connected successfully to:', mongoUri))
@@ -41,5 +42,5 @@ app.get('/health', (req, res) => {
 
 //turn on the server listening the port 3000.
 app.listen(port, () => {
-  console.log(`Users Service running on http://localhost:${port}`);
+  console.log(`Users Service listening on port :${port}`);
 });
