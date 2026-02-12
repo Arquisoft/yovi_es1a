@@ -72,26 +72,26 @@ The domain model revolves around the game of Y, a connection strategy game.
 * **Server authoritativeness**: The frontend (web or CLI) is simply a display layer, and the backend is the game engine. All checks for the legality of moves are applied by the backend to prevent cheating by modified clients.
 
 === Data persistence and exchange
-The system relies on a standardized text format for both data transport and storage.
+The system uses a standardized text format for both transporting and storing game data. For persistent storage of application user data, MongoDB is used.
 
 * **YEN Notation (Y Notation)**: The primary format for persisting game state and exchanging messages between subsystems (Web <-> Rust). It uses JSON to represent board size, player turns, and board layout.
 * **Serialization/Deserialization**: The system uses serde (in Rust) to strictly map the YEN JSON format to internal memory structures. This ensures that any saved game or network message can be reconstructed into a valid object at runtime.
+* **Users Storage**: MongoDB is employed to store user credentials and metadata. The system uses Mongoose schemas to define strict data types and validation rules, ensuring that invalid user data is rejected before reaching the database.
 
 === Architecture and Design Patterns
-The implementation leverages standard software design patterns to ensure modularity and testability, specifically within the Rust core:
+The core of the system uses established software engineering patterns to separate the logic from the implementation:
 
 * **Strategy Pattern**: Used for the AI ​​system. The YBot trait acts as a strategy interface, allowing different algorithms (Random, LLM) to be swapped at runtime via YBotRegistry without modifying the game logic.
-* **State Machine**: The game flow is modeled as a finite state machine (FSM) represented by the GameStatus enumeration (e.g., Ongoing, Finished). Transitions are strictly controlled by the results of the moves.
-* **Result Pattern**: Operations that can fail (such as placing a piece on an occupied cell) return a Result<T, GameYError> type, requiring explicit error handling at the compiler level.
+* **State Machine**: The game flow is modeled as a finite state machine represented by the GameStatus enumeration (e.g., Ongoing, Finished). Transitions are strictly controlled by the results of the moves.
+* **Result Pattern**: The system adopts a design where operations do not throw exceptions but rather return success or failure values as part of the normal flow. This forces the architecture to explicitly handle every possible outcome, eliminating "silent failures" and ensuring high reliability.
 
 === Error Handling and Logging
-To meet availability and observability requirements, the system implements structured logging and typed errors:
+To ensure maintainability and a transparent user experience, the architecture includes a comprehensive monitoring layer:
 
-* **Typed Errors**: The GameYError enumeration defines possible failure states (e.g., InvalidPlayerTurn, Occupied, IoError). This allows the API to return meaningful HTTP/JSON error codes to the client instead of generic server errors.
-* **Structured Logging**: The system uses the tracing library to instrument key operations. This provides a detailed log of game events (movements, state changes, errors), essential for debugging asynchronous bot interactions and API calls.
+* **Semantic Error Handling**: Instead of generic server faults, the system maps internal exceptions to specific, domain-relevant categories (e.g., "Rule Violation," "Resource Unavailable"). This allows client applications to receive meaningful feedback and guide the user towards a solution.
 
 === User Interface and UX Concepts
 
 * **Internal Logic**: Uses 3D barycentric coordinates (x, y, z) to calculate adjacency and winning paths.
 * **Visual/Input**: Uses a linear index (0 to N) or a visual grid mapping for user interactions, simplifying the input process for humans while the backend converts them to 3D coordinates.
-* **Feedback Loop**: The user interface provides immediate feedback on the validity of the move through the "Result" types returned by the core logic, ensuring that users understand why a move might be rejected (e.g., "Cell Occupied").
+* **Feedback Loop**: The user interface provides immediate feedback on the validity of the move based on the results returned by the core logic, ensuring that users understand why a move might be rejected (e.g., "Cell Occupied").

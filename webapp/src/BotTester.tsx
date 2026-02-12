@@ -9,7 +9,7 @@ const BotTester: React.FC = () => {
     setResultado('...');
 
     try {
-        //import.meta.env.VITE_API_ENDPOINT || 'http://localhost:4000';
+        //import.meta.env.VITE_API_ENDPOINT
         const apiEndpoint ='http://localhost:4000';
         const res = await fetch(`${apiEndpoint}/v1/ybot/choose/random_bot`, {
         method: 'POST',
@@ -53,4 +53,4 @@ const BotTester: React.FC = () => {
   );
 };
 
-export default BotTester;
+export default BotTester; // exit door so that the BotTester component can travel to other files.

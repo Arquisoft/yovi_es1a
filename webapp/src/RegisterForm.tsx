@@ -20,7 +20,7 @@ const RegisterForm: React.FC = () => {
 
     setLoading(true);
     try {
-      //import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
+      //import.meta.env.VITE_API_URL
       const API_URL = 'http://localhost:3000'
       const res = await fetch(`${API_URL}/createuser`, {
         method: 'POST',
@@ -31,7 +31,9 @@ const RegisterForm: React.FC = () => {
       });
 
       const data = await res.json();
+      //if the server answers ok
       if (res.ok) {
+        //Clean the form
         setResponseMessage(data.message);
         setUsername('');
         setEmail('');
@@ -42,7 +44,7 @@ const RegisterForm: React.FC = () => {
     } catch (err: any) {
       setError(err.message || 'Network error');
     } finally {
-      setLoading(false);
+      setLoading(false); // Whatever happens, stop showing the loading status
     }
   };
 
@@ -53,8 +55,8 @@ const RegisterForm: React.FC = () => {
         <input
           type="text"
           id="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={username} // stores all the letters entered into the box
+          onChange={(e) => setUsername(e.target.value)} // value on the box
           className="form-input"
           required
         />
@@ -83,11 +85,11 @@ const RegisterForm: React.FC = () => {
           required
         />
       </div>
-
-      <button type="submit" className="submit-button" disabled={loading}>
+      {/* disable the button to prevent double clicking (double registration)  -> disabled={loading}*/}
+      <button type="submit" className="submit-button" disabled={loading}> 
         {loading ? 'Entering...' : 'Lets go!'}
       </button>
-
+      
       {responseMessage && (
         <div className="success-message" style={{ marginTop: 12, color: 'green' }}>
           {responseMessage}
