@@ -3,8 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose'); //conect and talk with mongodb
 const cors = require('cors'); //allow extern peticions
 const promBundle = require('express-prom-bundle');
+import userRoutes from './routes/user-routes.js';
 
-const userRoutes = require('./routes/user-routes'); 
 
 const app = express();
 const port = process.env.PORT || 3000;
