@@ -3,9 +3,6 @@ name: Release — Test, Build, Publish, Deploy
 on:
   release:
     types: [published]
-  push:  # <-- AGREGAR ESTO TEMPORALMENTE
-    branches:
-      - master
 
 permissions:
   contents: read
