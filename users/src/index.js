@@ -1,8 +1,8 @@
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose'); //conect and talk with mongodb
-const cors = require('cors'); //allow extern peticions
-const promBundle = require('express-prom-bundle');
+import dotenv from 'dotenv';
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import promBundle from 'express-prom-bundle';
 import userRoutes from './routes/user-routes.js';
 
 
