@@ -13,16 +13,25 @@ const RegisterForm: React.FC = () => {
     setResponseMessage(null);
     setError(null);
 
-    if (!username.trim() || !email.trim() || !password.trim()) {
-      setError('Please enter valid data.');
+    // Validación específica para cada campo
+    if (!username.trim()) {
+      setError('Please enter a username');  // <-- CAMBIO AQUÍ
+      return;
+    }
+    
+    if (!email.trim()) {
+      setError('Please enter an email');
+      return;
+    }
+    
+    if (!password.trim()) {
+      setError('Please enter a password');
       return;
     }
 
     setLoading(true);
     try {
-      //import.meta.env.VITE_API_URL
-      //'http://localhost:3000'
-      const API_URL = import.meta.env.VITE_API_URL;
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       const res = await fetch(`${API_URL}/createuser`, {
         method: 'POST',
         headers: {
@@ -32,9 +41,7 @@ const RegisterForm: React.FC = () => {
       });
 
       const data = await res.json();
-      //if the server answers ok
       if (res.ok) {
-        //Clean the form
         setResponseMessage(data.message);
         setUsername('');
         setEmail('');
@@ -45,7 +52,7 @@ const RegisterForm: React.FC = () => {
     } catch (err: any) {
       setError(err.message || 'Network error');
     } finally {
-      setLoading(false); // Whatever happens, stop showing the loading status
+      setLoading(false);
     }
   };
 
@@ -56,8 +63,8 @@ const RegisterForm: React.FC = () => {
         <input
           type="text"
           id="username"
-          value={username} // stores all the letters entered into the box
-          onChange={(e) => setUsername(e.target.value)} // value on the box
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           className="form-input"
           required
         />
@@ -86,7 +93,7 @@ const RegisterForm: React.FC = () => {
           required
         />
       </div>
-      {/* disable the button to prevent double clicking (double registration)  -> disabled={loading}*/}
+
       <button type="submit" className="submit-button" disabled={loading}> 
         {loading ? 'Entering...' : 'Lets go!'}
       </button>
