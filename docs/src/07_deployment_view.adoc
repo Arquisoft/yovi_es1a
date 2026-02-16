@@ -98,7 +98,6 @@ gamey --> mongo : Read/Write data
 
 graf --> prom : Queries data
 prom --> users : Collects metrics
-prom --> gamey : Collects metrics
 @enduml
 ----
 
