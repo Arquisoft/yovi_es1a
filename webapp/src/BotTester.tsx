@@ -9,8 +9,8 @@ const BotTester: React.FC = () => {
     setResultado('...');
 
     try {
-        //import.meta.env.VITE_API_ENDPOINT
-        const apiEndpoint ='http://localhost:4000';
+        //'http://localhost:4000'
+        const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
         const res = await fetch(`${apiEndpoint}/v1/ybot/choose/random_bot`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
