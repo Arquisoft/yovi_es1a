@@ -66,7 +66,6 @@ const RegisterForm: React.FC = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="form-input"
-          required
         />
       </div>
 
@@ -78,7 +77,6 @@ const RegisterForm: React.FC = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="form-input"
-          required
         />
       </div>
 
@@ -90,7 +88,6 @@ const RegisterForm: React.FC = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="form-input"
-          required
         />
       </div>
 
