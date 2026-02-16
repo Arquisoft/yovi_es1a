@@ -1272,7 +1272,7 @@ This choice allows us to achieve two key things: first, agility, as we can chang
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Microservices:</strong> Strict separation of concerns. The Engine and User Service are isolated containers; changing one does not require recompiling or redeploying the other.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Usabilidad</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Usability</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Players expect a fluid experience, similar to a native app, without page reloads during the game.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>React SPA (Single Page Application):</strong> The interface loads once and updates dynamically. TypeScript ensures type safety, preventing runtime errors.</p></td>
 </tr>
@@ -2346,6 +2346,10 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Inexperience in using Docker</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Setting up internal networks, volumes, and container communication (with Node.js and Rust) can create deployment and configuration problems that delay integration testing or implementation.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Data Consistency</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When using a database without a rigid schema, there is a risk of data inconsistency if the model evolves and data migrations are not performed to update older documents.</p></td>
+</tr>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
@@ -2363,6 +2367,10 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Non-persistent Game State</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The current architecture manages active game sessions entirely in-memory within the Gamey Service. There is no real-time persistence layer for the game state (MongoDB is currently restricted to User management), meaning that any service restart or crash results in the immediate loss of all active matches.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Error Handling</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Backend error handling is fundamental. The lack of a centralized logging and exception management strategy will hinder the diagnosis of problems in production.</p></td>
 </tr>
 </tbody>
 </table>
