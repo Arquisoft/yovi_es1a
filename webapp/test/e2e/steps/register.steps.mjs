@@ -1,5 +1,5 @@
 import { Given, When, Then } from '@cucumber/cucumber';
-import { expect } from '@playwright/test';
+import assert from 'assert';
 
 Given('the register page is open', async function () {
   await this.page.goto('http://localhost:5173');
@@ -18,5 +18,9 @@ Then('I should see a welcome message containing {string}', async function (expec
     state: 'visible' 
   });
   const text = await successMessage.textContent();
-  expect(text).toContain(expectedText);
+  
+  assert.ok(
+    text.includes(expectedText), 
+    `El texto "${text}" no contiene lo esperado: "${expectedText}"`
+  );
 });
