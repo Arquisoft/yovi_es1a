@@ -41,3 +41,9 @@ app.get('/health', (req, res) => {
 });
 
 export default app
+
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(port, () => {
+        console.log(`Users Service listening on port :${port}`);
+    });
+}
