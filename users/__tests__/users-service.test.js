@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest'
 import request from 'supertest'
-import app from '../index.js'
+import app from '../src/index.js'
 
 describe('POST /createuser', () => {
     afterEach(() => {
