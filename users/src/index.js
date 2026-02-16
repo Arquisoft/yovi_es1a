@@ -40,7 +40,4 @@ app.get('/health', (req, res) => {
     res.json({ status: 'OK', service: 'Users Service' });
 });
 
-//turn on the server listening the port 3000.
-app.listen(port, () => {
-  console.log(`Users Service listening on port :${port}`);
-});
+export default app

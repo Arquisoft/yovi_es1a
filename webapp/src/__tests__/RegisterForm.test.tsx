@@ -33,7 +33,7 @@ describe('RegisterForm', () => {
 
     // Wrap interaction + assertion inside waitFor
     await waitFor(async () => {
-      await user.type(screen.getByLabelText(/whats your name\?/i), 'Pablo')
+      await user.type(screen.getByLabelText(/username/i), 'Pablo')
       await user.click(screen.getByRole('button', { name: /lets go!/i }))
 
       // Response message should appear
