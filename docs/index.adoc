@@ -14,7 +14,7 @@ include::src/config.adoc[]
 :toc-title: Table of Contents
 
 //añadido para el uml
-:plantuml-server-url: https://www.plantuml.com/plantuml
+:plantuml-server-url: http://www.plantuml.com/plantuml
 
 //additional style for arc42 help callouts
 ifdef::backend-html5[]

@@ -28,7 +28,7 @@ See https://docs.arc42.org/section-10/[Quality Requirements] in the arc42 docume
 endif::arc42help[]
 
 === Quality Tree
-[plantuml, quality-tree, png]
+[plantuml]
 ....
 @startmindmap
 * Quality

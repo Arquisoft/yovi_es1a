@@ -16,7 +16,7 @@ endif::arc42help[]
 
 The following diagram shows the main interaction between the user and the system.
 
-[plantuml, "level1_diagram", png]
+[plantuml]
 ----
 @startuml
 actor "User" as user
@@ -42,7 +42,7 @@ Contained Building Blocks::
 
 This level shows the decomposition of the system into the three main services defined in the project structure.
 
-[plantuml, "level2_diagram", png]
+[plantuml]
 ----
 @startuml
 package "Frontend" {

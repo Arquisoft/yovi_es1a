@@ -45,7 +45,7 @@ This section displays sequence diagrams. These show the interaction of objects i
 
 This diagram shows the game life cycle in its standard form (playing against the machine).
 
-[plantuml, "Sequence diagram",png]
+[plantuml]
 ----
 @startuml
 actor User
@@ -80,7 +80,7 @@ WebApp -> Db: Save statistics
 
 This diagram shows the life cycle of the game in which a bot participates against the machine.
 
-[plantuml, "Sequence diagram",png]
+[plantuml]
 ----
 @startuml
 actor Bot
@@ -111,7 +111,7 @@ end
 
 This diagram shows the different interactions that take place when a user registers.
 
-[plantuml, "Sequence diagram",png]
+[plantuml]
 ----
 @startuml
 actor User

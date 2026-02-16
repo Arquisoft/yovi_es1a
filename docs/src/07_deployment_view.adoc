@@ -1,8 +1,6 @@
 ifndef::imagesdir[:imagesdir: ../images]
 
 [[section-deployment-view]]
-
-
 == Deployment View
 
 ifdef::arc42help[]
@@ -62,7 +60,7 @@ endif::arc42help[]
 
 _**Overview Diagram**_
 
-[plantuml, "deployment-level1", png]
+[plantuml]
 ----
 @startuml
 title Deployment View - Yovi (Localhost)
@@ -153,7 +151,7 @@ endif::arc42help[]
 
 ==== _Docker Host (Localhost)_
 
-[plantuml, "deployment-level2-host", png]
+[plantuml]
 ----
 @startuml
 title Infrastructure Level 2 - Docker Host (Localhost)
@@ -179,7 +177,6 @@ users --> mongo : Persist user data
 gamey --> mongo : Persist game data (if used)
 
 prom --> users : Metrics data
-prom --> gamey : Metrics data
 graf --> prom : Dashboard queries
 @enduml
 ----
@@ -188,7 +185,7 @@ This diagram zooms into the Docker Host and the internal Docker network. All com
 
 ==== _Client (Terminal)_
 
-[plantuml, "deployment-level2-client", png]
+[plantuml]
 ----
 @startuml
 title Infrastructure Level 2 - Client (Terminal)
@@ -215,7 +212,7 @@ This diagram isolates the client-side element used during development/testing. T
 
 ==== _Monitoring Stack (Prometheus + Grafana)_
 
-[plantuml, "deployment-level2-monitoring", png]
+[plantuml]
 ----
 @startuml
 title Infrastructure Level 2 - Monitoring Stack
@@ -233,9 +230,8 @@ node "Docker Host (Localhost)" as host {
 }
 
 prom --> users : Collects metrics
-prom --> gamey : Collects metrics
 graf --> prom : Queries metrics
 @enduml
 ----
 
-This diagram focuses on observability. Prometheus collects technical metrics exposed by the backend services and stores them internally. Grafana queries Prometheus to display dashboards. This setup supports troubleshooting and performance monitoring during development.
+This diagram focuses on observability. Prometheus collects technical metrics exposed by the backend services. and stores them internally. Grafana queries Prometheus to display dashboards. This setup supports troubleshooting and performance monitoring during development.
