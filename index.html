@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.20">
+<meta name="generator" content="Asciidoctor 2.0.26">
 <title>yovi_es1a</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -116,7 +116,6 @@ h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title str
 :not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
 pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
 pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
-pre>code{display:block}
 pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
 em em{font-style:normal}
 strong strong{font-weight:400}
@@ -140,7 +139,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #content::before{content:none}
 #header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
 #header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
-#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header>h1:only-child{border-bottom:1px solid #dddddf;padding-bottom:8px}
 #header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
 #header .details span:first-child{margin-left:-.125em}
 #header .details span.email a{color:rgba(0,0,0,.85)}
@@ -162,6 +161,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #toctitle{color:#7a2518;font-size:1.2em}
 @media screen and (min-width:768px){#toctitle{font-size:1.375em}
 body.toc2{padding-left:15em;padding-right:0}
+body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
 #toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
 #toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
 #toc.toc2>ul{font-size:.9em;margin-bottom:0}
@@ -218,6 +218,7 @@ table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
 .literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class=highlight],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
 .listingblock>.content{position:relative}
+.listingblock pre>code{display:block}
 .listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
 .listingblock:hover code[data-lang]::before{display:block}
 .listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
@@ -327,7 +328,7 @@ a.image{text-decoration:none;display:inline-block}
 a.image object{pointer-events:none}
 sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
 sup.footnote a,sup.footnoteref a{text-decoration:none}
-sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+sup.footnote a:active,sup.footnoteref a:active,#footnotes .footnote a:first-of-type:active{text-decoration:underline}
 #footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
 #footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
 #footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
@@ -972,11 +973,7 @@ The title of the table is the name of your system, the three columns contain the
 </div>
 </div>
 </div>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/JSon2W8n3CRnFKyHRh_5qK7E1n24my4nt0KjDarfqeE-lTX3SVr_7x_9d8fNYM2la38L4bnKiYPEFdkBZ5NY0O0MruB3pRWCI8OvKkFopUTLGWhcXLptdJu5u6SX3dVT0ixDdALVccu1O8Tm74yzu16laHe-IDYWA__RHLDmBOR-PBHkeJbvDO29qreblW40" alt="business-context-diagram">
-</div>
-</div>
+<div class="listingblock"><div class="content"><pre class="plantuml plantuml-error">\nError: cannot connect to PlantUML server at ""</pre></div></div>
 <div class="paragraph">
 <p>Diagram elements:</p>
 </div>
@@ -1013,11 +1010,7 @@ together with a mapping table showing the relationships between channels and inp
 </div>
 </div>
 </div>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/VP9FJzj04CNl-ob6xg7fmIIbFHGV8X8YIX7GbAJb03cCxS5PnRlhpeu9gEAxLxisVugYofArE-ytRxrlVEW5MLfJAx_Hja560uKpZRDaPI4FDK5hwlrTwXIBJSMkjUMHgnt3Tgs5Ne4D5Xkiw2tsxdW_FA_0acwnhML9zpAfTMKDMO62h10hzHxcpf9n7X3gy2x4CNaW6xTqBnpLO0MOisQW6agD5QD15N58vZK-42U07fguV18cfT5MUs4Kr-aOAaen5OAsgWcIAyfXocxhYM7m5Gt1KQt9oeV8vxtoHm70IpgGN18M0fEcWS5YFkbWtw1wLCgwaY2PkM9332VE2mpEN87rsldWsbdr-K5YdDNYEBKaCEYRBaYsZZVFy9kphoYF1n-piqAsx4xVKevDiul_wOazB8ZlT46HRKDb5ne2UFW7hKBb6IrHC4TFa9mxMxdPD38chDLEFyPRjDWvCTxkOkRi3CcQMj-Da9s9s6C8iniefEFdKMGGvkqXVAfwAkxjZVi088CpXwM7a-NvsV1qSMElJvRBUVPbj5BADmXfcewx0223oVmRNDBlbhpudXoUBhvVGFPfD1gjNXfY3Fzj-1mRLESSMc8gaC4bOUc7Lwo5FCnGK2aL_yD8XLGWWr-QjZ13lyuTSlba3Td1wE3ZIYaLiNGSqu4CVhJ4khUxiTS16wrK5DEsUNN1HS7Oa8Tp4jP5yErlfWx9bgsf_m80" alt="technical-context-diagram">
-</div>
-</div>
+<div class="listingblock"><div class="content"><pre class="plantuml plantuml-error">\nError: cannot connect to PlantUML server at ""</pre></div></div>
 <div class="paragraph">
 <p>The Yovi system uses a set of HTTP interfaces for communication between microservices and to expose data to the actors (Player and Administrator). The communication channels represented in the architecture diagram are detailed below:</p>
 </div>
@@ -1047,7 +1040,7 @@ together with a mapping table showing the relationships between channels and inp
 <p><strong>Collection and consultation channel within the private network:</strong> Prometheus makes periodic HTTP GET requests to the Users Service&#8217;s internal port 3000 to collect technical health metrics. Simultaneously, Grafana queries the Prometheus database on port 9090 to retrieve historical data and generate graphs.</p>
 </li>
 <li>
-<p><strong>Data Persistence Interface:</strong> The Users Service communicates directly with the internal MongoDB database to read and write persistent data (user profiles and game history). This connection is strictly internal to the backend environment.</p>
+<p><strong>Data Persistence Interface:</strong> Both the Users Service and the Gamey Service communicate directly with the internal MongoDB database. The Users Service manages user profiles and authentication, while the Gamey Service persists game logs and match history. These connections are strictly internal to the backend environment.</p>
 </li>
 </ul>
 </div>
@@ -1132,13 +1125,16 @@ Rust&#8217;s type system allows invalid game states to be represented as compila
 <div class="sect3">
 <h4 id="_database">4.1.3. Database</h4>
 <div class="paragraph">
-<p>At the moment, no database has been used to store information.</p>
+<p>We chose MongoDB as our primary database because of its flexibility. Unlike traditional databases that use rigid tables, MongoDB stores information in "documents," a format that perfectly complements our coding technologies (Node.js and React).
+This choice allows us to achieve two key things: first, agility, as we can change what data we store about users or games without having to restructure the entire system each time. And second, speed, ensuring that saving game histories is fast and doesn&#8217;t interrupt the player experience.</p>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_containers">4.1.4. Containers</h4>
 <div class="paragraph">
-<p>Docker was selected for service containerization as it combines both Node.js and Rust. Furthermore, Docker guarantees absolute consistency of the environment between development machines and the production server. It also greatly facilitates the coordination of the microservices architecture, isolating the specific dependencies of each language to avoid conflicts and simplify joint deployment.</p>
+<p><strong>Quality goals:</strong> Agility in development and speed of response.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> The system must be able to store varied game data without a fixed structure, while maintaining security for user account data.
+==== Containers
+Docker was selected for service containerization as it combines both Node.js and Rust. Furthermore, Docker guarantees absolute consistency of the environment between development machines and the production server. It also greatly facilitates the coordination of the microservices architecture, isolating the specific dependencies of each language to avoid conflicts and simplify joint deployment.</p>
 </div>
 <div class="paragraph">
 <p><strong>Quality goals:</strong> portability, deployability, scalability, reproducibility.</p>
@@ -1148,7 +1144,7 @@ Rust&#8217;s type system allows invalid game states to be represented as compila
 </div>
 </div>
 <div class="sect3">
-<h4 id="_monitoring">4.1.5. Monitoring</h4>
+<h4 id="_monitoring">4.1.4. Monitoring</h4>
 <div class="paragraph">
 <p>We chose the combination of Prometheus and Grafana to implement the system&#8217;s monitoring and observability strategy. Prometheus acts as a time-series database, responsible for collecting technical metrics from the backend. Grafana connects to this data to visualize it on graphical dashboards in real-time. This decision is critical to quantitatively validate our performance requirements and detect what is slowing down the microservices architecture.</p>
 </div>
@@ -1160,7 +1156,7 @@ Rust&#8217;s type system allows invalid game states to be represented as compila
 </div>
 </div>
 <div class="sect3">
-<h4 id="_modeling_tools">4.1.6. Modeling Tools</h4>
+<h4 id="_modeling_tools">4.1.5. Modeling Tools</h4>
 <div class="paragraph">
 <p>PlantUML was selected to ensure agility in creating UML diagrams (Sequence, Class, Component). Unlike "drag and drop" visual tools, PlantUML ensures consistent and standardized aesthetics for all project diagrams, regardless of who creates them, allowing developers to focus on logical content rather than graphic design.</p>
 </div>
@@ -1172,7 +1168,7 @@ Rust&#8217;s type system allows invalid game states to be represented as compila
 </div>
 </div>
 <div class="sect3">
-<h4 id="_version_control">4.1.7. Version Control</h4>
+<h4 id="_version_control">4.1.6. Version Control</h4>
 <div class="paragraph">
 <p>We use GitHub to centralize code and facilitate teamwork. It allows us to develop new features in parallel using branches, avoiding conflicts between colleagues. Additionally, it protects project quality through the use of Pull Requests, ensuring that all new code is reviewed and approved by another colleague before being integrated into the main version.</p>
 </div>
@@ -1354,11 +1350,7 @@ Rust&#8217;s type system allows invalid game states to be represented as compila
 <div class="paragraph">
 <p>The following diagram shows the main interaction between the user and the system.</p>
 </div>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/7Sh12O0m343HUwO87Q03U11ta1uybXgqq3IIf8BRYrx_-ujvLX_S81SNnP2CD60s74OAHVYIJjqnR79NN1zpujyVkIl0Ts7KUfmUvx_XXCd8OA6-3sul" alt="level1_diagram">
-</div>
-</div>
+<div class="listingblock"><div class="content"><pre class="plantuml plantuml-error">\nError: cannot connect to PlantUML server at ""</pre></div></div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Motivation</dt>
@@ -1396,11 +1388,7 @@ Rust&#8217;s type system allows invalid game states to be represented as compila
 <div class="paragraph">
 <p>This level shows the decomposition of the system into the three main services defined in the project structure.</p>
 </div>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/ROwxQWCn44LxVSL5lUtUXN5CNaqWn0ucvKYwB8kjaP2q3Y7atyFkaWSXvTmvzyniQvFIXdWsMVn9EiBUbgID6YpU3G3u57DIQeCzqbtbR24LhtIIi_amFyMT-1CrOCzowJthFuBdobA_WCapZCbVx4uYNt2ZNQyprKdastWiI1CdbR0FIRjqlPlMmHapFuJ5OZCxiSRzuV28bI-KnZ7xpKp6RsQSp5nRBZS83ciyKK9T7KlVMCsM6ePu_WG0" alt="level2_diagram">
-</div>
-</div>
+<div class="listingblock"><div class="content"><pre class="plantuml plantuml-error">\nError: cannot connect to PlantUML server at ""</pre></div></div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Motivation</dt>
@@ -1539,33 +1527,21 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <div class="paragraph">
 <p>This diagram shows the game life cycle in its standard form (playing against the machine).</p>
 </div>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/XLBDJiCm3BxdAVm0smlqC0qsYSkuC274qKs-jT7IfCJkq7Xwr1QcTXiYKWwnlpzRMOjorgu9XgscJA-2R5hEwgrlEIgzeNnesrdfYHliKkMjSQnSie2sfJ4zbPQh7qP1krIHZsPyzerjMT2cXZrIrqDjXaDKpq7CjgJbXFe2xNAK4TURt8Zl4M2LH3ChglE2tgdY1gJd5Wjo_d3mjWjwNX17HsNYx4Zy5oPnBcCKjCbWnGWpb_eiqkCWSUBW7IkS2IcrXeZeEjbpEg51rA5vtstOWJ-CYMiMGdHm0u73kDz9gJ_tCurheWpfWbwmlvxBrP2je7sTFaUlAsIPmSVXXI0OVMsAwcC7kT6RpV22ZmwYGWtRsaTGCntxlyXo2x-R-WzvH6VwE_zQUpw1H5czgBTYreYkQy8t" alt="Sequence diagram">
-</div>
-</div>
+<div class="listingblock"><div class="content"><pre class="plantuml plantuml-error">\nError: cannot connect to PlantUML server at ""</pre></div></div>
 </div>
 <div class="sect2">
 <h3 id="_bot_against_application">6.2. Bot against Application</h3>
 <div class="paragraph">
 <p>This diagram shows the life cycle of the game in which a bot participates against the machine.</p>
 </div>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/VOzDRi8m48NtFiKSW5o01O9qKI6r4e9LbuFz81R-2VQOYfw-Ig96IQ4ToOiPltdlctKMJbAyKwmb9ggZg9QJM6rR3aARtNRMlxB7MpnRhLGTXQfLfrZI0GvQA4jYmVc-e0ywimV9lSM2Z3sTh2vExWlYOEWOEHdAzWjgizjs9gFjabuIM31er3YdwYUgxfTlxAnXWL7AnTWg8g8fq7kymID8__4af86-a3qDb0rdGZ0mlPhTSEParDKJb3saf409kJWPXNrQjUfmbdHeukSGyajrJE1Bty5b384w1h6X8C-zPkHxN0koPFAi6nj0Vdhflw3vKVl0-eSlWb7TMoEOujqt" alt="Sequence diagram">
-</div>
-</div>
+<div class="listingblock"><div class="content"><pre class="plantuml plantuml-error">\nError: cannot connect to PlantUML server at ""</pre></div></div>
 </div>
 <div class="sect2">
 <h3 id="_user_registration">6.3. User registration</h3>
 <div class="paragraph">
 <p>This diagram shows the different interactions that take place when a user registers.</p>
 </div>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/XOyzRiCm38LtdU9Tm1Vm4AI8vmmrYiwKH2T2PTeGgQIzVM0d0HoWHLU-Z-zdhqR5wfWT1PiAFfIBcwbO2cacCNooVvjd5yd8ap8wxzm2eTazj1RlV4fgN40XJ5NCtOK5wNoBmvd35zA0K3YoMAAiuE-afewohPcWN9ZYp_CE09r7iqdfMI8Y2v_8qYGhyWngTgjBY_uyNNLBSLR6aQ-eox9VR0-RKXVAAQv_q1e2gmurlmJT5_LqOSZ3T3lhpzvXaY6LyT_cBnnBT7kMMCTy0m00" alt="Sequence diagram">
-</div>
-</div>
+<div class="listingblock"><div class="content"><pre class="plantuml plantuml-error">\nError: cannot connect to PlantUML server at ""</pre></div></div>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -1658,11 +1634,7 @@ when your infrastructure is more complex.</p>
 <div class="paragraph">
 <p><em><strong>Overview Diagram</strong></em></p>
 </div>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/VP51RnCn48Nl_XMZd993n3q7rDAW0eAs4A2gMWuJxyl6YZtUshCD4Uf_H_Qc8HLIRgDvtpo_6PzbvQHzy4QTUj0SdO-x057wwR2bATt59qVZpz6oNyUi4sFonad7YGFbDJTnwwIb5VkC8yN6q4M1w49t7fHWbQNrC8QjnaG_Cf8n4XlGwC8xY8w8CzbQqXz3TFyTAJXXJ-C24xSGdVmgbEuLy_nYCOzsWqGVOjRZhDMpLDLnbJY0HY6AqvYc0gNnVl0AkerfCmmKeV14zxTOddTTVNIB9NVTq2w1CYsGdfn5LVlI6SHB3hXx9ROSi1l4cnG3T8q-LwLBCUod4gzOUE0JhsgtOUKbPz3eIvGspj_LVA7KXkYvx5zlCvs-FHo5PlJ-DsoloEKN0akJ7sGSM7hsvAJhonyUw38wh4OpMa2QJ0cFFRAMgK-Bwwk9sUi5hNiUoFERZoVfklXfsWoEXQvxqOo-WPitjyafwW7Cu7AACELYbIW7fHbzxP4Syg3Mtd7uY-Wzh6OAqEHi_aUy1FwFE8CqVV1_0G00" alt="deployment-level1">
-</div>
-</div>
+<div class="listingblock"><div class="content"><pre class="plantuml plantuml-error">\nError: cannot connect to PlantUML server at ""</pre></div></div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Motivation</dt>
@@ -1748,33 +1720,21 @@ when your infrastructure is more complex.</p>
 </div>
 <div class="sect3">
 <h4 id="_docker_host_localhost">7.2.1. <em>Docker Host (Localhost)</em></h4>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/VOzFImD13CNlyob2J-sX21vxa2e5_w1LB2AY7jBTR3jqPx8cMOk8trrcHgK5zHRoU-_bPQg6OdredNbh2SvZ8wWcVMMz45pIAxLm26EOSRKXWJDMW-4bLzYkMMtad6vyx50mWAwnvgsFAsYmLTeX5OUE8qLRs5jB85GPnbLBpaMk2GP_X0y05T84xmwW4Gm4Wy3H6yiuai7mopWdsx9iYY61f0TulAVbSTSzf-sMbjXrPNsd90eBabTVKQPzsXHuYe4Uzk0A0xrbMAFX4fLWSCLnnREJV32akPXlX0FPcdhDpauuVAKADXYnv0as3k33VJXNQi5uV5Gwm0HkwQKdDJsu9UquAkbJ75uihkUZNNKkzR_QbSIapXLX0ZSawjNohVoDApc_QHB96XZw9ZdgaNFfexssLsJYAorXF_IxtHvDVsUQPHEOeQwNZ5B3Iq_YITsKOjs7zXC0" alt="deployment-level2-host">
-</div>
-</div>
+<div class="listingblock"><div class="content"><pre class="plantuml plantuml-error">\nError: cannot connect to PlantUML server at ""</pre></div></div>
 <div class="paragraph">
 <p>This diagram zooms into the Docker Host and the internal Docker network. All components are deployed as containers within the same private network, allowing direct communication between services. WebApp interacts with backend services (Users Service and GameY Service) using JSON messages. MongoDB stores persistent data. Prometheus and Grafana run alongside the services to provide basic monitoring and visualization.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_client_terminal">7.2.2. <em>Client (Terminal)</em></h4>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/JOynJyD038Nt-nLFdP8X2sC7L0H8W2eO2c801lVYjb4lld3sKH3YlwDBQCLc-RttFNkXHibo7vnr5XYtiacabhAtd1XB_k20CpIu31sBeNhar7T2eNPEzvqCbAY7xgYDXqwss51G_gVus0zHM6nbNu6Hs1l9Dh1pv2qcp9wKqmoaoCh9EOajOpQLZMi_zNuxuENOZQgaG5iMgz-Ao_uKztD4N4M_vuIRg8Pg6Js5NLIhHsQP9k8pho-6OKGSU4t3K03b4ZJD-OcAEQu_sMTZBG_r9AswarYSKnXph5XQHUBtp6hwAjNTwk6-TWkMDlVX5m00" alt="deployment-level2-client">
-</div>
-</div>
+<div class="listingblock"><div class="content"><pre class="plantuml plantuml-error">\nError: cannot connect to PlantUML server at ""</pre></div></div>
 <div class="paragraph">
 <p>This diagram isolates the client-side element used during development/testing. The user executes commands via a terminal. Those commands generate requests toward the WebApp, which acts as the entry point to the deployed system.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_monitoring_stack_prometheus_grafana">7.2.3. <em>Monitoring Stack (Prometheus + Grafana)</em></h4>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/ROv1ImD138NlyoiUFTN3NZps80K55QeenOE8Xp3DjiFEJ4ecqrAa_rrcjw22jv3lUtbP5YErcgApO97nc7kbObgzLMMi-C0Hr-Zm93cOQCXRh8tyu5mPGjwJKaBPqKQE3VKK2_yYNj9UCcTRsoaobBrHtaPsBik6CRiJFx3YGOfXlX9FSIV5hcQWWZRXom6zKcBCqlH1bzamlmIVsOwYmnHeeFd0nrjXBLYp7eBdpmPhsqpmdXA__u5RIdoQu8jAOjjnBIFPgwHBIgcdJ9Elr3lWxCxEDGDTTpCrO85RYP6z5IGs3Rxy66FDVqQxDngZki1hPGtymvUSDpN5Rm00" alt="deployment-level2-monitoring">
-</div>
-</div>
+<div class="listingblock"><div class="content"><pre class="plantuml plantuml-error">\nError: cannot connect to PlantUML server at ""</pre></div></div>
 <div class="paragraph">
 <p>This diagram focuses on observability. Prometheus collects technical metrics exposed by the backend services and stores them internally. Grafana queries Prometheus to display dashboards. This setup supports troubleshooting and performance monitoring during development.</p>
 </div>
@@ -2056,16 +2016,44 @@ There you will find links and examples about ADR.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>React</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">We&#8217;ve decided to use React for the frontend because it allows us to build fast, scalable, and easy-to-maintain interfaces.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Microservices Architecture</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">We separated the application into decoupled services (<code>users</code>, <code>gamey</code>, <code>webapp</code>). This allows us to use the best technology for each specific problem (Rust for performance, Node.js for I/O) and enables independent development and deployment cycles.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">It includes everything needed to deploy the application anywhere, without complications.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>React</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">We use React for the <code>webapp</code> frontend because it allows us to build fast, scalable, and easy-to-maintain interfaces using a component-based architecture.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>TypeScript</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Applied in the <code>webapp</code> to provide static typing. This reduces runtime errors, improves code readability, and enhances developer tooling compared to standard JavaScript.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Vite</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Selected as the frontend build tool instead of Create React App (CRA) due to its superior performance in development server startup and Hot Module Replacement (HMR).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Node.js &amp; Express</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>users</code> service handles I/O-heavy operations (REST API, database access). Node.js is ideal for this due to its non-blocking event-driven model, and Express provides a minimal and flexible framework.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Rust</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The language we will use is Rust because it was one of the required conditions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>gamey</code> engine requires high performance for game logic and bot calculations. Rust provides memory safety without a garbage collector and meets the project&#8217;s core requirements.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MongoDB &amp; Mongoose</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MongoDB is the persistence layer, deployed as an independent container. We use <strong>Mongoose</strong> (in <code>users/src/database.js</code>) to manage connections and schemas. The connection string is decoupled using the <code>MONGODB_URI</code> environment variable in <code>.env</code>, following the 12-Factor App methodology for config.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker &amp; Docker Compose</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to orchestrate the entire system. It defines independent containers for <code>webapp</code>, <code>users</code>, <code>gamey</code>, and the <code>mongo</code> database, linking them via an internal network. This ensures the environment is reproducible and eliminates configuration issues between development and production.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GitHub Actions</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">We use it for CI/CD pipelines to automatically build, test, and check the quality of the code on every push, ensuring continuous integration and early error detection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>SonarCloud &amp; CodeScene</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integrated to monitor code quality, test coverage, and code health. This helps us manage technical debt and maintain architectural integrity over time.</p></td>
 </tr>
 </tbody>
 </table>
@@ -2099,11 +2087,7 @@ concrete and measurable.</p>
 </div>
 <div class="sect2">
 <h3 id="_quality_tree">10.1. Quality Tree</h3>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/RP51IyD048Nl_HLpZ06X2DvwQ6XQ3RIrjY1udEvEqu5aDipELkklboGgA5xdpNplyMOU3TLQ5jzYDydXEM73TftaELHYfA4ZnIFtCyWUkJxVJF8yXuEXU5JF7-JXTRc5LT0MRT2s0KeqXC9ZPwGHifALdC46kuwbxWbm89VqBvJqGWf5idCOjKACRnTdGXitAkcImGisxD4uI4_Q1Cyd_YVZaF-4Zg2eu62AHZLJ7BIIN4XTGnuUi2LOIir2FUtf64alFxGDUKxjo5i4CNgtX0siGrspr93rrrNvtOacPqd9mr8rAEmfTa7YO0axqbFVaJZwZLrXjBvF8zYJ2n8730U1R7OtdRPnN5k7DrYZaRWhx53ZO3-x7_GvYVzwuIS0" alt="quality-tree">
-</div>
-</div>
+<div class="listingblock"><div class="content"><pre class="plantuml plantuml-error">\nError: cannot connect to PlantUML server at ""</pre></div></div>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -2585,7 +2569,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2026-02-04 15:30:25 +0100
+Last updated 2026-02-07 22:47:51 +0100
 </div>
 </div>
 </body>
