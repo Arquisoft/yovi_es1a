@@ -19,6 +19,6 @@ describe('POST /createuser', () => {
 
         expect(res.status).toBe(201)
         expect(res.body).toHaveProperty('message')
-        expect(res.body.message).toMatch(/Hello Pablo! Welcome to the course!/i)
+        expect(res.body.message).toMatch(/User successfully created/i)
     })
 })
