@@ -1139,9 +1139,13 @@ This choice allows us to achieve two key things: first, agility, as we can chang
 <p><strong>Quality goals:</strong> Agility in development and speed of response.</p>
 </div>
 <div class="paragraph">
-<p><strong>Key constraints:</strong> The system must be able to store varied game data without a fixed structure, while maintaining security for user account data.
-==== Containers
-Docker was selected for service containerization as it combines both Node.js and Rust. Furthermore, Docker guarantees absolute consistency of the environment between development machines and the production server. It also greatly facilitates the coordination of the microservices architecture, isolating the specific dependencies of each language to avoid conflicts and simplify joint deployment.</p>
+<p><strong>Key constraints:</strong> The system must be able to store varied game data without a fixed structure, while maintaining security for user account data.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_containers">4.1.4. Containers</h4>
+<div class="paragraph">
+<p>Docker was selected for service containerization as it combines both Node.js and Rust. Furthermore, Docker guarantees absolute consistency of the environment between development machines and the production server. It also greatly facilitates the coordination of the microservices architecture, isolating the specific dependencies of each language to avoid conflicts and simplify joint deployment.</p>
 </div>
 <div class="paragraph">
 <p><strong>Quality goals:</strong> portability, deployability, scalability, reproducibility.</p>
@@ -1151,7 +1155,7 @@ Docker was selected for service containerization as it combines both Node.js and
 </div>
 </div>
 <div class="sect3">
-<h4 id="_monitoring">4.1.4. Monitoring</h4>
+<h4 id="_monitoring">4.1.5. Monitoring</h4>
 <div class="paragraph">
 <p>We chose the combination of Prometheus and Grafana to implement the system&#8217;s monitoring and observability strategy. Prometheus acts as a time-series database, responsible for collecting technical metrics from the backend. Grafana connects to this data to visualize it on graphical dashboards in real-time. This decision is critical to quantitatively validate our performance requirements and detect what is slowing down the microservices architecture.</p>
 </div>
@@ -1163,7 +1167,7 @@ Docker was selected for service containerization as it combines both Node.js and
 </div>
 </div>
 <div class="sect3">
-<h4 id="_modeling_tools">4.1.5. Modeling Tools</h4>
+<h4 id="_modeling_tools">4.1.6. Modeling Tools</h4>
 <div class="paragraph">
 <p>PlantUML was selected to ensure agility in creating UML diagrams (Sequence, Class, Component). Unlike "drag and drop" visual tools, PlantUML ensures consistent and standardized aesthetics for all project diagrams, regardless of who creates them, allowing developers to focus on logical content rather than graphic design.</p>
 </div>
@@ -1175,7 +1179,7 @@ Docker was selected for service containerization as it combines both Node.js and
 </div>
 </div>
 <div class="sect3">
-<h4 id="_version_control">4.1.6. Version Control</h4>
+<h4 id="_version_control">4.1.7. Version Control</h4>
 <div class="paragraph">
 <p>We use GitHub to centralize code and facilitate teamwork. It allows us to develop new features in parallel using branches, avoiding conflicts between colleagues. Additionally, it protects project quality through the use of Pull Requests, ensuring that all new code is reviewed and approved by another colleague before being integrated into the main version.</p>
 </div>
@@ -2616,7 +2620,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2026-02-16 18:05:26 +0100
+Last updated 2026-02-16 21:36:32 +0100
 </div>
 </div>
 </body>
