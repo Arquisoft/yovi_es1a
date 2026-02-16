@@ -1,7 +1,7 @@
-const User = require('../models/user-model');
-const bcrypt = require('bcrypt');
+import User from '../models/user-model.js'; 
+import bcrypt from 'bcrypt';
 
-async function createUser(userData) {
+export async function createUser(userData) {
     const { username, email, password } = userData;
 
     if (!username || !email || !password) {
@@ -27,4 +27,3 @@ async function createUser(userData) {
     return await newUser.save();
 }
 
-module.exports = { createUser };

@@ -1,11 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const { createUser } = require('../service/user-service');
+import express from 'express';
+import { createUser } from '../service/user-service.js';
 
 router.post('/createuser', async (req, res) => {
   try {
     const userData = req.body;
-    const user = await createUser(userData);
+    const user = await createUser(userData); 
     
     res.status(201).json({ 
       message: 'User successfully created',
@@ -29,4 +28,4 @@ router.post('/createuser', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router; 
