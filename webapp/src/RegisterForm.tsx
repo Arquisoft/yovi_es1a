@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import avatar from './img/avatar.png';
+import y_gris from './img/y_gris.png';
+
 
 const RegisterForm: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -57,56 +60,67 @@ const RegisterForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="register-form">
-      <div className="form-group">
-        <label htmlFor="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="form-input"
-        />
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="form-input"
-        />
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="form-input"
-        />
-      </div>
-
-      <button type="submit" className="submit-button" disabled={loading}> 
-        {loading ? 'Entering...' : 'Lets go!'}
-      </button>
+    <div className="RegisterForm">
       
-      {responseMessage && (
-        <div className="success-message" style={{ marginTop: 12, color: 'green' }}>
-          {responseMessage}
+      <img src={y_gris} className="y_gris" alt="y gris" />
+      <div className="form-content">
+        <div className="title-register">
+          <img src={avatar} className="avatar" alt="avatar" />
+          <h2>Crea una cuenta</h2>
         </div>
-      )}
 
-      {error && (
-        <div className="error-message" style={{ marginTop: 12, color: 'red' }}>
-          {error}
-        </div>
-      )}
-    </form>
+        <form onSubmit={handleSubmit} className="register-form">
+          <div className="form-group">
+            <label htmlFor="username">Usuario</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="form-input"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="form-input"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">Contraseña</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="form-input"
+            />
+          </div>
+
+          <button type="submit" className="submit-button" disabled={loading}> 
+            {loading ? 'Entering...' : 'Lets go!'}
+          </button>
+          
+          {responseMessage && (
+            <div className="success-message" style={{ marginTop: 12, color: 'green' }}>
+              {responseMessage}
+            </div>
+          )}
+
+          {error && (
+            <div className="error-message" style={{ marginTop: 12, color: 'red' }}>
+              {error}
+            </div>
+          )}
+        </form>
+      </div>
+    </div>
   );
 };
 

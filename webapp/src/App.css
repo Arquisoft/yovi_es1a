@@ -18,6 +18,46 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+.RegisterForm {
+  display: flex;
+  align-items: flex-start;
+  gap: 220px;
+}
+
+.y_dorado {
+  height: 15em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.y_gris {
+  height: 25em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.avatar {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.y_gris:hover, .y_dorado:hover, .avatar:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.y_gris.react:hover, .y_dorado.react:hover, .avatar.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+button {
+  margin-right: 10px;
+}
+
+.title-register {
+  display: flex;
+  flex-direction: row;
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);

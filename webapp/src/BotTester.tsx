@@ -37,7 +37,7 @@ const BotTester: React.FC = () => {
 
   return (
     <div>
-      <h3>Test de conexion Rust y React</h3>
+      <h2>Test de conexion Rust y React</h2>
       <form onSubmit={pedirMovimiento}>
         <input 
           type="text" 
