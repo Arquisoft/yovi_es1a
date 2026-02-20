@@ -7,7 +7,7 @@
   "scripts": {
     "start": "tsx src/index.ts",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage --coverage.reporter=text --coverage.reporter=lcov"
   },
   "author": "",
   "license": "ISC",
