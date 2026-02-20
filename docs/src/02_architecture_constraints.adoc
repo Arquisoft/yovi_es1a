@@ -1,0 +1,45 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-architecture-constraints]]
+== Architecture Constraints
+
+ifdef::arc42help[]
+[role="arc42help"]
+****
+.Contents
+Any requirement that constraints software architects in their freedom of design and implementation decisions or decision about the development process. These constraints sometimes go beyond individual systems and are valid for whole organizations and companies.
+****
+endif::arc42help[]
+
+=== Technical Constraints
+
+[cols="1,2",options="header"]
+|===
+|Constraint |Explanation
+| **React & TypeScript** | The frontend must be developed using React and TypeScript.
+| **Node.js & Express** | The user management service will be implemented using Node.js and Express.
+| **Rust Game Engine** | The core logic for the "Game of Y" must be implemented in Rust to ensure performance.
+| **Docker** | The system must be containerized using Docker and orchestrated with Docker Compose.
+| **GitHub Actions** | CI/CD pipelines must be managed using GitHub Actions for automated testing and deployment.
+| **YEN Notation** | Game moves and state must follow the standard YEN (Y-Game Extended Notation).
+|===
+
+=== Organizational Constraints
+
+[cols="1,2",options="header"]
+|===
+|Constraint |Explanation
+| **Team Size** | The team consists of 5 members: José Iván, Adrián, Fernando, Hugo, and Sergio.
+| **Timeframe** | The project must be tested, code completed and discussed before the final submission.
+| **Meetings** | Weekly meetings will be held during laboratory sessions to track progress, besides possible meetings to discuss some issues or problems throught the week.
+| **Version Control** | GitHub is the chosen platform for repository hosting and version control.
+|===
+
+=== Political and Convention Constraints
+
+[cols="1,2",options="header"]
+|===
+|Constraint |Explanation
+| **Arc42** | The documentation must follow the Arc42 template structure.
+| **Language** |  The documentation and code comments must be written in English, as it's the standard.
+|===

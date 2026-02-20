@@ -1,0 +1,95 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-building-block-view]]
+
+== Building Block View
+
+ifdef::arc42help[]
+[role="arc42help"]
+****
+.Content
+The building block view shows the static decomposition of the system into building blocks...
+****
+endif::arc42help[]
+
+=== Whitebox Overall System (Level 1)
+
+The following diagram shows the main interaction between the user and the system.
+
+[plantuml]
+----
+@startuml
+actor "User" as user
+component "Yovi System" as yovi
+
+user .right.> yovi : Uses
+@enduml
+----
+
+Motivation::
+Yovi (refering to our group game) is a web application that allows users to play the "Game of Y". The system acts as a single unit for the end user, providing registration, game logic, and history tracking.
+
+Contained Building Blocks::
+
+[cols="1,2",options="header"]
+|===
+| **Name** | **Responsibility**
+| **User** | End-user interacting with the application via a web browser.
+| **Yovi System** | The complete software solution handling the game logic and user data.
+|===
+
+=== Level 2
+
+This level shows the decomposition of the system into the three main services defined in the project structure.
+
+[plantuml]
+----
+@startuml
+package "Frontend" {
+    component "WebApp" as webapp
+}
+
+package "Backend Services" {
+    component "Users Service" as users
+    component "GameY Engine" as gamey
+}
+
+database "MongoDB" as db
+
+webapp --> users : HTTP /createuser
+webapp --> gamey : HTTP /game
+users ..> db : Reads/Writes
+@enduml
+----
+
+Motivation::
+The system follows a modular architecture to separate the user interface from the logic services.
+* **WebApp**: Handles UI and client-side logic.
+* **Users Service**: Manages user registration and data.
+* **GameY Engine**: Handles the specific rules and logic of the board game.
+
+Contained Building Blocks
+
+[cols="1,4", options="header"]
+|===
+| **Building Block** | **Description**
+
+| **WebApp**
+| *Responsibility:* Provides the graphical interface for the user. It communicates with the backend services to perform actions. +
+*Technology:* React, Vite, TypeScript. +
+*Location:* `/webapp` directory.
+
+| **Users Service**
+| *Responsibility:* Manages user registration and stores user information. It exposes a REST API. +
+*Technology:* Node.js, Express. +
+*Location:* `/users` directory.
+
+| **GameY Engine**
+| *Responsibility:* Implements the core logic of the Game of Y, including move validation and bot strategies using Rust for performance. +
+*Technology:* Rust. +
+*Location:* `/gamey` directory.
+
+| **MongoDB**
+| *Responsibility:* Database used to persist user data and game history. +
+*Technology:* MongoDB.
+|===

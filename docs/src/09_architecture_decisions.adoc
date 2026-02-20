@@ -1,0 +1,72 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-design-decisions]]
+== Architecture Decisions
+
+ifdef::arc42help[]
+[role="arc42help"]
+****
+.Contents
+Important, expensive, large scale or risky architecture decisions including rationales.
+With "decisions" we mean selecting one alternative based on given criteria.
+
+Please use your judgement to decide whether an architectural decision should be documented
+here in this central section or whether you better document it locally
+(e.g. within the white box template of one building block).
+
+Avoid redundancy. 
+Refer to section 4, where you already captured the most important decisions of your architecture.
+
+.Motivation
+Stakeholders of your system should be able to comprehend and retrace your decisions.
+
+.Form
+Various options:
+
+* ADR (https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions[Documenting Architecture Decisions]) for every important decision
+* List or table, ordered by importance and consequences or:
+* more detailed in form of separate sections per decision
+
+.Further Information
+
+See https://docs.arc42.org/section-9/[Architecture Decisions] in the arc42 documentation.
+There you will find links and examples about ADR.
+
+****
+endif::arc42help[]
+
+[options="header",cols="1,2"]
+|===
+|Decision |Reason
+
+| **Microservices Architecture**
+| We separated the application into decoupled services (`users`, `gamey`, `webapp`). This allows us to use the best technology for each specific problem (Rust for performance, Node.js for I/O) and enables independent development and deployment cycles.
+
+| **React**
+| We use React for the `webapp` frontend because it allows us to build fast, scalable, and easy-to-maintain interfaces using a component-based architecture.
+
+| **TypeScript**
+| Applied in the `webapp` to provide static typing. This reduces runtime errors, improves code readability, and enhances developer tooling compared to standard JavaScript.
+
+| **Vite**
+| Selected as the frontend build tool instead of Create React App (CRA) due to its superior performance in development server startup and Hot Module Replacement (HMR).
+
+| **Node.js & Express**
+| The `users` service handles I/O-heavy operations (REST API, database access). Node.js is ideal for this due to its non-blocking event-driven model, and Express provides a minimal and flexible framework.
+
+| **Rust**
+| The `gamey` engine requires high performance for game logic and bot calculations. Rust provides memory safety without a garbage collector and meets the project's core requirements.
+
+| **MongoDB & Mongoose**
+| MongoDB is the persistence layer, deployed as an independent container. We use **Mongoose** (in `users/src/database.js`) to manage connections and schemas. The connection string is decoupled using the `MONGODB_URI` environment variable in `.env`, following the 12-Factor App methodology for config.
+
+| **Docker & Docker Compose**
+| Used to orchestrate the entire system. It defines independent containers for `webapp`, `users`, `gamey`, and the `mongo` database, linking them via an internal network. This ensures the environment is reproducible and eliminates configuration issues between development and production.
+
+| **GitHub Actions**
+| We use it for CI/CD pipelines to automatically build, test, and check the quality of the code on every push, ensuring continuous integration and early error detection.
+
+| **SonarCloud & CodeScene**
+| Integrated to monitor code quality, test coverage, and code health. This helps us manage technical debt and maintain architectural integrity over time.
+
+|===

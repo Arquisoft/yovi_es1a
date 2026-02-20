@@ -1,0 +1,182 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-glossary]]
+== Glossary
+
+ifdef::arc42help[]
+[role="arc42help"]
+****
+.Contents
+The most important domain and technical terms that your stakeholders use when discussing the system.
+
+You can also see the glossary as source for translations if you work in multi-language teams.
+
+.Motivation
+You should clearly define your terms, so that all stakeholders
+
+* have an identical understanding of these terms
+* do not use synonyms and homonyms
+
+
+.Form
+
+A table with columns <Term> and <Definition>.
+
+Potentially more columns in case you need translations.
+
+
+.Further Information
+
+See https://docs.arc42.org/section-12/[Glossary] in the arc42 documentation.
+
+****
+endif::arc42help[]
+
+[cols="e,2e" options="header"]
+|===
+|Term |Definition
+
+|Yovi
+|Web-based system that provides access to the “Game of Y” and related services (registration, gameplay, and history tracking).
+
+|Game of Y
+|Strategic connection board game supported by the system, played on a triangular board.
+
+|Micrati
+|Game development company that requested the development of the system.
+
+|User
+|Person interacting with the system to register, play games, and consult game information.
+
+|Web-based system
+|Application accessible through a web browser.
+
+|WebApp
+|Client-facing application that provides the graphical user interface and communicates with backend services.
+
+|Users Service
+|Backend service responsible for user registration and user-related data management, exposing a REST API.
+
+|GameY Engine
+|Core service implementing the rules and validation of the Game of Y, including bot strategies.
+
+|Frontend
+|Client-side part of the system responsible for the user interface and interaction.
+
+|Backend
+|Server-side part of the system responsible for game logic, user management, validation, and data access.
+
+|React
+|Frontend library used to build the user interface.
+
+|TypeScript
+|Typed superset of JavaScript used to implement the frontend.
+
+|Node.js
+|JavaScript runtime used to implement server-side services.
+
+|Express
+|Node.js framework used to build the user management REST service.
+
+|Rust
+|Programming language used to implement the core game engine to achieve high performance and reliability.
+
+|MongoDB
+|Database used to persist user data and game history.
+
+|REST API
+|HTTP-based interface exposing service endpoints to perform operations (e.g., user management and gameplay actions).
+
+|HTTP
+|Protocol used for communication between the client and the services, and between internal components.
+
+|JSON
+|Data interchange format used in HTTP requests and responses between system components.
+
+|Docker
+|Containerization platform used to package and run the system components in isolated environments.
+
+|Docker Compose
+|Tool used to define and run multi-container applications.
+
+|GitHub
+|Platform used for source code hosting and version control.
+
+|GitHub Actions
+|CI/CD solution used to automate workflows such as building, testing, and integration tasks.
+
+|CI/CD
+|Practices for continuous integration and continuous delivery/deployment, supporting automated build and testing pipelines.
+
+|YEN (Y-Game Extended Notation)
+|Standard notation used to represent game moves and game state for storage and exchange.
+
+|Serialization / Deserialization
+|Process of converting game state between in-memory structures and a transport/storage representation (e.g., JSON).
+
+|serde
+|Rust serialization framework used to map YEN JSON format to internal Rust data structures.
+
+|Union-Find
+|Data structure used to detect connected components and determine winning paths efficiently.
+
+|Bot
+|Automated player that interacts with the system via an API and performs moves according to a strategy.
+
+|LLM (Large Language Model)
+|Type of AI model that can be integrated as a bot strategy to generate moves or decisions.
+
+|Strategy Pattern
+|Design pattern enabling multiple interchangeable bot strategies through a common interface.
+
+|State Machine (FSM)
+|Model used to represent the game flow using explicit states and controlled transitions.
+
+|Result Pattern
+|Approach where operations return typed success/error results, requiring explicit error handling.
+
+|GameStatus
+|Enumeration representing the current state of a game (e.g., ongoing or finished).
+
+|GameYError
+|Enumeration representing typed error conditions produced by the game engine.
+
+|Input validation and sanitization
+|Security measure ensuring coordinates and notation strings are checked before processing to prevent invalid states.
+
+|Server authoritativeness
+|Principle where the backend enforces all rules and move legality to prevent client-side manipulation.
+
+|Structured logging
+|Logging approach that captures consistent, queryable event information for debugging and observability.
+
+|tracing
+|Rust instrumentation/logging library used to record events such as moves, errors, and state changes.
+
+|Prometheus
+|Monitoring component that collects health and technical metrics from services via HTTP endpoints.
+
+|Grafana
+|Visualization tool used to display dashboards based on metrics retrieved from Prometheus.
+
+|Observability
+|Ability to understand system behavior via logs and metrics (e.g., identifying errors, performance issues).
+
+|CLI (Terminal)
+|Command-line interface used as a manual control interface for executing commands and simulating user behavior.
+
+|3D barycentric coordinates (x, y, z)
+|Internal coordinate representation used to compute adjacency and winning paths on the triangular board.
+
+|Linear index
+|Simplified coordinate representation used for user interaction (e.g., indexing cells from 0 to N).
+
+|Deployment view
+|Architecture view describing how software building blocks are mapped to infrastructure elements.
+
+|Building Block View
+|Architecture view describing the decomposition of the system into building blocks and their responsibilities.
+
+|Sequence diagram
+|UML diagram representing the runtime interaction between components in a scenario.
+|===

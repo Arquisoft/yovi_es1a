@@ -1,0 +1,133 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-runtime-view]]
+== Runtime View
+
+
+ifdef::arc42help[]
+[role="arc42help"]
+****
+.Contents
+The runtime view describes concrete behavior and interactions of the system’s building blocks in form of scenarios from the following areas:
+
+* important use cases or features: how do building blocks execute them?
+* interactions at critical external interfaces: how do building blocks cooperate with users and neighboring systems?
+* operation and administration: launch, start-up, stop
+* error and exception scenarios
+
+Remark: The main criterion for the choice of possible scenarios (sequences, workflows) is their *architectural relevance*. It is *not* important to describe a large number of scenarios. You should rather document a representative selection.
+
+.Motivation
+You should understand how (instances of) building blocks of your system perform their job and communicate at runtime.
+You will mainly capture scenarios in your documentation to communicate your architecture to stakeholders that are less willing or able to read and understand the static models (building block view, deployment view).
+
+.Form
+There are many notations for describing scenarios, e.g.
+
+* numbered list of steps (in natural language)
+* activity diagrams or flow charts
+* sequence diagrams
+* BPMN or EPCs (event process chains)
+* state machines
+* ...
+
+
+.Further Information
+
+See https://docs.arc42.org/section-6/[Runtime View] in the arc42 documentation.
+
+****
+endif::arc42help[]
+
+This section displays sequence diagrams. These show the interaction of objects in different scenarios.
+
+=== Game lifecycle against the computer
+
+This diagram shows the game life cycle in its standard form (playing against the machine).
+
+[plantuml]
+----
+@startuml
+actor User
+participant WebApp
+participant GameLogic
+database Db
+
+User -> WebApp: Log in
+WebApp -> Db: Check user credentials
+Db --> WebApp: Returns user data
+User -> WebApp: Select strategy, Y game type, difficulty, and board size
+WebApp -> GameLogic: Create board
+GameLogic --> WebApp: Board validated
+loop
+    User -> WebApp: Movement
+    WebApp -> GameLogic: Check if game has ended
+    alt Game ended
+        GameLogic --> WebApp: Return result
+        WebApp --> User: Show game result
+        break
+    else Game continues
+        WebApp -> GameLogic: Requests machine movement
+        GameLogic --> WebApp: Returns movement
+        WebApp --> User: Shows machine movement
+    end
+end
+WebApp -> Db: Save statistics
+@enduml
+----
+
+=== Bot against Application
+
+This diagram shows the life cycle of the game in which a bot participates against the machine.
+
+[plantuml]
+----
+@startuml
+actor Bot
+participant API
+participant GameLogic
+
+Bot -> API: Select strategy, Y game type, difficulty, and board size
+API -> GameLogic: Create board
+GameLogic --> API: Board validated
+
+loop
+    Bot -> API: Movement
+    API -> GameLogic: Check if game has ended
+    alt Game ended
+        GameLogic --> API: Return result
+        API --> Bot: Show game result
+        break
+    else Game continues
+        API -> GameLogic: Requests machine movement
+        GameLogic --> API: Returns movement
+        API --> Bot: Shows machine movement
+    end
+end
+@enduml
+----
+
+=== User registration
+
+This diagram shows the different interactions that take place when a user registers.
+
+[plantuml]
+----
+@startuml
+actor User
+participant WebApp
+database Db
+
+User -> WebApp: Register account
+WebApp -> Db: Check if credentials exists
+alt User already exists
+    Db --> WebApp: Send denegation
+    WebApp --> User: Shows denegation
+else New user
+    Db --> WebApp: Credentials validation successful
+    WebApp -> Db: Save new user credentials
+    Db --> WebApp: Send confirmation
+    WebApp --> User: Shows confirmation
+end
+@enduml
+----
