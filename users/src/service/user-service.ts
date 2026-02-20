@@ -25,8 +25,11 @@ export async function createUser(userData: CreateUserInput): Promise<IUser> {
     }
 
     const existingUser = await User.findOne({ 
-      $or: [{ email }, { username }] 
-    }); //search if already exist the email or the username
+    $or: [
+        { email: String(email) }, 
+        { username: String(username) }
+    ] 
+    });//search if already exist the email or the username
 
     if (existingUser) {
         if (existingUser.email === email) {
@@ -51,7 +54,7 @@ export async function createUser(userData: CreateUserInput): Promise<IUser> {
 
 export async function login(userData: LoginUserInput):Promise<IUser> {
   const { username, password } = userData;
-  const existingUser = await User.findOne({username});
+  const existingUser = await User.findOne({ username: String(username) });
 
   if (!existingUser) {
     throw new Error('User not found');

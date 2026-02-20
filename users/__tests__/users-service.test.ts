@@ -23,6 +23,18 @@ describe('Integration Tests: Users Service', () => {
             expect(res.status).toBe(201);
             expect(res.body).toHaveProperty('message');
             expect(res.body.message).toMatch(/User successfully created/i);
+            });
+            
+            it('should return 400 if required fields are missing', async () => {
+            const res = await supertest(app)
+                .post('/createuser')
+                .send({ 
+                    username: 'FaltaEmail'
+                })
+                .set('Accept', 'application/json');
+
+            expect(res.status).toBe(400);
+            expect(res.body).toHaveProperty('error');
         });
     });
 
@@ -41,6 +53,19 @@ describe('Integration Tests: Users Service', () => {
             expect(res.body.message).toMatch(/Login successful/i); 
             expect(res.body).toHaveProperty('userId');
             expect(res.body.username).toBe('Hugo');
+            });
+
+            it('should return 401 if password is incorrect', async () => {
+            const res = await supertest(app)
+                .post('/login')
+                .send({ 
+                    username: 'HugoC',
+                    password: 'wrongpassword' 
+                })
+                .set('Accept', 'application/json');
+
+            expect(res.status).toBe(401);
+            expect(res.body).toHaveProperty('error');
         });
     });
 });
