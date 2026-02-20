@@ -32,11 +32,11 @@ async function main() {
         }
     } 
     else if (choice === '2') {
-        const email = await question('Email: ');
+        const username = await question('Username: ');
         const password = await question('Password: ');
 
         try {
-            const res = await axios.post(`${API_URL}/login`, { email, password });
+            const res = await axios.post(`${API_URL}/login`, { username, password });
             console.log('\n Welcome back,', res.data.username);
             console.log('ID:', res.data.userId);
         } catch (err: any) {

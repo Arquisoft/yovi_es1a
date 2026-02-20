@@ -7,6 +7,12 @@ interface CreateUserInput {
   password?: string;
 }
 
+interface LoginUserInput {
+  username: string;
+  password: string;
+}
+
+
 export async function createUser(userData: CreateUserInput): Promise<IUser> {
     const { username, email, password } = userData; //extract the variables from userdata
 
@@ -41,4 +47,20 @@ export async function createUser(userData: CreateUserInput): Promise<IUser> {
     });
 
     return await newUser.save();
+}
+
+export async function login(userData: LoginUserInput):Promise<IUser> {
+  const { username, password } = userData;
+  const existingUser = await User.findOne({username});
+
+  if (!existingUser) {
+    throw new Error('User not found');
+  }
+  const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+
+  if (!isPasswordValid) {
+    throw new Error('Invalid password');
+  }
+
+  return existingUser;
 }

@@ -28,6 +28,8 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/inquirer": "^9.0.9",
+    "@types/superagent": "^8.1.9",
+    "@types/supertest": "^6.0.3",
     "@vitest/coverage-v8": "^4.0.15",
     "supertest": "^7.1.4",
     "tsx": "^4.21.0",
