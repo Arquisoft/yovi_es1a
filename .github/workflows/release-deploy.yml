@@ -43,7 +43,7 @@ jobs:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
         run: |
           cd ${{ matrix.service }}
-          npm test
+          npm run test:coverage
 
   test-rust:
     name: Run rust (gamey) tests

@@ -8,6 +8,11 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
     steps:
     - uses: actions/checkout@v4
       with:
@@ -21,6 +26,10 @@ jobs:
         node-version: 22
     - run: npm --prefix users ci
     - run: npm --prefix webapp ci
+    - name: Run users tests with coverage
+      env:
+        MONGODB_URI: mongodb://localhost:27017/testdb
+      run: npm --prefix users run test:coverage
     - run: npm --prefix users run test:coverage
     - run: npm --prefix webapp run test:coverage
     - name: Install cargo-llvm-cov
