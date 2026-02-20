@@ -22,18 +22,13 @@ router.post('/createuser', async (req: Request, res: Response) => {
     
   } catch (error: any) {
     
-    if (error.message === 'All fields are required') {
+    if (error.message === 'All fields are required' || error.message === 'Password must be at least 3 characters') {
       return res.status(400).json({ error: error.message });
     }
-    if (error.message === 'Password must be at least 3 characters') {
-      return res.status(400).json({ error: error.message });
-    }
-    if (error.message === 'Email already registered') {
+    if (error.message === 'Email already registered' || error.message === 'Username already taken') {
       return res.status(409).json({ error: error.message });
     }
-    if(error.message==='Username already taken'){
-      return res.status(409).json({error: error.message});
-    }
+    
     return res.status(500).json({ error: 'Error creating user' });
   }
 });
@@ -50,11 +45,12 @@ router.post('/login', async (req: Request, res: Response) => {
         })
   }catch(error: any)
   {
-      if(error.message==='User not found'){
-          return res.status(404).json({error: error.message});
-      }else if(error.message==='Invalid password'){
-        return res.status(500).json({error: error.message});
+      if (error.message === 'User not found') {
+          return res.status(404).json({ error: error.message });
+      } else if (error.message === 'Invalid password') {
+          return res.status(401).json({ error: error.message });
       }
+      
       return res.status(500).json({ error: 'Internal server error during login' });
   }
 })

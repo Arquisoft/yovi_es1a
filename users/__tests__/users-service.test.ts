@@ -24,7 +24,7 @@ describe('Integration Tests: Users Service', () => {
             expect(res.body).toHaveProperty('message');
             expect(res.body.message).toMatch(/User successfully created/i);
             });
-            
+
             it('should return 400 if required fields are missing', async () => {
             const res = await supertest(app)
                 .post('/createuser')
@@ -59,12 +59,24 @@ describe('Integration Tests: Users Service', () => {
             const res = await supertest(app)
                 .post('/login')
                 .send({ 
-                    username: 'HugoC',
+                    username: 'Hugo',
                     password: 'wrongpassword' 
                 })
                 .set('Accept', 'application/json');
 
             expect(res.status).toBe(401);
+            expect(res.body).toHaveProperty('error');
+        });
+        it('should return 404 if user is not found', async () => {
+            const res = await supertest(app)
+                .post('/login')
+                .send({ 
+                    username: 'fakeuser',
+                    password: 'testpassword123' 
+                })
+                .set('Accept', 'application/json');
+
+            expect(res.status).toBe(404); 
             expect(res.body).toHaveProperty('error');
         });
     });
