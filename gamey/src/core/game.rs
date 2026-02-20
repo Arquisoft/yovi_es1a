@@ -258,7 +258,7 @@ impl GameY {
     }
 
     /// Returns the neighboring coordinates for a given cell.
-    fn get_neighbors(&self, coords: &Coordinates) -> Vec<Coordinates> {
+    pub fn get_neighbors(&self, coords: &Coordinates) -> Vec<Coordinates> {
         let mut neighbors = Vec::new();
         let x = coords.x();
         let y = coords.y();
@@ -440,6 +440,17 @@ impl GameY {
                 && self.sets[root_j].touches_side_c;
         }
         false
+    }
+
+    pub fn cells_for_player(&self, target_player: PlayerId) -> Vec<Coordinates> {
+        let mut player_cells = Vec::new();
+        
+        for (coords, (_, player)) in &self.board_map {
+            if *player == target_player {
+                player_cells.push(*coords);
+            }
+        }       
+        player_cells
     }
 }
 
