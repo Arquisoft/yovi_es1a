@@ -30,7 +30,6 @@ jobs:
       env:
         MONGODB_URI: mongodb://localhost:27017/testdb
       run: npm --prefix users run test:coverage
-    - run: npm --prefix users run test:coverage
     - run: npm --prefix webapp run test:coverage
     - name: Install cargo-llvm-cov
       run: cargo install cargo-llvm-cov --locked
