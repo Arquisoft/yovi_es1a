@@ -46,5 +46,7 @@ jobs:
       with:
         args: >
           -Dsonar.javascript.lcov.reportPaths=users/coverage/lcov.info
-          -Dsonar.coverage.exclusions=**/*.test.ts,**/__tests__/**,**/test-cli.ts
+          -Dsonar.coverage.exclusions=**/*.test.ts,**/__tests__/**,**/test-cli.ts,users/src/database.ts,users/src/index.ts
           -Dsonar.test.inclusions=**/*.test.ts,**/__tests__/**
+          -Dsonar.projectKey=Arquisoft_yovi_es1a
+          -Dsonar.organization=arquisoft

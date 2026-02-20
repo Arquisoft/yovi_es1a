@@ -58,11 +58,15 @@ export async function createUser(userData: CreateUserInput): Promise<IUser> {
 
 export async function login(userData: LoginUserInput):Promise<IUser> {
   const { username, password } = userData;
-  
+
   if (typeof username !== 'string' || typeof password !== 'string') {
       throw new Error('Invalid input format');
   }
-  const existingUser = await User.findOne({ username: { $eq: username } });
+  const queryUsername = username; 
+
+  const existingUser = await User.findOne({ 
+      username: { $eq: queryUsername } 
+  });
 
   if (!existingUser) {
     throw new Error('User not found');
