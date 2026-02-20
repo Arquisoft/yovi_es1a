@@ -40,10 +40,10 @@ jobs:
         run: sleep 10
       - name: Run tests
         env:
-          MONGODB_URI: mongodb://localhost:27017/testdb
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
         run: |
           cd ${{ matrix.service }}
-          npm test
+          npm run test:coverage
 
   test-rust:
     name: Run rust (gamey) tests
