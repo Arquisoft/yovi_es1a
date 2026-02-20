@@ -8,6 +8,11 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
     steps:
     - uses: actions/checkout@v4
       with:
@@ -21,7 +26,10 @@ jobs:
         node-version: 22
     - run: npm --prefix users ci
     - run: npm --prefix webapp ci
-    - run: npm --prefix users run test:coverage
+    - name: Run users tests with coverage
+      env:
+        MONGODB_URI: mongodb://localhost:27017/testdb
+      run: npm --prefix users run test:coverage
     - run: npm --prefix webapp run test:coverage
     - name: Install cargo-llvm-cov
       run: cargo install cargo-llvm-cov --locked
@@ -35,3 +43,10 @@ jobs:
       uses: SonarSource/sonarqube-scan-action@master
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        args: >
+          -Dsonar.javascript.lcov.reportPaths=users/coverage/lcov.info
+          -Dsonar.coverage.exclusions=**/*.test.ts,**/__tests__/**,**/test-cli.ts,users/src/database.ts,users/src/index.ts
+          -Dsonar.test.inclusions=**/*.test.ts,**/__tests__/**
+          -Dsonar.projectKey=Arquisoft_yovi_es1a
+          -Dsonar.organization=arquisoft

@@ -57,6 +57,10 @@ This choice allows us to achieve two key things: first, agility, as we can chang
 *Quality goals:* Agility in development and speed of response.
 
 *Key constraints:* The system must be able to store varied game data without a fixed structure, while maintaining security for user account data.
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 ==== Containers
 Docker was selected for service containerization as it combines both Node.js and Rust. Furthermore, Docker guarantees absolute consistency of the environment between development machines and the production server. It also greatly facilitates the coordination of the microservices architecture, isolating the specific dependencies of each language to avoid conflicts and simplify joint deployment.
 
@@ -112,7 +116,6 @@ To connect the Frontend with the Microservices, we use a REST architecture. The 
 
 
 === Strategies for Quality Goals
-=== 4.3. Approaches to Achieve Quality Goals
 
 The following table relates our quality goals to specific scenarios and the architectural strategies implemented to resolve them.
 
@@ -132,7 +135,11 @@ The following table relates our quality goals to specific scenarios and the arch
 | The team needs to update the AI strategy without the risk of introducing errors into the User Login system.
 | **Microservices:** Strict separation of concerns. The Engine and User Service are isolated containers; changing one does not require recompiling or redeploying the other.
 
+<<<<<<< HEAD
 | **Usabilidad**
+=======
+| **Usability**
+>>>>>>> master
 | Players expect a fluid experience, similar to a native app, without page reloads during the game.
 | **React SPA (Single Page Application):** The interface loads once and updates dynamically. TypeScript ensures type safety, preventing runtime errors.
 

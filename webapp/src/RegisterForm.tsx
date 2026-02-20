@@ -71,7 +71,7 @@ const RegisterForm: React.FC = () => {
 
         <form onSubmit={handleSubmit} className="register-form">
           <div className="form-group">
-            <label htmlFor="username">Usuario</label>
+            <label htmlFor="username">Username</label>
             <input
               type="text"
               id="username"
@@ -93,7 +93,7 @@ const RegisterForm: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Contraseña</label>
+            <label htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
