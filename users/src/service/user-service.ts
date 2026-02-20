@@ -16,6 +16,10 @@ interface LoginUserInput {
 export async function createUser(userData: CreateUserInput): Promise<IUser> {
     const { username, email, password } = userData; //extract the variables from userdata
 
+    if (typeof username !== 'string' || typeof email !== 'string' || typeof password !== 'string') {
+        throw new Error('Invalid input format');
+    }
+
     if (!username || !email || !password) {
         throw new Error('All fields are required');
     }
@@ -54,6 +58,10 @@ export async function createUser(userData: CreateUserInput): Promise<IUser> {
 
 export async function login(userData: LoginUserInput):Promise<IUser> {
   const { username, password } = userData;
+  
+  if (typeof username !== 'string' || typeof password !== 'string') {
+      throw new Error('Invalid input format');
+  }
   const existingUser = await User.findOne({ username: { $eq: username } });
 
   if (!existingUser) {

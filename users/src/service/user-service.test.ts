@@ -10,7 +10,7 @@ vi.mock('bcryptjs');
  */
 describe('User service - Register', ()=>{
     it('1.It should throw an error when fields are missing.', async () => {
-        await expect(createUser({username:'roberto'})).rejects.toThrow('All fields are required');
+        await expect(createUser({username:'roberto'})).rejects.toThrow('Invalid input format');
     });
 
     it('2.It should throw an error because the password is less than 3 characters long.',async()=>

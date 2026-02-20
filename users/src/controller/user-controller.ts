@@ -22,7 +22,9 @@ router.post('/createuser', async (req: Request, res: Response) => {
     
   } catch (error: any) {
     
-    if (error.message === 'All fields are required' || error.message === 'Password must be at least 3 characters') {
+    if (error.message === 'All fields are required' || error.message === 'Password must be at least 3 characters'
+      || error.message === 'Invalid input format'
+    ) {
       return res.status(400).json({ error: error.message });
     }
     if (error.message === 'Email already registered' || error.message === 'Username already taken') {

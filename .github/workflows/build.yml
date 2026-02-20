@@ -43,3 +43,8 @@ jobs:
       uses: SonarSource/sonarqube-scan-action@master
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        args: >
+          -Dsonar.javascript.lcov.reportPaths=users/coverage/lcov.info
+          -Dsonar.coverage.exclusions=**/*.test.ts,**/__tests__/**,**/test-cli.ts
+          -Dsonar.test.inclusions=**/*.test.ts,**/__tests__/**
