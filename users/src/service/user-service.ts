@@ -27,11 +27,13 @@ export async function createUser(userData: CreateUserInput): Promise<IUser> {
     if (password.length < 3) {
         throw new Error('Password must be at least 3 characters');
     }
-
+    const sanitizedUsername = String(username).trim();
+    const sanitizedEmail = String(email).trim();
+    
     const existingUser = await User.findOne({ 
     $or: [
-        { email: { $eq: email } }, 
-        { username: { $eq: username } }
+        { email: { $eq: sanitizedEmail } }, 
+        { username: { $eq: sanitizedUsername } }
     ] 
     });//search if already exist the email or the username
 
@@ -63,9 +65,9 @@ export async function login(userData: LoginUserInput):Promise<IUser> {
       throw new Error('Invalid input format');
   }
   const queryUsername = username; 
-
+  const sanitizedUsername = String(username).trim();
   const existingUser = await User.findOne({ 
-      username: { $eq: queryUsername } 
+      username: { $eq: sanitizedUsername } 
   });
 
   if (!existingUser) {

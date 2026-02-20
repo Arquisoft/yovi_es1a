@@ -10,6 +10,7 @@ import userRoutes from './controller/user-controller';
 import connectBD from './database'; 
 
 const app: Application = express();
+app.disable('x-powered-by');
 const port: string | number = process.env.PORT || 3000;
 
 // middlewaers (allow front which is on a different port to request data from backend)
