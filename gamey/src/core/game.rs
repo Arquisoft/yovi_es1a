@@ -278,6 +278,9 @@ impl GameY {
         }
         neighbors
     }
+    pub fn player_at(&self, coords: &Coordinates) -> Option<PlayerId> {
+        self.board_map.get(coords).map(|(_, player)| *player)
+    }
 
     /// Renders the current state of the board as a text string.
     /// If `show_coordinates` is true, the coordinates of each cell will be displayed.
