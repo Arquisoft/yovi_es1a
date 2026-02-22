@@ -114,12 +114,13 @@ node "Docker Host (Localhost)" {
         component "WebApp (Frontend)" as webapp
         component "Users Service" as users
         component "Gamey Service" as gamey
-        database "MongoDB" as mongo
 
         component "Grafana" as graf
         component "Prometheus" as prom
     }
 }
+
+database "MongoDB" as mongo
 
 player -> browser : Plays Game
 browser --> webapp : Loads HTML/JS\n[HTTP:80]
