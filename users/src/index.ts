@@ -16,7 +16,12 @@ const port: string | number = process.env.PORT || 3000;
 
 // middlewaers (allow front which is on a different port to request data from backend)
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:80',
+    'http://localhost',
+    'http://localhost:3000'
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
