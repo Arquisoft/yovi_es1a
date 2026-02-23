@@ -110,10 +110,23 @@ mod tests {
     }
 
     #[test]
+    fn test_simple_blocker_bot_returns_valid_coordinates() {
+        let bot = SimpleBlockerBot;
+        let game = GameY::new(5);
+
+        let coords = bot.choose_move(&game).unwrap();
+        let index = coords.to_index(game.board_size());
+
+        // Total celdas para tamaño 5 = 15
+        assert!(index < 15);
+    }
+
+    #[test]
     fn test_simple_blocker_bot_returns_none_on_full_board() {
         let bot = SimpleBlockerBot;
         let mut game = GameY::new(2);
 
+        // Llenamos el tablero (tamaño 2 tiene 3 celdas)
         let moves = vec![
             Movement::Placement {
                 player: PlayerId::new(0),
@@ -133,6 +146,7 @@ mod tests {
             game.add_move(mv).unwrap();
         }
 
+        assert!(game.available_cells().is_empty());
         let chosen_move = bot.choose_move(&game);
         assert!(chosen_move.is_none());
     }
@@ -152,5 +166,20 @@ mod tests {
         let index = coords.to_index(game.board_size());
 
         assert!(game.available_cells().contains(&index));
+    }
+
+    #[test]
+    fn test_simple_blocker_bot_multiple_calls_return_valid_moves() {
+        let bot = SimpleBlockerBot;
+        let game = GameY::new(7);
+
+        for _ in 0..10 {
+            let coords = bot.choose_move(&game).unwrap();
+            let index = coords.to_index(game.board_size());
+
+            // Total celdas para tamaño 7 = 28
+            assert!(index < 28);
+            assert!(game.available_cells().contains(&index));
+        }
     }
 }
