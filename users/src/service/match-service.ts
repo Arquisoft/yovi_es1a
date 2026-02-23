@@ -27,7 +27,7 @@ export async function saveMatch(matchData:SaveMatchInput):Promise<IMatch>
 
     if(duration<0)
     {
-            throw new Error('Duration cannot be negative');
+        throw new Error('Duration cannot be negative');
     }
     
     const newMatch = new Match({
