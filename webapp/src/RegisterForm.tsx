@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import avatar from './img/avatar.png';
 import y_gris from './img/y_gris.png';
+import { Link } from 'react-router-dom';
 
 
 const RegisterForm: React.FC = () => {
@@ -106,7 +107,9 @@ const RegisterForm: React.FC = () => {
           <button type="submit" className="submit-button" disabled={loading}> 
             {loading ? 'Entering...' : 'Lets go!'}
           </button>
-          
+          <div style={{ textAlign: 'center', marginTop: '1rem', color: '#666' }}>
+  ¿Ya tienes cuenta? <Link to="/login" style={{ color: '#007bff', textDecoration: 'none', fontWeight: 'bold' }}>Inicia sesión</Link>
+          </div>
           {responseMessage && (
             <div className="success-message" style={{ marginTop: 12, color: 'green' }}>
               {responseMessage}
