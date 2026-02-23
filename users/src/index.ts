@@ -7,6 +7,7 @@ import cors from 'cors';
 import promBundle from 'express-prom-bundle';
 
 import userRoutes from './controller/user-controller'; 
+import matchRoutes from './controller/match-controller';
 import connectBD from './database'; 
 
 const app: Application = express();
@@ -37,6 +38,7 @@ app.use(metricsMiddleware);
 connectBD(); //conect bd
 
 app.use('/', userRoutes);  // connect with user-controller
+app.use('/matches', matchRoutes); // connect with match-controller
 
 app.get('/health', (req: Request, res: Response) => {
     res.json({ status: 'OK', service: 'Users Service' });

@@ -1,0 +1,12 @@
+POST http://localhost:3000/matches/save
+Content-Type: application/json
+
+{
+  "userId": "699b83c5919063d983629ac4",
+  "result": "lose",
+  "duration": 100,
+  "boardSize": 7
+}
+
+### Recuperar el historial del jugador
+GET http://localhost:3000/matches/history/699b83c5919063d983629ac4
