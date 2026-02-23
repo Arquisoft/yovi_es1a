@@ -13,10 +13,12 @@ pub mod ybot_registry;
 pub mod group_expansion;
 pub mod priority_block;
 pub mod monte_carlo;
+pub mod simple_blocker;
 pub use random::*;
 pub use ybot::*;
 pub use ybot_registry::*;
 pub use group_expansion::*;
 pub use priority_block::*;
 pub use monte_carlo::*;
+pub use simple_blocker::*;
 
