@@ -62,7 +62,7 @@ async function main() {
         } else {
             console.log('\nStarting game...');
             try {
-                execSync('cargo run -- --mode computer --bot monte_carlo_bot', { cwd: '../gamey', stdio: 'inherit' });
+                execSync('cargo run -- --mode computer --bot monte_carlo_bot', { cwd: '../gamey', stdio: 'inherit' }); // NOSONAR
 
                 console.log('\n¡Match finished! Obtaining results...');
 
