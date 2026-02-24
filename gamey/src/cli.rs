@@ -91,6 +91,27 @@ pub fn run_cli_game() -> Result<()> {
         match status {
             GameStatus::Finished { winner } => {
                 println!("Game over! Winner: {}", winner);
+                
+                let result_str = if winner.id() == 0 { "win" } else { "loss" };
+                
+                let total_moves = game.total_cells() - game.available_cells().len() as u32;
+
+                let json_data = format!(
+                    r#"{{
+                        "result": "{}",
+                        "board_size": {},
+                        "mode": "{}",
+                        "bot_used": "{}",
+                        "total_moves": {}
+                        }}"#,
+                    result_str, args.size, args.mode, args.bot, total_moves
+                );
+
+                if let Err(e) = std::fs::write("resultados_temp.json", json_data) {
+                    eprintln!("Aviso: No se pudo guardar el resultado de la partida: {}", e);
+                } else {
+                    println!("Resultados exportados para la base de datos");
+                }
                 break;
             }
             GameStatus::Ongoing { next_player } => {
