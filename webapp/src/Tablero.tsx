@@ -10,7 +10,7 @@ const GameBoard: React.FC = () => {
     for (let i = 0; i < TAM_TABLERO; i++) {
         const casillas = [];
         for (let j = 0; j <= i; j++) {
-            casillas.push( <div key={`${i} ${j}`} className="casilla"></div>);
+            casillas.push( <button key={`${i}-${j}`} className="casilla" onClick={() => handleClick(i, j)}></button>);
         }
         
         filas.push( <div key={i} className="tablero">{casillas}</div>//Casillas de cada fila
