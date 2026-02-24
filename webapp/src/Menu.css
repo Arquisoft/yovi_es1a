@@ -8,6 +8,7 @@
   background-color: #55a667;
   padding: 0.5rem;
   gap: 1rem;
+  align-items: center;
 }
 
 .content {
@@ -26,4 +27,27 @@
 .nav-item.active {
   background-color: #007bff;
   color: #fff;
+}
+
+/* Contenedor de la derecha (perfil) */
+.nav-right {
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* empuja el contenido al extremo derecho */
+}
+
+/* Botón de perfil */
+.perfil {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #fff;
+}
+
+.username {
+  font-size: 20px;
+}
+
+.avatar {
+  height: 40px;
 }
