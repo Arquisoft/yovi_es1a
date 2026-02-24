@@ -99,6 +99,20 @@ impl GameY {
         Ok(())
     }
 
+    /// Permite al bot saber a qué grupo pertenece una ficha en unas coordenadas dadas.
+    pub fn get_set_id(&self, coords: &Coordinates) -> Option<usize> {
+        match self.board_map.get(coords) {
+            Some((set_idx, _player)) => Some(*set_idx),
+            None => None,
+        }
+    }
+
+    /// Permite al bot saber qué bordes (A, B, C) está tocando un grupo específico.
+    pub fn get_group_edges(&self, set_idx: usize) -> (bool, bool, bool) {
+        let set = &self.sets[set_idx];
+        (set.touches_side_a, set.touches_side_b, set.touches_side_c)
+    }
+
     /// Returns the player who should make the next move, or None if the game is over.
     pub fn next_player(&self) -> Option<PlayerId> {
         if let GameStatus::Ongoing { next_player } = self.status {
