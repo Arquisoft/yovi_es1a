@@ -1,0 +1,9 @@
+.casilla {
+    background-color: #ddd;
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+}
+.tablero {
+    margin-bottom: 2px;
+}
