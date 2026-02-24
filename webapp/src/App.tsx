@@ -4,6 +4,7 @@ import BotTester from './BotTester';
 import { Routes, Route } from "react-router-dom";
 import Home from './Home';
 import Login from './Login';
+import Tablero from './Tablero';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Route path="/register" element={<RegisterForm />} />
       <Route path="/botTester" element={<BotTester />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/game" element={<Tablero />} />
     </Routes>
   );
 }
