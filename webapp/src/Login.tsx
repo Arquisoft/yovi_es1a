@@ -41,6 +41,10 @@ const Login: React.FC = () => {
       const data = await res.json();
       
       if (res.ok) {
+          localStorage.setItem("user", JSON.stringify({
+            userId: data.userId, 
+            username: data.username
+          }));
         console.log("¡Conectado con éxito!", data.message);
         alert(`¡Bienvenido de nuevo, ${data.username}!`);
         
