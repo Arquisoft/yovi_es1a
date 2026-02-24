@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-//import "./Menu.css";
+import "./Menu.css";
 
 const Menu: React.FC = () => {
   const [activeTab, setActiveTab] = useState("play");
@@ -24,9 +24,6 @@ const Menu: React.FC = () => {
         {activeTab === "settings" && <p>Panel de ajustes</p>}
       </div>
 
-      <footer className="footer">
-        <p>yovi_es1a</p>
-      </footer>
     </div>
   );
 };
