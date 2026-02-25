@@ -6,6 +6,8 @@ import Home from './Home';
 import Login from './Login';
 import Tablero from './Tablero';
 import MenuOpciones from './MenuOpciones';
+import Estadisticas from './Estadisticas';
+
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/game" element={<Tablero />} />
       <Route path="/menu" element={<MenuOpciones />} />
+      <Route path="/estadisticas" element={<Estadisticas />} />
+
     </Routes>
   );
 }

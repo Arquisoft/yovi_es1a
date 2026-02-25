@@ -1,14 +1,13 @@
 import React, { useState,useEffect  } from "react";
-import "./Menu.css";
 import avatar from './img/avatar.png';
 import { useNavigate } from 'react-router-dom';
 
-const Menu: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("Inicio");
-  const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
 
-  const navigate = useNavigate();
-
+const Estadisticas: React.FC = () => {
+    const [activeTab, setActiveTab] = useState("stats");
+    const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
+    const navigate = useNavigate();
+    
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -48,15 +47,9 @@ const Menu: React.FC = () => {
           </button>
         </div>
       </nav>
-
-      <div className="content">
-        {activeTab === "Inicio" && <p>Panel de inicio</p>}
-        {activeTab === "play" && <p>Panel de juego</p>}
-        {activeTab === "stats" && <p>Panel de estadísticas</p>}
-      </div>
-
+    <h2>ESTADÍSTICAS</h2>
     </div>
   );
 };
 
-export default Menu;
+export default Estadisticas;
