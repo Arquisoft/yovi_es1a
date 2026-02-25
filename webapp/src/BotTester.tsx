@@ -31,6 +31,7 @@ const BotTester: React.FC = () => {
       }
 
     } catch (err) {
+      console.error('Error en pedirMovimiento:', err);
       setResultado('Error de conexión');
     }
   };

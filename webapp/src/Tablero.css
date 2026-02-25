@@ -1,0 +1,16 @@
+.casilla {
+    background-color: #ddd;
+    width: 45px;
+    height: 45px;
+    margin: 2px;
+}
+.tablero {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2px;
+}
+
+h2 {
+    font-size: 40px;
+    margin-bottom: 50px;
+}
