@@ -56,13 +56,15 @@ const Menu: React.FC = () => {
         <h3>Reglas del juego</h3>
         <ul>
           <li>Se juega por turnos</li>
-          <li>el ganador será el primero en conectar los tres lados del tablero</li>
+          <li>El ganador será el primero en conectar los tres lados del tablero.</li>
+          <li>Se considera que las casillas de las esquinas pertenecen a los dos lados.</li>
         </ul>
         <h3>Posibilidades</h3>
           <ul>
             <li>Jugar contra un bot</li>
             <li>Elegir estrategia y nivel de dificultad</li>
             <li>Consultar estadísticas</li>
+            <li>Tamaño de tablero variable</li>
           </ul>
 
         <h3>Estrategias disponibles</h3>
