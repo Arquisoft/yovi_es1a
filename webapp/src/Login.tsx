@@ -48,7 +48,9 @@ const Login: React.FC = () => {
         console.log("¡Conectado con éxito!", data.message);
         alert(`¡Bienvenido de nuevo, ${data.username}!`);
         
-        navigate('/botTester');
+        //navigate('/botTester');
+        navigate('/menu');
+
         
       } else {
         setError(data.error || 'Error al iniciar sesión');
