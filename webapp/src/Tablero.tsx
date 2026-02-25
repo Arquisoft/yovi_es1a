@@ -114,7 +114,7 @@ return (
         </div>
 
         <div className="nav-right">
-          <button>Idioma</button>
+          <button className="nav-item">Idioma</button>
           <button className="nav-item perfil">
             <img src={avatar} className="avatar" alt="avatar" />
             <span className="username">{user?.username || "Invitado"}</span>
