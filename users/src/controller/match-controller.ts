@@ -6,20 +6,24 @@ const router: Router = express.Router();
 
 router.post('/save',async (req: Request, res: Response) => 
     {
-        try{
+       try{
             const matchData = req.body;
+            if (!matchData || Object.keys(matchData).length === 0) {
+            return res.status(400).json({ error: "No data received." });
+        }
             const match = await saveMatch(matchData);
             return res.status(201).json({
-                message: 'Match successfully saved',
-                matchId: match._id,
-                result: match.result
-            });
+            message: 'Match successfully saved',
+            matchId: match._id,
+            ...match.toJSON()
+        });
         }catch(error:any){
             if (
                 error.message === 'Invalid input format' || 
                 error.message === 'Invalid input format for boardSize' ||
                 error.message === 'Invalid match result' || 
-                error.message === 'Duration cannot be negative'
+                error.message === 'Duration cannot be negative' ||
+                error.message.includes('negative')
             ) {
             return res.status(400).json({ error: error.message });
             }

@@ -95,7 +95,7 @@ pub fn run_cli_game() -> Result<()> {
             GameStatus::Finished { winner } => {
                 println!("Game over! Winner: {}", winner);
                 
-                let result_str = if winner.id() == 0 { "win" } else { "loss" };
+                let result_str = if winner.id() == 0 { "win" } else { "lose" };
                 
                 let total_moves = game.total_cells() - game.available_cells().len() as u32;
 

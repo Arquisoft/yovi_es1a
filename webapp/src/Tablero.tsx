@@ -57,7 +57,7 @@ const GameBoard: React.FC = () => {
   };
 
   // Cuando el jugador hace click
-  const jugar = async (row: number, col: number) => {
+  const jugar = async (_row: number, _col: number) => {
     setLoading(true);//Espero
 
     try {

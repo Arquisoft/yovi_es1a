@@ -5,15 +5,21 @@ export interface SaveMatchInput
     result:string;
     duration:number;
     boardSize?:number; //Optional default 7.
+    opponent?: string;
+    totalMoves?: number;
+    gameMode?: string;
 }
 export async function saveMatch(matchData:SaveMatchInput):Promise<IMatch>
 {
-    const {userId,result,duration,boardSize} = matchData;
+    const {userId,result,duration,boardSize,totalMoves,gameMode,opponent} = matchData;
 
     if(typeof userId !== 'string' || typeof result !== 'string' || typeof duration !== 'number'){
         throw new Error('Invalid input format');
     }
-
+    
+    if (totalMoves && totalMoves < 0) {
+        throw new Error('Total moves cannot be negative');
+    }
     if(boardSize!==undefined && typeof boardSize !=='number')
     {
         throw new Error('Invalid input format for boardSize');
@@ -34,7 +40,10 @@ export async function saveMatch(matchData:SaveMatchInput):Promise<IMatch>
         user:userId,
         result:result,
         duration:duration,
-        boardSize:boardSize || 7
+        boardSize:boardSize || 7,
+        opponent: opponent || 'Generic bot', 
+        totalMoves: totalMoves || 0,
+        gameMode: gameMode || 'computer'
     });
     return await newMatch.save();
 }

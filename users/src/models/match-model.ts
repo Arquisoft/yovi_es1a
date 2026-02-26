@@ -4,6 +4,9 @@ export interface IMatch extends Document{
     result: 'win' | 'lose' | 'surrender';
     duration:number;
     boardSize:number;
+    opponent: string;      
+    totalMoves: number;
+    gameMode: string;      
     createdAt:Date;
 }
 const MatchSchema:Schema = new Schema({
@@ -25,7 +28,10 @@ const MatchSchema:Schema = new Schema({
         type:Number,
         required:true,
         default:7
-    }
+    },
+    opponent: { type: String, default: 'Unknown' },
+    totalMoves: { type: Number, default: 0 },
+    gameMode: { type: String, default: 'computer' }
 }, {
   timestamps: true
 });

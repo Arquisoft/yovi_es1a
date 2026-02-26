@@ -1,5 +1,11 @@
 import axios from 'axios';
 import readline from 'readline';
+import fs from 'fs';       
+import path from 'path';
+
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 import { execSync } from 'child_process';
 import { saveMatch, getMatchHistory } from './src/service/match-service';
@@ -62,31 +68,55 @@ async function main() {
         } else {
             console.log('\nStarting game...');
             try {
-                execSync('cargo run -- --mode computer --bot monte_carlo_bot', { cwd: '../gamey', stdio: 'inherit' }); // NOSONAR
+                const startTime = Date.now();
 
-                console.log('\n¡Match finished! Obtaining results...');
+                execSync('cargo run -- --mode computer --bot monte_carlo_bot', { 
+                    cwd: '../gamey', 
+                    stdio: 'inherit' 
+                }); // NOSONAR
 
-                const result = await question('What was the result? (win/lose/surrender): ');
-                const durationStr = await question('Game duration in seconds?: ');
-                const boardSizeStr = await question('¿Board size?: ');
+                const endTime = Date.now();
+                const durationSeconds = Math.max(1, Math.floor((endTime - startTime) / 1000));
 
-                const duration = parseInt(durationStr);
-                const boardSize = parseInt(boardSizeStr);
+                console.log('\nMatch finished! Reading results from game engine...');
 
-                const res = await axios.post(`${API_URL}/matches/save`, { 
-                    userId: currentUserId, 
-                    result, 
-                    duration, 
-                    boardSize 
-                });
+                const resultsPath = path.join(__dirname, '../gamey/resultados_temp.json');
 
-                console.log('¡Stats saved with exit!', res.data.message);
+                if (fs.existsSync(resultsPath)) {
+                    const rawData = fs.readFileSync(resultsPath, 'utf-8');
+                    const gameData = JSON.parse(rawData);
+                    let finalResult = gameData.result;
+
+                    console.log(`\nDetected Stats from Engine:`);
+                    console.log(`- Result: ${finalResult.toUpperCase()}`);
+                    console.log(`- Board Size: ${gameData.board_size}`);
+                    console.log(`- Bot: ${gameData.bot_used}`);
+                    console.log(`- Duration: ${durationSeconds} seconds`);
+
+                    const res = await axios.post(`${API_URL}/matches/save`, { 
+                        userId: currentUserId, 
+                        result: finalResult, 
+                        duration: durationSeconds, 
+                        boardSize: gameData.board_size ,
+                        opponent: gameData.bot_used,
+                        totalMoves: gameData.total_moves,
+                        gameMode: gameData.mode
+                    });
+
+                    console.log('\nStats successfully saved to Database!', res.data.message);
+
+                    fs.unlinkSync(resultsPath); 
+
+                } else {
+                    console.error("\n Error: No se encontró el archivo de resultados 'resultados_temp.json'.");
+                    console.error("¿El juego terminó correctamente o se cerró forzosamente?");
+                }
+
             } catch (err: any) {
-                console.error('\nError running the game or saving the game:', err.response?.data?.error || err.message);
+                console.error('nError saving match:', err.response?.data?.error || err.message);
             }
         }
-    }
-    else if (choice === '4') {
+    } else if (choice === '4') {
         if (!currentUserId) {
             console.log('\nYou must log in first to see your statistics!');
         } else {
@@ -101,7 +131,9 @@ async function main() {
                 } else {
                     history.forEach((match: any, index: number) => {
                         const date = new Date(match.createdAt).toLocaleDateString();
-                        console.log(`${index + 1}. Result: ${match.result.toUpperCase()} | Duratin: ${match.duration}s | Board Size: ${match.boardSize}x${match.boardSize} | Date: ${date}`);
+                        console.log(`${index + 1}. [${match.result.toUpperCase()}] vs ${match.opponent} (${match.totalMoves} moves)`);
+                        console.log(`   Time: ${match.duration}s | Size: ${match.boardSize}x${match.boardSize} | Date: ${date}`);
+                        console.log('------------------------------------------------');
                     });
                 }
                 console.log('=========================================');

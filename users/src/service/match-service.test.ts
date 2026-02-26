@@ -45,6 +45,53 @@ describe('Match service - Save Match',()=> {
       
       await expect(saveMatch(invalidInput)).rejects.toThrow('Duration cannot be negative');
     });
+    it('7. It should save opponent, totalMoves and gameMode correctly', async () => {
+        const mockInput = { 
+            userId: 'user123', 
+            result: 'win', 
+            duration: 150, 
+            boardSize: 9,
+            opponent: 'SuperBot',
+            totalMoves: 42,
+            gameMode: 'computer'
+        };
+        
+        const mockSavedMatch = { _id: 'matchNew', ...mockInput };
+        Match.prototype.save = vi.fn().mockResolvedValue(mockSavedMatch);
+
+        const result = await saveMatch(mockInput);
+
+        expect(result).toEqual(mockSavedMatch);
+        expect(Match).toHaveBeenCalledWith(expect.objectContaining({
+            opponent: 'SuperBot',
+            totalMoves: 42,
+            gameMode: 'computer'
+        }));
+    });
+
+    it('8. It should use default values for opponent ("Generic bot") and gameMode ("computer") if missing', async () => {
+        const mockInput = { userId: 'user123', result: 'lose', duration: 100 };        
+        Match.prototype.save = vi.fn().mockResolvedValue({ 
+            _id: 'matchDef', 
+            ...mockInput, 
+            opponent: 'Generic bot',
+            gameMode: 'computer',
+            totalMoves: 0 
+        });
+
+        await saveMatch(mockInput);
+        expect(Match).toHaveBeenCalledWith(expect.objectContaining({
+            opponent: 'Generic bot',
+            gameMode: 'computer',
+            totalMoves: 0
+        }));
+    });
+
+    it('9. It should throw an error if totalMoves is negative', async () => {
+        const invalidInput = { userId: 'user123', result: 'win', duration: 10, totalMoves: -10 };
+        
+        await expect(saveMatch(invalidInput)).rejects.toThrow('Total moves cannot be negative');
+    });
 }) 
 describe('Match service - Get Match History', async () => 
     {
