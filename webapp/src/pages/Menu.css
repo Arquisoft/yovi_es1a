@@ -1,5 +1,5 @@
 .nav-bar {
-  position: fixed;/*Siempre visible*/
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -12,7 +12,7 @@
 }
 
 .content {
-  margin-top: 3rem; /* para no tapar nav bar*/
+  margin-top: 3rem;
   text-align: left;
 }
 
@@ -30,14 +30,12 @@
   color: #fff;
 }
 
-/* Contenedor de la derecha (perfil) */
 .nav-right {
   display: flex;
   align-items: center;
-  margin-left: auto; /* empuja el contenido al extremo derecho */
+  margin-left: auto; 
 }
 
-/* Botón de perfil */
 .perfil {
   display: flex;
   align-items: center;

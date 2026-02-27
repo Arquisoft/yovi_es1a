@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import reactLogo from './assets/react.svg';
-import y_dorada from './img/y_dorada.png';
-import './App.css';
+import reactLogo from '../assets/react.svg'
+import y_dorada from '../assets/y_dorada.png';
+import '../App.css';
 
 function Home() {
   return (

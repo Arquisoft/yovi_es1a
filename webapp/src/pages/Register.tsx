@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import avatar from './img/avatar.png';
-import y_gris from './img/y_gris.png';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import avatar from '../assets/avatar.png';
+import y_gris from '../assets/y_gris.png'; 
+import { authService } from '../services/auth.service';
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -16,59 +17,37 @@ const Login: React.FC = () => {
     event.preventDefault();
     setError(null);
 
-    if (!username.trim()) {
-      setError('Please enter a username');
-      return;
-    }
-    
-    if (!password.trim()) {
-      setError('Please enter a password');
+    if (!username.trim() || !email.trim() || !password.trim()) {
+      setError('Please fill all fields');
       return;
     }
 
     setLoading(true);
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      
-      const res = await fetch(`${API_URL}/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password }) 
-      });
+      const data = await authService.register(username, email, password);
 
-      const data = await res.json();
-      
-      if (res.ok) {
-          localStorage.setItem("user", JSON.stringify({
-            userId: data.userId, 
-            username: data.username
-          }));
-        console.log("¡Conectado con éxito!", data.message);
-        alert(`¡Bienvenido de nuevo, ${data.username}!`);
-        
-        //navigate('/botTester');
-        navigate('/menu');
+      localStorage.setItem("user", JSON.stringify({
+        userId: data.userId, 
+        username: data.username
+      }));
 
-        
-      } else {
-        setError(data.error || 'Error al iniciar sesión');
-      }
+      setUsername(''); setEmail(''); setPassword('');
+      navigate('/menu');
+
     } catch (err: any) {
-      setError('Error de conexión con el servidor');
+      setError(err.message || 'Network error');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="RegisterForm"> {/* Usamos la misma clase envoltorio para heredar tu CSS */}
+    <div className="RegisterForm">
       <img src={y_gris} className="y_gris" alt="y gris" />
       <div className="form-content">
         <div className="title-register">
           <img src={avatar} className="avatar" alt="avatar" />
-          <h2>Inicia Sesión</h2>
+          <h2>Crea una cuenta</h2>
         </div>
 
         <form onSubmit={handleSubmit} className="register-form">
@@ -79,6 +58,17 @@ const Login: React.FC = () => {
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              className="form-input"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="form-input"
             />
           </div>
@@ -95,15 +85,15 @@ const Login: React.FC = () => {
           </div>
 
           <button type="submit" className="submit-button" disabled={loading}> 
-            {loading ? 'Entering...' : 'Log in!'}
+            {loading ? 'Entering...' : 'Lets go!'}
           </button>
-
-          <div style={{ textAlign: 'center', marginTop: '1rem', color: '#666' }}>
-            ¿No tienes cuenta? <Link to="/register" style={{ color: '#007bff', textDecoration: 'none', fontWeight: 'bold' }}>Regístrate aquí</Link>
-          </div>
           
+          <div style={{ textAlign: 'center', marginTop: '1rem', color: '#666' }}>
+            ¿Ya tienes cuenta? <Link to="/login" style={{ color: '#007bff', textDecoration: 'none', fontWeight: 'bold' }}>Inicia sesión</Link>
+          </div>
+
           {error && (
-            <div className="error-message" style={{ marginTop: 12, color: 'red', textAlign: 'center' }}>
+            <div className="error-message" style={{ marginTop: 12, color: 'red' }}>
               {error}
             </div>
           )}
@@ -113,4 +103,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Register;
