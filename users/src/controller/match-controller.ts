@@ -6,18 +6,23 @@ const router: Router = express.Router();
 
 router.post('/',async (req: Request, res: Response) => 
     {
-       try{
-            const matchData = req.body;
-            if (!matchData || Object.keys(matchData).length === 0) {
-            return res.status(400).json({ error: "No data received." });
+       try {
+        const { user, ...rest } = req.body; 
+
+        if (!user) {
+            return res.status(400).json({ error: "No user ID received." });
         }
-            const match = await saveMatch(matchData);
-            return res.status(201).json({
+        const match = await saveMatch({ 
+            userId: user, 
+            ...rest 
+        });
+
+        return res.status(201).json({
             message: 'Match successfully saved',
             matchId: match._id,
             ...match.toJSON()
         });
-        }catch(error:any){
+    }catch(error:any){
             if (
                 error.message === 'Invalid input format' || 
                 error.message === 'Invalid input format for boardSize' ||
@@ -33,6 +38,9 @@ router.post('/',async (req: Request, res: Response) =>
 router.get('/user/:userId', async (req: Request, res: Response) => {
     try{
         const userId = req.params.userId;
+        if (!userId || userId.trim() === '') {
+            return res.status(404).json({ error: 'User ID is required' });
+        }
         const history = await getMatchHistory(userId);
         return res.status(200).json(history);
     }catch(error:any)

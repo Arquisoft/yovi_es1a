@@ -61,6 +61,15 @@ pub async fn choose(
             )));
         }
     };
+    if let crate::GameStatus::Finished { winner } = game_y.status() {
+        let status_str = if *winner == crate::PlayerId::new(0) { "human_won" } else { "bot_won" };
+        return Ok(Json(MoveResponse {
+            api_version: params.api_version,
+            bot_id: params.bot_id,
+            coords: crate::Coordinates::new(0, 0, 0),
+            game_status: status_str.to_string(),
+        }));
+    }
     let bot = match state.bots().find(&params.bot_id) {
         Some(bot) => bot,
         None => {
