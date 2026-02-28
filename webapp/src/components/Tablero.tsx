@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { gameService } from "../services/game.service";
 import { statsService } from "../services/stats.service";
 import "./Tablero.css";
@@ -37,15 +37,12 @@ const Tablero: React.FC<TableroProps> = ({ size }) => {
   const [startTime] = useState<number>(Date.now());
   const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
 
-  useEffect(() => {
-    setLayout(getInitialLayout(size));
-    setTurn("B");
-  }, [size]);
-
   React.useEffect(() => {
     const storedUser = localStorage.getItem("user");
+    setLayout(getInitialLayout(size));
+    setTurn("B");
     if (storedUser) setUser(JSON.parse(storedUser));
-  }, []);
+  }, [size]);
 
   const safeSaveStats = async (result: "win" | "lose", finalBoard: string) => {
     if (!user || !user.userId) return;
@@ -57,7 +54,7 @@ const Tablero: React.FC<TableroProps> = ({ size }) => {
         result,
         duration: durationSeconds,
         boardSize: size, 
-        opponent: "shortest_path_bot",
+        opponent: "monte_carlo_bot",
         totalMoves: moves,
         gameMode: "computer"
       });
@@ -77,9 +74,9 @@ const Tablero: React.FC<TableroProps> = ({ size }) => {
     setLoading(true);
 
     try {
-      const yenLayout = stringToYenLayout(updatedFlatLayout, size); // SUSTITUIMOS TAM por size
+      const yenLayout = stringToYenLayout(updatedFlatLayout, size); 
       
-      const response = await gameService.askBotMove("shortest_path_bot", size, 1, yenLayout); // SUSTITUIMOS TAM por size
+      const response = await gameService.askBotMove("monte_carlo_bot", size, 1, yenLayout); 
 
       if (response.game_status === "human_won") {
         setTimeout(() => alert("¡HAS GANADO!"), 100);
@@ -87,7 +84,7 @@ const Tablero: React.FC<TableroProps> = ({ size }) => {
         return; 
       }
 
-      const botIndex = coordsToIndex(response.coords.x, response.coords.y, size); // SUSTITUIMOS TAM por size
+      const botIndex = coordsToIndex(response.coords.x, response.coords.y, size);
       const finalLayoutArray = updatedFlatLayout.split("");
       finalLayoutArray[botIndex] = "R";
       setLayout(finalLayoutArray.join(""));

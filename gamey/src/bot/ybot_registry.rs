@@ -16,10 +16,10 @@ use crate::YBot;
 ///
 /// ```
 /// use std::sync::Arc;
-/// use gamey::{YBotRegistry, RandomBot};
+/// use gamey::{YBotRegistry, RandomBot,ShortestPathBot};
 ///
 /// let registry = YBotRegistry::new()
-///     .with_bot(Arc::new(RandomBot));
+///     .with_bot(Arc::new(RandomBot)).with_bot(Arc::new(ShortestPathBot)).with_bot(Arc::new(MonteCarloBot));
 ///
 /// let bot = registry.find("random_bot");
 /// assert!(bot.is_some());

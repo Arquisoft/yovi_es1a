@@ -1,4 +1,6 @@
 import Match, {IMatch} from '../models/match-model';
+import mongoose from 'mongoose';
+
 export interface SaveMatchInput
 {
     userId:string;
@@ -16,6 +18,7 @@ export async function saveMatch(matchData:SaveMatchInput):Promise<IMatch>
     if(typeof userId !== 'string' || typeof result !== 'string' || typeof duration !== 'number'){
         throw new Error('Invalid input format');
     }
+    
     
     if (totalMoves && totalMoves < 0) {
         throw new Error('Total moves cannot be negative');
@@ -36,8 +39,14 @@ export async function saveMatch(matchData:SaveMatchInput):Promise<IMatch>
         throw new Error('Duration cannot be negative');
     }
     
+    let userObjectId;
+    try {
+        userObjectId = new mongoose.Types.ObjectId(userId);
+    } catch (error) {
+        throw new Error('Invalid User ID format');
+    }
     const newMatch = new Match({
-        user:userId,
+        user:userObjectId,
         result:result,
         duration:duration,
         boardSize:boardSize || 7,
@@ -47,12 +56,14 @@ export async function saveMatch(matchData:SaveMatchInput):Promise<IMatch>
     });
     return await newMatch.save();
 }
-export async function getMatchHistory(userId:string): Promise<IMatch[]>{
-    if(typeof userId !== 'string')
-    {
+export async function getMatchHistory(userId: string): Promise<IMatch[]> {
+    if (typeof userId !== 'string') {
         throw new Error('Invalid input format');
     }
-    const safeUserId=userId.trim();
-    // search matches and order it from most recent to oldest (-1)
-    return await Match.find({ user: { $eq: safeUserId } }).sort({ createdAt: -1 }).populate('user','username');
+    const safeUserId = userId.trim();
+    const userObjectId = new mongoose.Types.ObjectId(safeUserId);
+
+    return await Match.find({ user: userObjectId })
+        .sort({ createdAt: -1 })
+        .populate('user', 'username');
 }

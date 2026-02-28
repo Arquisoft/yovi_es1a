@@ -8,6 +8,7 @@ import promBundle from 'express-prom-bundle';
 
 import userRoutes from './controller/user-controller'; 
 import matchRoutes from './controller/match-controller';
+import botRoutes from './controller/bot-controller';
 import connectBD from './database'; 
 
 const app: Application = express();
@@ -45,6 +46,7 @@ connectBD(); //conect bd
 
 app.use('/', userRoutes);  // connect with user-controller
 app.use('/matches', matchRoutes); // connect with match-controller
+app.use('/api/bot', botRoutes); //connect with bot controller
 
 app.get('/health', (req: Request, res: Response) => {
     res.json({ status: 'OK', service: 'Users Service' });

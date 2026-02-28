@@ -23,12 +23,12 @@ describe('Integration Tests: Matches Service', () => {
         await Match.deleteMany({ user: testUserId });
     });
 
-    describe('POST /matches/save', () => {
+    describe('POST /matches', () => {
         it('should save a new match and return 201', async () => {
             const res = await supertest(app)
-                .post('/matches/save')
+                .post('/matches')
                 .send({
-                    userId: testUserId,
+                    user: testUserId,
                     result: 'win',
                     duration: 120,
                     boardSize: 7,
@@ -51,9 +51,9 @@ describe('Integration Tests: Matches Service', () => {
 
         it('should return 400 if required fields are missing', async () => {
             const res = await supertest(app)
-                .post('/matches/save')
+                .post('/matches')
                 .send({
-                    userId: testUserId,
+                    user: testUserId,
                 });
 
             expect(res.status).toBe(400);
@@ -62,9 +62,9 @@ describe('Integration Tests: Matches Service', () => {
 
         it('should return 400 if duration is negative', async () => {
             const res = await supertest(app)
-                .post('/matches/save')
+                .post('/matches')
                 .send({
-                    userId: testUserId,
+                    user: testUserId,
                     result: 'win',
                     duration: -50
                 });
@@ -75,9 +75,9 @@ describe('Integration Tests: Matches Service', () => {
 
         it('should return 400 if result is not win, lose, or surrender', async () => {
             const res = await supertest(app)
-                .post('/matches/save')
+                .post('/matches')
                 .send({
-                    userId: testUserId,
+                    user: testUserId,
                     result: 'trap',
                     duration: 100
                 });
@@ -88,9 +88,9 @@ describe('Integration Tests: Matches Service', () => {
 
         it('should return 500 if an invalid MongoDB ID is provided', async () => {
             const res = await supertest(app)
-                .post('/matches/save')
+                .post('/matches')
                 .send({
-                    userId: 'id-falso-que-rompe-mongoose', 
+                    user: 'id-falso-que-rompe-mongoose', 
                     result: 'win',
                     duration: 100
                 });
@@ -100,9 +100,9 @@ describe('Integration Tests: Matches Service', () => {
         });
         it('should return 400 if totalMoves is negative', async () => {
             const res = await supertest(app)
-                .post('/matches/save')
+                .post('/matches')
                 .send({
-                    userId: testUserId,
+                    user: testUserId,
                     result: 'win',
                     duration: 100,
                     totalMoves: -5
@@ -116,7 +116,7 @@ describe('Integration Tests: Matches Service', () => {
     describe('GET /matches/history/:userId', () => {
         it('should return 200 and the match history for a valid user', async () => {
             const res = await supertest(app)
-                .get(`/matches/history/${testUserId}`)
+                .get(`/matches/user/${testUserId}`)
                 .set('Accept', 'application/json');
 
             expect(res.status).toBe(200);
@@ -130,17 +130,18 @@ describe('Integration Tests: Matches Service', () => {
             }
         });
 
-        it('should return 404 if userId is missing', async () => {
-            const res = await supertest(app)
-                .get('/matches/history/')
-                .set('Accept', 'application/json');
+        it('should return 200 and an empty array if userId is not found', async () => {
+        const res = await supertest(app)
+            .get('/matches/user/000000000000000000000000')
+            .set('Accept', 'application/json');
 
-            expect(res.status).toBe(404);
-        });
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual([]);
+});
 
         it('should return 500 if an invalid MongoDB ID format is provided', async () => {
             const res = await supertest(app)
-                .get('/matches/history/id-false') 
+                .get(`/matches/user/idfalse`)
                 .set('Accept', 'application/json');
 
             expect(res.status).toBe(500);
