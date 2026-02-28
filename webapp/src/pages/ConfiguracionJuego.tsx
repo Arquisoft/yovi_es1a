@@ -12,6 +12,16 @@ const ConfiguracionJuego: React.FC = () => {
   const [bot, setBot] = useState<string>("random_bot");
   const [dificultad, setDificultad] = useState<"facil" | "medio" | "dificil">("facil");
 
+  const irAlJuego = () => {
+    navigate("/partida", { 
+      state: { 
+        tamanoSeleccionado: tamano,
+        botSeleccionado: bot,
+        modoSeleccionado: modo
+      } 
+    });
+  };
+
 const dibujarPrevisualizacion = () => {
     const filas = [];
     for (let i = 0; i < tamano; i++) {
@@ -113,7 +123,7 @@ const dibujarPrevisualizacion = () => {
             </>
           )}
 
-          <button className="btn-jugar" >
+          <button className="btn-jugar" onClick={irAlJuego}>
             Jugar
           </button>
         </div>

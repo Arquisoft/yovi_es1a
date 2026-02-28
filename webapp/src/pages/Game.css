@@ -1,0 +1,17 @@
+.game-page {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2vh; /* Reemplaza marginTop: 20px */
+  text-align: center; /* Reemplaza textAlign: center */
+}
+
+.game-title {
+  font-size: 1.5rem;
+  margin-bottom: 2vh;
+}
