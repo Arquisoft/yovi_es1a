@@ -3,13 +3,15 @@ import { Routes, Route } from "react-router-dom";
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Menu from './pages/Menu';
+import Menu from './pages/ConfiguracionJuego';
 import Estadisticas from './pages/Estadisticas';
 import Game from './pages/Game';
+import Ayuda from "./pages/Ayuda";
 
 import BotTester from './components/BotTester'; 
 
 import './App.css';
+
 
 function App() {
   return (
@@ -20,9 +22,10 @@ function App() {
       <Route path="/register" element={<Register />} />
 
       {/*Private routes */}
-      <Route path="/menu" element={<Menu />} />
+      <Route path="/configuracion" element={<Menu />} />
       <Route path="/game" element={<Game />} />
       <Route path="/estadisticas" element={<Estadisticas />} />
+      <Route path="/ayuda" element={<Ayuda />} />
 
       {/* Routes for testing */}
       <Route path="/botTester" element={<BotTester />} />

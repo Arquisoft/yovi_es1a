@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import avatar from '../assets/avatar.png'; 
 
 interface NavBarProps {
-  activeTab: "Inicio" | "play" | "stats";
+  activeTab: "play" | "stats" |"Ayuda";
 }
 
 const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
@@ -26,13 +26,7 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
     <nav className="nav-bar">
       <div className="nav-left">
         <button 
-          onClick={() => navigate("/menu")}
-          className={`nav-item ${activeTab === "Inicio" ? "active" : ""}`}
-        >
-          Inicio
-        </button>
-        <button 
-          onClick={() => navigate("/game")}
+          onClick={() => navigate("/configuracion")}
           className={`nav-item ${activeTab === "play" ? "active" : ""}`}
         >
           Jugar
@@ -42,6 +36,12 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
           className={`nav-item ${activeTab === "stats" ? "active" : ""}`}
         >
           Estadísticas
+        </button>
+        <button 
+          onClick={() => navigate("/ayuda")}
+          className={`nav-item ${activeTab === "Ayuda" ? "active" : ""}`}
+        >
+          Ayuda
         </button>
       </div>
 

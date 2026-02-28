@@ -2,11 +2,10 @@ import React from "react";
 import NavBar from "../components/NavBar";
 import "./Menu.css";
 
-const Menu: React.FC = () => {
+const Ayuda: React.FC = () => {
   return (
     <div>
-      {}
-      <NavBar activeTab="Inicio" />
+      <NavBar activeTab="Ayuda" />
 
       <div className="content">
         <h2>Bienvenido a Game Y</h2>
@@ -44,4 +43,4 @@ const Menu: React.FC = () => {
   );
 };
 
-export default Menu;
+export default Ayuda;
