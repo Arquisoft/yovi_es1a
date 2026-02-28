@@ -26,6 +26,8 @@ pub struct MoveResponse {
     pub bot_id: String,
     /// The coordinates where the bot chooses to place its piece.
     pub coords: Coordinates,
+    // State of the game ("ongoing","bot_won"..)
+    pub game_status:String,
 }
 
 /// Handler for the bot move selection endpoint.
@@ -59,6 +61,15 @@ pub async fn choose(
             )));
         }
     };
+    if let crate::GameStatus::Finished { winner } = game_y.status() {
+        let status_str = if *winner == crate::PlayerId::new(0) { "human_won" } else { "bot_won" };
+        return Ok(Json(MoveResponse {
+            api_version: params.api_version,
+            bot_id: params.bot_id,
+            coords: crate::Coordinates::new(0, 0, 0),
+            game_status: status_str.to_string(),
+        }));
+    }
     let bot = match state.bots().find(&params.bot_id) {
         Some(bot) => bot,
         None => {
@@ -84,10 +95,34 @@ pub async fn choose(
             )));
         }
     };
+    let mut game_y_mut = game_y;
+    let bot_player_id = crate::PlayerId::new(1); //asume bot plays always as player 1
+    let bot_move = crate::Movement::Placement {
+        player: bot_player_id,
+        coords: coords,
+    };
+    if let Err(e) = game_y_mut.add_move(bot_move) {
+        return Err(Json(ErrorResponse::error(
+            &format!("Failed to apply bot move to calculate state: {:?}", e),
+            Some(params.api_version),
+            Some(params.bot_id),
+        )));
+    }
+    let status_str = match game_y_mut.status() {
+        crate::GameStatus::Ongoing { .. } => "ongoing".to_string(),
+        crate::GameStatus::Finished { winner } => {
+            if *winner == bot_player_id {
+                "bot_won".to_string()
+            } else {
+                "human_won".to_string()
+            }
+        }
+    };
     let response = MoveResponse {
         api_version: params.api_version,
         bot_id: params.bot_id,
         coords,
+        game_status: status_str,
     };
     Ok(Json(response))
 }
@@ -102,10 +137,12 @@ mod tests {
             api_version: "v1".to_string(),
             bot_id: "random".to_string(),
             coords: Coordinates::new(1, 2, 3),
+            game_status: "ongoing".to_string(),
         };
         assert_eq!(response.api_version, "v1");
         assert_eq!(response.bot_id, "random");
         assert_eq!(response.coords, Coordinates::new(1, 2, 3));
+        assert_eq!(response.game_status, "ongoing");
     }
 
     #[test]
@@ -114,18 +151,21 @@ mod tests {
             api_version: "v1".to_string(),
             bot_id: "random".to_string(),
             coords: Coordinates::new(1, 2, 3),
+            game_status: "ongoing".to_string(),
         };
         let json = serde_json::to_string(&response).unwrap();
         assert!(json.contains("\"api_version\":\"v1\""));
         assert!(json.contains("\"bot_id\":\"random\""));
+        assert!(json.contains("\"game_status\":\"ongoing\""));
     }
 
     #[test]
     fn test_move_response_deserialize() {
-        let json = r#"{"api_version":"v1","bot_id":"test","coords":{"x":0,"y":1,"z":2}}"#;
+        let json = r#"{"api_version":"v1","bot_id":"test","coords":{"x":0,"y":1,"z":2},"game_status":"ongoing"}"#;
         let response: MoveResponse = serde_json::from_str(json).unwrap();
         assert_eq!(response.api_version, "v1");
         assert_eq!(response.bot_id, "test");
+        assert_eq!(response.game_status, "ongoing");
     }
 
     #[test]
@@ -134,6 +174,7 @@ mod tests {
             api_version: "v1".to_string(),
             bot_id: "random".to_string(),
             coords: Coordinates::new(0, 0, 0),
+            game_status: "bot_won".to_string(),
         };
         let cloned = response.clone();
         assert_eq!(response, cloned);
@@ -145,16 +186,19 @@ mod tests {
             api_version: "v1".to_string(),
             bot_id: "random".to_string(),
             coords: Coordinates::new(1, 1, 1),
+            game_status: "ongoing".to_string(),
         };
         let r2 = MoveResponse {
             api_version: "v1".to_string(),
             bot_id: "random".to_string(),
             coords: Coordinates::new(1, 1, 1),
+            game_status: "ongoing".to_string(),
         };
         let r3 = MoveResponse {
             api_version: "v2".to_string(),
             bot_id: "random".to_string(),
             coords: Coordinates::new(1, 1, 1),
+            game_status: "ongoing".to_string(),
         };
         assert_eq!(r1, r2);
         assert_ne!(r1, r3);

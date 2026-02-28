@@ -1,0 +1,59 @@
+import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import avatar from '../assets/avatar.png'; 
+
+interface NavBarProps {
+  activeTab: "Inicio" | "play" | "stats";
+}
+
+const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+
+  return (
+    <nav className="nav-bar">
+      <div className="nav-left">
+        <button 
+          onClick={() => navigate("/menu")}
+          className={`nav-item ${activeTab === "Inicio" ? "active" : ""}`}
+        >
+          Inicio
+        </button>
+        <button 
+          onClick={() => navigate("/game")}
+          className={`nav-item ${activeTab === "play" ? "active" : ""}`}
+        >
+          Jugar
+        </button>
+        <button 
+          onClick={() => navigate("/estadisticas")}
+          className={`nav-item ${activeTab === "stats" ? "active" : ""}`}
+        >
+          Estadísticas
+        </button>
+      </div>
+
+      <div className="nav-right">
+        <button className="nav-item">Idioma</button>
+        <button className="nav-item perfil" onClick={handleLogout} title="Cerrar sesión">
+          <img src={avatar} className="avatar" alt="avatar" />
+          <span className="username">{user?.username || "Invitado"}</span>
+        </button>
+      </div>
+    </nav>
+  );
+};
+
+export default NavBar;

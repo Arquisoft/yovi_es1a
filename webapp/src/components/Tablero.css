@@ -1,0 +1,13 @@
+.casilla.player-b {
+  background-color: #3b82f6; 
+  color: white;
+  font-weight: bold;
+  border: 2px solid #2563eb;
+}
+
+.casilla.player-r {
+  background-color: #ef4444;
+  color: white;
+  font-weight: bold;
+  border: 2px solid #dc2626;
+}

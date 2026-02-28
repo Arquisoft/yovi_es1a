@@ -1,0 +1,54 @@
+.nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  background-color: #55a667;
+  padding: 0.5rem;
+  gap: 1rem;
+  align-items: center;
+}
+
+.content {
+  margin-top: 3rem;
+  text-align: left;
+}
+
+.nav-item {
+  background: #5f6d2a;
+  color: #fff;
+}
+
+.nav-item:hover {
+  background-color: #fc7777;
+}
+
+.nav-item.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  margin-left: auto; 
+}
+
+.perfil {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #fff;
+  height: 40px;
+  width: 200px;
+}
+
+.username {
+  font-size: 20px;
+}
+
+.avatar {
+  height: 20px;
+}

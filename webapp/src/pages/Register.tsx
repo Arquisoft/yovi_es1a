@@ -1,58 +1,39 @@
 import React, { useState } from 'react';
-import avatar from './img/avatar.png';
-import y_gris from './img/y_gris.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import avatar from '../assets/avatar.png';
+import y_gris from '../assets/y_gris.png'; 
+import { authService } from '../services/auth.service';
 
-
-const RegisterForm: React.FC = () => {
+const Register: React.FC = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [responseMessage, setResponseMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setResponseMessage(null);
     setError(null);
 
-    // Validación específica para cada campo
-    if (!username.trim()) {
-      setError('Please enter a username');  // <-- CAMBIO AQUÍ
-      return;
-    }
-    
-    if (!email.trim()) {
-      setError('Please enter an email');
-      return;
-    }
-    
-    if (!password.trim()) {
-      setError('Please enter a password');
+    if (!username.trim() || !email.trim() || !password.trim()) {
+      setError('Please fill all fields');
       return;
     }
 
     setLoading(true);
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const res = await fetch(`${API_URL}/createuser`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, email, password })
-      });
+      const data = await authService.register(username, email, password);
 
-      const data = await res.json();
-      if (res.ok) {
-        setResponseMessage(data.message);
-        setUsername('');
-        setEmail('');
-        setPassword('');
-      } else {
-        setError(data.error || 'Server error');
-      }
+      localStorage.setItem("user", JSON.stringify({
+        userId: data.userId, 
+        username: data.username
+      }));
+
+      setUsername(''); setEmail(''); setPassword('');
+      navigate('/menu');
+
     } catch (err: any) {
       setError(err.message || 'Network error');
     } finally {
@@ -62,7 +43,6 @@ const RegisterForm: React.FC = () => {
 
   return (
     <div className="RegisterForm">
-      
       <img src={y_gris} className="y_gris" alt="y gris" />
       <div className="form-content">
         <div className="title-register">
@@ -107,14 +87,10 @@ const RegisterForm: React.FC = () => {
           <button type="submit" className="submit-button" disabled={loading}> 
             {loading ? 'Entering...' : 'Lets go!'}
           </button>
+          
           <div style={{ textAlign: 'center', marginTop: '1rem', color: '#666' }}>
-  ¿Ya tienes cuenta? <Link to="/login" style={{ color: '#007bff', textDecoration: 'none', fontWeight: 'bold' }}>Inicia sesión</Link>
+            ¿Ya tienes cuenta? <Link to="/login" style={{ color: '#007bff', textDecoration: 'none', fontWeight: 'bold' }}>Inicia sesión</Link>
           </div>
-          {responseMessage && (
-            <div className="success-message" style={{ marginTop: 12, color: 'green' }}>
-              {responseMessage}
-            </div>
-          )}
 
           {error && (
             <div className="error-message" style={{ marginTop: 12, color: 'red' }}>
@@ -127,4 +103,4 @@ const RegisterForm: React.FC = () => {
   );
 };
 
-export default RegisterForm;
+export default Register;

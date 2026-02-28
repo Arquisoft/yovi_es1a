@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import avatar from './img/avatar.png';
-import y_gris from './img/y_gris.png';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import avatar from '../assets/avatar.png';
+import y_gris from '../assets/y_gris.png';
+import { authService } from '../services/auth.service';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -16,48 +16,32 @@ const Login: React.FC = () => {
     event.preventDefault();
     setError(null);
 
-    if (!username.trim()) {
-      setError('Please enter a username');
-      return;
-    }
-    
-    if (!password.trim()) {
-      setError('Please enter a password');
+    if (!username.trim() || !password.trim()) {
+      setError('Please enter username and password');
       return;
     }
 
     setLoading(true);
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      
-      const res = await fetch(`${API_URL}/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password }) 
-      });
+      const data = await authService.login(username, password);
 
-      const data = await res.json();
+      localStorage.setItem("user", JSON.stringify({
+        userId: data.userId, 
+        username: data.username
+      }));
       
-      if (res.ok) {
-        console.log("¡Conectado con éxito!", data.message);
-        alert(`¡Bienvenido de nuevo, ${data.username}!`);
-        
-        navigate('/botTester');
-        
-      } else {
-        setError(data.error || 'Error al iniciar sesión');
-      }
+      alert(`¡Bienvenido de nuevo, ${data.username}!`);
+      navigate('/menu');
+
     } catch (err: any) {
-      setError('Error de conexión con el servidor');
+      setError(err.message || 'Error de conexión con el servidor');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="RegisterForm"> {/* Usamos la misma clase envoltorio para heredar tu CSS */}
+    <div className="RegisterForm">
       <img src={y_gris} className="y_gris" alt="y gris" />
       <div className="form-content">
         <div className="title-register">
