@@ -1,4 +1,4 @@
-const RUST_API_URL = import.meta.env.VITE_RUST_API_URL || "http://localhost:4000";
+const NODE_API_URL = "http://localhost:3000";
 
 export interface BotMoveResponse {
   api_version: string;
@@ -10,16 +10,18 @@ export interface BotMoveResponse {
 export const gameService = {
   askBotMove: async (botId: string, size: number, turn: number, layout: string): Promise<BotMoveResponse> => {
     try {
-      const response = await fetch(`${RUST_API_URL}/v1/ybot/choose/${botId}`, {
+      const positionYen = {
+        size,
+        turn: turn,
+        players: ["B", "R"],
+        layout,
+      };
+      const response = await fetch(`${NODE_API_URL}/api/bot/play`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          size,
-          turn,
-          players: ["B", "R"],
-          layout,
+          position: positionYen,
+          strategy: botId
         }),
       });
 
@@ -27,8 +29,13 @@ export const gameService = {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data: BotMoveResponse = await response.json();
-      return data;
+      const data = await response.json();
+      return {
+        api_version: "v1",
+        bot_id: botId,
+        coords: data.move,
+        game_status: data.game_status
+      };
     } catch (error) {
       console.error("Error calling Rust API:", error);
       throw error;
