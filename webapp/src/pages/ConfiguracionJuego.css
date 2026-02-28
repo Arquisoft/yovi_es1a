@@ -1,20 +1,35 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.config-page {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
 .config-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 5vw; 
-  padding: 6vh 2vw; 
-  max-width: 90vw; 
-  margin: 0 auto;
-  text-align: left;
+  justify-content: center;
+  align-items: center;
+  gap: 8vw;
+  padding: 2vh 4vw;
+  width: 100%;
+  flex: 1;
+  box-sizing: border-box;
 }
 
 .config-controls {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 3vh;
+  gap: 2vh;
+  max-width: 35vw;
 }
 
 .config-preview {
@@ -22,26 +37,29 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  max-width: 45vw;
 }
 
 .control-group {
-  margin-bottom: 1.5vh; 
+  margin-bottom: 1vh;
 }
 
 .control-input {
   display: block;
   width: 100%;
-  padding: 1.2vh 0.8vw; 
-  margin-top: 1.2vh;
+  padding: 1.2vh 1vw;
+  margin-top: 1vh;
   border-radius: 0.5rem;
   border: 0.1rem solid #ddd;
   font-size: 1rem;
   background-color: #fcfcfc;
+  box-sizing: border-box;
 }
 
 .btn-jugar {
-  margin-top: 4vh; 
-  padding: 2vh 1.2vw;
+  margin-top: 2vh;
+  padding: 2vh 1vw;
   font-size: 1.2rem;
   font-weight: bold;
   letter-spacing: 0.1rem;
@@ -52,6 +70,8 @@
   border-radius: 0.6rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .btn-jugar:hover {
@@ -62,28 +82,52 @@
 
 .preview-board {
   width: 100%;
-  max-width: 45vmin;
-  height: 45vmin;
+  height: 40vh;
   background-color: #fdfdfd;
   border: 0.2rem dashed #e0e0e0;
-  margin-bottom: 4vh;
+  margin-bottom: 3vh;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 1rem;
+  box-sizing: border-box;
 }
 
 .preview-bot, .preview-human {
   width: 100%;
-  max-width: 45vmin;
-  padding: 3vh;
+  padding: 2vh;
   border-radius: 1rem;
   box-shadow: 0 0.4rem 0.6rem rgba(0,0,0,0.05);
-  
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   gap: 1.5vh;
+  box-sizing: border-box;
+}
+
+.tablero-mini-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5vmin;
+  width: 100%;
+  height: 100%;
+}
+
+.fila-mini {
+  display: flex;
+  justify-content: center;
+  gap: 0.5vmin;
+}
+
+.casilla-mini {
+  width: 1.5vmin;
+  height: 1.5vmin;
+  background-color: #cbd5e0;
+  border-radius: 50%;
+  box-shadow: inset 0 0.1rem 0.2rem rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
 }

@@ -1,13 +1,30 @@
 import React, { useState } from "react";
-import { Bot, Swords } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import "./ConfiguracionJuego.css"; 
 
 const ConfiguracionJuego: React.FC = () => {
+  // 2. Añade esta línea justo al principio de tu componente:
+  const navigate = useNavigate();
+  
   const [modo, setModo] = useState<"humano" | "bot">("bot");
   const [tamano, setTamano] = useState<number>(5);
   const [bot, setBot] = useState<string>("random_bot");
   const [dificultad, setDificultad] = useState<"facil" | "medio" | "dificil">("facil");
+
+const dibujarPrevisualizacion = () => {
+    const filas = [];
+    for (let i = 0; i < tamano; i++) {
+      const casillas = [];
+      for (let j = 0; j <= i; j++) {
+        casillas.push(<div key={`${i}-${j}`} className="casilla-mini"></div>);
+      }
+      filas.push(<div key={i} className="fila-mini">{casillas}</div>);
+    }
+    return filas;
+}
+
+  
 
   return (
     <div className="config-page">
@@ -96,7 +113,7 @@ const ConfiguracionJuego: React.FC = () => {
             </>
           )}
 
-          <button className="btn-jugar">
+          <button className="btn-jugar" >
             Jugar
           </button>
         </div>
@@ -105,9 +122,12 @@ const ConfiguracionJuego: React.FC = () => {
           <h2>Previsualización del tablero</h2>
           
           <div className="preview-board">
+            <div className="tablero-mini-container">
+              {dibujarPrevisualizacion()}
+            </div>
           </div>
           
-          {modo === "bot" && (
+          {/* {modo === "bot" && (
             <div className="preview-bot">
               <p>Bot rival: <strong>{bot}</strong></p>
               <Bot size={64} strokeWidth={1.5} color="#2c3e50" />
@@ -119,7 +139,7 @@ const ConfiguracionJuego: React.FC = () => {
               <p>Jugador vs Jugador</p>
               <Swords size={64} strokeWidth={1.5} color="#2c3e50" />
             </div>
-          )}
+          )} */}
         </div>
 
       </div>

@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { gameService } from "../services/game.service";
+import { statsService } from "../services/stats.service";
 import "./Tablero.css";
 
-const TAM = 4;
-const INITIAL_LAYOUT = ".........."; 
 type Player = "B" | "R";
-
 
 const stringToYenLayout = (flatLayout: string, size: number) => {
   let yenLayout = "";
@@ -22,40 +20,88 @@ const stringToYenLayout = (flatLayout: string, size: number) => {
 
 const coordsToIndex = (x: number, y: number, size: number) => {
   const row = size - 1 - x;
-  const col = y;
-  return (row * (row + 1)) / 2 + col;
+  return (row * (row + 1)) / 2 + y;
 };
 
-const Tablero: React.FC = () => {
-  const [layout, setLayout] = useState(INITIAL_LAYOUT);
+interface TableroProps {
+  size: number;
+}
+
+const Tablero: React.FC<TableroProps> = ({ size }) => {
+  
+  const getInitialLayout = (n: number) => ".".repeat((n * (n + 1)) / 2);
+
+  const [layout, setLayout] = useState(getInitialLayout(size));
   const [turn, setTurn] = useState<Player>("B");
   const [loading, setLoading] = useState(false);
+  const [startTime] = useState<number>(Date.now());
+  const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
+
+  useEffect(() => {
+    setLayout(getInitialLayout(size));
+    setTurn("B");
+  }, [size]);
+
+  React.useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) setUser(JSON.parse(storedUser));
+  }, []);
+
+  const safeSaveStats = async (result: "win" | "lose", finalBoard: string) => {
+    if (!user || !user.userId) return;
+    try {
+      const durationSeconds = Math.floor((Date.now() - startTime) / 1000);
+      const moves = finalBoard.split("").filter(c => c !== ".").length;
+      await statsService.saveMatchResult({
+        user: user.userId,
+        result,
+        duration: durationSeconds,
+        boardSize: size, 
+        opponent: "shortest_path_bot",
+        totalMoves: moves,
+        gameMode: "computer"
+      });
+      console.log("Estadísticas guardadas con éxito en Node.js");
+    } catch (error) {
+      console.error("Error al guardar en la BD:", error);
+    }
+  };
 
   const play = async (index: number) => {
-    //Human's move
     const newLayoutArray = layout.split("");
     newLayoutArray[index] = "B";
     const updatedFlatLayout = newLayoutArray.join("");
     
     setLayout(updatedFlatLayout);
-    setTurn("R"); //Bots turn
+    setTurn("R"); 
     setLoading(true);
 
     try {
-      const yenLayout = stringToYenLayout(updatedFlatLayout, TAM);
+      const yenLayout = stringToYenLayout(updatedFlatLayout, size); // SUSTITUIMOS TAM por size
       
-      const botCoords = await gameService.askBotMove("random_bot", TAM, 1, yenLayout);
+      const response = await gameService.askBotMove("shortest_path_bot", size, 1, yenLayout); // SUSTITUIMOS TAM por size
 
-      const botIndex = coordsToIndex(botCoords.x, botCoords.y, TAM);
+      if (response.game_status === "human_won") {
+        setTimeout(() => alert("¡HAS GANADO!"), 100);
+        await safeSaveStats("win", updatedFlatLayout);
+        return; 
+      }
 
+      const botIndex = coordsToIndex(response.coords.x, response.coords.y, size); // SUSTITUIMOS TAM por size
       const finalLayoutArray = updatedFlatLayout.split("");
       finalLayoutArray[botIndex] = "R";
       setLayout(finalLayoutArray.join(""));
-      setTurn("B"); 
 
+      if (response.game_status === "bot_won") {
+        setTimeout(() => alert("HAS PERDIDO."), 100);
+        await safeSaveStats("lose", finalLayoutArray.join(""));
+        return;
+      }
+
+      setTurn("B"); 
     } catch (error) {
       console.error("Error communicating with the bot:", error);
-      alert("The Rust engine is not responding or the play was invalid.");
+      alert("El motor de Rust no responde o la jugada fue inválida.");
       setTurn("B"); 
     } finally {
       setLoading(false);
@@ -65,16 +111,14 @@ const Tablero: React.FC = () => {
   const crearTablero = () => {
     let index = 0;
     const filas = [];
-
-    for (let i = 0; i < TAM; i++) {
+    for (let i = 0; i < size; i++) {
       const casillas = [];
       for (let j = 0; j <= i; j++) {
         const currentIndex = index; 
         const valor = layout[currentIndex];
-        
         let claseColor = "";
-        if (valor === "B") claseColor = " player-b";
-        if (valor === "R") claseColor = " player-r";
+        if (valor === "B") claseColor = " jugador-b";
+        if (valor === "R") claseColor = " jugador-r";
 
         casillas.push(
           <button
@@ -95,12 +139,8 @@ const Tablero: React.FC = () => {
 
   return (
     <div className="gameBoard">
-      <div className="board">
-        {crearTablero()}
-      </div>
-      <p style={{ marginTop: '20px', fontSize: '1.2rem' }}>
-        Turno: <strong>{turn}</strong>
-      </p>
+      <div className="board">{crearTablero()}</div>
+      <p style={{ marginTop: '20px', fontSize: '1.2rem' }}>Turno: <strong>{turn}</strong></p>
     </div>
   );
 };

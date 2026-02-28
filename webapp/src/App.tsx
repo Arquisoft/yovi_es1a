@@ -10,6 +10,7 @@ import ConfiguracionJuego from './pages/ConfiguracionJuego';
 import BotTester from './components/BotTester'; 
 
 import './App.css';
+import Game from "./pages/Game";
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
       <Route path="/register" element={<Register />} />
 
       {/*Private routes */}
+      <Route path="/partida" element={<Game />} />
       <Route path="/jugar" element={<ConfiguracionJuego />} />
       <Route path="/estadisticas" element={<Estadisticas />} />
       <Route path="/ayuda" element={<Ayuda />} />
