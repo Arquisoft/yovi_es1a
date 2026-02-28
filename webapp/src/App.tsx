@@ -3,10 +3,9 @@ import { Routes, Route } from "react-router-dom";
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Menu from './pages/ConfiguracionJuego';
 import Estadisticas from './pages/Estadisticas';
-import Game from './pages/Game';
 import Ayuda from "./pages/Ayuda";
+import ConfiguracionJuego from './pages/ConfiguracionJuego';
 
 import BotTester from './components/BotTester'; 
 
@@ -22,8 +21,7 @@ function App() {
       <Route path="/register" element={<Register />} />
 
       {/*Private routes */}
-      <Route path="/configuracion" element={<Menu />} />
-      <Route path="/game" element={<Game />} />
+      <Route path="/jugar" element={<ConfiguracionJuego />} />
       <Route path="/estadisticas" element={<Estadisticas />} />
       <Route path="/ayuda" element={<Ayuda />} />
 
