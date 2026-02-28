@@ -4,7 +4,7 @@ import {getMatchHistory} from '../service/match-service';
 
 const router: Router = express.Router();
 
-router.post('/save',async (req: Request, res: Response) => 
+router.post('/',async (req: Request, res: Response) => 
     {
        try{
             const matchData = req.body;
@@ -30,7 +30,7 @@ router.post('/save',async (req: Request, res: Response) =>
             return res.status(500).json({ error: 'Error saving match' });
         }
     })
-router.get('/history/:userId', async (req: Request, res: Response) => {
+router.get('/user/:userId', async (req: Request, res: Response) => {
     try{
         const userId = req.params.userId;
         const history = await getMatchHistory(userId);
