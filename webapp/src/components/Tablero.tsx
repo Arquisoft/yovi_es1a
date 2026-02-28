@@ -30,6 +30,21 @@ const Tablero: React.FC = () => {
   const [layout, setLayout] = useState(INITIAL_LAYOUT);
   const [turn, setTurn] = useState<Player>("B");
   const [loading, setLoading] = useState(false);
+  const [startTime] = useState<number>(Date.now());
+  const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
+
+  /* * INITIALIZATION EFFECT:
+  * Executes only once when the component loads ([]).
+  * Checks if a user is stored in the browser's memory (previous login).
+  * If found, converts it from text to an object and stores it in the local state
+  * to know who is playing.
+  */
+  React.useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const play = async (index: number) => {
     //Human's move
