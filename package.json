@@ -5,12 +5,14 @@
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
     "inquirer": "^13.2.5",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.2.0",
     "nodemailer": "^8.0.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6"
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10"
   }
 }
