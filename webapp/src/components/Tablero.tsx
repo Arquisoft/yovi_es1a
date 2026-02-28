@@ -47,7 +47,7 @@ const Tablero: React.FC = () => {
         result,
         duration: durationSeconds,
         boardSize: TAM,
-        opponent: "random_bot",
+        opponent: "monte_carlo_bot",
         totalMoves: moves,
         gameMode: "computer"
       });
@@ -69,7 +69,7 @@ const Tablero: React.FC = () => {
     try {
       const yenLayout = stringToYenLayout(updatedFlatLayout, TAM);
       
-      const response = await gameService.askBotMove("random_bot", TAM, 1, yenLayout);
+      const response = await gameService.askBotMove("monte_carlo_bot", TAM, 1, yenLayout);
 
       if (response.game_status === "human_won") {
         setTimeout(() => alert("¡HAS GANADO!"), 100);
