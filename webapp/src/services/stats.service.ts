@@ -12,12 +12,13 @@ export interface MatchData {
 
 export const statsService = {
   saveMatchResult: async (matchData: MatchData) => {
+    const token = localStorage.getItem('token');
     try {
       const res = await fetch(`${API_URL}/matches/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // "Authorization": `Bearer ${localStorage.getItem('token')}` // Para cuando haya JWT
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(matchData),
       });
@@ -33,11 +34,12 @@ export const statsService = {
     }
   },
   getMatchHistory: async (userId: string) => {
+    const token = localStorage.getItem('token');
     const res = await fetch(`${API_URL}/matches/user/${userId}`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
-        // "Authorization": `Bearer ${localStorage.getItem('token')}` // Para cuando haya JWT
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${token}`
       }
     });
 
