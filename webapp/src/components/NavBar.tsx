@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import avatar from '../assets/avatar.png'; 
-import { messages } from "../recursos/messages";
 import { useLanguage } from "../idiomaConf/LanguageContext";
 
 interface NavBarProps {
@@ -28,9 +27,19 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
   const { t, lang, setLang } = useLanguage();
 
   // Función para cambiar idioma al pulsar el botón
-  const changelang = () => {
-    setLang(lang === "es" ? "en" : "es");
-  };
+      const changelang = () => {
+        if (lang === "es") {
+          setLang("en");
+        } else if (lang === "en") {
+          setLang("fr");
+        } else if (lang === "fr") {
+          setLang("it");
+        } else if (lang === "it") {
+          setLang("de");
+        } else {
+          setLang("es");
+        }
+      };
 
 
 

@@ -9,10 +9,21 @@ function Home() {
     //Usar el idioma
     const { lang, setLang, t } = useLanguage();
 
-    // Función para cambiar idioma al pulsar el botón
-    const changelang = () => {
-      setLang(lang === "es" ? "en" : "es");
-    };
+      const changelang = () => {
+        if (lang === "es") {
+          setLang("en");
+        } else if (lang === "en") {
+          setLang("fr");
+        } else if (lang === "fr") {
+          setLang("it");
+        } else if (lang === "it") {
+          setLang("de");
+        } else {
+          setLang("es");
+        }
+      };
+
+
 
   return (
     <div className="App">

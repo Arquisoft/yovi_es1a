@@ -6,7 +6,8 @@ import { useEffect } from "react";
 import type { ReactNode } from "react";
 import { messages } from "../recursos/messages";
 
-type Language = "es" | "en";
+type Language = "es" | "en" | "fr" | "it" | "de";
+//type Language = keyof typeof messages; // 'es' | 'en' | 'fr'
 type MessageKeys = keyof typeof messages["es"];
 
 interface LanguageContextProps {
