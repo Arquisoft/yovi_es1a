@@ -3,7 +3,9 @@ import reactLogo from '../assets/react.svg'
 import y_dorada from '../assets/y_dorada.png';
 import '../App.css';
 
+
 function Home() {
+
   return (
     <div className="App">
       <div>
@@ -15,9 +17,8 @@ function Home() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-
       <h2>Pantalla inicial de Game Y</h2>
-      <h3>Escoja la opción deseada</h3>     
+      <h3>Escoja la opción deseada</h3>
       <Link to="/register">
         <button>Crear cuenta</button>
       </Link>

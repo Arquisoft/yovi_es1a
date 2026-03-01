@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import avatar from '../assets/avatar.png'; 
+import { messages } from "../recursos/messages";
+import { useLanguage } from "../idiomaConf/LanguageContext";
 
 interface NavBarProps {
   activeTab: "play" | "stats" |"Ayuda";
@@ -22,6 +24,17 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
     navigate("/login");
   };
 
+  //Usar el idioma
+  const { t, lang, setLang } = useLanguage();
+
+  // Función para cambiar idioma al pulsar el botón
+  const changelang = () => {
+    setLang(lang === "es" ? "en" : "es");
+  };
+
+
+
+
   return (
     <nav className="nav-bar">
       <div className="nav-left">
@@ -29,24 +42,24 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
           onClick={() => navigate("/jugar")}
           className={`nav-item ${activeTab === "play" ? "active" : ""}`}
         >
-          Jugar
+          {t("jugar")}
         </button>
         <button 
           onClick={() => navigate("/estadisticas")}
           className={`nav-item ${activeTab === "stats" ? "active" : ""}`}
         >
-          Estadísticas
+          {t("estadisticas")}
         </button>
         <button 
           onClick={() => navigate("/ayuda")}
           className={`nav-item ${activeTab === "Ayuda" ? "active" : ""}`}
         >
-          Ayuda
+          {t("ayuda")}
         </button>
       </div>
 
       <div className="nav-right">
-        <button className="nav-item">Idioma</button>
+        <button className="nav-item" onClick={changelang}>{t("idioma")}</button>
         <button className="nav-item perfil" onClick={handleLogout} title="Cerrar sesión">
           <img src={avatar} className="avatar" alt="avatar" />
           <span className="username">{user?.username || "Invitado"}</span>

@@ -14,6 +14,7 @@ import Game from "./pages/Game";
 
 
 function App() {
+
   return (
     <Routes>
       {/* Public routes */}
