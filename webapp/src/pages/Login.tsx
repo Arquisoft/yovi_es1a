@@ -31,7 +31,7 @@ const Login: React.FC = () => {
       }));
       
       alert(`¡Bienvenido de nuevo, ${data.username}!`);
-      navigate('/menu');
+      navigate('/jugar');
 
     } catch (err: any) {
       setError(err.message || 'Error de conexión con el servidor');
