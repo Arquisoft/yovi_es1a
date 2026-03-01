@@ -2,9 +2,17 @@ import { Link } from "react-router-dom";
 import reactLogo from '../assets/react.svg'
 import y_dorada from '../assets/y_dorada.png';
 import '../App.css';
+import { useLanguage } from "../idiomaConf/LanguageContext";
 
 
 function Home() {
+    //Usar el idioma
+    const { lang, setLang, t } = useLanguage();
+
+    // Función para cambiar idioma al pulsar el botón
+    const changelang = () => {
+      setLang(lang === "es" ? "en" : "es");
+    };
 
   return (
     <div className="App">
@@ -17,18 +25,19 @@ function Home() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h2>Pantalla inicial de Game Y</h2>
-      <h3>Escoja la opción deseada</h3>
+      <h2>{t("pantIn")}</h2>
+      <h3>{t("OpcionDeseada")}</h3>
+      <button onClick={changelang}>{t("idioma")}</button>
       <Link to="/register">
-        <button>Crear cuenta</button>
+        <button>{t("crearCuenta")}</button>
       </Link>
       
       <Link to="/login">
-        <button>Iniciar sesión</button>
+        <button>{t("iniciarSes")}</button>
       </Link>
       
       <Link to="/botTester">
-        <button>BotTester</button>
+        <button>{t("botTester")}</button>
       </Link>
       
     </div>

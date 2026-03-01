@@ -1,11 +1,11 @@
 export const messages = {
   en: {
     welcome: "Welcome",
-    idioma: "Language",
     jugar: "Play",
-    estadisticas: "Stats",
+    estadisticas: "Statistics",
     ayuda: "Help",
-    MisEstadisticas: "my stats",
+    idioma: "Language",
+    MisEstadisticas: "My Statistics",
     cargandoPartidas: "Loading your matches...",
     ceroPartidas: "You haven't played any matches yet. Give it a try against the bot!",
     fecha: "Date",
@@ -16,7 +16,7 @@ export const messages = {
 
     bienvenido: "Welcome to Game Y",
     introducción: "Introduction",
-    desc: "Game Y is a board game where strategy prevails. The goal is to connect three sides of the board before your opponent.",
+    desc: "Game Y is a board game where strategy prevails. The objective is to connect the three sides of the board before your opponent.",
     reglas: "Game rules",
     turnos: "The game is played in turns",
     ganador: "The winner is the first to connect the three sides of the board.",
@@ -36,11 +36,50 @@ export const messages = {
     random: "Random:",
     randomDesc: "The bot marks a random available cell.",
     shortestPath: "Shortest path:",
-    shortDesc: "The bot chooses the cell that maximizes its own connection between the sides of the board and blocks opponent opportunities.",
+    shortDesc: "The bot chooses the cell that maximizes its own connection between the sides of the board and blocks the opponent's opportunities.",
     bloqueSimple: "Simple block:",
     bloqueSimpleDesc: "The bot chooses the empty cell closest to the opponent’s pieces to block expansion. If no enemy pieces are nearby, it chooses randomly.",
     trian: "Attack triangle:",
-    trianDesc: "The bot searches for empty cells that connect several of its own pieces. If none, it expands."
+    trianDesc: "The bot searches for empty cells that connect several of its own pieces. If none, it expands.",
+
+    conf: "Match Configuration",
+    modo: "Game Mode:",
+    maq: "Against the Machine (1 Player)",
+    multijugador: "Local Multiplayer (2 Players)",
+    tamTabl: "Board Size:",
+    nivelDif: "Difficulty Level:",
+    facil: "Easy",
+    intermedio: "Intermediate",
+    experto: "Expert",
+    eligeOponente: "Choose your opponent:",
+    aleatorio: "Random choice",
+    bloqSim: "Simple Block",
+    expansi: "Expansion Strategy",
+    bloq: "Blocking Priority",
+    trianAt: "Attack Triangle",
+    monteCarl: "Monte Carlo",
+    shortPa: "Shortest Path",
+    prevTablero: "Board Preview",
+    partCurso: "Match in progress",
+    turn: "Turn:",
+
+    pantIn: "Game Y Home Screen",
+    OpcionDeseada: "Choose the desired option",
+    crearCuenta: "Create Account",
+    iniciarSes: "Log In",
+    botTester: "BotTester",
+
+    inSes: "Log In",
+    user: "Username",
+    contra: "Password",
+    noCuenta: "Don't have an account?",
+    regAqui: "Register here",
+
+    creaCuent: "Create an account",
+    email: "Email",
+    siCuenta: "Already have an account?",
+    test: "Rust and React connection test",
+    Mover:"Move"
   },
   es: {
     welcome: "Bienvenido",
@@ -104,6 +143,24 @@ export const messages = {
     shortPa:"Shortest Path",
     prevTablero:"Previsualización del tablero",
     partCurso:"Partida en curso",
-    turn:"Turno:"
+    turn:"Turno:",
+    
+    pantIn:"Pantalla inicial de Game Y",
+    OpcionDeseada:"Escoja la opción deseada",
+    crearCuenta:"Crear cuenta",
+    iniciarSes:"Iniciar sesión",
+    botTester:"BotTester",
+
+    inSes:"Inicia Sesión",
+    user:"Usuario",
+    contra:"Contraseña",
+    noCuenta:"¿No tienes cuenta?",
+    regAqui:"Regístrate aquí",
+
+    creaCuent:"Crea una cuenta",
+    email:"Email",
+    siCuenta:"¿Ya tienes cuenta?",
+    test: "Test de conexion Rust y React",
+    Mover:"Mover"
   },
 };

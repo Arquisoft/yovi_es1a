@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLanguage } from "../idiomaConf/LanguageContext";
 
 const BotTester: React.FC = () => {
   const [layout, setLayout] = useState('./../.../..../...../....../.......');
@@ -36,16 +37,19 @@ const BotTester: React.FC = () => {
     }
   };
 
+      //Usar el idioma
+      const { lang, setLang, t } = useLanguage();
+
   return (
     <div>
-      <h2>Test de conexion Rust y React</h2>
+      <h2>{t("test")}</h2>
       <form onSubmit={pedirMovimiento}>
         <input 
           type="text" 
           value={layout} 
           onChange={(e) => setLayout(e.target.value)} 
         />
-        <button type="submit">Mover</button>
+        <button type="submit">{t("Mover")}</button>
       </form>
       
       { }

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import avatar from '../assets/avatar.png';
 import y_gris from '../assets/y_gris.png';
 import { authService } from '../services/auth.service';
+import { useLanguage } from "../idiomaConf/LanguageContext";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -40,18 +41,21 @@ const Login: React.FC = () => {
     }
   };
 
+      //Usar el idioma
+      const { lang, setLang, t } = useLanguage();
+
   return (
     <div className="RegisterForm">
       <img src={y_gris} className="y_gris" alt="y gris" />
       <div className="form-content">
         <div className="title-register">
           <img src={avatar} className="avatar" alt="avatar" />
-          <h2>Inicia Sesión</h2>
+          <h2>{t("inSes")}</h2>
         </div>
 
         <form onSubmit={handleSubmit} className="register-form">
           <div className="form-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">{t("user")}</label>
             <input
               type="text"
               id="username"
@@ -62,7 +66,7 @@ const Login: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">{t("contra")}</label>
             <input
               type="password"
               id="password"
@@ -77,7 +81,7 @@ const Login: React.FC = () => {
           </button>
 
           <div style={{ textAlign: 'center', marginTop: '1rem', color: '#666' }}>
-            ¿No tienes cuenta? <Link to="/register" style={{ color: '#007bff', textDecoration: 'none', fontWeight: 'bold' }}>Regístrate aquí</Link>
+            {t("noCuenta")} <Link to="/register" style={{ color: '#007bff', textDecoration: 'none', fontWeight: 'bold' }}>{t("regAqui")}</Link>
           </div>
           
           {error && (
