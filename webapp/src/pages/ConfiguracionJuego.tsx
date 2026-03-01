@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import "./ConfiguracionJuego.css"; 
+import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 
 const ConfiguracionJuego: React.FC = () => {
   // 2. Añade esta línea justo al principio de tu componente:
@@ -34,7 +35,8 @@ const dibujarPrevisualizacion = () => {
     return filas;
 }
 
-  
+    //Usar el idioma
+    const { lang, setLang, t } = useLanguage();
 
   return (
     <div className="config-page">
@@ -43,22 +45,22 @@ const dibujarPrevisualizacion = () => {
       <div className="config-container">
         
         <div className="config-controls">
-          <h2>Configuración de la Partida</h2>
+          <h2>{t("conf")}</h2>
 
           <div className="control-group">
-            <label><strong>Modo de Juego:</strong> </label>
+            <label><strong>{t("modo")}</strong> </label>
             <select 
               className="control-input"
               value={modo} 
               onChange={(e) => setModo(e.target.value as "humano" | "bot")}
             >
-              <option value="bot">Contra la Máquina (1 Jugador)</option>
-              <option value="humano">Multijugador Local (2 Jugadores)</option>
+              <option value="bot">{t("maq")}</option>
+              <option value="humano">{t("multijugador")}</option>
             </select>
           </div>
 
           <div className="control-group">
-            <label><strong>Tamaño del Tablero:</strong> {tamano}</label>
+            <label><strong>{t("tamTabl")}</strong> {tamano}</label>
             <input 
               className="control-input"
               type="range" 
@@ -72,7 +74,7 @@ const dibujarPrevisualizacion = () => {
           {modo === "bot" && (
             <>
               <div className="control-group">
-                <label><strong>Nivel de Dificultad:</strong></label>
+                <label><strong>{t("nivelDif")}</strong></label>
                 <select 
                   className="control-input"
                   value={dificultad}
@@ -84,14 +86,14 @@ const dibujarPrevisualizacion = () => {
                     if (nuevaDif === "dificil") setBot("monte_carlo_bot");
                   }}
                 >
-                  <option value="facil">Fácil</option>
-                  <option value="medio">Intermedio</option>
-                  <option value="dificil">Experto</option>
+                  <option value="facil">{t("facil")}</option>
+                  <option value="medio">{t("intermedio")}</option>
+                  <option value="dificil">{t("experto")}</option>
                 </select>
               </div>
 
               <div className="control-group">
-                <label><strong>Elige tu oponente:</strong></label>
+                <label><strong>{t("eligeOponente")}</strong></label>
                 <select 
                   className="control-input"
                   value={bot} 
@@ -99,23 +101,23 @@ const dibujarPrevisualizacion = () => {
                 >
                   {dificultad === "facil" && (
                     <>
-                      <option value="random_bot">Elección aleatoria</option>
-                      <option value="simple_blocker_bot">Bloqueo Simple</option>
-                      <option value="group_expansion_bot">Estrategia de Expansión</option>
+                      <option value="random_bot">{t("aleatorio")}</option>
+                      <option value="simple_blocker_bot">{t("bloqSim")}</option>
+                      <option value="group_expansion_bot">{t("expansi")}</option>
                     </>
                   )}
 
                   {dificultad === "medio" && (
                     <>
-                      <option value="priority_block_bot">Prioridad en Bloqueo</option>
-                      <option value="triangle_attack_bot">Triángulo de Ataque</option>
+                      <option value="priority_block_bot">{t("bloq")}</option>
+                      <option value="triangle_attack_bot">{t("trianAt")}</option>
                     </>
                   )}
 
                   {dificultad === "dificil" && (
                     <>
-                      <option value="monte_carlo_bot">Monte Carlo</option>
-                      <option value="shortest_path_bot">Shortest Path</option>
+                      <option value="monte_carlo_bot">{t("monteCarl")}</option>
+                      <option value="shortest_path_bot">{t("shortPa")}</option>
                     </>
                   )}
                 </select>
@@ -124,12 +126,12 @@ const dibujarPrevisualizacion = () => {
           )}
 
           <button className="btn-jugar" onClick={irAlJuego}>
-            Jugar
+            {t("jugar")}
           </button>
         </div>
 
         <div className="config-preview">
-          <h2>Previsualización del tablero</h2>
+          <h2>{t("prevTablero")}</h2>
           
           <div className="preview-board">
             <div className="tablero-mini-container">

@@ -83,6 +83,27 @@ export const messages = {
     bloqueSimple:"Bloque simple:",
     bloqueSimpleDesc:"el bot elige la casilla vacía más cercana a las piezas del oponente para bloquear su expansión. Si no hay piezas enemigas cercanas, elige aleatoriamente.",
     trian:"Triángulo de ataque:",
-    trianDesc:"El bot busca casillas vacías que conecten varias de sus propias piezas. Si no hay, se expande."
+    trianDesc:"El bot busca casillas vacías que conecten varias de sus propias piezas. Si no hay, se expande.",
+    
+    conf:"Configuración de la Partida",
+    modo:"Modo de Juego:",
+    maq:"Contra la Máquina (1 Jugador)",
+    multijugador:"Multijugador Local (2 Jugadores)",
+    tamTabl:"Tamaño del Tablero:",
+    nivelDif:"Nivel de Dificultad:",
+    facil:"Fácil",
+    intermedio:"Intermedio",
+    experto:"Experto",
+    eligeOponente:"Elige tu oponente:",
+    aleatorio:"Elección aleatoria",
+    bloqSim:"Bloqueo Simple",
+    expansi:"Estrategia de Expansión",
+    bloq:"Prioridad en Bloqueo",
+    trianAt:"Triángulo de Ataque",
+    monteCarl:"Monte Carlo",
+    shortPa:"Shortest Path",
+    prevTablero:"Previsualización del tablero",
+    partCurso:"Partida en curso",
+    turn:"Turno:"
   },
 };

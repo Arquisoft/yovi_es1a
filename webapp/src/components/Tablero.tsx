@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { gameService } from "../services/game.service";
 import { statsService } from "../services/stats.service";
 import "./Tablero.css";
+import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 
 type Player = "B" | "R";
 
@@ -134,10 +135,13 @@ const Tablero: React.FC<TableroProps> = ({ size }) => {
     return filas;
   };
 
+      //Usar el idioma
+      const { lang, setLang, t } = useLanguage();
+
   return (
     <div className="gameBoard">
       <div className="board">{crearTablero()}</div>
-      <p style={{ marginTop: '20px', fontSize: '1.2rem' }}>Turno: <strong>{turn}</strong></p>
+      <p style={{ marginTop: '20px', fontSize: '1.2rem' }}>{t("turn")} <strong>{turn}</strong></p>
     </div>
   );
 };
