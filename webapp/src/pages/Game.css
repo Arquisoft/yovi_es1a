@@ -7,8 +7,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 2vh; /* Reemplaza marginTop: 20px */
-  text-align: center; /* Reemplaza textAlign: center */
+  margin-top: 2vh;
+  text-align: center;
 }
 
 .game-title {

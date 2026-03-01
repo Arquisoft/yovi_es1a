@@ -23,7 +23,7 @@ function App() {
 
       {/*Private routes */}
       <Route path="/partida" element={<Game />} />
-      <Route path="/jugar" element={<ConfiguracionJuego />} />
+      <Route path="/game" element={<ConfiguracionJuego />} />
       <Route path="/estadisticas" element={<Estadisticas />} />
       <Route path="/ayuda" element={<Ayuda />} />
 
