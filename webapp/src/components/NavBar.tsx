@@ -26,7 +26,7 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
     <nav className="nav-bar">
       <div className="nav-left">
         <button 
-          onClick={() => navigate("/configuracion")}
+          onClick={() => navigate("/jugar")}
           className={`nav-item ${activeTab === "play" ? "active" : ""}`}
         >
           Jugar
