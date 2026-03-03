@@ -1,4 +1,3 @@
-import React from "react";
 import { createContext } from "react";     // Para crear un contexto
 import { useContext } from "react";        // Para usar el contexto en los componentes
 import { useState } from "react";

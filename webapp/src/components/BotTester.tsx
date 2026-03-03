@@ -38,7 +38,7 @@ const BotTester: React.FC = () => {
   };
 
       //Usar el idioma
-      const { lang, setLang, t } = useLanguage();
+      const { t } = useLanguage();
 
   return (
     <div>

@@ -6,7 +6,7 @@ import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 const Ayuda: React.FC = () => {
 
   //Usar el idioma
-  const { lang, setLang, t } = useLanguage();
+  const { t } = useLanguage();
     
   return (
     <div>

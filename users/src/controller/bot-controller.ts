@@ -21,7 +21,6 @@ router.post('/play', async (req: Request, res: Response) => {
 
         if (!rustResponse.ok) {
             const errorText = await rustResponse.text();
-            console.error("Rust devolvió este error:", errorText); // <-- Saldrá en tu consola de Docker
             const errorData = await rustResponse.json().catch(() => ({}));
             return res.status(500).json({ 
                 error: "The Rust engine rejected the play or couldn't find the bot.", 
