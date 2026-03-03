@@ -43,7 +43,7 @@ const Register: React.FC = () => {
   };
 
     //Usar el idioma
-    const { lang, setLang, t } = useLanguage();
+    const { t } = useLanguage();
 
   return (
     <div className="RegisterForm">

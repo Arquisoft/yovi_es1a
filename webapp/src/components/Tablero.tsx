@@ -136,7 +136,7 @@ const Tablero: React.FC<TableroProps> = ({ size }) => {
   };
 
       //Usar el idioma
-      const { lang, setLang, t } = useLanguage();
+      const { t } = useLanguage();
 
   return (
     <div className="gameBoard">
