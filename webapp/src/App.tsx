@@ -3,8 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Estadisticas from './pages/Estadisticas';
-import Ayuda from "./pages/Ayuda";
+import Statistics from './pages/Statistics';
+import Help from "./pages/Help";
 import ConfiguracionJuego from './pages/GameSettings';
 
 import BotTester from './components/BotTester'; 
@@ -25,8 +25,8 @@ function App() {
       {/*Private routes */}
       <Route path="/game" element={<Game />} />
       <Route path="/configureGame" element={<ConfiguracionJuego />} />
-      <Route path="/estadisticas" element={<Estadisticas />} />
-      <Route path="/ayuda" element={<Ayuda />} />
+      <Route path="/statistics" element={<Statistics />} />
+      <Route path="/help" element={<Help />} />
 
       {/* Routes for testing */}
       <Route path="/botTester" element={<BotTester />} />

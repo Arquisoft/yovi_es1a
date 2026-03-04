@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import NavBar from "../components/NavBar";
-import { statsService } from "../services/stats.service";
+import NavBar from "../components/NavBar.tsx";
+import { statsService } from "../services/stats.service.ts";
 import "./Menu.css";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 import video from "../assets/videoLinea.mp4";
