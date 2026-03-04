@@ -35,7 +35,8 @@ const Register: React.FC = () => {
       }));
 
       setUsername(''); setEmail(''); setPassword('');
-      navigate('/menu');
+      alert(`¡Usuario registrado correctamente!`);
+      navigate('/jugar');
 
     } catch (err: any) {
       setError(err.message || 'Network error');

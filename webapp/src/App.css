@@ -194,3 +194,17 @@ button:hover {
 .stats h2 {
   font-size: 2rem;
 }
+
+.nav-home {
+  position: absolute; /* Saca al elemento del flujo normal de la página */
+  top: 60px;
+  right: 95px;
+}
+
+.control-idioma {
+  padding: 5px 10px; /*Borde de 5 arriba y abajo, de 10 a los lados */
+  background-color: #5b99f6;
+  color: #f9f9f9;
+  border-radius: 8px;
+  font-weight: bold;
+}
