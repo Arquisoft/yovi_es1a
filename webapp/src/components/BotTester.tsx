@@ -42,7 +42,7 @@ const BotTester: React.FC = () => {
       const { t } = useLanguage();
 
   return (
-    <div>
+    <div className="botTester">
       <video autoPlay muted loop className="video">
         <source src={video} type="video/mp4" />
         No se ha podido mostrar el video de fondo

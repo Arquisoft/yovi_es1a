@@ -109,7 +109,8 @@ button {
 }
 
 .title-register {
-  padding: 0rem 3rem;/* espacio arriba 0 rem, espacio a los lados 3 rem */
+  padding: 0rem 2rem;/* espacio arriba 0 rem, espacio a los lados 3 rem */
+  gap: 1rem;
   align-items: center;
   background-color: #d8d8d8;
   border-radius: 8px;
@@ -156,9 +157,28 @@ button {
 }
 
 .submit-button:hover {
-  background-color: #0056b3;
+  background-color: #d8eafd;
+  color: #03080e;
+  border: 2px solid #03080e;/* Borde*/
 }
 
 h2 {
   font-size: 1.5rem;
+}
+
+.botTester {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.botTester form{
+  display: flex;
+  gap: 1rem;               /* Espacio entre input y botón */
+  align-items: center;     /* Centra verticalmente */
+}
+
+button:hover {
+  background-color: #d8eafd;
+  color: #03080e;
+  border: 2px solid #03080e;/* Borde*/
 }
