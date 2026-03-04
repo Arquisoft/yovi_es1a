@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useLanguage } from "../idiomaConf/LanguageContext";
+import video from "../assets/videoLinea.mp4";
 
 const BotTester: React.FC = () => {
   const [layout, setLayout] = useState('./../.../..../...../....../.......');
@@ -36,16 +38,23 @@ const BotTester: React.FC = () => {
     }
   };
 
+      //Usar el idioma
+      const { t } = useLanguage();
+
   return (
-    <div>
-      <h2>Test de conexion Rust y React</h2>
+    <div className="botTester">
+      <video autoPlay muted loop className="video">
+        <source src={video} type="video/mp4" />
+        No se ha podido mostrar el video de fondo
+      </video>
+      <h1>{t("test")}</h1>
       <form onSubmit={pedirMovimiento}>
         <input 
           type="text" 
           value={layout} 
           onChange={(e) => setLayout(e.target.value)} 
         />
-        <button type="submit">Mover</button>
+        <button type="submit">{t("Mover")}</button>
       </form>
       
       { }

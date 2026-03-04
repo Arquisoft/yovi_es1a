@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import { statsService } from "../services/stats.service";
 import "./Menu.css";
+import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
+import video from "../assets/videoLinea.mp4";
 
 interface MatchRecord {
   _id: string;
@@ -20,6 +22,7 @@ const Estadisticas: React.FC = () => {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
+
     
     if (storedUser) {
       const user = JSON.parse(storedUser);
@@ -41,31 +44,38 @@ const Estadisticas: React.FC = () => {
     }
   };
 
+  //Usar el idioma
+  const { t } = useLanguage();
+
+
   return (
     <div>
       {}
       <NavBar activeTab="stats" />
-      
-      <div className="content" style={{ padding: "20px", marginTop: "60px" }}>
-        <h2>Mis Estadísticas</h2>
+      <video autoPlay muted loop className="videoIN">
+        <source src={video} type="video/mp4" />
+        No se ha podido mostrar el video de fondo
+      </video>
+      <div className="stats">
+        <h2>{t("MisEstadisticas")}</h2>
 
-        {loading && <p>Cargando tus partidas...</p>}
+        {loading && <p>{t("cargandoPartidas")}</p>}
         {error && <p style={{ color: "red" }}>{error}</p>}
 
         {!loading && !error && history.length === 0 && (
-          <p>Aún no has jugado ninguna partida. ¡Anímate a probar contra el bot!</p>
+          <p>{t("ceroPartidas")}</p>
         )}
 
         {}
         {!loading && !error && history.length > 0 && (
           <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
             <thead>
-              <tr style={{ backgroundColor: "#55a667", color: "white", textAlign: "left" }}>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>Fecha</th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>Resultado</th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>Oponente</th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>Movimientos</th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>Duración</th>
+              <tr style={{ backgroundColor: "#5b99f6", color: "white", textAlign: "left" }}>
+                <th style={{ padding: "10px", border: "1px solid #ddd" }}>{t("fecha")}</th>
+                <th style={{ padding: "10px", border: "1px solid #ddd" }}>{t("resultado")}</th>
+                <th style={{ padding: "10px", border: "1px solid #ddd" }}>{t("oponente")}</th>
+                <th style={{ padding: "10px", border: "1px solid #ddd" }}>{t("movimientos")}</th>
+                <th style={{ padding: "10px", border: "1px solid #ddd" }}>{t("duracion")}</th>
               </tr>
             </thead>
             <tbody>
