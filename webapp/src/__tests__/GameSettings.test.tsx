@@ -22,7 +22,7 @@ describe('GameSettings', () => {
     const slider = screen.getByRole('slider')
     fireEvent.change(slider, { target: { value: '7' } })
 
-    const labelStrong = screen.getByText(/Tamaño del Tablero:/i)
+    const labelStrong = screen.getByText(/tamTabl/i)
 
     expect(labelStrong.closest('label')).toHaveTextContent('7')
   })
@@ -32,7 +32,7 @@ describe('GameSettings', () => {
     render(<GameSettings />)
 
     const selectors = screen.getAllByRole('combobox')
-    const botSelector = selectors[2] 
+    const botSelector = selectors[3] 
 
     await user.selectOptions(botSelector, 'simple_blocker_bot')
     expect(botSelector).toHaveValue('simple_blocker_bot')
@@ -63,8 +63,8 @@ describe('GameSettings', () => {
     render(<GameSettings />)
 
     const selectors = screen.getAllByRole('combobox')
-    const dificultySelector = selectors[1]
-    const botSelector = selectors[2]
+    const dificultySelector = selectors[2]
+    const botSelector = selectors[3]
 
     await user.selectOptions(dificultySelector, 'medio')
     expect(dificultySelector).toHaveValue('medio')
@@ -85,8 +85,8 @@ describe('GameSettings', () => {
     fireEvent.change(slider, { target: { value: '10' } })
 
     const selectors = screen.getAllByRole('combobox')
-    await user.selectOptions(selectors[1], 'dificil')
-    await user.selectOptions(selectors[2], 'monte_carlo_bot')
+    await user.selectOptions(selectors[2], 'dificil')
+    await user.selectOptions(selectors[3], 'monte_carlo_bot')
 
     const playButton = screen.getAllByRole('button', { name: /JUGAR/i })
     await user.click(playButton[1])
@@ -97,5 +97,35 @@ describe('GameSettings', () => {
         botSeleccionado: 'monte_carlo_bot'
       })
     }))
+  })
+
+  test('It allows the user to change the game mode (bot or humano)', async () => {
+    const user = userEvent.setup()
+    render(<GameSettings />)
+
+    const selectors = screen.getAllByRole('combobox')
+    
+    const modeSelector = selectors[1]
+    expect(modeSelector).toHaveValue('bot')
+    await user.selectOptions(modeSelector, 'humano')
+    expect(modeSelector).toHaveValue('humano')
+
+    await user.selectOptions(modeSelector, 'bot')
+    expect(modeSelector).toHaveValue('bot')
+  })
+
+  test('It automatically selects "random_bot" when difficulty is set to easy', async () => {
+    const user = userEvent.setup()
+    render(<GameSettings />)
+
+    const selectors = screen.getAllByRole('combobox')
+    const dificultySelector = selectors[2]
+    const botSelector = selectors[3]
+
+    await user.selectOptions(dificultySelector, 'medio')
+    await user.selectOptions(botSelector, 'priority_block_bot')
+
+    await user.selectOptions(dificultySelector, 'facil')
+    expect(botSelector).toHaveValue('random_bot')
   })
 })
