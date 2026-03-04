@@ -51,6 +51,8 @@
 
 button {
   margin-right: 10px;
+  background-color: #5b99f6;
+  color: rgb(255, 255, 255);
 }
 
 .title-register {
@@ -181,4 +183,14 @@ button:hover {
   background-color: #d8eafd;
   color: #03080e;
   border: 2px solid #03080e;/* Borde*/
+}
+
+.stats {
+  text-align: "center";
+  padding: "20px";
+  margin-top: "60px";
+}
+
+.stats h2 {
+  font-size: 2rem;
 }

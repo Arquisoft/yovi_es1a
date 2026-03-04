@@ -2,6 +2,7 @@ import React from "react";
 import NavBar from "../components/NavBar";
 import "./Menu.css";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
+import video from "../assets/videoLinea.mp4";
 
 const Ayuda: React.FC = () => {
 
@@ -9,9 +10,12 @@ const Ayuda: React.FC = () => {
   const { t } = useLanguage();
     
   return (
-    <div>
+    <div className="ayuda">
       <NavBar activeTab="Ayuda" />
-
+      <video autoPlay muted loop className="videoIN">
+        <source src={video} type="video/mp4" />
+        No se ha podido mostrar el video de fondo
+      </video>
       <div className="content">
         <h2>{t("bienvenido")}</h2>
         

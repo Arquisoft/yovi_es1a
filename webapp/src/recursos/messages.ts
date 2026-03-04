@@ -79,7 +79,13 @@ export const messages = {
     email: "Email",
     siCuenta: "Already have an account?",
     test: "Rust and React connection test",
-    Mover:"Move"
+    Mover:"Move",
+
+    esp: "Spanish",
+    en: "English",
+    it: "Italian",
+    fr: "French",
+    de: "German"
   },
   es: {
     welcome: "Bienvenido",
@@ -161,7 +167,13 @@ export const messages = {
     email:"Email",
     siCuenta:"¿Ya tienes cuenta?",
     test: "Test de conexion Rust y React",
-    Mover:"Mover"
+    Mover:"Mover",
+
+    esp:"Español",
+    en:"Inglés",
+    it:"Italiano",
+    fr:"Francés",
+    de:"Alemán"
   },
   fr: {
     welcome: "Bienvenue",
@@ -178,7 +190,7 @@ export const messages = {
     movimientos: "Coups",
     duracion: "Durée",
 
-    bienvenido: "Bienvenue sur Game Y",
+    bienvenido:"Bienvenue sur Game Y",
     introducción: "Introduction",
     desc: "Game Y est un jeu de plateau où la stratégie prime. L'objectif est de connecter les trois côtés du plateau avant votre adversaire.",
     reglas: "Règles du jeu",
@@ -243,7 +255,13 @@ export const messages = {
     email: "Email",
     siCuenta: "Vous avez déjà un compte ?",
     test: "Test de connexion Rust et React",
-    Mover: "Déplacer"
+    Mover: "Déplacer",
+
+    esp: "Espagnol",
+    en: "Anglais",
+    it: "Italien",
+    fr: "Français",
+    de: "Allemand"
   },
   it: {
     welcome: "Benvenuto",
@@ -260,7 +278,7 @@ export const messages = {
     movimientos: "Mosse",
     duracion: "Durata",
 
-    bienvenido: "Benvenuto in Game Y",
+    bienvenido:"Benvenuto in Game Y",
     introducción: "Introduzione",
     desc: "Game Y è un gioco da tavolo in cui la strategia è fondamentale. L'obiettivo è connettere i tre lati della tavola prima del tuo avversario.",
     reglas: "Regole del gioco",
@@ -325,7 +343,13 @@ export const messages = {
     email: "Email",
     siCuenta: "Hai già un account?",
     test: "Test connessione Rust e React",
-    Mover: "Muovi"
+    Mover: "Muovi",
+
+    esp: "Spagnolo",
+    en: "Inglese",
+    it: "Italiano",
+    fr: "Francese",
+    de: "Tedesco"
   },
 
   de: {
@@ -408,6 +432,12 @@ export const messages = {
     email: "Email",
     siCuenta: "Schon ein Konto?",
     test: "Rust- und React-Verbindungstest",
-    Mover: "Bewegen"
+    Mover: "Bewegen",
+
+    esp: "Spanisch",
+    en: "Englisch",
+    it: "Italienisch",
+    fr: "Französisch",
+    de: "Deutsch"
   }
 } 
