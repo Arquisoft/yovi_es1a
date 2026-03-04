@@ -58,6 +58,16 @@ button {
   flex-direction: row;
 }
 
+.video {
+  position: fixed;/*Posicion fija (No se mueve al scrollear)*/
+  top: 0;/* Empieza desde arriba */
+  left: 0;/* Empieza desde la izquierda */
+  width: 100%;
+  height: 100%;
+  z-index: -1;/* se pone al fondo detrás del contenido */
+  object-fit: cover;/* Adpatar tamaño para cubrir la pantalla completa */
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);

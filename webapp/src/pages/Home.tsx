@@ -3,6 +3,7 @@ import reactLogo from '../assets/react.svg'
 import y_dorada from '../assets/y_dorada.png';
 import '../App.css';
 import { useLanguage } from "../idiomaConf/LanguageContext";
+import video from "../assets/videoLinea.mp4";
 
 
 function Home() {
@@ -27,6 +28,10 @@ function Home() {
 
   return (
     <div className="App">
+      <video autoPlay muted loop className="video">
+        <source src={video} type="video/mp4" />
+        Tu navegador no soporta video HTML5.
+      </video>
       <div>
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
           <img src="/vite.svg" className="logo" alt="Vite logo" />
