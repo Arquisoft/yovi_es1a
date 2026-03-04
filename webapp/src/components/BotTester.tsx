@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from "../idiomaConf/LanguageContext";
+import video from "../assets/videoLinea.mp4";
 
 const BotTester: React.FC = () => {
   const [layout, setLayout] = useState('./../.../..../...../....../.......');
@@ -41,8 +42,12 @@ const BotTester: React.FC = () => {
       const { t } = useLanguage();
 
   return (
-    <div>
-      <h2>{t("test")}</h2>
+    <div className="botTester">
+      <video autoPlay muted loop className="video">
+        <source src={video} type="video/mp4" />
+        No se ha podido mostrar el video de fondo
+      </video>
+      <h1>{t("test")}</h1>
       <form onSubmit={pedirMovimiento}>
         <input 
           type="text" 

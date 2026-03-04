@@ -5,35 +5,50 @@
   width: 100%;
   display: flex;
   justify-content: left;
-  background-color: #55a667;
+  background-color: #5b99f6;
   padding: 0.5rem;
   gap: 1rem;
   align-items: center;
+
 }
 
 .content {
-  margin-top: 3rem;
+  margin-top: 6rem;
   text-align: left;
+
 }
 
 .nav-item {
-  background: #5f6d2a;
+  background: #1321a3;
   color: #fff;
 }
 
 .nav-item:hover {
-  background-color: #fc7777;
+  background-color: #d8eafd;
+  color: #03080e;
+  border: 2px solid #03080e;/* Borde*/
 }
 
 .nav-item.active {
-  background-color: #007bff;
+  background-color: #00172c;
   color: #fff;
 }
 
 .nav-right {
   display: flex;
   align-items: center;
-  margin-left: auto; 
+  margin-left: auto;
+  gap:  1rem;
+}
+
+.nav-right .perfil{
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.nav-right select.control-input {
+  background-color: #1321a3;
+  color: #ffffff;
 }
 
 .perfil {
@@ -51,4 +66,13 @@
 
 .avatar {
   height: 20px;
+}
+
+.videoIN {
+  position: fixed;/*Posicion fija (No se mueve al scrollear)*/
+  top: 3rem;/* Empieza desde arriba */
+  left: 0rem;/* Empieza desde la izquierda */
+  width: 100%;
+  z-index: -1;/* se pone al fondo detrás del contenido */
+  object-fit: cover;/* Adpatar tamaño para cubrir la pantalla completa */
 }

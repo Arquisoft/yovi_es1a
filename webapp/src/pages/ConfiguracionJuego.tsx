@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import "./ConfiguracionJuego.css"; 
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
+import video from "../assets/videoLinea.mp4";
 
 const ConfiguracionJuego: React.FC = () => {
   // 2. Añade esta línea justo al principio de tu componente:
@@ -41,7 +42,10 @@ const dibujarPrevisualizacion = () => {
   return (
     <div className="config-page">
       <NavBar activeTab="play" />
-
+      <video autoPlay muted loop className="videoIN">
+        <source src={video} type="video/mp4" />
+        No se ha podido mostrar el video de fondo
+      </video>
       <div className="config-container">
         
         <div className="config-controls">

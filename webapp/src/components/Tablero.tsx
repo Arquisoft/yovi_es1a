@@ -3,6 +3,7 @@ import { gameService } from "../services/game.service";
 import { statsService } from "../services/stats.service";
 import "./Tablero.css";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
+import video from "../assets/videoLinea.mp4";
 
 type Player = "B" | "R";
 
@@ -140,6 +141,10 @@ const Tablero: React.FC<TableroProps> = ({ size }) => {
 
   return (
     <div className="gameBoard">
+      <video autoPlay muted loop className="videoIN">
+        <source src={video} type="video/mp4" />
+        No se ha podido mostrar el video de fondo
+      </video>
       <div className="board">{crearTablero()}</div>
       <p style={{ marginTop: '20px', fontSize: '1.2rem' }}>{t("turn")} <strong>{turn}</strong></p>
     </div>

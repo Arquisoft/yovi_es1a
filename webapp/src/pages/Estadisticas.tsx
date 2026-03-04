@@ -3,6 +3,7 @@ import NavBar from "../components/NavBar";
 import { statsService } from "../services/stats.service";
 import "./Menu.css";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
+import video from "../assets/videoLinea.mp4";
 
 interface MatchRecord {
   _id: string;
@@ -51,8 +52,11 @@ const Estadisticas: React.FC = () => {
     <div>
       {}
       <NavBar activeTab="stats" />
-      
-      <div className="content" style={{ padding: "20px", marginTop: "60px" }}>
+      <video autoPlay muted loop className="videoIN">
+        <source src={video} type="video/mp4" />
+        No se ha podido mostrar el video de fondo
+      </video>
+      <div className="stats">
         <h2>{t("MisEstadisticas")}</h2>
 
         {loading && <p>{t("cargandoPartidas")}</p>}
@@ -66,7 +70,7 @@ const Estadisticas: React.FC = () => {
         {!loading && !error && history.length > 0 && (
           <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
             <thead>
-              <tr style={{ backgroundColor: "#55a667", color: "white", textAlign: "left" }}>
+              <tr style={{ backgroundColor: "#5b99f6", color: "white", textAlign: "left" }}>
                 <th style={{ padding: "10px", border: "1px solid #ddd" }}>{t("fecha")}</th>
                 <th style={{ padding: "10px", border: "1px solid #ddd" }}>{t("resultado")}</th>
                 <th style={{ padding: "10px", border: "1px solid #ddd" }}>{t("oponente")}</th>
