@@ -26,20 +26,29 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
   //Usar el idioma
   const { t, lang, setLang } = useLanguage();
 
-  // Función para cambiar idioma al pulsar el botón
-      const changelang = () => {
-        if (lang === "es") {
-          setLang("en");
-        } else if (lang === "en") {
-          setLang("fr");
-        } else if (lang === "fr") {
-          setLang("it");
-        } else if (lang === "it") {
-          setLang("de");
-        } else {
-          setLang("es");
-        }
-      };
+  // Función para cambiar idioma
+  const changeLangTo = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = e.target.value;
+    switch (selected) {
+      case "es":
+        setLang("es");
+        break;
+      case "en":
+        setLang("en");
+        break;
+      case "it":
+        setLang("it");
+        break;
+      case "fr":
+        setLang("fr");
+        break;
+      case "de":
+        setLang("de");
+        break;
+      default:
+        setLang("es");
+    }
+  };
 
 
 
@@ -68,7 +77,18 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
       </div>
 
       <div className="nav-right">
-        <button className="nav-item" onClick={changelang}>{t("idioma")}</button>
+        <select 
+              className="control-input"
+              value={lang} 
+              onChange={changeLangTo}
+            >
+          <option value="es">{t("esp")}</option>
+          <option value="en">{t("en")}</option>
+          <option value="it">{t("it")}</option>
+          <option value="fr">{t("fr")}</option>
+          <option value="de">{t("de")}</option>
+        </select>
+
         <button className="nav-item perfil" onClick={handleLogout} title="Cerrar sesión">
           <img src={avatar} className="avatar" alt="avatar" />
           <span className="username">{user?.username || "Invitado"}</span>

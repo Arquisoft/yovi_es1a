@@ -51,11 +51,23 @@
 
 button {
   margin-right: 10px;
+  background-color: #5b99f6;
+  color: rgb(255, 255, 255);
 }
 
 .title-register {
   display: flex;
   flex-direction: row;
+}
+
+.video {
+  position: fixed;/*Posicion fija (No se mueve al scrollear)*/
+  top: 0;/* Empieza desde arriba */
+  left: 0;/* Empieza desde la izquierda */
+  width: 100%;
+  height: 100%;
+  z-index: -1;/* se pone al fondo detrás del contenido */
+  object-fit: cover;/* Adpatar tamaño para cubrir la pantalla completa */
 }
 
 @keyframes logo-spin {
@@ -89,10 +101,26 @@ button {
   max-width: 300px;
   margin: 50px auto;
   padding: 20px;
-  border: 1px solid #ccc;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background-color: #fff;
+}
+
+.title-register .avatar {
+  width: 50px;               
+  height: 70px;
+}
+
+.title-register {
+  padding: 0rem 2rem;/* espacio arriba 0 rem, espacio a los lados 3 rem */
+  gap: 1rem;
+  align-items: center;
+  background-color: #d8d8d8;
+  border-radius: 8px;
+  color: #03080e;
+}
+
+.title-register h2{
+  font-size: 2rem;
 }
 
 .form-group {
@@ -131,5 +159,52 @@ button {
 }
 
 .submit-button:hover {
-  background-color: #0056b3;
+  background-color: #d8eafd;
+  color: #03080e;
+  border: 2px solid #03080e;/* Borde*/
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+.botTester {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.botTester form{
+  display: flex;
+  gap: 1rem;               /* Espacio entre input y botón */
+  align-items: center;     /* Centra verticalmente */
+}
+
+button:hover {
+  background-color: #d8eafd;
+  color: #03080e;
+  border: 2px solid #03080e;/* Borde*/
+}
+
+.stats {
+  text-align: "center";
+  padding: "20px";
+  margin-top: "60px";
+}
+
+.stats h2 {
+  font-size: 2rem;
+}
+
+.nav-home {
+  position: absolute; /* Saca al elemento del flujo normal de la página */
+  top: 60px;
+  right: 95px;
+}
+
+.control-idioma {
+  padding: 5px 10px; /*Borde de 5 arriba y abajo, de 10 a los lados */
+  background-color: #5b99f6;
+  color: #f9f9f9;
+  border-radius: 8px;
+  font-weight: bold;
 }

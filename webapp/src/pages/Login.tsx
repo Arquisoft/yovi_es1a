@@ -4,6 +4,7 @@ import avatar from '../assets/avatar.png';
 import y_gris from '../assets/y_gris.png';
 import { authService } from '../services/auth.service';
 import { useLanguage } from "../idiomaConf/LanguageContext";
+import video from "../assets/videoLinea.mp4";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -46,6 +47,10 @@ const Login: React.FC = () => {
 
   return (
     <div className="RegisterForm">
+      <video autoPlay muted loop className="video">
+        <source src={video} type="video/mp4" />
+        No se ha podido mostrar el video de fondo
+      </video>
       <img src={y_gris} className="y_gris" alt="y gris" />
       <div className="form-content">
         <div className="title-register">
