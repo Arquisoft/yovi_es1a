@@ -46,6 +46,38 @@ describe('User service - Register', ()=>{
         //pretend that we have encrypted the password
         expect(bcrypt.hash).toHaveBeenCalledWith('123', 10);
     });
+    it('6.It should throw an error if input types are strictly not strings.', async () => {
+        await expect(createUser({ username: 123 as any, email: '', password: '123' }))
+            .rejects.toThrow('Invalid input format');
+            
+        await expect(createUser({ username: 'hugo', email: true as any, password: '123' }))
+            .rejects.toThrow('Invalid input format');
+            
+        await expect(createUser({ username: 'hugo', email: 'hugo@gmail.com', password: [] as any }))
+            .rejects.toThrow('Invalid input format');
+    });
+    it('7.It should throw an error if fields are empty strings.', async () => {
+        await expect(createUser({ username: '', email: 'hugo@gmail.com', password: '123' }))
+            .rejects.toThrow('All fields are required');
+            
+        await expect(createUser({ username: 'hugo', email: '', password: '123' }))
+            .rejects.toThrow('All fields are required');
+            
+        await expect(createUser({ username: 'hugo', email: 'hugo@gmail.com', password: '' }))
+            .rejects.toThrow('All fields are required');
+    });
+    it('8.It should cover the false branch of the username check.', async () => {
+        vi.mocked(User.findOne).mockResolvedValue({ email: 'distint@gmail.com', username: 'distint' } as any);
+        vi.mocked(bcrypt.hash).mockResolvedValue('hash' as never);
+        
+        const mockUser = { username: 'hugo', email: 'hugo@gmail.com', password: 'hash' };
+        User.prototype.save = vi.fn().mockResolvedValue(mockUser);
+
+        const result = await createUser({ username: 'hugo', email: 'hugo@gmail.com', password: '123' });
+        
+        expect(result).toEqual(mockUser);
+    });
+    
 })
 /**
  * Unitary test to login with an user.
@@ -70,5 +102,12 @@ describe('User service - Login', ()=>{
         vi.mocked(bcrypt.compare).mockResolvedValue(true as any);
         const result = await login({username:'hugocarbajales',password:'good_hash'});
         expect(result).toEqual(user_simultated);
+    });
+    it('4.It should give an error when the input format is invalid.', async () => {
+        await expect(login({ username: 123 as any, password: '123' }))
+            .rejects.toThrow('Invalid input format');
+            
+        await expect(login({ username: 'hugo', password: 123 as any }))
+            .rejects.toThrow('Invalid input format');
     });
 });

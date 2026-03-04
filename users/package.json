@@ -20,6 +20,7 @@
     "express-prom-bundle": "^8.0.0",
     "inquirer": "^13.2.5",
     "js-yaml": "^4.1.0",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.1.6",
     "swagger-ui-express": "^5.0.1"
   },
@@ -28,6 +29,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/inquirer": "^9.0.9",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/superagent": "^8.1.9",
     "@types/supertest": "^6.0.3",
     "@vitest/coverage-v8": "^4.0.18",

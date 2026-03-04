@@ -6,7 +6,6 @@ import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 import video from "../assets/videoLinea.mp4";
 
 const ConfiguracionJuego: React.FC = () => {
-  // 2. Añade esta línea justo al principio de tu componente:
   const navigate = useNavigate();
   
   const [modo, setModo] = useState<"humano" | "bot">("bot");
