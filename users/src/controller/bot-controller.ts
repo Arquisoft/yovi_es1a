@@ -1,4 +1,4 @@
-const RUST_API_URL = process.env.RUST_API_URL || "http://gamey:4000";
+const RUST_API_URL = process.env.RUST_API_URL;
 import express, { Request, Response, Router } from 'express';
 
 const router: Router = express.Router();
