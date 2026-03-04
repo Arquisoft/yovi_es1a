@@ -92,6 +92,11 @@ describe('Match service - Save Match',()=> {
         
         await expect(saveMatch(invalidInput)).rejects.toThrow('Total moves cannot be negative');
     });
+    it('10. It should throw an error if the userId string is not a valid ObjectId format', async () => {
+        const invalidInput = { userId: 'id-invalido-que-no-es-hexadecimal', result: 'win', duration: 100 };
+        
+        await expect(saveMatch(invalidInput)).rejects.toThrow('Invalid User ID format');
+    });
 }) 
 describe('Match service - Get Match History', () => {
     it('1.It should retrieve and populate the history correctly.', async () => {
@@ -107,5 +112,8 @@ describe('Match service - Get Match History', () => {
       expect(Match.find).toHaveBeenCalled();
       expect(mockSort).toHaveBeenCalledWith({ createdAt: -1 });
       expect(mockPopulate).toHaveBeenCalledWith('user', 'username');
+    });
+    it('2. It should throw an error if the userId is not a string', async () => {
+        await expect(getMatchHistory(12345 as any)).rejects.toThrow('Invalid input format');
     });
 });
