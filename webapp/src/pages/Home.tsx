@@ -30,7 +30,7 @@ function Home() {
     <div className="App">
       <video autoPlay muted loop className="video">
         <source src={video} type="video/mp4" />
-        Tu navegador no soporta video HTML5.
+        No se ha podido mostrar el video de fondo
       </video>
       <div>
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
@@ -41,8 +41,8 @@ function Home() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h2>{t("pantIn")}</h2>
-      <h3>{t("OpcionDeseada")}</h3>
+      <h1>{t("bienvenido")}</h1>
+      <h2>{t("OpcionDeseada")}</h2>
       <button onClick={changelang}>{t("idioma")}</button>
       <Link to="/register">
         <button>{t("crearCuenta")}</button>
