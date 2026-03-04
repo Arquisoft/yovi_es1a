@@ -96,5 +96,20 @@ describe('Integration Tests: Bot Controller', () => {
             expect(res.status).toBe(500);
             expect(res.body).toHaveProperty('error', "Internal error on Node.js server");
         });
+        it('6. should handle non-JSON error responses from Rust engine', async () => {
+            fetchMock.mockResolvedValueOnce({
+                ok: false,
+                text: async () => "Internal Server Error: Database Down" 
+            } as any);
+
+            const res = await supertest(app)
+                .post('/api/bot/play')
+                .send({ position: 'pos' });
+
+            expect(res.status).toBe(500);
+            expect(res.body).toHaveProperty('error', "The Rust engine rejected the play or couldn't find the bot.");
+            
+            expect(res.body.details).toHaveProperty('rawError', "Internal Server Error: Database Down");
+        });
     });
 });

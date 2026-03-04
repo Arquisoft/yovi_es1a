@@ -26,6 +26,8 @@ router.post('/play', async (req: Request, res: Response) => {
             try {
                 errorData = JSON.parse(errorText);
             } catch (e) {
+                console.warn("Could not parse Rust error response as JSON:", e);
+                errorData = { rawError: errorText };
             }
 
             return res.status(500).json({ 
