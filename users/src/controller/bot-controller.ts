@@ -11,7 +11,7 @@ router.post('/play', async (req: Request, res: Response) => {
             return res.status(400).json({ error: "The 'position' parameter (YEN notation) is mandatory." });
         }
 
-        const botId = strategy || "random_bot";
+        const botId = (strategy === "random") ? "random_bot" : (strategy || "random_bot");
 
         const rustResponse = await fetch(`${RUST_API_URL}/v1/ybot/choose/${botId}`, {
             method: 'POST',
@@ -21,7 +21,13 @@ router.post('/play', async (req: Request, res: Response) => {
 
         if (!rustResponse.ok) {
             const errorText = await rustResponse.text();
-            const errorData = await rustResponse.json().catch(() => ({}));
+            let errorData = {};
+            
+            try {
+                errorData = JSON.parse(errorText);
+            } catch (e) {
+            }
+
             return res.status(500).json({ 
                 error: "The Rust engine rejected the play or couldn't find the bot.", 
                 details: errorData 
@@ -29,11 +35,7 @@ router.post('/play', async (req: Request, res: Response) => {
         }
 
         const data = await rustResponse.json();
-
-        return res.status(200).json({
-            move: data.coords,
-            game_status: data.game_status
-        });
+        return res.status(200).json(data);
 
     } catch (error: any) {
         console.error("Error communicating with the YEN engine:", error);
