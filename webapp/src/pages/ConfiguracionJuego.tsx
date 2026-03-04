@@ -5,7 +5,6 @@ import "./ConfiguracionJuego.css";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 
 const ConfiguracionJuego: React.FC = () => {
-  // 2. Añade esta línea justo al principio de tu componente:
   const navigate = useNavigate();
   
   const [modo, setModo] = useState<"humano" | "bot">("bot");

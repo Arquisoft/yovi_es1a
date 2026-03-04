@@ -1,8 +1,9 @@
-import { describe, it, expect, afterAll, beforeAll } from 'vitest';
+import { describe, it, expect, afterAll, beforeAll, vi } from 'vitest';
 import supertest from 'supertest';
 import app from '../src/index'; 
 import User from '../src/models/user-model'; 
 import Match from '../src/models/match-model';
+import * as MatchService from '../src/service/match-service';
 describe('Integration Tests: Matches Service', () => {
     let testUserId: string;
     //Create an user
@@ -60,6 +61,18 @@ describe('Integration Tests: Matches Service', () => {
             expect(res.body).toHaveProperty('error');
         });
 
+        it('should return 400 if user ID is missing', async () => {
+            const res = await supertest(app)
+                .post('/matches')
+                .send({
+                    result: 'win',
+                    duration: 120
+                });
+
+            expect(res.status).toBe(400);
+            expect(res.body).toHaveProperty('error', 'No user ID received.');
+        });
+
         it('should return 400 if duration is negative', async () => {
             const res = await supertest(app)
                 .post('/matches')
@@ -111,6 +124,7 @@ describe('Integration Tests: Matches Service', () => {
             expect(res.status).toBe(400);
             expect(res.body.error).toContain('Total moves cannot be negative');
         });
+        
     });
 
     describe('GET /matches/history/:userId', () => {
@@ -146,6 +160,27 @@ describe('Integration Tests: Matches Service', () => {
 
             expect(res.status).toBe(500);
             expect(res.body).toHaveProperty('error');
+        });
+
+        it('should return 404 if userId is whitespace', async () => {
+            const res = await supertest(app)
+                .get('/matches/user/%20')
+                .set('Accept', 'application/json');
+
+            expect(res.status).toBe(404);
+            expect(res.body).toHaveProperty('error', 'User ID is required');
+        });
+
+        it('should return 400 if service throws Invalid input format', async () => {
+            const spy = vi.spyOn(MatchService, 'getMatchHistory').mockRejectedValueOnce(new Error('Invalid input format'));
+
+            const res = await supertest(app)
+                .get(`/matches/user/${testUserId}`)
+                .set('Accept', 'application/json');
+
+            expect(res.status).toBe(400);
+            expect(res.body).toHaveProperty('error', 'Invalid input format');
+            spy.mockRestore();
         });
     });
 });

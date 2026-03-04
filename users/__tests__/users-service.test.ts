@@ -1,4 +1,4 @@
-import { describe, it, expect, afterAll, beforeAll } from 'vitest';
+import { describe, it, expect, afterAll, beforeAll,vi } from 'vitest';
 import supertest from 'supertest';
 import app from '../src/index'; 
 import User from '../src/models/user-model'; 
@@ -37,6 +37,41 @@ describe('Integration Tests: Users Service', () => {
             expect(res.status).toBe(400);
             expect(res.body).toHaveProperty('error');
         });
+        it('should return an error (and cover catch block) if the user already exists', async () => {
+            const res = await supertest(app)
+                .post('/createuser')
+                .send({ 
+                    username: 'Hugo',
+                    email: 'hugocarbajales@test.com',      
+                    password: 'testpassword123'  
+                })
+                .set('Accept', 'application/json');
+
+            expect(res.status).toBeGreaterThanOrEqual(400); 
+            expect(res.body).toHaveProperty('error');
+        });
+        it('should handle unexpected internal errors (covering line 34)', async () => {
+            // 1. Saboteamos la base de datos para que lance un error no controlado
+            const spy = vi.spyOn(User, 'findOne').mockRejectedValueOnce(new Error('Catastrophic DB Failure'));
+
+            // 2. Hacemos la petición con datos correctos
+            const res = await supertest(app)
+                .post('/createuser')
+                .send({ 
+                    username: 'UnluckyUser',
+                    email: 'unlucky@test.com',      
+                    password: 'testpassword123'  
+                })
+                .set('Accept', 'application/json');
+
+            // 3. Verificamos que el controlador llegó al final del catch (suele ser un 500)
+            expect(res.status).toBe(500); // Si tu línea 34 devuelve otro status, cámbialo aquí
+            expect(res.body).toHaveProperty('error');
+
+            // 4. Limpiamos el sabotaje para no estropear los siguientes tests
+            spy.mockRestore();
+        });
+        
     });
 
     describe('POST /login', () => {
@@ -78,6 +113,17 @@ describe('Integration Tests: Users Service', () => {
                 .set('Accept', 'application/json');
 
             expect(res.status).toBe(404); 
+            expect(res.body).toHaveProperty('error');
+        });
+        it('should return 400 (and cover catch block) if login inputs have invalid format', async () => {
+            const res = await supertest(app)
+                .post('/login')
+                .send({ 
+                    username: 'Hugo'
+                })
+                .set('Accept', 'application/json');
+
+            expect(res.status).toBeGreaterThanOrEqual(400);
             expect(res.body).toHaveProperty('error');
         });
     });
