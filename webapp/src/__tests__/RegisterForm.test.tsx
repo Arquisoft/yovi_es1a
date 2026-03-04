@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import RegisterForm from '../pages/Register'
 import { afterEach, describe, expect, test, vi } from 'vitest' 
 import '@testing-library/jest-dom'
+import { MemoryRouter } from 'react-router-dom'
 
 describe('RegisterForm', () => {
   afterEach(() => {
@@ -22,13 +23,14 @@ describe('RegisterForm', () => {
   })
 
   test('submits username and displays response', async () => {
-    // Mock fetch to resolve automatically
     global.fetch = vi.fn().mockResolvedValueOnce({
       ok: true,
       json: async () => ({ message: 'User successfully created' }), 
     } as Response)
 
-    render(<RegisterForm />)
+    render(<MemoryRouter>
+        <RegisterForm />
+      </MemoryRouter>)
     const user = userEvent.setup()
 
     await user.type(screen.getByLabelText(/username/i), 'Pablo')

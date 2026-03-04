@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
-import "./ConfiguracionJuego.css"; 
+import "./GameSettings.css"; 
 
 const ConfiguracionJuego: React.FC = () => {
   // 2. Añade esta línea justo al principio de tu componente:
@@ -13,7 +13,7 @@ const ConfiguracionJuego: React.FC = () => {
   const [dificultad, setDificultad] = useState<"facil" | "medio" | "dificil">("facil");
 
   const irAlJuego = () => {
-    navigate("/partida", { 
+    navigate("/game", { 
       state: { 
         tamanoSeleccionado: tamano,
         botSeleccionado: bot,

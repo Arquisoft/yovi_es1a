@@ -5,7 +5,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Estadisticas from './pages/Estadisticas';
 import Ayuda from "./pages/Ayuda";
-import ConfiguracionJuego from './pages/ConfiguracionJuego';
+import ConfiguracionJuego from './pages/GameSettings';
 
 import BotTester from './components/BotTester'; 
 
@@ -22,8 +22,8 @@ function App() {
       <Route path="/register" element={<Register />} />
 
       {/*Private routes */}
-      <Route path="/partida" element={<Game />} />
-      <Route path="/game" element={<ConfiguracionJuego />} />
+      <Route path="/game" element={<Game />} />
+      <Route path="/configureGame" element={<ConfiguracionJuego />} />
       <Route path="/estadisticas" element={<Estadisticas />} />
       <Route path="/ayuda" element={<Ayuda />} />
 
