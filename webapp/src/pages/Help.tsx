@@ -11,7 +11,7 @@ const Ayuda: React.FC = () => {
     
   return (
     <div className="ayuda">
-      <NavBar activeTab="Ayuda" />
+      <NavBar activeTab="help" />
       <video autoPlay muted loop className="videoIN">
         <source src={video} type="video/mp4" />
         No se ha podido mostrar el video de fondo

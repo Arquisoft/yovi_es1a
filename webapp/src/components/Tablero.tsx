@@ -44,12 +44,11 @@ const Tablero: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [startTime] = useState<number>(Date.now());
   const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
-  const [gameOver, setGameOver] = useState(false);
+
   React.useEffect(() => {
     const storedUser = localStorage.getItem("user");
     setLayout(getInitialLayout(size));
     setTurn("B");
-    setGameOver(false);
     if (storedUser) setUser(JSON.parse(storedUser));
   }, [size]);
 
@@ -88,7 +87,6 @@ const Tablero: React.FC = () => {
       const response = await gameService.askBotMove(botSeleccionado, size, 1, yenLayout); 
 
       if (response.game_status === "human_won") {
-        setGameOver(true);
         setTimeout(() => alert("¡HAS GANADO!"), 100);
         await safeSaveStats("win", updatedFlatLayout);
         return; 
@@ -100,7 +98,6 @@ const Tablero: React.FC = () => {
       setLayout(finalLayoutArray.join(""));
 
       if (response.game_status === "bot_won") {
-        setGameOver(true);
         setTimeout(() => alert("HAS PERDIDO."), 100);
         await safeSaveStats("lose", finalLayoutArray.join(""));
         return;
@@ -133,7 +130,7 @@ const Tablero: React.FC = () => {
             key={`${i}-${j}`}
             className={`casilla${claseColor}`} 
             onClick={() => play(currentIndex)}
-            disabled={valor !== "." || loading || gameOver} 
+            disabled={valor !== "." || loading}
           >
             {valor !== "." ? valor : ""}
           </button>
@@ -154,8 +151,20 @@ const Tablero: React.FC = () => {
         <source src={video} type="video/mp4" />
         No se ha podido mostrar el video de fondo
       </video>
-      <div className="board">{crearTablero()}</div>
-      <p style={{ marginTop: '20px', fontSize: '1.2rem' }}>{t("turn")} <strong>{turn}</strong></p>
+      
+      <div className="tablero-grid">
+        {crearTablero()}
+      </div>
+
+      {/* CAMBIO EN LOS TURNOS */}
+      <p style={{ marginTop: '20px', fontSize: '1.2rem', color: 'white' }}>
+        {t("turn")}: 
+        <strong style={{ color: turn === "B" ? "#3b82f6" : "#ef4444", marginLeft: '10px' }}>
+          {turn === "B" ? "JUGADOR (Azul)" : "BOT (Rojo)"}
+        </strong>
+      </p>
+      
+      {loading && <p style={{ color: '#60a5fa' }}>El Bot está calculando...</p>}
     </div>
   );
 };
