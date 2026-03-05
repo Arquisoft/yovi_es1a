@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+// Importamos useLocation para recibir la mochila de ConfiguracionJuego
+import { useLocation } from "react-router-dom"; 
 import { gameService } from "../services/game.service";
 import { statsService } from "../services/stats.service";
 import "./Tablero.css";
@@ -25,12 +27,16 @@ const coordsToIndex = (x: number, y: number, size: number) => {
   return (row * (row + 1)) / 2 + y;
 };
 
-interface TableroProps {
-  size: number;
-}
-
-const Tablero: React.FC<TableroProps> = ({ size }) => {
+const Tablero: React.FC = () => {
+  const location = useLocation();
   
+  const { 
+    tamanoSeleccionado = 5, 
+    botSeleccionado = "random_bot" 
+  } = location.state || {};
+
+  const size = tamanoSeleccionado;
+
   const getInitialLayout = (n: number) => ".".repeat((n * (n + 1)) / 2);
 
   const [layout, setLayout] = useState(getInitialLayout(size));
@@ -56,7 +62,7 @@ const Tablero: React.FC<TableroProps> = ({ size }) => {
         result,
         duration: durationSeconds,
         boardSize: size, 
-        opponent: "monte_carlo_bot",
+        opponent: botSeleccionado, 
         totalMoves: moves,
         gameMode: "computer"
       });
@@ -78,7 +84,7 @@ const Tablero: React.FC<TableroProps> = ({ size }) => {
     try {
       const yenLayout = stringToYenLayout(updatedFlatLayout, size); 
       
-      const response = await gameService.askBotMove("monte_carlo_bot", size, 1, yenLayout); 
+      const response = await gameService.askBotMove(botSeleccionado, size, 1, yenLayout); 
 
       if (response.game_status === "human_won") {
         setTimeout(() => alert("¡HAS GANADO!"), 100);
@@ -100,7 +106,7 @@ const Tablero: React.FC<TableroProps> = ({ size }) => {
       setTurn("B"); 
     } catch (error) {
       console.error("Error communicating with the bot:", error);
-      alert("El motor de Rust no responde o la jugada fue inválida.");
+      alert(`El bot ${botSeleccionado} no responde o la jugada fue inválida.`);
       setTurn("B"); 
     } finally {
       setLoading(false);
@@ -136,8 +142,8 @@ const Tablero: React.FC<TableroProps> = ({ size }) => {
     return filas;
   };
 
-      //Usar el idioma
-      const { t } = useLanguage();
+  //Usar el idioma
+  const { t } = useLanguage();
 
   return (
     <div className="gameBoard">
