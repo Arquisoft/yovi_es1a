@@ -11,8 +11,15 @@ router.post('/play', async (req: Request, res: Response) => {
             return res.status(400).json({ error: "The 'position' parameter (YEN notation) is mandatory." });
         }
 
-        const botId = (strategy === "random") ? "random_bot" : (strategy || "random_bot");
-
+        const validBots = ["random_bot", "group_expansion_bot", "monte_carlo_bot","priority_block_bot","shortest_path_bot","simple_blocker_bot","triangle_attack_bot"];
+        let botId = "random_bot";
+        if (strategy === "random") {
+            botId = "random_bot";
+        } else if (validBots.includes(strategy)) {
+            botId = strategy;
+        } else if (strategy) {
+            return res.status(400).json({ error: `Invalid strategy: ${strategy}` });
+        }
         const rustResponse = await fetch(`${RUST_API_URL}/v1/ybot/choose/${botId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
