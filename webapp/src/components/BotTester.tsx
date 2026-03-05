@@ -5,15 +5,19 @@ import video from "../assets/videoLinea.mp4";
 const BotTester: React.FC = () => {
   const [layout, setLayout] = useState('./../.../..../...../....../.......');
   const [resultado, setResultado] = useState('');
+  
+  // 1. Añadimos un estado para guardar el bot seleccionado (por defecto "random_bot")
+  const [botId, setBotId] = useState('random_bot');
 
   const pedirMovimiento = async (e: React.FormEvent) => {
     e.preventDefault();
     setResultado('...');
 
     try {
-        //'http://localhost:4000'
         const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
-        const res = await fetch(`${apiEndpoint}/v1/ybot/choose/random_bot`, {
+        
+        // 2. Inyectamos la variable botId en la URL
+        const res = await fetch(`${apiEndpoint}/v1/ybot/choose/${botId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -38,8 +42,7 @@ const BotTester: React.FC = () => {
     }
   };
 
-      //Usar el idioma
-      const { t } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <div className="botTester">
@@ -48,19 +51,41 @@ const BotTester: React.FC = () => {
         No se ha podido mostrar el video de fondo
       </video>
       <h1>{t("test")}</h1>
+      
       <form onSubmit={pedirMovimiento}>
+        {/* 3. Añadimos el selector de dificultad */}
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="bot-select" style={{ color: 'white', marginRight: '10px' }}>
+            Nivel / Tipo de Bot:
+          </label>
+          <select 
+            id="bot-select" 
+            value={botId} 
+            onChange={(e) => setBotId(e.target.value)}
+            style={{ padding: '5px', borderRadius: '5px' }}
+          >
+            <option value="random_bot">Aleatorio</option>
+            <option value="simple_blocker_bot">Bloqueador Simple</option>
+            <option value="group_expansion_bot">Expansión de Grupo</option>
+            <option value="shortest_path_bot">Camino Más Corto</option>
+            <option value="triangle_attack_bot">Ataque Triangular</option>
+            <option value="priority_block_bot">Bloqueo Prioritario</option>
+            <option value="monte_carlo_bot">Monte Carlo</option>
+          </select>
+        </div>
+
         <input 
           type="text" 
           value={layout} 
           onChange={(e) => setLayout(e.target.value)} 
+          style={{ marginRight: '10px' }}
         />
         <button type="submit">{t("Mover")}</button>
       </form>
       
-      { }
-      <p>{resultado}</p>
+      <p style={{ color: 'white', marginTop: '15px' }}>{resultado}</p>
     </div>
   );
 };
 
-export default BotTester; // exit door so that the BotTester component can travel to other files.
+export default BotTester;

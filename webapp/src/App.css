@@ -102,7 +102,7 @@ button {
   margin: 50px auto;
   padding: 20px;
   border-radius: 8px;
-  background-color: #fff;
+  background-color: #bfc0cd;
 }
 
 .title-register .avatar {
@@ -114,7 +114,7 @@ button {
   padding: 0rem 2rem;/* espacio arriba 0 rem, espacio a los lados 3 rem */
   gap: 1rem;
   align-items: center;
-  background-color: #d8d8d8;
+  background-color: #a89ac3;
   border-radius: 8px;
   color: #03080e;
 }

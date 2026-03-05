@@ -33,7 +33,7 @@ export const gameService = {
       return {
         api_version: "v1",
         bot_id: botId,
-        coords: data.move,
+        coords: data.coords,
         game_status: data.game_status
       };
     } catch (error) {

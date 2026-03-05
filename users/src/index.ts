@@ -19,9 +19,8 @@ const port: string | number = process.env.PORT || 3000;
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    //'http://localhost:80',
-    //'http://localhost',
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'http://localhost'
   ],
   //origin: 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],

@@ -50,9 +50,15 @@ pub fn create_router(state: AppState) -> axum::Router {
 ///
 /// The default state includes the `RandomBot` which selects moves randomly.
 pub fn create_default_state() -> AppState {
-    let bots = YBotRegistry::new().with_bot(Arc::new(RandomBot)).with_bot(Arc::new(ShortestPathBot)).
-    with_bot(Arc::new(MonteCarloBot)).with_bot(Arc::new(GroupExpansionBot)).with_bot(Arc::new(PriorityBlockBot)).with_bot(Arc::new(SimpleBlockerBot))
-    .with_bot(Arc::new(TriangleAttackBot));
+    let bots = YBotRegistry::new()
+        .with_bot(Arc::new(RandomBot))
+        .with_bot(Arc::new(ShortestPathBot))
+        .with_bot(Arc::new(MonteCarloBot))
+        .with_bot(Arc::new(GroupExpansionBot))
+        .with_bot(Arc::new(PriorityBlockBot))
+        .with_bot(Arc::new(SimpleBlockerBot))
+        .with_bot(Arc::new(TriangleAttackBot));
+    
     AppState::new(bots)
 }
 
