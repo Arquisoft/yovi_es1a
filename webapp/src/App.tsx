@@ -3,9 +3,9 @@ import { Routes, Route } from "react-router-dom";
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Estadisticas from './pages/Estadisticas';
-import Ayuda from "./pages/Ayuda";
-import ConfiguracionJuego from './pages/ConfiguracionJuego';
+import Statistics from './pages/Statistics';
+import Help from "./pages/Help";
+import ConfiguracionJuego from './pages/GameSettings';
 
 import BotTester from './components/BotTester'; 
 
@@ -23,10 +23,10 @@ function App() {
       <Route path="/register" element={<Register />} />
 
       {/*Private routes */}
-      <Route path="/partida" element={<Game />} />
-      <Route path="/jugar" element={<ConfiguracionJuego />} />
-      <Route path="/estadisticas" element={<Estadisticas />} />
-      <Route path="/ayuda" element={<Ayuda />} />
+      <Route path="/game" element={<Game />} />
+      <Route path="/configureGame" element={<ConfiguracionJuego />} />
+      <Route path="/statistics" element={<Statistics />} />
+      <Route path="/help" element={<Help />} />
 
       {/* Routes for testing */}
       <Route path="/botTester" element={<BotTester />} />
