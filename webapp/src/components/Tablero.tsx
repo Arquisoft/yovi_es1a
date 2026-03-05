@@ -44,11 +44,12 @@ const Tablero: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [startTime] = useState<number>(Date.now());
   const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
-
+  const [gameOver, setGameOver] = useState(false);
   React.useEffect(() => {
     const storedUser = localStorage.getItem("user");
     setLayout(getInitialLayout(size));
     setTurn("B");
+    setGameOver(false);
     if (storedUser) setUser(JSON.parse(storedUser));
   }, [size]);
 
@@ -87,6 +88,7 @@ const Tablero: React.FC = () => {
       const response = await gameService.askBotMove(botSeleccionado, size, 1, yenLayout); 
 
       if (response.game_status === "human_won") {
+        setGameOver(true);
         setTimeout(() => alert("¡HAS GANADO!"), 100);
         await safeSaveStats("win", updatedFlatLayout);
         return; 
@@ -98,6 +100,7 @@ const Tablero: React.FC = () => {
       setLayout(finalLayoutArray.join(""));
 
       if (response.game_status === "bot_won") {
+        setGameOver(true);
         setTimeout(() => alert("HAS PERDIDO."), 100);
         await safeSaveStats("lose", finalLayoutArray.join(""));
         return;
@@ -130,7 +133,7 @@ const Tablero: React.FC = () => {
             key={`${i}-${j}`}
             className={`casilla${claseColor}`} 
             onClick={() => play(currentIndex)}
-            disabled={valor !== "." || loading}
+            disabled={valor !== "." || loading || gameOver} 
           >
             {valor !== "." ? valor : ""}
           </button>
