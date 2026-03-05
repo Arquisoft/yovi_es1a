@@ -4,7 +4,7 @@ import avatar from '../assets/avatar.png';
 import { useLanguage } from "../idiomaConf/LanguageContext";
 
 interface NavBarProps {
-  activeTab: "play" | "stats" |"Ayuda";
+  activeTab: "play" | "stats" |"help";
 }
 
 const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
@@ -57,20 +57,20 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
     <nav className="nav-bar">
       <div className="nav-left">
         <button 
-          onClick={() => navigate("/jugar")}
+          onClick={() => navigate("/configureGame")}
           className={`nav-item ${activeTab === "play" ? "active" : ""}`}
         >
           {t("jugar")}
         </button>
         <button 
-          onClick={() => navigate("/estadisticas")}
+          onClick={() => navigate("/statistics")}
           className={`nav-item ${activeTab === "stats" ? "active" : ""}`}
         >
           {t("estadisticas")}
         </button>
         <button 
-          onClick={() => navigate("/ayuda")}
-          className={`nav-item ${activeTab === "Ayuda" ? "active" : ""}`}
+          onClick={() => navigate("/help")}
+          className={`nav-item ${activeTab === "help" ? "active" : ""}`}
         >
           {t("ayuda")}
         </button>

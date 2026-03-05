@@ -33,7 +33,7 @@ const Login: React.FC = () => {
       }));
       
       alert(`¡Bienvenido de nuevo, ${data.username}!`);
-      navigate('/jugar');
+      navigate('/game');
 
     } catch (err: any) {
       setError(err.message || 'Error de conexión con el servidor');

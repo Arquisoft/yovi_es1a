@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
-import "./ConfiguracionJuego.css"; 
+import "./GameSettings.css"; 
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 import video from "../assets/videoLinea.mp4";
 
@@ -14,7 +14,7 @@ const ConfiguracionJuego: React.FC = () => {
   const [dificultad, setDificultad] = useState<"facil" | "medio" | "dificil">("facil");
 
   const irAlJuego = () => {
-    navigate("/partida", { 
+    navigate("/game", { 
       state: { 
         tamanoSeleccionado: tamano,
         botSeleccionado: bot,
