@@ -4,6 +4,7 @@ import y_dorada from '../assets/y_dorada.png';
 import '../App.css';
 import { useLanguage } from "../idiomaConf/LanguageContext";
 import video from "../assets/videoLinea.mp4";
+import NavBar from "../components/NavBar";
 
 
 function Home() {
@@ -37,23 +38,11 @@ function Home() {
 
   return (
     <div className="App">
+      <NavBar activeTab="" />
       <video autoPlay muted loop className="video">
         <source src={video} type="video/mp4" />
         No se ha podido mostrar el video de fondo
       </video>
-      <nav className="nav-home">
-        <select 
-              className="control-idioma"
-              value={lang} 
-              onChange={changeLangTo}
-            >
-          <option value="es">{t("esp")}</option>
-          <option value="en">{t("en")}</option>
-          <option value="it">{t("it")}</option>
-          <option value="fr">{t("fr")}</option>
-          <option value="de">{t("de")}</option>
-        </select>
-      </nav>
       <div>
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
           <img src="/vite.svg" className="logo" alt="Vite logo" />

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/auth.service';
 import { useLanguage } from '../idiomaConf/LanguageContext';
 import AuthForm from '../components/AuthForm';
+import NavBar from '../components/NavBar';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -21,6 +22,8 @@ const Login: React.FC = () => {
   };
 
   return (
+  <>
+    <NavBar activeTab="" />
     <AuthForm
       title={t("inSes")}
       buttonText="Log in!"
@@ -30,6 +33,7 @@ const Login: React.FC = () => {
       bottomLinkPath="/register"
       onSubmit={handleLogin}
     />
+  </>
   );
 };
 

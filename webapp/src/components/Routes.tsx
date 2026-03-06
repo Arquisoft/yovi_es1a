@@ -2,7 +2,8 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 const checkAuth = () => {
   const user = localStorage.getItem("user");
-  return !!user; 
+  if (!user || user === "null" || user === "undefined") return false; 
+  return true;
 };
 
 const UnloginRoute = () => {

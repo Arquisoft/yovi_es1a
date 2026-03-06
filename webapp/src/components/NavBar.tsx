@@ -4,7 +4,7 @@ import avatar from '../assets/avatar.png';
 import { useLanguage } from "../idiomaConf/LanguageContext";
 
 interface NavBarProps {
-  activeTab: "play" | "stats" |"help";
+  activeTab: "play" | "stats" |"help" | "";
 }
 
 const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
