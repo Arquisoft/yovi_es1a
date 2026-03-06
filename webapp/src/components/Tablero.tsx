@@ -151,8 +151,20 @@ const Tablero: React.FC = () => {
         <source src={video} type="video/mp4" />
         No se ha podido mostrar el video de fondo
       </video>
-      <div className="board">{crearTablero()}</div>
-      <p style={{ marginTop: '20px', fontSize: '1.2rem' }}>{t("turn")} <strong>{turn}</strong></p>
+      
+      <div className="tablero-grid">
+        {crearTablero()}
+      </div>
+
+      {/* CAMBIO EN LOS TURNOS */}
+      <p style={{ marginTop: '20px', fontSize: '1.2rem', color: 'white' }}>
+        {t("turn")}: 
+        <strong style={{ color: turn === "B" ? "#3b82f6" : "#ef4444", marginLeft: '10px' }}>
+          {turn === "B" ? "JUGADOR (Azul)" : "BOT (Rojo)"}
+        </strong>
+      </p>
+      
+      {loading && <p style={{ color: '#60a5fa' }}>El Bot está calculando...</p>}
     </div>
   );
 };
