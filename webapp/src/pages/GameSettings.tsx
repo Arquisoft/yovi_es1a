@@ -28,12 +28,12 @@ const dibujarPrevisualizacion = () => {
     for (let i = 0; i < tamano; i++) {
       const casillas = [];
       for (let j = 0; j <= i; j++) {
-        casillas.push(<div key={`${i}-${j}`} className="casilla-mini"></div>);
+        casillas.push(<div key={`${i}-${j}`} className={`casilla-mini preview-${dificultad}`}></div>);
       }
       filas.push(<div key={i} className="fila-mini">{casillas}</div>);
     }
     return filas;
-}
+};
 
     //Usar el idioma
     const { t } = useLanguage();

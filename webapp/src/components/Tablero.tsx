@@ -44,6 +44,7 @@ const Tablero: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [startTime] = useState<number>(Date.now());
   const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
+  const [gameFinished, setGameFinished] = useState(false);
 
   React.useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -88,6 +89,7 @@ const Tablero: React.FC = () => {
       const data = await gameService.checkWinner(size, yenLayout);
 
       if (data.status === "win") {
+        setGameFinished(true);
         const winnerName = turn === "B" ? "1 (Azul)" : "2 (Rojo)";
         if (turn === "R") {
           setTimeout(() => alert(`¡Ha ganado tu amigo! (Jugador ${winnerName}). Has perdido la partida.`), 100);
@@ -117,6 +119,7 @@ const Tablero: React.FC = () => {
     const response = await gameService.askBotMove(botSeleccionado, size, 1, yenLayout); 
 
     if (response.game_status === "human_won") {
+      setGameFinished(true);
       setTimeout(() => alert("¡HAS GANADO!"), 100);
       await safeSaveStats("win", updatedFlatLayout);
       return; 
@@ -128,6 +131,7 @@ const Tablero: React.FC = () => {
     setLayout(finalLayoutArray.join(""));
 
     if (response.game_status === "bot_won") {
+      setGameFinished(true);
       setTimeout(() => alert("HAS PERDIDO."), 100);
       await safeSaveStats("lose", finalLayoutArray.join(""));
       return;
@@ -156,15 +160,15 @@ const Tablero: React.FC = () => {
         if (valor === "R") claseColor = " jugador-r";
 
         casillas.push(
-          <button
-            key={`${i}-${j}`}
-            className={`casilla${claseColor}`} 
-            onClick={() => play(currentIndex)}
-            disabled={valor !== "." || loading}
-          >
-            {valor !== "." ? valor : ""}
-          </button>
-        );
+        <button
+          key={`${i}-${j}`}
+          className={`casilla${claseColor}`} 
+          onClick={() => play(currentIndex)}
+          disabled={valor !== "." || loading || gameFinished} 
+        >
+          {valor !== "." ? valor : ""}
+        </button>
+      );
         index++;
       }
       filas.push(<div key={i} className="tablero">{casillas}</div>);
