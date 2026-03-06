@@ -1,6 +1,7 @@
 export const messages = {
   en: {
     welcome: "Welcome",
+    inicio: "Home",
     jugar: "Play",
     estadisticas: "Statistics",
     ayuda: "Help",
@@ -13,6 +14,7 @@ export const messages = {
     oponente: "Opponent",
     movimientos: "Moves",
     duracion: "Duration",
+    
 
     bienvenido: "Welcome to Game Y",
     introducción: "Introduction",
@@ -89,6 +91,7 @@ export const messages = {
   },
   es: {
     welcome: "Bienvenido",
+    inicio: "Inicio",
     jugar: "Jugar",
     estadisticas: "Estadísticas",
     ayuda: "Ayuda",
@@ -177,6 +180,7 @@ export const messages = {
   },
   fr: {
     welcome: "Bienvenue",
+    inicio: "Accueil",
     jugar: "Jouer",
     estadisticas: "Statistiques",
     ayuda: "Aide",
@@ -265,6 +269,7 @@ export const messages = {
   },
   it: {
     welcome: "Benvenuto",
+    inicio: "Inizio",
     jugar: "Gioca",
     estadisticas: "Statistiche",
     ayuda: "Aiuto",
@@ -354,6 +359,7 @@ export const messages = {
 
   de: {
     welcome: "Willkommen",
+    inicio: "Startseite",
     jugar: "Spielen",
     estadisticas: "Statistiken",
     ayuda: "Hilfe",

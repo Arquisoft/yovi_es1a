@@ -20,12 +20,12 @@ const Register: React.FC = () => {
     }));
 
     alert(`¡Usuario registrado correctamente!`);
-    navigate('/jugar');
+    navigate('/configureGame');
   };
 
   return (
     <>
-    <NavBar activeTab="" />
+    <NavBar activeTab="register" />
     <AuthForm
       title={t("creaCuent")}
       isRegister={true}

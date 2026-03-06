@@ -23,7 +23,7 @@ const Login: React.FC = () => {
 
   return (
   <>
-    <NavBar activeTab="" />
+    <NavBar activeTab="login" />
     <AuthForm
       title={t("inSes")}
       buttonText="Log in!"
