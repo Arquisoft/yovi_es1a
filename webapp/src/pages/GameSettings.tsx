@@ -5,7 +5,7 @@ import "./GameSettings.css";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 import video from "../assets/videoLinea.mp4";
 
-const ConfiguracionJuego: React.FC = () => {
+const GameSettings: React.FC = () => {
   const navigate = useNavigate();
   
   const [modo, setModo] = useState<"humano" | "bot">("bot");
@@ -162,4 +162,4 @@ const dibujarPrevisualizacion = () => {
   );
 };
 
-export default ConfiguracionJuego;
+export default GameSettings;
