@@ -61,22 +61,18 @@ button {
 }
 
 .video {
-  position: fixed;/*Posicion fija (No se mueve al scrollear)*/
-  top: 0;/* Empieza desde arriba */
-  left: 0;/* Empieza desde la izquierda */
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;/* se pone al fondo detrás del contenido */
-  object-fit: cover;/* Adpatar tamaño para cubrir la pantalla completa */
+  z-index: -1;
+  object-fit: cover;
 }
 
 @keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -98,11 +94,15 @@ button {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  max-width: 300px;
+  max-width: 350px;
   margin: 50px auto;
-  padding: 20px;
-  border-radius: 8px;
-  background-color: #bfc0cd;
+  padding: 30px;
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.07); 
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
 }
 
 .title-register .avatar {
@@ -111,12 +111,13 @@ button {
 }
 
 .title-register {
-  padding: 0rem 2rem;/* espacio arriba 0 rem, espacio a los lados 3 rem */
+  padding: 0rem 2rem;
   gap: 1rem;
   align-items: center;
-  background-color: #a89ac3;
+  background-color: transparent; 
   border-radius: 8px;
-  color: #03080e;
+  color: #60a5fa; 
+  text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
 }
 
 .title-register h2{
@@ -131,7 +132,8 @@ button {
 .form-group label {
   margin-bottom: 5px;
   font-weight: bold;
-  color: #333;
+  color: #ffffff; 
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
 .form-input {
@@ -161,7 +163,7 @@ button {
 .submit-button:hover {
   background-color: #d8eafd;
   color: #03080e;
-  border: 2px solid #03080e;/* Borde*/
+  border: 2px solid #03080e;
 }
 
 h2 {
@@ -175,20 +177,20 @@ h2 {
 }
 .botTester form{
   display: flex;
-  gap: 1rem;               /* Espacio entre input y botón */
-  align-items: center;     /* Centra verticalmente */
+  gap: 1rem;
+  align-items: center;
 }
 
 button:hover {
   background-color: #d8eafd;
   color: #03080e;
-  border: 2px solid #03080e;/* Borde*/
+  border: 2px solid #03080e;
 }
 
 .stats {
-  text-align: "center";
-  padding: "20px";
-  margin-top: "60px";
+  text-align: center;
+  padding: 20px;
+  margin-top: 60px;
 }
 
 .stats h2 {
@@ -196,15 +198,77 @@ button:hover {
 }
 
 .nav-home {
-  position: absolute; /* Saca al elemento del flujo normal de la página */
+  position: absolute;
   top: 60px;
   right: 95px;
 }
 
 .control-idioma {
-  padding: 5px 10px; /*Borde de 5 arriba y abajo, de 10 a los lados */
+  padding: 5px 10px;
   background-color: #5b99f6;
   color: #f9f9f9;
   border-radius: 8px;
   font-weight: bold;
+}
+
+.tabla-container-scroll {
+  max-height: 60vh;
+  overflow-y: auto;
+  margin-top: 20px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tabla-stats {
+  width: 100%;
+  border-collapse: collapse;
+  color: #ffffff !important;
+}
+
+.tabla-stats thead {
+  position: sticky;
+  top: 0;
+  background-color: #5b99f6;
+  z-index: 1;
+}
+
+.tabla-stats th {
+  padding: 15px;
+  text-align: left;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.tabla-stats td {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0 !important;
+}
+
+.tabla-stats tbody tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.res-win {
+  color: #00ff00 !important; 
+  text-shadow: 0 0 12px rgba(0, 255, 0, 0.8), 0 0 20px rgba(0, 255, 0, 0.4);
+  font-weight: 900 !important;
+  letter-spacing: 1px;
+}
+
+.res-lose, .res-surrender {
+  color: #ff0000 !important; 
+  text-shadow: 0 0 12px rgba(255, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.4);
+  font-weight: 900 !important;
+  letter-spacing: 1px;
+}
+
+.tabla-container-scroll::-webkit-scrollbar { width: 8px; }
+.tabla-container-scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
+.tabla-container-scroll::-webkit-scrollbar-thumb {
+  background: #5b99f6;
+  border-radius: 10px;
 }

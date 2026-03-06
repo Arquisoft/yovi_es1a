@@ -1,14 +1,98 @@
-.casilla.player-b {
-  background-color: #3b82f6; 
-  color: white;
-  font-weight: bold;
-  border: 2px solid #2563eb;
+/* Contenedor principal para centrar todo */
+.gameBoard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
 }
 
-.casilla.player-r {
-  background-color: #ef4444;
-  color: white;
-  font-weight: bold;
-  border: 2px solid #dc2626;
+/* El video de fondo específico para el componente */
+.videoIN {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  object-fit: cover;
+  filter: brightness(0.6);
 }
 
+/* El contenedor con efecto cristal (Glassmorphism) */
+.tablero-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+}
+
+/* Cada fila del tablero */
+.tablero {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* Estilo base de la casilla Hexagonal */
+.casilla {
+  width: 46px;
+  height: 52px;
+  background-color: rgba(255, 255, 255, 0.1);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent; /* Oculta la letra B/R para que solo se vea el color */
+  font-size: 0;
+}
+
+.casilla:focus {
+  outline: none; /* Elimina el borde negro/azul de selección */
+  box-shadow: none; /* Por si acaso algún navegador añade sombra */
+}
+
+.casilla:active {
+  filter: brightness(1.5);
+}
+
+/* Hover para casillas vacías */
+.casilla:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* TUS CLASES ORIGINALES (Adaptadas al nuevo estilo) */
+.casilla.jugador-b {
+  background: radial-gradient(circle at 35% 35%, #60a5fa, #2563eb);
+  filter: drop-shadow(0 0 8px #3b82f6);
+  animation: pulse-glow 2.5s infinite;
+}
+
+.casilla.jugador-r {
+  background: radial-gradient(circle at 35% 35%, #fb7185, #dc2626);
+  filter: drop-shadow(0 0 8px #ef4444);
+  animation: pulse-glow 2.5s infinite;
+}
+
+/* Animación de brillo neón */
+@keyframes pulse-glow {
+  0%, 100% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 5px currentColor); }
+  50% { transform: scale(0.98); filter: brightness(1.2) drop-shadow(0 0 15px currentColor); }
+}
+
+/* Estilo para el texto del turno */
+strong {
+  color: #5b99f6;
+  text-shadow: 0 0 10px rgba(91, 153, 246, 0.5);
+}
