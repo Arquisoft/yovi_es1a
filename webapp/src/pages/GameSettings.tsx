@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
-import "./ConfiguracionJuego.css"; 
+import "./GameSettings.css"; 
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 import video from "../assets/videoLinea.mp4";
 
@@ -15,8 +15,13 @@ const ConfiguracionJuego: React.FC = () => {
   const [dificultad, setDificultad] = useState<"facil" | "medio" | "dificil">("facil");
 
   const irAlJuego = () => {
-    navigate("/partida", { 
-      state: { tamanoSeleccionado: tamano, botSeleccionado: bot, modoSeleccionado: modo } 
+    // Usamos la ruta de master para mantener compatibilidad
+    navigate("/game", { 
+      state: { 
+        tamanoSeleccionado: tamano, 
+        botSeleccionado: bot, 
+        modoSeleccionado: modo 
+      } 
     });
   };
 
@@ -86,7 +91,7 @@ const ConfiguracionJuego: React.FC = () => {
           <button className="btn-jugar-fixed" onClick={irAlJuego}>{t("jugar")}</button>
         </div>
 
-        {/* COLUMNA DERECHA: PREVISUALIZACIÓN */}
+ 
         <div className="config-preview">
           <h2 className="fixed-title">{t("prevTablero")}</h2>
           <div className="preview-board-fixed">
