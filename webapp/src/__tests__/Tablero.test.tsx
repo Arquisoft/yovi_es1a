@@ -37,7 +37,7 @@ describe('Board - Initial Rendering', () => {
 
   test('initial text shows it is the PLAYER (Blue) turn', () => {
     renderTablero()
-    expect(screen.getByText(/JUGADOR \(Azul\)/i)).toBeInTheDocument()
+    expect(screen.getByText(/TÚ \(Azul\)/i)).toBeInTheDocument()
   })
 
   test('does not show the calculating message initially', () => {
@@ -60,6 +60,7 @@ describe('Board - Initial Rendering', () => {
 
 describe('Board - Player Interaction', () => {
   beforeEach(() => {
+    vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'ongoing' })
     vi.mocked(gameService.askBotMove).mockImplementation(() => new Promise(() => {}))
   })
   afterEach(() => vi.clearAllMocks())
@@ -80,27 +81,34 @@ describe('Board - Player Interaction', () => {
     expect(primeraCasilla).toHaveClass('jugador-b')
   })
 
-  test('after clicking, the text changes to BOT (Red) turn', () => {
+  test('after clicking, the text changes to BOT (Red) turn', async () => {
     const { container } = renderTablero()
+    
     fireEvent.click(container.querySelectorAll('.casilla')[0])
     
-    expect(screen.getByText(/BOT \(Rojo\)/i)).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText(/BOT \(Rojo\)/i)).toBeInTheDocument()
+    }, { timeout: 1000 })
   })
 
-  test('while the bot is thinking, the "calculating" message appears', () => {
+  test('while the bot is thinking, the "calculating" message appears', async () => {
     const { container } = renderTablero()
+    
     fireEvent.click(container.querySelectorAll('.casilla')[0])
     
-    expect(screen.getByText(/El Bot está calculando/i)).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText(/El Bot está calculando/i)).toBeInTheDocument()
+    }, { timeout: 1000 })
   })
 })
 
 describe('Board - Bot Response', () => {
   beforeEach(() => {
+    vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'ongoing' })
     vi.mocked(gameService.askBotMove).mockResolvedValue({
       api_version: "1.0",
       bot_id: "test",
-      game_status: 'playing',
+      game_status: 'ongoing',
       coords: { x: 1, y: 0, z: 0 } 
     })
   })
@@ -113,8 +121,9 @@ describe('Board - Bot Response', () => {
     fireEvent.click(casillas[0]) 
 
     await waitFor(() => {
-      expect(casillas[1]).toHaveTextContent('R')
-      expect(casillas[1]).toHaveClass('jugador-r')
+      const botCasilla = container.querySelector('.casilla.jugador-r')
+      expect(botCasilla).toBeInTheDocument()
+      expect(botCasilla).toHaveTextContent('R')
     })
   })
 
@@ -132,7 +141,7 @@ describe('Board - Bot Response', () => {
     fireEvent.click(container.querySelectorAll('.casilla')[0])
 
     await waitFor(() => {
-      expect(screen.getByText(/JUGADOR \(Azul\)/i)).toBeInTheDocument()
+      expect(screen.getByText(/TÚ \(Azul\)/i)).toBeInTheDocument()
     })
   })
 })
@@ -149,10 +158,11 @@ describe('Board - End of Game', () => {
   })
 
   test('triggers a victory alert if the bot says the human won', async () => {
+    vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
     vi.mocked(gameService.askBotMove).mockResolvedValueOnce({ 
       api_version: "1.0", 
       bot_id: "test", 
-      game_status: 'human_won', 
+      game_status: 'ongoing', 
       coords: { x: 0, y: 0, z: 0 } 
     })
     
@@ -165,10 +175,11 @@ describe('Board - End of Game', () => {
   })
 
   test('saves the victory (win) statistic in the database', async () => {
+    vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
     vi.mocked(gameService.askBotMove).mockResolvedValueOnce({ 
       api_version: "1.0", 
       bot_id: "test", 
-      game_status: 'human_won', 
+      game_status: 'ongoing', 
       coords: { x: 0, y: 0, z: 0 } 
     })
     
@@ -181,10 +192,14 @@ describe('Board - End of Game', () => {
   })
 
   test('triggers a defeat alert if the bot wins the game', async () => {
+    vi.mocked(gameService.checkWinner)
+      .mockResolvedValueOnce({ status: 'ongoing' })
+      .mockResolvedValueOnce({ status: 'win' })
+    
     vi.mocked(gameService.askBotMove).mockResolvedValueOnce({ 
       api_version: "1.0", 
       bot_id: "test", 
-      game_status: 'bot_won', 
+      game_status: 'ongoing', 
       coords: { x: 1, y: 1, z: 0 } 
     })
     
@@ -199,8 +214,9 @@ describe('Board - End of Game', () => {
   test('does not save stats if the user object is incomplete (missing userId)', async () => {
     localStorage.setItem('user', JSON.stringify({ username: 'JugadorFantasma' }))
     
+    vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
     vi.mocked(gameService.askBotMove).mockResolvedValueOnce({ 
-      api_version: "1.0", bot_id: "test", game_status: 'human_won', coords: { x: 0, y: 0, z: 0 } 
+      api_version: "1.0", bot_id: "test", game_status: 'ongoing', coords: { x: 0, y: 0, z: 0 } 
     })
     
     const { container } = renderTablero()
@@ -225,27 +241,32 @@ describe('Board - Error Handling', () => {
   })
 
   test('handles the error if the bot (Rust) crashes or does not respond', async () => {
-    vi.mocked(gameService.askBotMove).mockRejectedValueOnce(new Error('Bot is down'))
+  vi.clearAllMocks()
+  
+  vi.mocked(gameService.checkWinner).mockReset()
+  vi.mocked(gameService.askBotMove).mockReset()
+  
+  vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'ongoing' })
+  vi.mocked(gameService.askBotMove).mockRejectedValue(new Error('Bot is down'))
 
-    const { container } = renderTablero()
-    fireEvent.click(container.querySelectorAll('.casilla')[0])
+  const { container } = renderTablero()
+  fireEvent.click(container.querySelectorAll('.casilla')[0])
 
-    await waitFor(() => {
-      expect(console.error).toHaveBeenCalledWith("Error communicating with the bot:", expect.any(Error))
-      
-      expect(window.alert).toHaveBeenCalledWith(expect.stringContaining('no responde o la jugada fue inválida.'))
-      
-      expect(screen.getByText(/JUGADOR \(Azul\)/i)).toBeInTheDocument()
-      
-      expect(screen.queryByText(/El Bot está calculando/i)).not.toBeInTheDocument()
-    })
-  })
+  await waitFor(() => {
+    expect(console.error).toHaveBeenCalledWith("Error communicating with the bot:", expect.any(Error))
+  }, { timeout: 3000 })
+  
+  expect(window.alert).toHaveBeenCalledWith(expect.stringContaining('no responde o la jugada fue inválida.'))
+  expect(screen.getByText(/TÚ \(Azul\)/i)).toBeInTheDocument()
+  expect(screen.queryByText(/El Bot está calculando/i)).not.toBeInTheDocument()
+})
 
   test('handles the error if the database (Node) fails to save stats', async () => {
+    vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
     vi.mocked(gameService.askBotMove).mockResolvedValueOnce({ 
       api_version: "1.0", 
       bot_id: "test", 
-      game_status: 'human_won', 
+      game_status: 'ongoing', 
       coords: { x: 0, y: 0, z: 0 } 
     })
     

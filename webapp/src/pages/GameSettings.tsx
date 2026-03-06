@@ -13,13 +13,15 @@ const ConfiguracionJuego: React.FC = () => {
   const [tamano, setTamano] = useState<number>(5);
   const [bot, setBot] = useState<string>("random_bot");
   const [dificultad, setDificultad] = useState<"facil" | "medio" | "dificil">("facil");
+  const [colorUsuario, setColorUsuario] = useState<"B" | "R">("B");
 
   const irAlJuego = () => {
     navigate("/game", { 
       state: { 
         tamanoSeleccionado: tamano,
         botSeleccionado: bot,
-        modoSeleccionado: modo
+        modoSeleccionado: modo,
+        colorUsuario: colorUsuario,
       } 
     });
   };
@@ -47,7 +49,6 @@ const ConfiguracionJuego: React.FC = () => {
       
       <div className="config-container">
         
-        {/* COLUMNA IZQUIERDA: CONTROLES */}
         <div className="config-controls">
           <h2 className="fixed-title">{t("conf")}</h2>
 
@@ -78,7 +79,6 @@ const ConfiguracionJuego: React.FC = () => {
             />
           </div>
 
-          {/* ÁREA DE OPCIONES DINÁMICAS CON ALTURA RESERVADA */}
           <div className="bot-options-area">
             {modo === "bot" && (
               <>
@@ -134,8 +134,21 @@ const ConfiguracionJuego: React.FC = () => {
                 </div>
               </>
             )}
+          <div className="control-group">
+            <label className="fixed-label"><strong>¿Quién empieza la partida?</strong></label>
+            <select 
+              className="control-input"
+              value={colorUsuario} 
+              onChange={(e) => setColorUsuario(e.target.value as "B" | "R")}
+            >
+              <option value="B">Empiezo el usuario logeado (Fichas Azules)</option>
+              <option value="R">
+                {modo === "bot" ? "Empieza la Máquina (Fichas Azules)" : "Empieza el invitado (Fichas Azules)"}
+              </option>
+            </select>
           </div>
-
+          </div>
+          
           <button className="btn-jugar-fixed" onClick={irAlJuego}>
             {t("jugar")}
           </button>
