@@ -6,7 +6,9 @@ export interface BotMoveResponse {
   coords: { x: number; y: number; z: number };
   game_status: string;
 }
-
+export interface CheckWinnerResponse {
+  status: string;
+}
 export const gameService = {
   askBotMove: async (botId: string, size: number, turn: number, layout: string): Promise<BotMoveResponse> => {
     try {
@@ -38,6 +40,24 @@ export const gameService = {
       };
     } catch (error) {
       console.error("Error calling Rust API:", error);
+      throw error;
+    }
+  },
+  checkWinner: async (size: number, layout: string): Promise<CheckWinnerResponse> => {
+    try {
+      const response = await fetch(`${NODE_API_URL}/api/bot/check-winner`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ size, layout }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error en el servidor de Node: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error al verificar ganador:", error);
       throw error;
     }
   },

@@ -19,7 +19,8 @@
 //!     }
 //! }
 //! ```
-
+use axum::Json;
+use crate::{GameY, YEN, GameStatus}; 
 pub mod choose;
 pub mod error;
 pub mod state;
@@ -42,7 +43,7 @@ pub fn create_router(state: AppState) -> axum::Router {
         .route(
             "/{api_version}/ybot/choose/{bot_id}",
             axum::routing::post(choose::choose),
-        )
+        ).route("/{api_version}/game/check_winner", axum::routing::post(check_winner))
         .with_state(state)
 }
 
@@ -93,6 +94,21 @@ pub async fn run_bot_server(port: u16) -> Result<(), GameYError> {
         })?;
 
     Ok(())
+}
+pub async fn check_winner(Json(payload): Json<YEN>) -> impl IntoResponse {
+    match GameY::try_from(payload) {
+        Ok(game) => {
+            match game.status() {
+                GameStatus::Finished { .. } => {
+                    Json(serde_json::json!({ "status": "win" }))
+                },
+                GameStatus::Ongoing { .. } => {
+                    Json(serde_json::json!({ "status": "ongoing" }))
+                },
+            }
+        },
+        Err(_) => Json(serde_json::json!({ "status": "error", "message": "Layout inválido" })),
+    }
 }
 
 /// Health check endpoint handler.

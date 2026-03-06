@@ -17,7 +17,7 @@ const Login: React.FC = () => {
     }));
     
     alert(`¡Bienvenido de nuevo, ${data.username}!`);
-    navigate('/jugar');
+    navigate('/configureGame');
   };
 
   return (

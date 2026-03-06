@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// Importamos useLocation para recibir la mochila de ConfiguracionJuego
 import { useLocation } from "react-router-dom"; 
 import { gameService } from "../services/game.service";
 import { statsService } from "../services/stats.service";
@@ -32,7 +31,8 @@ const Tablero: React.FC = () => {
   
   const { 
     tamanoSeleccionado = 5, 
-    botSeleccionado = "random_bot" 
+    botSeleccionado = "random_bot" ,
+    modoSeleccionado = "bot"
   } = location.state || {};
 
   const size = tamanoSeleccionado;
@@ -62,9 +62,9 @@ const Tablero: React.FC = () => {
         result,
         duration: durationSeconds,
         boardSize: size, 
-        opponent: botSeleccionado, 
+        opponent: modoSeleccionado === "humano" ? "Amigo" : botSeleccionado, 
         totalMoves: moves,
-        gameMode: "computer"
+        gameMode: modoSeleccionado === "humano" ? "human" : "computer"
       });
       console.log("Estadísticas guardadas con éxito en Node.js");
     } catch (error) {
@@ -73,45 +73,75 @@ const Tablero: React.FC = () => {
   };
 
   const play = async (index: number) => {
-    const newLayoutArray = layout.split("");
-    newLayoutArray[index] = "B";
-    const updatedFlatLayout = newLayoutArray.join("");
-    
-    setLayout(updatedFlatLayout);
-    setTurn("R"); 
+  const newLayoutArray = layout.split("");
+  newLayoutArray[index] = turn;
+  const updatedFlatLayout = newLayoutArray.join("");
+  
+  setLayout(updatedFlatLayout);
+
+  if (modoSeleccionado === "humano") {
     setLoading(true);
-
     try {
-      const yenLayout = stringToYenLayout(updatedFlatLayout, size); 
+      const yenLayout = stringToYenLayout(updatedFlatLayout, size);
       
-      const response = await gameService.askBotMove(botSeleccionado, size, 1, yenLayout); 
+  
+      const data = await gameService.checkWinner(size, yenLayout);
 
-      if (response.game_status === "human_won") {
-        setTimeout(() => alert("¡HAS GANADO!"), 100);
-        await safeSaveStats("win", updatedFlatLayout);
-        return; 
-      }
-
-      const botIndex = coordsToIndex(response.coords.x, response.coords.y, size);
-      const finalLayoutArray = updatedFlatLayout.split("");
-      finalLayoutArray[botIndex] = "R";
-      setLayout(finalLayoutArray.join(""));
-
-      if (response.game_status === "bot_won") {
-        setTimeout(() => alert("HAS PERDIDO."), 100);
-        await safeSaveStats("lose", finalLayoutArray.join(""));
-        return;
-      }
-
-      setTurn("B"); 
+      if (data.status === "win") {
+        const winnerName = turn === "B" ? "1 (Azul)" : "2 (Rojo)";
+        if (turn === "R") {
+          setTimeout(() => alert(`¡Ha ganado tu amigo! (Jugador ${winnerName}). Has perdido la partida.`), 100);
+          await safeSaveStats("lose", updatedFlatLayout); 
+        } else {
+          setTimeout(() => alert(`¡Felicidades! Has ganado al Jugador ${winnerName}.`), 100);
+          await safeSaveStats("win", updatedFlatLayout); 
+    }
+    
+    setLoading(false);
+    return;
+}
+    
+      setTurn(turn === "B" ? "R" : "B");
     } catch (error) {
-      console.error("Error communicating with the bot:", error);
-      alert(`El bot ${botSeleccionado} no responde o la jugada fue inválida.`);
-      setTurn("B"); 
+      console.error("Error verificando victoria en modo humano:", error);
     } finally {
       setLoading(false);
     }
-  };
+    return; 
+  }
+  setTurn("R"); 
+  setLoading(true);
+
+  try {
+    const yenLayout = stringToYenLayout(updatedFlatLayout, size); 
+    const response = await gameService.askBotMove(botSeleccionado, size, 1, yenLayout); 
+
+    if (response.game_status === "human_won") {
+      setTimeout(() => alert("¡HAS GANADO!"), 100);
+      await safeSaveStats("win", updatedFlatLayout);
+      return; 
+    }
+
+    const botIndex = coordsToIndex(response.coords.x, response.coords.y, size);
+    const finalLayoutArray = updatedFlatLayout.split("");
+    finalLayoutArray[botIndex] = "R";
+    setLayout(finalLayoutArray.join(""));
+
+    if (response.game_status === "bot_won") {
+      setTimeout(() => alert("HAS PERDIDO."), 100);
+      await safeSaveStats("lose", finalLayoutArray.join(""));
+      return;
+    }
+
+    setTurn("B"); 
+  } catch (error) {
+    console.error("Error communicating with the bot:", error);
+    alert(`El bot ${botSeleccionado} no responde o la jugada fue inválida.`);
+    setTurn("B"); 
+  } finally {
+    setLoading(false);
+  }
+};
 
   const crearTablero = () => {
     let index = 0;
@@ -156,15 +186,18 @@ const Tablero: React.FC = () => {
         {crearTablero()}
       </div>
 
-      {/* CAMBIO EN LOS TURNOS */}
       <p style={{ marginTop: '20px', fontSize: '1.2rem', color: 'white' }}>
         {t("turn")}: 
         <strong style={{ color: turn === "B" ? "#3b82f6" : "#ef4444", marginLeft: '10px' }}>
-          {turn === "B" ? "JUGADOR (Azul)" : "BOT (Rojo)"}
+          {modoSeleccionado === "humano" 
+            ? (turn === "B" ? "JUGADOR 1 (Azul)" : "JUGADOR 2 (Rojo)")
+            : (turn === "B" ? "JUGADOR (Azul)" : "BOT (Rojo)")}
         </strong>
       </p>
       
-      {loading && <p style={{ color: '#60a5fa' }}>El Bot está calculando...</p>}
+      {loading && modoSeleccionado === "bot" && (
+        <p style={{ color: '#60a5fa' }}>El Bot está calculando...</p>
+      )}
     </div>
   );
 };
