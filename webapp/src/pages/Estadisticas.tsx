@@ -23,7 +23,6 @@ const Estadisticas: React.FC = () => {
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
 
-    
     if (storedUser) {
       const user = JSON.parse(storedUser);
       fetchHistory(user.userId);
@@ -44,13 +43,10 @@ const Estadisticas: React.FC = () => {
     }
   };
 
-  //Usar el idioma
   const { t } = useLanguage();
-
 
   return (
     <div>
-      {}
       <NavBar activeTab="stats" />
       <video autoPlay muted loop className="videoIN">
         <source src={video} type="video/mp4" />
@@ -59,41 +55,40 @@ const Estadisticas: React.FC = () => {
       <div className="stats">
         <h2>{t("MisEstadisticas")}</h2>
 
-        {loading && <p>{t("cargandoPartidas")}</p>}
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {loading && <p className="loading-text">{t("cargandoPartidas")}</p>}
+        {error && <p className="error-text">{error}</p>}
 
         {!loading && !error && history.length === 0 && (
-          <p>{t("ceroPartidas")}</p>
+          <p className="empty-text">{t("ceroPartidas")}</p>
         )}
 
-        {}
         {!loading && !error && history.length > 0 && (
-          <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
-            <thead>
-              <tr style={{ backgroundColor: "#5b99f6", color: "white", textAlign: "left" }}>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>{t("fecha")}</th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>{t("resultado")}</th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>{t("oponente")}</th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>{t("movimientos")}</th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>{t("duracion")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {history.map((match) => (
-                <tr key={match._id}>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {new Date(match.createdAt).toLocaleDateString()}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd", fontWeight: "bold", color: match.result === 'win' ? 'green' : 'red' }}>
-                    {match.result.toUpperCase()}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>{match.opponent}</td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>{match.totalMoves}</td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>{match.duration} s</td>
+          <div className="tabla-container-scroll">
+            <table className="tabla-stats">
+              <thead>
+                <tr>
+                  <th>{t("fecha")}</th>
+                  <th>{t("resultado")}</th>
+                  <th>{t("oponente")}</th>
+                  <th>{t("movimientos")}</th>
+                  <th>{t("duracion")}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {history.map((match) => (
+                  <tr key={match._id}>
+                    <td>{new Date(match.createdAt).toLocaleDateString()}</td>
+                    <td className={`res-${match.result}`}>
+                      {match.result.toUpperCase()}
+                    </td>
+                    <td>{match.opponent}</td>
+                    <td>{match.totalMoves}</td>
+                    <td>{match.duration} s</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>
