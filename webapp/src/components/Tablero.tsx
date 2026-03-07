@@ -59,7 +59,7 @@ const Tablero: React.FC = () => {
       setLoading(true);
       try {
         const yenLayout = stringToYenLayout(layout, size);
-        const response = await gameService.askBotMove(botSeleccionado, size, 1, yenLayout);
+        const response = await gameService.askBotMove(botSeleccionado, size, 0, yenLayout);
 
         const botIndex = coordsToIndex(response.coords.x, response.coords.y, size);
         const newLayoutArray = layout.split("");
@@ -165,7 +165,8 @@ const Tablero: React.FC = () => {
 
   try {
     const yenLayout = stringToYenLayout(updatedFlatLayout, size); 
-    const response = await gameService.askBotMove(botSeleccionado, size, 1, yenLayout); 
+    const turnoDelBot = botColor === "B" ? 0 : 1;
+    const response = await gameService.askBotMove(botSeleccionado, size, turnoDelBot, yenLayout); 
 
     const botIndex = coordsToIndex(response.coords.x, response.coords.y, size);
     const finalLayoutArray = updatedFlatLayout.split("");
