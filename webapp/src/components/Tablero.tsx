@@ -198,7 +198,11 @@ const Tablero: React.FC = () => {
     setLoading(false);
   }
 };
-  const crearTablero = () => {
+const crearTablero = () => {
+  const baseSize = size > 10 ? 380 : 450; 
+  const cellSize = Math.min(50, Math.floor(baseSize / size)); 
+  const cellHeight = Math.floor(cellSize * 1.15);
+
   let index = 0;
   const filas = [];
   for (let i = 0; i < size; i++) {
@@ -220,13 +224,17 @@ const Tablero: React.FC = () => {
           className={`casilla${claseColor}`} 
           onClick={() => esClickeable && play(currentIndex)}
           disabled={!esClickeable} 
+          style={{ 
+            width: `${cellSize}px`, 
+            height: `${cellHeight}px`,
+            margin: `${cellSize * 0.05}px` 
+          }}
         >
-          {valor !== "." ? valor : ""}
         </button>
       );
       index++;
     }
-    filas.push(<div key={i} className="tablero">{casillas}</div>);
+    filas.push(<div key={i} className="tablero" style={{ gap: `${cellSize * 0.1}px` }}>{casillas}</div>);
   }
   return filas;
 };
@@ -246,9 +254,11 @@ const Tablero: React.FC = () => {
 
       <p style={{ marginTop: '20px', fontSize: '1.2rem', color: 'white' }}>
         {t("turn")}: 
-        <strong style={{ color: turn === "B" ? "#3b82f6" : "#ef4444", marginLeft: '10px' }}>
+        <strong className={turn === "B" ? "turno-azul" : "turno-rojo"} style={{ marginLeft: '10px' }}>
           {modoSeleccionado === "humano" 
-            ? (turn === "B" ? `JUGADOR 1 (Azul) ${colorUsuario === "B" ? "(Tú)" : "(Amigo)"}` : `JUGADOR 2 (Rojo) ${colorUsuario === "R" ? "(Tú)" : "(Amigo)"}`)
+            ? (turn === "B" 
+                ? `JUGADOR 1 (Azul) ${colorUsuario === "B" ? "(Tú)" : "(Amigo)"}` 
+                : `JUGADOR 2 (Rojo) ${colorUsuario === "R" ? "(Tú)" : "(Amigo)"}`)
             : (turn === colorUsuario 
                 ? `TÚ (${colorUsuario === "B" ? "Azul" : "Rojo"})` 
                 : `BOT (${colorUsuario === "B" ? "Rojo" : "Azul"})`)}
