@@ -26,18 +26,28 @@ const GameSettings: React.FC = () => {
     });
   };
 
-  const dibujarPrevisualizacion = () => {
-    const filas = [];
-    for (let i = 0; i < tamano; i++) {
-      const casillas = [];
-      for (let j = 0; j <= i; j++) {
-        // Usa la clase dinámica según la dificultad para aplicar los colores del CSS
-        casillas.push(<div key={`${i}-${j}`} className={`casilla-mini preview-${dificultad}`}></div>);
-      }
-      filas.push(<div key={i} className="fila-mini">{casillas}</div>);
+const dibujarPrevisualizacion = () => {
+  const cellSize = Math.min(25, Math.floor(320 / tamano)); 
+
+  const filas = [];
+  for (let i = 0; i < tamano; i++) {
+    const casillas = [];
+    for (let j = 0; j <= i; j++) {
+      casillas.push(
+        <div 
+          key={`${i}-${j}`} 
+          className={`casilla-mini preview-${dificultad}`}
+          style={{ 
+            width: `${cellSize}px`, 
+            height: `${cellSize}px` 
+          }}
+        ></div>
+      );
     }
-    return filas;
-  };
+    filas.push(<div key={i} className="fila-mini">{casillas}</div>);
+  }
+  return filas;
+};
 
   return (
     <div className="config-page">
