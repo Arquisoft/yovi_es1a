@@ -5,38 +5,49 @@ import "./GameSettings.css";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 import video from "../assets/videoLinea.mp4";
 
-const ConfiguracionJuego: React.FC = () => {
+const GameSettings: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   
   const [modo, setModo] = useState<"humano" | "bot">("bot");
   const [tamano, setTamano] = useState<number>(5);
   const [bot, setBot] = useState<string>("random_bot");
   const [dificultad, setDificultad] = useState<"facil" | "medio" | "dificil">("facil");
+  const [colorUsuario, setColorUsuario] = useState<"B" | "R">("B");
 
   const irAlJuego = () => {
     navigate("/game", { 
       state: { 
         tamanoSeleccionado: tamano,
         botSeleccionado: bot,
-        modoSeleccionado: modo
+        modoSeleccionado: modo,
+        colorUsuario: colorUsuario,
       } 
     });
   };
 
 const dibujarPrevisualizacion = () => {
-    const filas = [];
-    for (let i = 0; i < tamano; i++) {
-      const casillas = [];
-      for (let j = 0; j <= i; j++) {
-        casillas.push(<div key={`${i}-${j}`} className="casilla-mini"></div>);
-      }
-      filas.push(<div key={i} className="fila-mini">{casillas}</div>);
-    }
-    return filas;
-}
+  const cellSize = Math.min(25, Math.floor(320 / tamano)); 
 
-    //Usar el idioma
-    const { t } = useLanguage();
+  const filas = [];
+  for (let i = 0; i < tamano; i++) {
+    const casillas = [];
+    for (let j = 0; j <= i; j++) {
+      casillas.push(
+        <div 
+          key={`${i}-${j}`} 
+          className={`casilla-mini preview-${dificultad}`}
+          style={{ 
+            width: `${cellSize}px`, 
+            height: `${cellSize}px` 
+          }}
+        ></div>
+      );
+    }
+    filas.push(<div key={i} className="fila-mini">{casillas}</div>);
+  }
+  return filas;
+};
 
   return (
     <div className="config-page">
@@ -45,13 +56,14 @@ const dibujarPrevisualizacion = () => {
         <source src={video} type="video/mp4" />
         No se ha podido mostrar el video de fondo
       </video>
+      
       <div className="config-container">
         
         <div className="config-controls">
-          <h2>{t("conf")}</h2>
+          <h2 className="fixed-title">{t("conf")}</h2>
 
           <div className="control-group">
-            <label><strong>{t("modo")}</strong> </label>
+            <label className="fixed-label"><strong>{t("modo")}</strong></label>
             <select 
               className="control-input"
               value={modo} 
@@ -63,9 +75,12 @@ const dibujarPrevisualizacion = () => {
           </div>
 
           <div className="control-group">
-            <label><strong>{t("tamTabl")}</strong> {tamano}</label>
+            <label className="fixed-label">
+                <strong>{t("tamTabl")}</strong> 
+                <span className="size-value">{tamano}</span>
+            </label>
             <input 
-              className="control-input"
+              className="control-input-range" 
               type="range" 
               min="3" 
               max="15" 
@@ -74,87 +89,90 @@ const dibujarPrevisualizacion = () => {
             />
           </div>
 
-          {modo === "bot" && (
-            <>
-              <div className="control-group">
-                <label><strong>{t("nivelDif")}</strong></label>
-                <select 
-                  className="control-input"
-                  value={dificultad}
-                  onChange={(e) => {
-                    const nuevaDif = e.target.value as "facil" | "medio" | "dificil";
-                    setDificultad(nuevaDif);
-                    if (nuevaDif === "facil") setBot("random_bot");
-                    if (nuevaDif === "medio") setBot("expansion_bot");
-                    if (nuevaDif === "dificil") setBot("monte_carlo_bot");
-                  }}
-                >
-                  <option value="facil">{t("facil")}</option>
-                  <option value="medio">{t("intermedio")}</option>
-                  <option value="dificil">{t("experto")}</option>
-                </select>
-              </div>
+          <div className="bot-options-area">
+            {modo === "bot" && (
+              <>
+                <div className="control-group">
+                  <label className="fixed-label"><strong>{t("nivelDif")}</strong></label>
+                  <select 
+                    className="control-input"
+                    value={dificultad}
+                    onChange={(e) => {
+                      const nuevaDif = e.target.value as "facil" | "medio" | "dificil";
+                      setDificultad(nuevaDif);
+                      // Lógica de asignación automática de bots
+                      if (nuevaDif === "facil") setBot("random_bot");
+                      if (nuevaDif === "medio") setBot("triangle_attack_bot");
+                      if (nuevaDif === "dificil") setBot("monte_carlo_bot");
+                    }}
+                  >
+                    <option value="facil">{t("facil")}</option>
+                    <option value="medio">{t("intermedio")}</option>
+                    <option value="dificil">{t("experto")}</option>
+                  </select>
+                </div>
 
-              <div className="control-group">
-                <label><strong>{t("eligeOponente")}</strong></label>
-                <select 
-                  className="control-input"
-                  value={bot} 
-                  onChange={(e) => setBot(e.target.value)}
-                >
-                  {dificultad === "facil" && (
-                    <>
-                      <option value="random_bot">{t("aleatorio")}</option>
-                      <option value="simple_blocker_bot">{t("bloqSim")}</option>
-                      <option value="group_expansion_bot">{t("expansi")}</option>
-                    </>
-                  )}
+                <div className="control-group">
+                  <label className="fixed-label"><strong>{t("eligeOponente")}</strong></label>
+                  <select 
+                    className="control-input"
+                    value={bot} 
+                    onChange={(e) => setBot(e.target.value)}
+                  >
+                    {dificultad === "facil" && (
+                      <>
+                        <option value="random_bot">{t("aleatorio")}</option>
+                        <option value="simple_blocker_bot">{t("bloqSim")}</option>
+                        <option value="group_expansion_bot">{t("expansi")}</option>
+                      </>
+                    )}
 
-                  {dificultad === "medio" && (
-                    <>
-                      <option value="priority_block_bot">{t("bloq")}</option>
-                      <option value="triangle_attack_bot">{t("trianAt")}</option>
-                    </>
-                  )}
+                    {dificultad === "medio" && (
+                      <>
+                        <option value="priority_block_bot">{t("bloq")}</option>
+                        <option value="triangle_attack_bot">{t("trianAt")}</option>
+                      </>
+                    )}
 
-                  {dificultad === "dificil" && (
-                    <>
-                      <option value="monte_carlo_bot">{t("monteCarl")}</option>
-                      <option value="shortest_path_bot">{t("shortPa")}</option>
-                    </>
-                  )}
-                </select>
-              </div>
-            </>
-          )}
-
-          <button className="btn-jugar" onClick={irAlJuego}>
+                    {dificultad === "dificil" && (
+                      <>
+                        <option value="monte_carlo_bot">{t("monteCarl")}</option>
+                        <option value="shortest_path_bot">{t("shortPa")}</option>
+                      </>
+                    )}
+                  </select>
+                </div>
+              </>
+            )}
+          <div className="control-group">
+            <label className="fixed-label"><strong>¿Quién empieza la partida?</strong></label>
+            <select 
+              className="control-input"
+              value={colorUsuario} 
+              onChange={(e) => setColorUsuario(e.target.value as "B" | "R")}
+            >
+              <option value="B">Empiezo el usuario logeado (Fichas Azules)</option>
+              <option value="R">
+                {modo === "bot" ? "Empieza la Máquina (Fichas Azules)" : "Empieza el invitado (Fichas Azules)"}
+              </option>
+            </select>
+          </div>
+          </div>
+          
+          <button className="btn-jugar-fixed" onClick={irAlJuego}>
             {t("jugar")}
           </button>
         </div>
 
+        {/* COLUMNA DERECHA: PREVISUALIZACIÓN */}
         <div className="config-preview">
-          <h2>{t("prevTablero")}</h2>
+          <h2 className="fixed-title">{t("prevTablero")}</h2>
           
-          <div className="preview-board">
+          <div className="preview-board-fixed">
             <div className="tablero-mini-container">
               {dibujarPrevisualizacion()}
             </div>
           </div>
-          
-          {/* {modo === "bot" && (
-            <div className="preview-bot">
-              <p>Bot rival: <strong>{bot}</strong></p>
-              <Bot size={64} strokeWidth={1.5} color="#2c3e50" />
-            </div>
-          )}
-
-          {modo === "humano" && (
-            <div className="preview-human">
-              <p>Jugador vs Jugador</p>
-              <Swords size={64} strokeWidth={1.5} color="#2c3e50" />
-            </div>
-          )} */}
         </div>
 
       </div>
@@ -162,4 +180,4 @@ const dibujarPrevisualizacion = () => {
   );
 };
 
-export default ConfiguracionJuego;
+export default GameSettings;
