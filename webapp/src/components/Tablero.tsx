@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// Importamos useLocation para recibir la mochila de ConfiguracionJuego
 import { useLocation } from "react-router-dom"; 
 import { gameService } from "../services/game.service";
 import { statsService } from "../services/stats.service";
@@ -32,11 +31,12 @@ const Tablero: React.FC = () => {
   
   const { 
     tamanoSeleccionado = 5, 
-    botSeleccionado = "random_bot" 
+    botSeleccionado = "random_bot" ,
+    modoSeleccionado = "bot",
+    colorUsuario = "B"
   } = location.state || {};
 
   const size = tamanoSeleccionado;
-
   const getInitialLayout = (n: number) => ".".repeat((n * (n + 1)) / 2);
 
   const [layout, setLayout] = useState(getInitialLayout(size));
@@ -44,6 +44,7 @@ const Tablero: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [startTime] = useState<number>(Date.now());
   const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
+  const [gameFinished, setGameFinished] = useState(false);
 
   React.useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -51,6 +52,43 @@ const Tablero: React.FC = () => {
     setTurn("B");
     if (storedUser) setUser(JSON.parse(storedUser));
   }, [size]);
+
+  React.useEffect(() => {
+  const botJuegaPrimero = async () => {
+    if (modoSeleccionado === "bot" && colorUsuario === "R" && layout === getInitialLayout(size)) {
+      setLoading(true);
+      try {
+        const yenLayout = stringToYenLayout(layout, size);
+        const response = await gameService.askBotMove(botSeleccionado, size, 0, yenLayout);
+
+        const botIndex = coordsToIndex(response.coords.x, response.coords.y, size);
+        const newLayoutArray = layout.split("");
+        newLayoutArray[botIndex] = "B";
+        const newLayout = newLayoutArray.join("");
+        setLayout(newLayout);
+        
+        const yenLayoutAfterBot = stringToYenLayout(newLayout, size);
+        const checkBot = await gameService.checkWinner(size, yenLayoutAfterBot);
+        
+        if (checkBot.status === "win") {
+          setGameFinished(true);
+          setTimeout(() => alert("HAS PERDIDO."), 100);
+          await safeSaveStats("lose", newLayout);
+          return;
+        }
+        
+        setTurn("R");
+      } catch (error) {
+        console.error("Error en el primer movimiento del bot:", error);
+        alert("Error al iniciar el juego con el bot.");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  botJuegaPrimero();
+}, [modoSeleccionado, colorUsuario, size, botSeleccionado]);
 
   const safeSaveStats = async (result: "win" | "lose", finalBoard: string) => {
     if (!user || !user.userId) return;
@@ -62,87 +100,137 @@ const Tablero: React.FC = () => {
         result,
         duration: durationSeconds,
         boardSize: size, 
-        opponent: botSeleccionado, 
+        opponent: modoSeleccionado === "humano" ? "Amigo" : botSeleccionado, 
         totalMoves: moves,
-        gameMode: "computer"
+        gameMode: modoSeleccionado === "humano" ? "human" : "computer"
       });
-      console.log("Estadísticas guardadas con éxito en Node.js");
+      console.log("Estadísticas guardadas con éxito");
     } catch (error) {
       console.error("Error al guardar en la BD:", error);
     }
   };
 
-  const play = async (index: number) => {
-    const newLayoutArray = layout.split("");
-    newLayoutArray[index] = "B";
-    const updatedFlatLayout = newLayoutArray.join("");
-    
-    setLayout(updatedFlatLayout);
-    setTurn("R"); 
+ const play = async (index: number) => {
+  const newLayoutArray = layout.split("");
+  
+  newLayoutArray[index] = turn;
+  const updatedFlatLayout = newLayoutArray.join("");
+  
+  setLayout(updatedFlatLayout);
+
+  if (modoSeleccionado === "humano") {
     setLoading(true);
-
     try {
-      const yenLayout = stringToYenLayout(updatedFlatLayout, size); 
-      
-      const response = await gameService.askBotMove(botSeleccionado, size, 1, yenLayout); 
+      const yenLayout = stringToYenLayout(updatedFlatLayout, size);
+      const data = await gameService.checkWinner(size, yenLayout);
 
-      if (response.game_status === "human_won") {
-        setTimeout(() => alert("¡HAS GANADO!"), 100);
-        await safeSaveStats("win", updatedFlatLayout);
-        return; 
-      }
-
-      const botIndex = coordsToIndex(response.coords.x, response.coords.y, size);
-      const finalLayoutArray = updatedFlatLayout.split("");
-      finalLayoutArray[botIndex] = "R";
-      setLayout(finalLayoutArray.join(""));
-
-      if (response.game_status === "bot_won") {
-        setTimeout(() => alert("HAS PERDIDO."), 100);
-        await safeSaveStats("lose", finalLayoutArray.join(""));
+      if (data.status === "win") {
+        setGameFinished(true);
+        if (turn === colorUsuario) {
+          await safeSaveStats("win", updatedFlatLayout); 
+        } else {
+          await safeSaveStats("lose", updatedFlatLayout); 
+        }
+        setLoading(false);
         return;
       }
-
-      setTurn("B"); 
+      
+      setTurn(turn === "B" ? "R" : "B");
     } catch (error) {
-      console.error("Error communicating with the bot:", error);
-      alert(`El bot ${botSeleccionado} no responde o la jugada fue inválida.`);
-      setTurn("B"); 
+      console.error("Error verificando victoria en modo humano:", error);
     } finally {
       setLoading(false);
     }
-  };
+    return; 
+  }
 
-  const crearTablero = () => {
-    let index = 0;
-    const filas = [];
-    for (let i = 0; i < size; i++) {
-      const casillas = [];
-      for (let j = 0; j <= i; j++) {
-        const currentIndex = index; 
-        const valor = layout[currentIndex];
-        let claseColor = "";
-        if (valor === "B") claseColor = " jugador-b";
-        if (valor === "R") claseColor = " jugador-r";
+  const botColor: Player = colorUsuario === "B" ? "R" : "B";
+  setTurn(botColor); 
+  setLoading(true);
 
-        casillas.push(
-          <button
-            key={`${i}-${j}`}
-            className={`casilla${claseColor}`} 
-            onClick={() => play(currentIndex)}
-            disabled={valor !== "." || loading}
-          >
-            {valor !== "." ? valor : ""}
-          </button>
-        );
-        index++;
-      }
-      filas.push(<div key={i} className="tablero">{casillas}</div>);
+  try {
+    const yenLayoutAfterHuman = stringToYenLayout(updatedFlatLayout, size);
+    const checkHuman = await gameService.checkWinner(size, yenLayoutAfterHuman);
+    
+    if (checkHuman && checkHuman.status === "win") {
+      setGameFinished(true);
+      setTimeout(() => alert("¡HAS GANADO!"), 100);
+      await safeSaveStats("win", updatedFlatLayout);
+      setLoading(false);
+      return;
     }
-    return filas;
-  };
+  } catch (error) {
+    console.error("Error verificando victoria del humano:", error);
+  }
 
-  //Usar el idioma
+  try {
+    const yenLayout = stringToYenLayout(updatedFlatLayout, size); 
+    const turnoDelBot = botColor === "B" ? 0 : 1;
+    const response = await gameService.askBotMove(botSeleccionado, size, turnoDelBot, yenLayout); 
+
+    const botIndex = coordsToIndex(response.coords.x, response.coords.y, size);
+    const finalLayoutArray = updatedFlatLayout.split("");
+    finalLayoutArray[botIndex] = botColor;
+    const finalLayout = finalLayoutArray.join("");
+    setLayout(finalLayout);
+
+    try {
+      const yenLayoutAfterBot = stringToYenLayout(finalLayout, size);
+      const checkBot = await gameService.checkWinner(size, yenLayoutAfterBot);
+
+      if (checkBot && checkBot.status === "win") {
+        setGameFinished(true);
+        setTimeout(() => alert("HAS PERDIDO."), 100);
+        await safeSaveStats("lose", finalLayout);
+        setLoading(false);
+        return;
+      }
+    } catch (error) {
+      console.error("Error verificando victoria del bot:", error);
+    }
+
+    setTurn(colorUsuario);
+  } catch (error) {
+    console.error("Error communicating with the bot:", error);
+    alert(`El bot ${botSeleccionado} no responde o la jugada fue inválida.`);
+    setTurn(colorUsuario); 
+  } finally {
+    setLoading(false);
+  }
+};
+  const crearTablero = () => {
+  let index = 0;
+  const filas = [];
+  for (let i = 0; i < size; i++) {
+    const casillas = [];
+    for (let j = 0; j <= i; j++) {
+      const currentIndex = index; 
+      const valor = layout[currentIndex];
+      let claseColor = "";
+      if (valor === "B") claseColor = " jugador-b";
+      if (valor === "R") claseColor = " jugador-r";
+
+      const esClickeable = modoSeleccionado === "humano" 
+        ? valor === "." && !loading && !gameFinished 
+        : valor === "." && turn === colorUsuario && !loading && !gameFinished; 
+
+      casillas.push(
+        <button
+          key={`${i}-${j}`}
+          className={`casilla${claseColor}`} 
+          onClick={() => esClickeable && play(currentIndex)}
+          disabled={!esClickeable} 
+        >
+          {valor !== "." ? valor : ""}
+        </button>
+      );
+      index++;
+    }
+    filas.push(<div key={i} className="tablero">{casillas}</div>);
+  }
+  return filas;
+};
+
   const { t } = useLanguage();
 
   return (
@@ -156,15 +244,20 @@ const Tablero: React.FC = () => {
         {crearTablero()}
       </div>
 
-      {/* CAMBIO EN LOS TURNOS */}
       <p style={{ marginTop: '20px', fontSize: '1.2rem', color: 'white' }}>
         {t("turn")}: 
         <strong style={{ color: turn === "B" ? "#3b82f6" : "#ef4444", marginLeft: '10px' }}>
-          {turn === "B" ? "JUGADOR (Azul)" : "BOT (Rojo)"}
+          {modoSeleccionado === "humano" 
+            ? (turn === "B" ? `JUGADOR 1 (Azul) ${colorUsuario === "B" ? "(Tú)" : "(Amigo)"}` : `JUGADOR 2 (Rojo) ${colorUsuario === "R" ? "(Tú)" : "(Amigo)"}`)
+            : (turn === colorUsuario 
+                ? `TÚ (${colorUsuario === "B" ? "Azul" : "Rojo"})` 
+                : `BOT (${colorUsuario === "B" ? "Rojo" : "Azul"})`)}
         </strong>
       </p>
       
-      {loading && <p style={{ color: '#60a5fa' }}>El Bot está calculando...</p>}
+      {loading && modoSeleccionado === "bot" && (
+        <p style={{ color: '#60a5fa' }}>El Bot está calculando...</p>
+      )}
     </div>
   );
 };
