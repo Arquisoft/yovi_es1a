@@ -19,19 +19,13 @@
   filter: brightness(0.6);
 }
 
-/* El contenedor con efecto cristal (Glassmorphism) */
 .tablero-grid {
+  max-height: 75vh; 
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
-  padding: 40px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+  justify-content: center;
+  overflow: visible;
 }
 
 /* Cada fila del tablero */
@@ -41,10 +35,7 @@
   gap: 4px;
 }
 
-/* Estilo base de la casilla Hexagonal */
 .casilla {
-  width: 46px;
-  height: 52px;
   background-color: rgba(255, 255, 255, 0.1);
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   border: none;
@@ -53,8 +44,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: transparent; /* Oculta la letra B/R para que solo se vea el color */
-  font-size: 0;
+  color: transparent !important;
+  font-size: 0 !important;      
+  line-height: 0;              
+  text-indent: -9999px;
 }
 
 .casilla:focus {
@@ -91,8 +84,19 @@
   50% { transform: scale(0.98); filter: brightness(1.2) drop-shadow(0 0 15px currentColor); }
 }
 
-/* Estilo para el texto del turno */
 strong {
-  color: #5b99f6;
-  text-shadow: 0 0 10px rgba(91, 153, 246, 0.5);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); 
+  transition: all 0.3s ease;
+  font-weight: 800;
+}
+
+
+.turno-azul {
+  color: #60a5fa !important;
+  text-shadow: 0 0 15px rgba(96, 165, 250, 0.6) !important;
+}
+
+.turno-rojo {
+  color: #fb7185 !important;
+  text-shadow: 0 0 15px rgba(251, 113, 133, 0.6) !important;
 }
