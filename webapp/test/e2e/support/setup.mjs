@@ -17,9 +17,6 @@ Before(async function () {
   const devtools = false // Cambiar a true para abrir con DevTools
 
   this.browser = await chromium.launch({ headless, slowMo, devtools })
-  this.page = await this.browser.newPage({
-  locale: 'es-ES' 
-  });
   this.page = await this.browser.newPage()
 })
 
