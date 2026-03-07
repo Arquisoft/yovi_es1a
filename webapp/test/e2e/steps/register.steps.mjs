@@ -25,8 +25,8 @@ When('I click the "Create Account" button', async function () {
 
 When('I enter a unique username, email and password', async function () {
   const uniqueId = Date.now(); 
-  this.registeredUsername = `Corredor_${uniqueId}`;
-  this.registeredEmail = `corredor${uniqueId}@maraton.com`;
+  this.registeredUsername = `user${uniqueId}`;
+  this.registeredEmail = `user${uniqueId}@gmail.com`;
 
   const inputs = this.page.locator('input');
   await inputs.nth(0).waitFor({ state: 'visible', timeout: 5000 });

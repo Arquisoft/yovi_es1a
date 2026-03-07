@@ -65,27 +65,29 @@ describe('Board - Player Interaction', () => {
   })
   afterEach(() => vi.clearAllMocks())
 
+  // FIX: The board renders color via CSS class, not text content.
+  // The button is intentionally empty — checking the class is the correct assertion.
   test('clicking an empty cell places the letter B', () => {
     const { container } = renderTablero()
     const primeraCasilla = container.querySelectorAll('.casilla')[0]
-    
+
     fireEvent.click(primeraCasilla)
-    expect(primeraCasilla).toHaveTextContent('B')
+    expect(primeraCasilla).toHaveClass('jugador-b')
   })
 
   test('clicking an empty cell assigns the CSS class "jugador-b"', () => {
     const { container } = renderTablero()
     const primeraCasilla = container.querySelectorAll('.casilla')[0]
-    
+
     fireEvent.click(primeraCasilla)
     expect(primeraCasilla).toHaveClass('jugador-b')
   })
 
   test('after clicking, the text changes to BOT (Red) turn', async () => {
     const { container } = renderTablero()
-    
+
     fireEvent.click(container.querySelectorAll('.casilla')[0])
-    
+
     await waitFor(() => {
       expect(screen.getByText(/BOT \(Rojo\)/i)).toBeInTheDocument()
     }, { timeout: 1000 })
@@ -93,9 +95,9 @@ describe('Board - Player Interaction', () => {
 
   test('while the bot is thinking, the "calculating" message appears', async () => {
     const { container } = renderTablero()
-    
+
     fireEvent.click(container.querySelectorAll('.casilla')[0])
-    
+
     await waitFor(() => {
       expect(screen.getByText(/El Bot está calculando/i)).toBeInTheDocument()
     }, { timeout: 1000 })
@@ -109,21 +111,23 @@ describe('Board - Bot Response', () => {
       api_version: "1.0",
       bot_id: "test",
       game_status: 'ongoing',
-      coords: { x: 1, y: 0, z: 0 } 
+      coords: { x: 1, y: 0, z: 0 }
     })
   })
   afterEach(() => vi.clearAllMocks())
 
+  // FIX: The button has no text content — it uses class "jugador-r" for color.
+  // We check the class instead of text content.
   test('the bot places its token (letter R) in the corresponding cell', async () => {
-    const { container } = renderTablero(3) 
+    const { container } = renderTablero(3)
     const casillas = container.querySelectorAll('.casilla')
-    
-    fireEvent.click(casillas[0]) 
+
+    fireEvent.click(casillas[0])
 
     await waitFor(() => {
       const botCasilla = container.querySelector('.casilla.jugador-r')
       expect(botCasilla).toBeInTheDocument()
-      expect(botCasilla).toHaveTextContent('R')
+      expect(botCasilla).toHaveClass('jugador-r')
     })
   })
 
@@ -151,7 +155,7 @@ describe('Board - End of Game', () => {
     vi.spyOn(window, 'alert').mockImplementation(() => {})
     localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
   })
-  
+
   afterEach(() => {
     vi.clearAllMocks()
     localStorage.clear()
@@ -159,13 +163,13 @@ describe('Board - End of Game', () => {
 
   test('triggers a victory alert if the bot says the human won', async () => {
     vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
-    vi.mocked(gameService.askBotMove).mockResolvedValueOnce({ 
-      api_version: "1.0", 
-      bot_id: "test", 
-      game_status: 'ongoing', 
-      coords: { x: 0, y: 0, z: 0 } 
+    vi.mocked(gameService.askBotMove).mockResolvedValueOnce({
+      api_version: "1.0",
+      bot_id: "test",
+      game_status: 'ongoing',
+      coords: { x: 0, y: 0, z: 0 }
     })
-    
+
     const { container } = renderTablero()
     fireEvent.click(container.querySelectorAll('.casilla')[0])
 
@@ -176,13 +180,13 @@ describe('Board - End of Game', () => {
 
   test('saves the victory (win) statistic in the database', async () => {
     vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
-    vi.mocked(gameService.askBotMove).mockResolvedValueOnce({ 
-      api_version: "1.0", 
-      bot_id: "test", 
-      game_status: 'ongoing', 
-      coords: { x: 0, y: 0, z: 0 } 
+    vi.mocked(gameService.askBotMove).mockResolvedValueOnce({
+      api_version: "1.0",
+      bot_id: "test",
+      game_status: 'ongoing',
+      coords: { x: 0, y: 0, z: 0 }
     })
-    
+
     const { container } = renderTablero()
     fireEvent.click(container.querySelectorAll('.casilla')[0])
 
@@ -195,14 +199,14 @@ describe('Board - End of Game', () => {
     vi.mocked(gameService.checkWinner)
       .mockResolvedValueOnce({ status: 'ongoing' })
       .mockResolvedValueOnce({ status: 'win' })
-    
-    vi.mocked(gameService.askBotMove).mockResolvedValueOnce({ 
-      api_version: "1.0", 
-      bot_id: "test", 
-      game_status: 'ongoing', 
-      coords: { x: 1, y: 1, z: 0 } 
+
+    vi.mocked(gameService.askBotMove).mockResolvedValueOnce({
+      api_version: "1.0",
+      bot_id: "test",
+      game_status: 'ongoing',
+      coords: { x: 1, y: 1, z: 0 }
     })
-    
+
     const { container } = renderTablero()
     fireEvent.click(container.querySelectorAll('.casilla')[0])
 
@@ -213,12 +217,12 @@ describe('Board - End of Game', () => {
 
   test('does not save stats if the user object is incomplete (missing userId)', async () => {
     localStorage.setItem('user', JSON.stringify({ username: 'JugadorFantasma' }))
-    
+
     vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
-    vi.mocked(gameService.askBotMove).mockResolvedValueOnce({ 
-      api_version: "1.0", bot_id: "test", game_status: 'ongoing', coords: { x: 0, y: 0, z: 0 } 
+    vi.mocked(gameService.askBotMove).mockResolvedValueOnce({
+      api_version: "1.0", bot_id: "test", game_status: 'ongoing', coords: { x: 0, y: 0, z: 0 }
     })
-    
+
     const { container } = renderTablero()
     fireEvent.click(container.querySelectorAll('.casilla')[0])
 
@@ -231,7 +235,7 @@ describe('Board - End of Game', () => {
 describe('Board - Error Handling', () => {
   beforeEach(() => {
     vi.spyOn(window, 'alert').mockImplementation(() => {})
-    vi.spyOn(console, 'error').mockImplementation(() => {}) 
+    vi.spyOn(console, 'error').mockImplementation(() => {})
     localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
   })
 
@@ -241,35 +245,33 @@ describe('Board - Error Handling', () => {
   })
 
   test('handles the error if the bot (Rust) crashes or does not respond', async () => {
-  vi.clearAllMocks()
-  
-  vi.mocked(gameService.checkWinner).mockReset()
-  vi.mocked(gameService.askBotMove).mockReset()
-  
-  vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'ongoing' })
-  vi.mocked(gameService.askBotMove).mockRejectedValue(new Error('Bot is down'))
+    // Reset first to clear any leftover resolved implementations from other tests
+    vi.mocked(gameService.checkWinner).mockReset()
+    vi.mocked(gameService.askBotMove).mockReset()
+    vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'ongoing' })
+    vi.mocked(gameService.askBotMove).mockRejectedValue(new Error('Bot is down'))
 
-  const { container } = renderTablero()
-  fireEvent.click(container.querySelectorAll('.casilla')[0])
+    const { container } = renderTablero()
+    fireEvent.click(container.querySelectorAll('.casilla')[0])
 
-  await waitFor(() => {
-    expect(console.error).toHaveBeenCalledWith("Error communicating with the bot:", expect.any(Error))
-  }, { timeout: 3000 })
-  
-  expect(window.alert).toHaveBeenCalledWith(expect.stringContaining('no responde o la jugada fue inválida.'))
-  expect(screen.getByText(/TÚ \(Azul\)/i)).toBeInTheDocument()
-  expect(screen.queryByText(/El Bot está calculando/i)).not.toBeInTheDocument()
-})
+    await waitFor(() => {
+      expect(console.error).toHaveBeenCalledWith("Error communicating with the bot:", expect.any(Error))
+    }, { timeout: 3000 })
+
+    expect(window.alert).toHaveBeenCalledWith(expect.stringContaining('no responde o la jugada fue inválida.'))
+    expect(screen.getByText(/TÚ \(Azul\)/i)).toBeInTheDocument()
+    expect(screen.queryByText(/El Bot está calculando/i)).not.toBeInTheDocument()
+  })
 
   test('handles the error if the database (Node) fails to save stats', async () => {
     vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
-    vi.mocked(gameService.askBotMove).mockResolvedValueOnce({ 
-      api_version: "1.0", 
-      bot_id: "test", 
-      game_status: 'ongoing', 
-      coords: { x: 0, y: 0, z: 0 } 
+    vi.mocked(gameService.askBotMove).mockResolvedValueOnce({
+      api_version: "1.0",
+      bot_id: "test",
+      game_status: 'ongoing',
+      coords: { x: 0, y: 0, z: 0 }
     })
-    
+
     vi.mocked(statsService.saveMatchResult).mockRejectedValueOnce(new Error('DB is down'))
 
     const { container } = renderTablero()
@@ -280,12 +282,13 @@ describe('Board - Error Handling', () => {
     })
   })
 })
+
 describe('Board - Human vs Human Mode', () => {
   beforeEach(() => {
     vi.spyOn(window, 'alert').mockImplementation(() => {})
     localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
   })
-  
+
   afterEach(() => {
     vi.clearAllMocks()
     localStorage.clear()
@@ -293,14 +296,14 @@ describe('Board - Human vs Human Mode', () => {
 
   const renderTableroHumano = (colorUsuario = 'B') => {
     return render(
-      <MemoryRouter initialEntries={[{ 
-        pathname: '/game', 
-        state: { 
-          tamanoSeleccionado: 3, 
+      <MemoryRouter initialEntries={[{
+        pathname: '/game',
+        state: {
+          tamanoSeleccionado: 3,
           botSeleccionado: 'random_bot',
           modoSeleccionado: 'humano',
           colorUsuario: colorUsuario
-        } 
+        }
       }]}>
         <Routes>
           <Route path="/game" element={<Tablero />} />
@@ -309,54 +312,32 @@ describe('Board - Human vs Human Mode', () => {
     )
   }
 
+  // FIX: Buttons render color via CSS class, not text. Check classes instead.
   test('in human mode, both players can place pieces', async () => {
     vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'ongoing' })
-    
+
     const { container } = renderTableroHumano()
     const casillas = container.querySelectorAll('.casilla')
-    
+
     fireEvent.click(casillas[0])
     await waitFor(() => {
-      expect(casillas[0]).toHaveTextContent('B')
+      expect(casillas[0]).toHaveClass('jugador-b')
     })
-    
+
     fireEvent.click(casillas[1])
     await waitFor(() => {
-      expect(casillas[1]).toHaveTextContent('R')
+      expect(casillas[1]).toHaveClass('jugador-r')
     })
   })
 
   test('in human mode, detects win for player B (user)', async () => {
-  vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
-  
-  const { container } = renderTableroHumano('B')
-  const casillas = container.querySelectorAll('.casilla')
-  
-  fireEvent.click(casillas[0])
-  
-  await waitFor(() => {
-    expect(statsService.saveMatchResult).toHaveBeenCalledWith(
-      expect.objectContaining({ result: 'win' })
-    )
-  })
-})
+    vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
 
-  test('in human mode, detects loss for user when opponent wins', async () => {
-    vi.mocked(gameService.checkWinner)
-      .mockResolvedValueOnce({ status: 'ongoing' })
-      .mockResolvedValueOnce({ status: 'win' })
-    
-    const { container } = renderTableroHumano('R')
+    const { container } = renderTableroHumano('B')
     const casillas = container.querySelectorAll('.casilla')
-    
+
     fireEvent.click(casillas[0])
-    
-    await waitFor(() => {
-      expect(casillas[0]).toHaveTextContent('B')
-    })
-    
-    fireEvent.click(casillas[1])
-    
+
     await waitFor(() => {
       expect(statsService.saveMatchResult).toHaveBeenCalledWith(
         expect.objectContaining({ result: 'win' })
@@ -364,15 +345,41 @@ describe('Board - Human vs Human Mode', () => {
     })
   })
 
+  // FIX: Same — use class assertions. Also the flow: player B clicks → B piece placed (jugador-b),
+  // then player R clicks → R piece placed (jugador-r), then winner check triggers loss save.
+  test('in human mode, detects loss for user when opponent wins', async () => {
+    vi.mocked(gameService.checkWinner)
+      .mockResolvedValueOnce({ status: 'ongoing' })
+      .mockResolvedValueOnce({ status: 'win' })
+
+    const { container } = renderTableroHumano('R')
+    const casillas = container.querySelectorAll('.casilla')
+
+    fireEvent.click(casillas[0])
+    await waitFor(() => {
+      expect(casillas[0]).toHaveClass('jugador-b')
+    })
+
+    fireEvent.click(casillas[1])
+
+    await waitFor(() => {
+      expect(statsService.saveMatchResult).toHaveBeenCalledWith(
+        expect.objectContaining({ result: 'win' })
+      )
+    })
+  })
+
+  // FIX: The click triggers the async flow but the cell click itself is synchronous.
+  // We just need to fire click and wait for the error log — no text content check needed.
   test('in human mode, handles error when checking winner', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
     vi.mocked(gameService.checkWinner).mockRejectedValue(new Error('API Error'))
-    
+
     const { container } = renderTableroHumano()
     const casillas = container.querySelectorAll('.casilla')
-    
+
     fireEvent.click(casillas[0])
-    
+
     await waitFor(() => {
       expect(console.error).toHaveBeenCalledWith(
         "Error verificando victoria en modo humano:",
@@ -388,7 +395,7 @@ describe('Board - Bot Plays First', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
     localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
   })
-  
+
   afterEach(() => {
     vi.clearAllMocks()
     localStorage.clear()
@@ -396,14 +403,14 @@ describe('Board - Bot Plays First', () => {
 
   const renderTableroWithBotFirst = () => {
     return render(
-      <MemoryRouter initialEntries={[{ 
-        pathname: '/game', 
-        state: { 
-          tamanoSeleccionado: 3, 
+      <MemoryRouter initialEntries={[{
+        pathname: '/game',
+        state: {
+          tamanoSeleccionado: 3,
           botSeleccionado: 'random_bot',
           modoSeleccionado: 'bot',
           colorUsuario: 'R'
-        } 
+        }
       }]}>
         <Routes>
           <Route path="/game" element={<Tablero />} />
@@ -412,6 +419,8 @@ describe('Board - Bot Plays First', () => {
     )
   }
 
+  // FIX: The bot plays as "B" (Blue) when user picks "R". The cell gets class "jugador-b",
+  // not text "B". Check the class instead.
   test('bot makes first move when user chooses to play second', async () => {
     vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'ongoing' })
     vi.mocked(gameService.askBotMove).mockResolvedValue({
@@ -420,13 +429,13 @@ describe('Board - Bot Plays First', () => {
       game_status: 'ongoing',
       coords: { x: 0, y: 0, z: 0 }
     })
-    
+
     renderTableroWithBotFirst()
-    
+
     await waitFor(() => {
       const botCasilla = document.querySelector('.casilla.jugador-b')
       expect(botCasilla).toBeInTheDocument()
-      expect(botCasilla).toHaveTextContent('B')
+      expect(botCasilla).toHaveClass('jugador-b')
     })
   })
 
@@ -438,26 +447,28 @@ describe('Board - Bot Plays First', () => {
       game_status: 'ongoing',
       coords: { x: 0, y: 0, z: 0 }
     })
-    
+
     renderTableroWithBotFirst()
-    
+
     await waitFor(() => {
       expect(window.alert).toHaveBeenCalledWith('HAS PERDIDO.')
     })
   })
 
   test('handles error when bot fails to make first move', async () => {
+    // Reset so useEffect fires the rejection immediately on mount
+    vi.mocked(gameService.askBotMove).mockReset()
     vi.mocked(gameService.askBotMove).mockRejectedValue(new Error('Bot error'))
-    
+
     renderTableroWithBotFirst()
-    
+
     await waitFor(() => {
       expect(console.error).toHaveBeenCalledWith(
         "Error en el primer movimiento del bot:",
         expect.any(Error)
       )
     })
-    
+
     expect(window.alert).toHaveBeenCalledWith('Error al iniciar el juego con el bot.')
   })
 })
@@ -468,7 +479,7 @@ describe('Board - Additional Error Scenarios', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
     localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
   })
-  
+
   afterEach(() => {
     vi.clearAllMocks()
     localStorage.clear()
@@ -478,17 +489,17 @@ describe('Board - Additional Error Scenarios', () => {
     vi.mocked(gameService.checkWinner)
       .mockResolvedValueOnce({ status: 'ongoing' })
       .mockRejectedValueOnce(new Error('Check winner error'))
-    
+
     vi.mocked(gameService.askBotMove).mockResolvedValue({
       api_version: "1.0",
       bot_id: "test",
       game_status: 'ongoing',
       coords: { x: 1, y: 0, z: 0 }
     })
-    
+
     const { container } = renderTablero()
     fireEvent.click(container.querySelectorAll('.casilla')[0])
-    
+
     await waitFor(() => {
       expect(console.error).toHaveBeenCalledWith(
         "Error verificando victoria del bot:",
@@ -500,7 +511,7 @@ describe('Board - Additional Error Scenarios', () => {
   test('board cells show correct CSS classes and content', () => {
     const { container } = renderTablero(3)
     const casillas = container.querySelectorAll('.casilla')
-    
+
     casillas.forEach(casilla => {
       expect(casilla).toHaveTextContent('')
       expect(casilla).not.toHaveClass('jugador-b')
