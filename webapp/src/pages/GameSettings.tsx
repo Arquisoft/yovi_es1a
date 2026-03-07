@@ -5,7 +5,7 @@ import "./GameSettings.css";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 import video from "../assets/videoLinea.mp4";
 
-const ConfiguracionJuego: React.FC = () => {
+const GameSettings: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
   
@@ -170,4 +170,4 @@ const ConfiguracionJuego: React.FC = () => {
   );
 };
 
-export default ConfiguracionJuego;
+export default GameSettings;

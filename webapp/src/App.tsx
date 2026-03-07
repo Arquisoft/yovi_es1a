@@ -1,11 +1,12 @@
 import { Routes, Route } from "react-router-dom";
+import { UnloginRoute, GameAccessRoute } from './components/Routes';
 
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Statistics from './pages/Statistics';
 import Help from "./pages/Help";
-import ConfiguracionJuego from './pages/GameSettings';
+import GameSettings from './pages/GameSettings';
 
 import BotTester from './components/BotTester'; 
 
@@ -23,10 +24,16 @@ function App() {
       <Route path="/register" element={<Register />} />
 
       {/*Private routes */}
-      <Route path="/game" element={<Game />} />
-      <Route path="/configureGame" element={<ConfiguracionJuego />} />
-      <Route path="/statistics" element={<Statistics />} />
-      <Route path="/help" element={<Help />} />
+      <Route element={<UnloginRoute />}>
+        <Route path="/configureGame" element={<GameSettings />} />
+        <Route path="/statistics" element={<Statistics />} />
+        <Route path="/help" element={<Help />} />
+        <Route path="/botTester" element={<BotTester />} />
+
+        <Route element={<GameAccessRoute />}>
+          <Route path="/game" element={<Game />} />
+        </Route>
+      </Route>
 
       {/* Routes for testing */}
       <Route path="/botTester" element={<BotTester />} />

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/auth.service';
 import { useLanguage } from '../idiomaConf/LanguageContext';
 import AuthForm from '../components/AuthForm';
+import NavBar from '../components/NavBar';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -23,6 +24,8 @@ const Register: React.FC = () => {
   };
 
   return (
+    <>
+    <NavBar activeTab="register" />
     <AuthForm
       title={t("creaCuent")}
       isRegister={true}
@@ -33,6 +36,7 @@ const Register: React.FC = () => {
       bottomLinkPath="/login"
       onSubmit={handleRegister}
     />
+  </>  
   );
 };
 
