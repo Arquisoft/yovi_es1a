@@ -62,16 +62,12 @@ When('I click the "Lets go!" button', async function () {
 });
 
 Then('I should see a welcome message containing {string}', async function (expectedMessage) {
-  const dialog = await this.dialogPromise;
+  await this.page.waitForSelector('.welcome-overlay', { timeout: 5000 });
+
+  const welcomeText = await this.page.locator('.welcome-overlay').innerText();
   
-  if (dialog) {
-    const message = dialog.message();
-    await dialog.accept();
-    if (!message.includes('¡Usuario registrado correctamente!')) {
-      throw new Error(`Mensaje de alerta incorrecto. Recibido: ${message}`);
-    }
-  } else {
-    throw new Error('No saltó la alerta de éxito nativa (window.alert)');
+  if (!welcomeText) {
+    throw new Error('No apareció el mensaje de bienvenida en el DOM');
   }
 
   await this.page.waitForFunction(
@@ -81,20 +77,18 @@ Then('I should see a welcome message containing {string}', async function (expec
 });
 
 Then('I should see an error message indicating the user already exists', async function () {
-  const dialog = await this.dialogPromise;
+  await this.page.waitForSelector('.error-message-neon-bottom', { timeout: 5000 });
+
+  const errorText = await this.page.locator('.error-message-neon-bottom').innerText();
   
-  if (dialog) {
-    await dialog.accept();
-  } else {
-    const bodyText = await this.page.locator('body').innerText();
-    const isErrorVisible = bodyText.includes('already registered') || 
-                           bodyText.includes('already taken') ||
-                           bodyText.toLowerCase().includes('error');
-                           
-    if (!isErrorVisible) {
-      throw new Error('No se vio el error del backend (already registered/taken) en la pantalla');
-    }
+  const isErrorVisible = errorText.includes('already registered') || 
+                         errorText.includes('already taken') ||
+                         errorText.toLowerCase().includes('error');
+                         
+  if (!isErrorVisible) {
+    throw new Error(`No se vio el error esperado. Texto encontrado: "${errorText}"`);
   }
+
   const currentUrl = this.page.url();
   if (!currentUrl.includes('/register')) {
     throw new Error('El sistema navegó a otra página a pesar del error de registro');

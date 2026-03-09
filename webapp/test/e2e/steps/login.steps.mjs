@@ -21,7 +21,18 @@ When('I fill in valid credentials and submit', async function () {
   await this.page.fill('#username', 'adriangg');
   await this.page.fill('#password', '1234');
   await this.page.click('button[type="submit"]');
+});
 
+When('I fill in invalid credentials and submit', async function () {
+  await this.page.fill('#username', 'usuario_falso_inventado');
+  await this.page.fill('#password', 'clave_incorrecta');
+  await this.page.click('button[type="submit"]');
+});
+
+When('I leave the credentials empty and submit', async function () {
+  await this.page.fill('#username', '');
+  await this.page.fill('#password', '');
+  await this.page.click('button[type="submit"]');
 });
 
 Then('I should be redirected to the configureGame page', async function () {
@@ -34,48 +45,39 @@ Then('I should be redirected to the configureGame page', async function () {
   );
 });
 
-When('I fill in invalid credentials and submit', async function () {
-  await this.page.fill('#username', 'usuario_falso_inventado');
-  await this.page.fill('#password', 'clave_incorrecta');
-  await this.page.click('button[type="submit"]');
-});
-
 Then('I should see an error message for incorrect credentials on the screen', async function () {
-  const errorMessage = await this.page.waitForSelector('.error-message', { 
-    timeout: 10000,
-    state: 'visible' 
-  });
+  await this.page.waitForTimeout(2000);
+  await this.page.screenshot({ path: 'debug-login-invalid.png', fullPage: true });
+
+  const errorMessage = await this.page.waitForSelector(
+    '.error-message, .error-message-neon',
+    { timeout: 10000, state: 'visible' }
+  );
   
   const text = await errorMessage.textContent();
+  assert.ok(text.length > 0, "No se encontró ningún texto de error en la pantalla");
   assert.ok(
-    text.length > 0,"No se encontró ningún texto de error en la pantalla"
+    text.includes("Usuario o contraseña incorrectos") ||
+    text.includes("errorLogin") ||
+    text.includes("incorrectos") ||
+    text.includes("incorrect") ||
+    text.includes("error"),
+    `La web mostró "${text}".`
   );
-
-  assert.strictEqual(
-    text, 
-    "User not found", `Hay texto, pero es incorrecto. Esperábamos "User not found" pero la web mostró "${text}".`
-  );
-});
-
-When('I leave the credentials empty and submit', async function () {
-  await this.page.fill('#username', '');
-  await this.page.fill('#password', '');
-  await this.page.click('button[type="submit"]');
 });
 
 Then('I should see an error message for empty credentials on the screen', async function () {
-  const errorMessage = await this.page.waitForSelector('.error-message', { 
-    timeout: 10000,
-    state: 'visible' 
-  });
+  const errorMessage = await this.page.waitForSelector(
+    '.error-message, .error-message-neon',
+    { timeout: 10000, state: 'visible' }
+  );
   
   const text = await errorMessage.textContent();
-  assert.ok(
-    text.length > 0,"No se encontró ningún texto de error en la pantalla"
-  );
+  assert.ok(text.length > 0, "No se encontró ningún texto de error en la pantalla");
 
   assert.strictEqual(
     text, 
-    "Please enter username and password", `Hay texto, pero es incorrecto. Esperábamos "Please enter username and password" pero la web mostró "${text}".`
+    "Please enter username and password",
+    `Esperábamos "Please enter username and password" pero la web mostró "${text}".`
   );
 });

@@ -200,6 +200,7 @@ describe('Board - Error Handling', () => {
   })
 
   test('handles error if database fails to save stats', async () => {
+    localStorage.setItem('user', JSON.stringify({ userId: '123' }));
     vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
     vi.mocked(statsService.saveMatchResult).mockRejectedValueOnce(new Error('DB is down'))
     const { container } = renderTablero()
@@ -262,7 +263,10 @@ describe('Board - Additional Scenarios', () => {
     const { container } = renderTablero()
     fireEvent.click(container.querySelectorAll('.casilla')[0])
     await waitFor(() => {
-      expect(console.error).toHaveBeenCalledWith("Error verificando victoria del bot:", expect.any(Error))
+      expect(console.error).toHaveBeenCalledWith(
+        "Error en el primer movimiento del bot:",
+        expect.any(Error)
+      );
     })
   })
 
