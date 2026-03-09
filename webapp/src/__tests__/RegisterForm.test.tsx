@@ -7,29 +7,27 @@ import { MemoryRouter } from 'react-router-dom'
 
 describe('RegisterForm', () => {
   afterEach(() => {
-    vi.restoreAllMocks()//Evita que un test afecte al siguiente restaurando de cero
+    vi.restoreAllMocks()
   })
 
-  //Registrarse sin username, email ni password --> Mensaje: Please fill all fields
-  test('shows validation error when username, email and password is empty', async () => {//Texto: lo que se comprueba
+  // Registrarse sin username, email ni password --> Mensaje: Please fill all fields
+  test('shows validation error when username, email and password is empty', async () => {
     render(
       <MemoryRouter>
         <RegisterForm />
       </MemoryRouter>
-    )//render() monta el formulario. MemoryRouter se usa como un BrowserRouter pero para tests
-    //Se necesita MemoryRouter para crear el contexto de Router en memoria, así useNavigate() funciona en el test. 
+    )
 
-    const user = userEvent.setup()//Creo un usuario virtual de pruebas
-
-    const button = screen.getByRole('button', { name: /lets go!/i })//screen (objeto que funciona como DOM donde esta el componente de render), getByRole('button', { name: /lets go!/i }) busca el boton. La i indica que no importa Mayus/Minus.
-    await user.click(button)//Click en el botón
+    const user = userEvent.setup()
+    const button = screen.getByRole('button', { name: /lets go!/i })
+    await user.click(button)
     
-    await waitFor(() => {//Espera que algo ocurra en el DOM.
-      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()//Lo esperado que ocurra. Busca ese texto en el DOM generado.
+    await waitFor(() => {
+      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()
     })
   })
 
-  //Registrarse sin username --> Mensaje: Please fill all fields
+  // Registrarse sin username
   test('registrarse sin username', async () => {
     render(
       <MemoryRouter>
@@ -37,18 +35,16 @@ describe('RegisterForm', () => {
       </MemoryRouter>
     )
     const user = userEvent.setup()
-
-    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')//Asigno email. Uso email porque es la clave del texto internacionalizado.
-    await user.type(screen.getByLabelText(/contra/i), 'password123')//Asigno password. Uso contra porque es la clave del texto internacionalizado.
-    
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))//Click en el botón
+    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')
+    await user.type(screen.getByLabelText(/contra/i), 'password123')
+    await user.click(screen.getByRole('button', { name: /lets go!/i }))
 
     await waitFor(() => {
-      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()//Lo esperado que ocurra. Busca ese texto en el DOM generado.
+      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()
     })
   })
 
-  //Registrarse sin email --> Mensaje: Please fill all fields
+  // Registrarse sin email
   test('registrarse sin email', async () => {
     render(
       <MemoryRouter>
@@ -56,18 +52,16 @@ describe('RegisterForm', () => {
       </MemoryRouter>
     )
     const user = userEvent.setup()
-
-    await user.type(screen.getByLabelText(/user/i), 'Pablo')//Asigno username. Uso user porque es la clave del texto internacionalizado.
-    await user.type(screen.getByLabelText(/contra/i), 'password123')//Asigno password. Uso contra porque es la clave del texto internacionalizado.
-    
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))//Click en el botón
+    await user.type(screen.getByLabelText(/user/i), 'Pablo')
+    await user.type(screen.getByLabelText(/contra/i), 'password123')
+    await user.click(screen.getByRole('button', { name: /lets go!/i }))
 
     await waitFor(() => {
-      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()//Lo esperado que ocurra. Busca ese texto en el DOM generado.
+      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()
     })
   })
 
-  //Registrarse sin password --> Mensaje: Please fill all fields
+  // Registrarse sin password
   test('registrarse sin password', async () => {
     render(
       <MemoryRouter>
@@ -75,18 +69,16 @@ describe('RegisterForm', () => {
       </MemoryRouter>
     )
     const user = userEvent.setup()
-
-    await user.type(screen.getByLabelText(/user/i), 'Pablo')//Asigno username. Uso user porque es la clave del texto internacionalizado.
-    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')//Asigno email. Uso email porque es la clave del texto internacionalizado.
-    
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))//Click en el botón
+    await user.type(screen.getByLabelText(/user/i), 'Pablo')
+    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')
+    await user.click(screen.getByRole('button', { name: /lets go!/i }))
 
     await waitFor(() => {
-      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()//Lo esperado que ocurra. Busca ese texto en el DOM generado.
+      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()
     })
   })
 
-  //Registrarse sin user ni email --> Mensaje: Please fill all fields
+  // Registrarse sin user ni email
   test('registrarse sin user ni email', async () => {
     render(
       <MemoryRouter>
@@ -94,17 +86,15 @@ describe('RegisterForm', () => {
       </MemoryRouter>
     )
     const user = userEvent.setup()
-
-    await user.type(screen.getByLabelText(/contra/i), 'password123')//Asigno password. Uso contra porque es la clave del texto internacionalizado.
-    
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))//Click en el botón
+    await user.type(screen.getByLabelText(/contra/i), 'password123')
+    await user.click(screen.getByRole('button', { name: /lets go!/i }))
 
     await waitFor(() => {
-      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()//Lo esperado que ocurra. Busca ese texto en el DOM generado.
+      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()
     })
   })
 
-  //Registrarse sin user ni password --> Mensaje: Please fill all fields
+  // Registrarse sin user ni password
   test('registrarse sin user ni password', async () => {
     render(
       <MemoryRouter>
@@ -112,17 +102,15 @@ describe('RegisterForm', () => {
       </MemoryRouter>
     )
     const user = userEvent.setup()
-
-    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')//Asigno email. Uso email porque es la clave del texto internacionalizado.
-    
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))//Click en el botón
+    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')
+    await user.click(screen.getByRole('button', { name: /lets go!/i }))
 
     await waitFor(() => {
-      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()//Lo esperado que ocurra. Busca ese texto en el DOM generado.
+      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()
     })
   })
 
-  //Registrarse sin email ni password --> Mensaje: Please fill all fields
+  // Registrarse sin email ni password
   test('registrarse sin email ni password', async () => {
     render(
       <MemoryRouter>
@@ -130,24 +118,21 @@ describe('RegisterForm', () => {
       </MemoryRouter>
     )
     const user = userEvent.setup()
-
-    await user.type(screen.getByLabelText(/user/i), 'Pablo')//Asigno username. Uso user porque es la clave del texto internacionalizado.
-    
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))//Click en el botón
+    await user.type(screen.getByLabelText(/user/i), 'Pablo')
+    await user.click(screen.getByRole('button', { name: /lets go!/i }))
 
     await waitFor(() => {
-      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()//Lo esperado que ocurra. Busca ese texto en el DOM generado.
+      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()
     })
   })
 
-  //Registro con contraseña de menos de tres caracteres
+  // Registro con contraseña de menos de tres caracteres
   test('registro con contraseña de menos de tres caracteres', async () => {
-    // Mock fetch to resolve automatically
     global.fetch = vi.fn().mockResolvedValueOnce({
       ok: false,
       status: 400,
       json: async () => ({ error: 'Password must be at least 3 characters' }),
-    } as Response)//Devuelvo aqui el error
+    } as Response)
 
     render(
       <MemoryRouter>
@@ -155,26 +140,23 @@ describe('RegisterForm', () => {
       </MemoryRouter>
     )
     const user = userEvent.setup()
-
-    await user.type(screen.getByLabelText(/user/i), 'Pablo')//Asigno username. Uso user porque es la clave del texto internacionalizado.
-    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')//Asigno email. Uso email porque es la clave del texto internacionalizado.
-    await user.type(screen.getByLabelText(/contra/i), '3')//Asigno password. Uso contra porque es la clave del texto internacionalizado.
-    
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))//Click en el botón
+    await user.type(screen.getByLabelText(/user/i), 'Pablo')
+    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')
+    await user.type(screen.getByLabelText(/contra/i), '3')
+    await user.click(screen.getByRole('button', { name: /lets go!/i }))
 
     await waitFor(() => {
-      expect(screen.getByText(/Password must be at least 3 characters/i)).toBeInTheDocument()//Lo esperado que ocurra. Busca ese texto en el DOM generado.
+      expect(screen.getByText(/Password must be at least 3 characters/i)).toBeInTheDocument()
     })
   })
 
-  //Registro con email ya registrado
+  // Registro con email ya registrado
   test('Registro con email ya registrado', async () => {
-    // Mock fetch to resolve automatically
     global.fetch = vi.fn().mockResolvedValueOnce({
       ok: false,
-      status: 409, // Código
+      status: 409,
       json: async () => ({ error: 'Email already registered' }),
-    } as Response)//Devuelvo aqui el error
+    } as Response)
 
     render(
       <MemoryRouter>
@@ -182,26 +164,23 @@ describe('RegisterForm', () => {
       </MemoryRouter>
     )
     const user = userEvent.setup()
-
-    await user.type(screen.getByLabelText(/user/i), 'Pablo')//Asigno username. Uso user porque es la clave del texto internacionalizado.
-    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')//Asigno email. Uso email porque es la clave del texto internacionalizado.
-    await user.type(screen.getByLabelText(/contra/i), 'password123')//Asigno password. Uso contra porque es la clave del texto internacionalizado.
-    
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))//Click en el botón
+    await user.type(screen.getByLabelText(/user/i), 'Pablo')
+    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')
+    await user.type(screen.getByLabelText(/contra/i), 'password123')
+    await user.click(screen.getByRole('button', { name: /lets go!/i }))
 
     await waitFor(() => {
-      expect(screen.getByText(/Email already registered/i)).toBeInTheDocument()//Lo esperado que ocurra. Busca ese texto en el DOM generado.
+      expect(screen.getByText(/Email already registered/i)).toBeInTheDocument()
     })
   })
 
-  //Registro con username ya registrado
+  // Registro con username ya registrado
   test('Registro con username ya registrado', async () => {
-    // Mock fetch to resolve automatically
     global.fetch = vi.fn().mockResolvedValueOnce({
       ok: false,
-      status: 409, // Código
+      status: 409,
       json: async () => ({ error: 'Username already taken' }),
-    } as Response)//Devuelvo aqui el error
+    } as Response)
 
     render(
       <MemoryRouter>
@@ -209,27 +188,22 @@ describe('RegisterForm', () => {
       </MemoryRouter>
     )
     const user = userEvent.setup()
-
-    await user.type(screen.getByLabelText(/user/i), 'Pablo')//Asigno username. Uso user porque es la clave del texto internacionalizado.
-    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')//Asigno email. Uso email porque es la clave del texto internacionalizado.
-    await user.type(screen.getByLabelText(/contra/i), 'password123')//Asigno password. Uso contra porque es la clave del texto internacionalizado.
-    
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))//Click en el botón
+    await user.type(screen.getByLabelText(/user/i), 'Pablo')
+    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')
+    await user.type(screen.getByLabelText(/contra/i), 'password123')
+    await user.click(screen.getByRole('button', { name: /lets go!/i }))
 
     await waitFor(() => {
-      expect(screen.getByText(/Username already taken/i)).toBeInTheDocument()//Lo esperado que ocurra. Busca ese texto en el DOM generado.
+      expect(screen.getByText(/Username already taken/i)).toBeInTheDocument()
     })
   })
 
-  //Registro válido --> Mensaje: User successfully created
-  test('submits username and displays response', async () => {
-    // Mock fetch to resolve automatically
-    global.fetch = vi.fn().mockResolvedValueOnce({//Es lo que devolvería el fetch de la clase de register
+  // Registro válido
+  test('submits username and displays success message', async () => {
+    global.fetch = vi.fn().mockResolvedValueOnce({
       ok: true,
       json: async () => ({ message: 'User successfully created' }), 
-    } as Response)//Simula una respuesta exitosa de un servidor. Cuando el componente lo llame no va a hacer una petición real, sino que devolverá inmediatamente una respuesta simulada
-    
-    const alert = vi.spyOn(window, 'alert').mockImplementation(() => {});//Esto reemplaza el comportamiento real de alert y bloquea el alert real    
+    } as Response)
     
     render(
       <MemoryRouter>
@@ -238,14 +212,13 @@ describe('RegisterForm', () => {
     )
     const user = userEvent.setup()
 
-    await user.type(screen.getByLabelText(/user/i), 'Pablo')//Asigno username. Uso user porque es la clave del texto internacionalizado.
-    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')//Asigno email. Uso email porque es la clave del texto internacionalizado.
-    await user.type(screen.getByLabelText(/contra/i), 'password123')//Asigno password. Uso contra porque es la clave del texto internacionalizado.
-    
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))//Click en el botón
+    await user.type(screen.getByLabelText(/user/i), 'Pablo')
+    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')
+    await user.type(screen.getByLabelText(/contra/i), 'password123')
+    await user.click(screen.getByRole('button', { name: /lets go!/i }))
 
     await waitFor(() => {
-      expect(alert).toHaveBeenCalledWith('¡Usuario registrado correctamente!');
+      expect(screen.getByText(/¡Usuario registrado correctamente!/i)).toBeInTheDocument()
     })
   })
 })

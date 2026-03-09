@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom"; 
+import { useLocation, useNavigate } from "react-router-dom";
 import { gameService } from "../services/game.service";
 import { statsService } from "../services/stats.service";
 import "./Tablero.css";
@@ -28,6 +28,7 @@ const coordsToIndex = (x: number, y: number, size: number) => {
 
 const Tablero: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate(); 
   
   const { 
     tamanoSeleccionado = 5, 
@@ -45,6 +46,8 @@ const Tablero: React.FC = () => {
   const [startTime] = useState<number>(Date.now());
   const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
   const [gameFinished, setGameFinished] = useState(false);
+  const [showWinnerModal, setShowWinnerModal] = useState(false);
+  const [winnerMessage, setWinnerMessage] = useState("");
 
   React.useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -54,41 +57,41 @@ const Tablero: React.FC = () => {
   }, [size]);
 
   React.useEffect(() => {
-  const botJuegaPrimero = async () => {
-    if (modoSeleccionado === "bot" && colorUsuario === "R" && layout === getInitialLayout(size)) {
-      setLoading(true);
-      try {
-        const yenLayout = stringToYenLayout(layout, size);
-        const response = await gameService.askBotMove(botSeleccionado, size, 0, yenLayout);
+    const botJuegaPrimero = async () => {
+      if (modoSeleccionado === "bot" && colorUsuario === "R" && layout === getInitialLayout(size)) {
+        setLoading(true);
+        try {
+          const yenLayout = stringToYenLayout(layout, size);
+          const response = await gameService.askBotMove(botSeleccionado, size, 0, yenLayout);
 
-        const botIndex = coordsToIndex(response.coords.x, response.coords.y, size);
-        const newLayoutArray = layout.split("");
-        newLayoutArray[botIndex] = "B";
-        const newLayout = newLayoutArray.join("");
-        setLayout(newLayout);
-        
-        const yenLayoutAfterBot = stringToYenLayout(newLayout, size);
-        const checkBot = await gameService.checkWinner(size, yenLayoutAfterBot);
-        
-        if (checkBot.status === "win") {
-          setGameFinished(true);
-          setTimeout(() => alert("HAS PERDIDO."), 100);
-          await safeSaveStats("lose", newLayout);
-          return;
+          const botIndex = coordsToIndex(response.coords.x, response.coords.y, size);
+          const newLayoutArray = layout.split("");
+          newLayoutArray[botIndex] = "B";
+          const newLayout = newLayoutArray.join("");
+          setLayout(newLayout);
+          
+          const yenLayoutAfterBot = stringToYenLayout(newLayout, size);
+          const checkBot = await gameService.checkWinner(size, yenLayoutAfterBot);
+          
+          if (checkBot.status === "win") {
+            setGameFinished(true);
+            setWinnerMessage("HAS PERDIDO.");
+            setShowWinnerModal(true);
+            await safeSaveStats("lose", newLayout);
+            return;
+          }
+          
+          setTurn("R");
+        } catch (error) {
+          console.error("Error en el primer movimiento del bot:", error);
+        } finally {
+          setLoading(false);
         }
-        
-        setTurn("R");
-      } catch (error) {
-        console.error("Error en el primer movimiento del bot:", error);
-        alert("Error al iniciar el juego con el bot.");
-      } finally {
-        setLoading(false);
       }
-    }
-  };
+    };
 
-  botJuegaPrimero();
-}, [modoSeleccionado, colorUsuario, size, botSeleccionado]);
+    botJuegaPrimero();
+  }, [modoSeleccionado, colorUsuario, size, botSeleccionado]);
 
   const safeSaveStats = async (result: "win" | "lose", finalBoard: string) => {
     if (!user || !user.userId) return;
@@ -104,132 +107,135 @@ const Tablero: React.FC = () => {
         totalMoves: moves,
         gameMode: modoSeleccionado === "humano" ? "human" : "computer"
       });
-      console.log("Estadísticas guardadas con éxito");
     } catch (error) {
       console.error("Error al guardar en la BD:", error);
     }
   };
 
- const play = async (index: number) => {
-  const newLayoutArray = layout.split("");
-  
-  newLayoutArray[index] = turn;
-  const updatedFlatLayout = newLayoutArray.join("");
-  
-  setLayout(updatedFlatLayout);
+  const play = async (index: number) => {
+    if (gameFinished) return; 
 
-  if (modoSeleccionado === "humano") {
-    setLoading(true);
-    try {
-      const yenLayout = stringToYenLayout(updatedFlatLayout, size);
-      const data = await gameService.checkWinner(size, yenLayout);
+    const newLayoutArray = layout.split("");
+    newLayoutArray[index] = turn;
+    const updatedFlatLayout = newLayoutArray.join("");
+    setLayout(updatedFlatLayout);
 
-      if (data.status === "win") {
-        setGameFinished(true);
-        if (turn === colorUsuario) {
-          await safeSaveStats("win", updatedFlatLayout); 
-        } else {
-          await safeSaveStats("lose", updatedFlatLayout); 
+    if (modoSeleccionado === "humano") {
+      setLoading(true);
+      try {
+        const yenLayout = stringToYenLayout(updatedFlatLayout, size);
+        const data = await gameService.checkWinner(size, yenLayout);
+
+        if (data.status === "win") {
+          setGameFinished(true);
+          const winnerText = turn === "B" ? "¡GANÓ EL AZUL!" : "¡GANÓ EL ROJO!";
+          setWinnerMessage(winnerText);
+          setShowWinnerModal(true);
+
+          if (turn === colorUsuario) {
+            await safeSaveStats("win", updatedFlatLayout); 
+          } else {
+            await safeSaveStats("lose", updatedFlatLayout); 
+          }
+          setLoading(false);
+          return;
         }
+        setTurn(turn === "B" ? "R" : "B");
+      } catch (error) {
+        console.error("Error verificando victoria:", error);
+      } finally {
+        setLoading(false);
+      }
+      return; 
+    }
+
+    const botColor: Player = colorUsuario === "B" ? "R" : "B";
+    setTurn(botColor); 
+    setLoading(true);
+
+    try {
+      const yenLayoutAfterHuman = stringToYenLayout(updatedFlatLayout, size);
+      const checkHuman = await gameService.checkWinner(size, yenLayoutAfterHuman);
+      
+      if (checkHuman && checkHuman.status === "win") {
+        setGameFinished(true);
+        setWinnerMessage("¡HAS GANADO!");
+        setShowWinnerModal(true);
+        await safeSaveStats("win", updatedFlatLayout);
         setLoading(false);
         return;
       }
-      
-      setTurn(turn === "B" ? "R" : "B");
-    } catch (error) {
-      console.error("Error verificando victoria en modo humano:", error);
-    } finally {
-      setLoading(false);
-    }
-    return; 
-  }
 
-  const botColor: Player = colorUsuario === "B" ? "R" : "B";
-  setTurn(botColor); 
-  setLoading(true);
+      const yenLayout = stringToYenLayout(updatedFlatLayout, size); 
+      const turnoDelBot = botColor === "B" ? 0 : 1;
+      const response = await gameService.askBotMove(botSeleccionado, size, turnoDelBot, yenLayout); 
 
-  try {
-    const yenLayoutAfterHuman = stringToYenLayout(updatedFlatLayout, size);
-    const checkHuman = await gameService.checkWinner(size, yenLayoutAfterHuman);
-    
-    if (checkHuman && checkHuman.status === "win") {
-      setGameFinished(true);
-      setTimeout(() => alert("¡HAS GANADO!"), 100);
-      await safeSaveStats("win", updatedFlatLayout);
-      setLoading(false);
-      return;
-    }
-  } catch (error) {
-    console.error("Error verificando victoria del humano:", error);
-  }
+      const botIndex = coordsToIndex(response.coords.x, response.coords.y, size);
+      const finalLayoutArray = updatedFlatLayout.split("");
+      finalLayoutArray[botIndex] = botColor;
+      const finalLayout = finalLayoutArray.join("");
+      setLayout(finalLayout);
 
-  try {
-    const yenLayout = stringToYenLayout(updatedFlatLayout, size); 
-    const turnoDelBot = botColor === "B" ? 0 : 1;
-    const response = await gameService.askBotMove(botSeleccionado, size, turnoDelBot, yenLayout); 
-
-    const botIndex = coordsToIndex(response.coords.x, response.coords.y, size);
-    const finalLayoutArray = updatedFlatLayout.split("");
-    finalLayoutArray[botIndex] = botColor;
-    const finalLayout = finalLayoutArray.join("");
-    setLayout(finalLayout);
-
-    try {
       const yenLayoutAfterBot = stringToYenLayout(finalLayout, size);
       const checkBot = await gameService.checkWinner(size, yenLayoutAfterBot);
 
       if (checkBot && checkBot.status === "win") {
         setGameFinished(true);
-        setTimeout(() => alert("HAS PERDIDO."), 100);
+        setWinnerMessage("HAS PERDIDO.");
+        setShowWinnerModal(true);
         await safeSaveStats("lose", finalLayout);
         setLoading(false);
         return;
       }
+
+      setTurn(colorUsuario);
     } catch (error) {
-      console.error("Error verificando victoria del bot:", error);
+      console.error("Error communicating with the bot:", error);
+      setTurn(colorUsuario); 
+    } finally {
+      setLoading(false);
     }
+  };
 
-    setTurn(colorUsuario);
-  } catch (error) {
-    console.error("Error communicating with the bot:", error);
-    alert(`El bot ${botSeleccionado} no responde o la jugada fue inválida.`);
-    setTurn(colorUsuario); 
-  } finally {
-    setLoading(false);
-  }
-};
   const crearTablero = () => {
-  let index = 0;
-  const filas = [];
-  for (let i = 0; i < size; i++) {
-    const casillas = [];
-    for (let j = 0; j <= i; j++) {
-      const currentIndex = index; 
-      const valor = layout[currentIndex];
-      let claseColor = "";
-      if (valor === "B") claseColor = " jugador-b";
-      if (valor === "R") claseColor = " jugador-r";
+    const baseSize = size > 10 ? 380 : 450; 
+    const cellSize = Math.min(50, Math.floor(baseSize / size)); 
+    const cellHeight = Math.floor(cellSize * 1.15);
 
-      const esClickeable = modoSeleccionado === "humano" 
-        ? valor === "." && !loading && !gameFinished 
-        : valor === "." && turn === colorUsuario && !loading && !gameFinished; 
+    let index = 0;
+    const filas = [];
+    for (let i = 0; i < size; i++) {
+      const casillas = [];
+      for (let j = 0; j <= i; j++) {
+        const currentIndex = index; 
+        const valor = layout[currentIndex];
+        let claseColor = "";
+        if (valor === "B") claseColor = " jugador-b";
+        if (valor === "R") claseColor = " jugador-r";
 
-      casillas.push(
-        <button
-          key={`${i}-${j}`}
-          className={`casilla${claseColor}`} 
-          onClick={() => esClickeable && play(currentIndex)}
-          disabled={!esClickeable} 
-        >
-          {valor !== "." ? valor : ""}
-        </button>
-      );
-      index++;
+        const esClickeable = modoSeleccionado === "humano" 
+          ? valor === "." && !loading && !gameFinished 
+          : valor === "." && turn === colorUsuario && !loading && !gameFinished; 
+
+        casillas.push(
+          <button
+            key={`${i}-${j}`}
+            className={`casilla${claseColor}`} 
+            onClick={() => esClickeable && play(currentIndex)}
+            disabled={!esClickeable} 
+            style={{ 
+              width: `${cellSize}px`, 
+              height: `${cellHeight}px`,
+              margin: `${cellSize * 0.05}px` 
+            }}
+          />
+        );
+        index++;
+      }
+      filas.push(<div key={i} className="tablero" style={{ gap: `${cellSize * 0.1}px` }}>{casillas}</div>);
     }
-    filas.push(<div key={i} className="tablero">{casillas}</div>);
-  }
-  return filas;
-};
+    return filas;
+  };
 
   const { t } = useLanguage();
 
@@ -246,9 +252,11 @@ const Tablero: React.FC = () => {
 
       <p style={{ marginTop: '20px', fontSize: '1.2rem', color: 'white' }}>
         {t("turn")}: 
-        <strong style={{ color: turn === "B" ? "#3b82f6" : "#ef4444", marginLeft: '10px' }}>
+        <strong className={turn === "B" ? "turno-azul" : "turno-rojo"} style={{ marginLeft: '10px' }}>
           {modoSeleccionado === "humano" 
-            ? (turn === "B" ? `JUGADOR 1 (Azul) ${colorUsuario === "B" ? "(Tú)" : "(Amigo)"}` : `JUGADOR 2 (Rojo) ${colorUsuario === "R" ? "(Tú)" : "(Amigo)"}`)
+            ? (turn === "B" 
+                ? `JUGADOR 1 (Azul) ${colorUsuario === "B" ? "(Tú)" : "(Amigo)"}` 
+                : `JUGADOR 2 (Rojo) ${colorUsuario === "R" ? "(Tú)" : "(Amigo)"}`)
             : (turn === colorUsuario 
                 ? `TÚ (${colorUsuario === "B" ? "Azul" : "Rojo"})` 
                 : `BOT (${colorUsuario === "B" ? "Rojo" : "Azul"})`)}
@@ -258,6 +266,30 @@ const Tablero: React.FC = () => {
       {loading && modoSeleccionado === "bot" && (
         <p style={{ color: '#60a5fa' }}>El Bot está calculando...</p>
       )}
+
+
+      {showWinnerModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h2 className={`modal-title ${
+                winnerMessage.includes("GANADO") || winnerMessage.includes("AZUL") || winnerMessage.includes("GANASTE")
+                  ? "turno-azul" 
+                  : "turno-rojo"
+              }`}>
+                {winnerMessage}
+              </h2>
+              
+              <div className="modal-actions">
+                <button className="btn-modal primary" onClick={() => window.location.reload()}>
+                  {t("jugar")} 
+                </button>
+                <button className="btn-modal secondary" onClick={() => navigate("/")}>
+                  {t("inicio")}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
   );
 };

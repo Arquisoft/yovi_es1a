@@ -1,133 +1,157 @@
-/* --- ESTRUCTURA BLINDADA CON ESPACIADO MEJORADO --- */
+/* --- GameSettings.css - BLOQUEO DE MOVIMIENTO Y LETRA AJUSTADA --- */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
 
 .config-page {
-  min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; 
+  align-items: center;     
+  position: fixed; 
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
 }
 
 .config-container {
   display: flex;
   flex-direction: row;
-  width: 1100px !important; 
-  height: 750px !important; /* Más altura para evitar solapamientos */
-  padding: 40px !important;
-  gap: 60px;
-  background: rgba(255, 255, 255, 0.05) !important;
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 20px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+  width: 85vw !important; 
+  max-width: 1050px;
+  height: auto !important; 
+  max-height: 85vh; 
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 35px;
+  gap: 40px;
   box-sizing: border-box;
+  z-index: 10;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
 .config-controls {
-  width: 450px !important; 
+  flex: 1.2;
   display: flex;
   flex-direction: column;
+  gap: 12px; 
 }
 
-.config-preview {
-  width: 480px !important;
-  display: flex;
-  flex-direction: column;
-}
-
-/* TÍTULO CON MÁS ESPACIO */
 .fixed-title {
-  height: 60px; /* Un poco más de espacio propio */
-  color: #60a5fa !important;
-  text-shadow: 0 0 15px rgba(96, 165, 250, 0.6);
-  font-size: 2.2rem !important;
-  margin-bottom: 40px !important; /* SEPARACIÓN EXTRA AQUÍ */
+  font-size: 0.8rem; /* Letra un poco más grande y clara */
+  color: #fff;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-bottom: 3px solid #5b99f6;
+  text-align: center;
+  padding-bottom: 8px;
+  letter-spacing: 2px;
 }
 
-.control-group {
-  height: 100px;
-  margin-bottom: 15px;
-}
+.control-group { width: 100%; }
 
 .fixed-label {
   display: block;
-  height: 35px;
-  font-size: 1.2rem !important;
-  color: #d1d5db;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-/* VALOR DEL TAMAÑO EN BLANCO */
-.size-value {
-  color: #ffffff !important;
-  font-weight: bold;
-  font-size: 1.3rem;
-  margin-left: 10px;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  color: #ffffff;
+  margin-bottom: 6px;
+  font-size: 1.1rem; /* Tamaño intermedio perfecto */
+  font-weight: 600;
 }
 
 .control-input {
-  width: 100% !important;
-  height: 55px !important;
-  background-color: rgba(0, 0, 0, 0.5) !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(91, 153, 246, 0.6) !important;
-  border-radius: 8px;
-  font-size: 1.1rem !important;
-  padding: 0 15px !important;
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 1rem;
+  box-sizing: border-box;
 }
 
 .control-input-range {
   width: 100% !important;
-  height: 40px !important;
-  cursor: pointer;
-}
-
-.bot-options-area {
-  min-height: 230px;
+  margin: 10px 0;
 }
 
 .btn-jugar-fixed {
-  width: 100% !important;
-  height: 70px !important;
-  margin-top: auto;
-  background-color: #5b99f6 !important;
+  width: 100%;
+  padding: 18px;
+  background: linear-gradient(135deg, #5b99f6 0%, #1321a3 100%);
   color: white;
-  border-radius: 12px;
-  font-weight: bold;
-  font-size: 1.5rem !important;
   border: none;
+  border-radius: 12px;
+  font-size: 1.4rem;
+  font-weight: bold;
   cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  box-shadow: 0 4px 20px rgba(91, 153, 246, 0.5);
-  transition: all 0.3s ease;
+  margin-top: 20px;
+  transition: transform 0.2s;
 }
 
 .btn-jugar-fixed:hover {
-  background-color: #ffffff !important;
-  color: #03080e !important;
-  transform: translateY(-2px);
+  transform: scale(1.02);
+}
+
+/* --- PREVISUALIZACIÓN CON ALTURA BLOQUEADA --- */
+.config-preview {
+  flex: 0.8;
+  display: flex;
+  flex-direction: column;
+  /* Centramos el contenido dentro de la columna */
+  justify-content: center; 
 }
 
 .preview-board-fixed {
-  width: 100% !important;
-  flex: 1;
-  min-height: 450px;
-  background-color: rgba(0, 0, 0, 0.3) !important;
+  width: 100%;
+  height: 400px !important; 
+  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 15px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden; /* Evita que el tablero se salga si es muy grande */
 }
 
-/* TABLERO */
-.tablero-mini-container { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.fila-mini { display: flex; flex-direction: row; gap: 4px; }
-.casilla-mini { width: 1.8vmin; height: 1.8vmin; border-radius: 50%; flex-shrink: 0; transition: 0.5s; }
+.tablero-mini-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px; /* Espacio reducido entre casillas */
+}
 
-/* COLORES */
-.preview-facil { background-color: #00ff00; box-shadow: 0 0 10px #00ff00; }
-.preview-medio { background-color: #ffff00; box-shadow: 0 0 10px #ffff00; }
-.preview-dificil { background-color: #ff0000; box-shadow: 0 0 12px #ff0000; }
+.fila-mini {
+  display: flex;
+  gap: 2px;
+}
+
+.casilla-mini {
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  transition: all 0.3s ease;
+  background-color: #555;
+}
+
+.preview-facil { background-color: #4caf50 !important; box-shadow: 0 0 8px #4caf50; }
+.preview-medio { background-color: #ff9800 !important; box-shadow: 0 0 8px #ff9800; }
+.preview-dificil { background-color: #f44336 !important; box-shadow: 0 0 8px #f44336; }
+
+.videoIN {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  object-fit: cover;
+}

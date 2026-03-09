@@ -14,11 +14,31 @@ vi.mock('react-router-dom', async () => {
 const mockSetLang = vi.fn();
 vi.mock('../idiomaConf/LanguageContext', () => ({
   useLanguage: () => ({
-    t: (key: string) => key, 
+    t: (key: string) => key,
     lang: 'es',
     setLang: mockSetLang
   })
 }));
+
+// Helper: renderiza con usuario logueado en localStorage
+const renderWithUser = (activeTab: string = 'play') => {
+  localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'JugadorPro' }));
+  return render(
+    <MemoryRouter>
+      <NavBar activeTab={activeTab as any} />
+    </MemoryRouter>
+  );
+};
+
+// Helper: renderiza sin usuario
+const renderWithoutUser = (activeTab: string = 'home') => {
+  localStorage.removeItem('user');
+  return render(
+    <MemoryRouter>
+      <NavBar activeTab={activeTab as any} />
+    </MemoryRouter>
+  );
+};
 
 describe('NavBar', () => {
   beforeEach(() => {
@@ -27,27 +47,17 @@ describe('NavBar', () => {
   });
 
   test('It loads the user from localStorage and displays their username', () => {
-    const fakeUser = { userId: '123', username: 'JugadorPro' };
-    localStorage.setItem('user', JSON.stringify(fakeUser));
-
-    render(
-      <MemoryRouter>
-        <NavBar activeTab="play" />
-      </MemoryRouter>
-    );
-
+    renderWithUser();
     expect(screen.getByText('JugadorPro')).toBeInTheDocument();
   });
 
+  // FIX: El botón de logout solo existe cuando hay usuario en localStorage.
+  // El test original no ponía usuario, así que el botón nunca aparecía.
   test('It logs out correctly, removing localStorage and navigating to login', async () => {
     const user = userEvent.setup();
     const removeItemSpy = vi.spyOn(Storage.prototype, 'removeItem');
 
-    render(
-      <MemoryRouter>
-        <NavBar activeTab="play" />
-      </MemoryRouter>
-    );
+    renderWithUser(); // <-- necesita usuario para que aparezca el botón
 
     const logoutButton = screen.getByTitle('Cerrar sesión');
     await user.click(logoutButton);
@@ -58,113 +68,64 @@ describe('NavBar', () => {
 
   test('It changes the language to Spanish ("es")', async () => {
     const user = userEvent.setup();
-    render(
-      <MemoryRouter>
-        <NavBar activeTab="play" />
-      </MemoryRouter>
-    );
-    const langSelect = screen.getByRole('combobox');
-    
-    await user.selectOptions(langSelect, 'es');
+    renderWithoutUser();
+    await user.selectOptions(screen.getByRole('combobox'), 'es');
     expect(mockSetLang).toHaveBeenCalledWith('es');
   });
 
   test('It changes the language to English', async () => {
     const user = userEvent.setup();
-    render(
-      <MemoryRouter>
-        <NavBar activeTab="play" />
-      </MemoryRouter>
-    );
-    const langSelect = screen.getByRole('combobox');
-    
-    await user.selectOptions(langSelect, 'en');
+    renderWithoutUser();
+    await user.selectOptions(screen.getByRole('combobox'), 'en');
     expect(mockSetLang).toHaveBeenCalledWith('en');
   });
 
   test('It changes the language to Italian', async () => {
     const user = userEvent.setup();
-    render(
-      <MemoryRouter>
-        <NavBar activeTab="play" />
-      </MemoryRouter>
-    );
-    const langSelect = screen.getByRole('combobox');
-    
-    await user.selectOptions(langSelect, 'it');
+    renderWithoutUser();
+    await user.selectOptions(screen.getByRole('combobox'), 'it');
     expect(mockSetLang).toHaveBeenCalledWith('it');
   });
 
   test('It changes the language to French', async () => {
     const user = userEvent.setup();
-    render(
-      <MemoryRouter>
-        <NavBar activeTab="play" />
-      </MemoryRouter>
-    );
-    const langSelect = screen.getByRole('combobox');
-    
-    await user.selectOptions(langSelect, 'fr');
+    renderWithoutUser();
+    await user.selectOptions(screen.getByRole('combobox'), 'fr');
     expect(mockSetLang).toHaveBeenCalledWith('fr');
   });
 
   test('It changes the language to German', async () => {
     const user = userEvent.setup();
-    render(
-      <MemoryRouter>
-        <NavBar activeTab="play" />
-      </MemoryRouter>
-    );
-    const langSelect = screen.getByRole('combobox');
-    
-    await user.selectOptions(langSelect, 'de');
+    renderWithoutUser();
+    await user.selectOptions(screen.getByRole('combobox'), 'de');
     expect(mockSetLang).toHaveBeenCalledWith('de');
   });
 
   test('It applies the default case (Spanish) if it receives an unknown value', () => {
-    render(
-      <MemoryRouter>
-        <NavBar activeTab="play" />
-      </MemoryRouter>
-    );
-    const langSelect = screen.getByRole('combobox');
-    
-    fireEvent.change(langSelect, { target: { value: 'zh' } });
+    renderWithoutUser();
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'zh' } });
     expect(mockSetLang).toHaveBeenCalledWith('es');
   });
 
+  // FIX: "jugar", "estadisticas", "ayuda" solo se renderizan cuando hay usuario.
+  // Los tests originales no ponían usuario en localStorage.
   test('It navigates to /configureGame when clicking "Jugar"', async () => {
     const user = userEvent.setup();
-    render(
-      <MemoryRouter>
-        <NavBar activeTab="stats" />
-      </MemoryRouter>
-    );
-    
+    renderWithUser('stats'); // usuario logueado para que aparezca el botón
     await user.click(screen.getByText('jugar'));
     expect(mockNavigate).toHaveBeenCalledWith('/configureGame');
   });
 
   test('It navigates to /statistics when clicking "Estadísticas"', async () => {
     const user = userEvent.setup();
-    render(
-      <MemoryRouter>
-        <NavBar activeTab="help" />
-      </MemoryRouter>
-    );
-    
+    renderWithUser('help');
     await user.click(screen.getByText('estadisticas'));
     expect(mockNavigate).toHaveBeenCalledWith('/statistics');
   });
 
   test('It navigates to /help when clicking "Ayuda"', async () => {
     const user = userEvent.setup();
-    render(
-      <MemoryRouter>
-        <NavBar activeTab="play" />
-      </MemoryRouter>
-    );
-    
+    renderWithUser('play');
     await user.click(screen.getByText('ayuda'));
     expect(mockNavigate).toHaveBeenCalledWith('/help');
   });
