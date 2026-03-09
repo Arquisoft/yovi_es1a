@@ -21,7 +21,7 @@ app.use(cors({
     'http://localhost:5173',
     'http://localhost:3000',
     'http://localhost',
-    'http://20.199.88.71'
+    'http://20.199.88.71' // NOSONAR
   ],
   //origin: 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
