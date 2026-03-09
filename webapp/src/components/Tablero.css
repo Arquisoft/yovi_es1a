@@ -1,4 +1,4 @@
-/* Contenedor principal para centrar todo */
+
 .gameBoard {
   display: flex;
   flex-direction: column;
@@ -7,7 +7,6 @@
   min-height: 80vh;
 }
 
-/* El video de fondo específico para el componente */
 .videoIN {
   position: fixed;
   top: 0;
@@ -51,8 +50,8 @@
 }
 
 .casilla:focus {
-  outline: none; /* Elimina el borde negro/azul de selección */
-  box-shadow: none; /* Por si acaso algún navegador añade sombra */
+  outline: none;
+  box-shadow: none; 
 }
 
 .casilla:active {
@@ -65,7 +64,6 @@
   transform: translateY(-2px) scale(1.05);
 }
 
-/* TUS CLASES ORIGINALES (Adaptadas al nuevo estilo) */
 .casilla.jugador-b {
   background: radial-gradient(circle at 35% 35%, #60a5fa, #2563eb);
   filter: drop-shadow(0 0 8px #3b82f6);
@@ -99,4 +97,76 @@ strong {
 .turno-rojo {
   color: #fb7185 !important;
   text-shadow: 0 0 15px rgba(251, 113, 133, 0.6) !important;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  max-width: 450px;
+}
+
+.modal-title {
+  font-size: 2.8rem !important;
+  font-weight: 900;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  display: block;
+}
+
+.modal-content .turno-azul {
+  color: #60a5fa !important;
+  text-shadow: 0 0 25px rgba(96, 165, 250, 0.9) !important;
+}
+
+.modal-content .turno-rojo {
+  color: #fb7185 !important;
+  text-shadow: 0 0 25px rgba(251, 113, 133, 0.9) !important;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.btn-modal {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.btn-modal.primary { background: #3b82f6; color: white; }
+.btn-modal.secondary { background: rgba(255,255,255,0.2); color: white; }
+.btn-modal:hover { transform: scale(1.05); }
+
+.modal-content .turno-azul {
+  color: #60a5fa !important; 
+  text-shadow: 0 0 20px rgba(96, 165, 250, 0.8) !important;
+}
+
+.modal-content .turno-rojo {
+  color: #fb7185 !important; 
+  text-shadow: 0 0 20px rgba(251, 113, 133, 0.8) !important;
 }

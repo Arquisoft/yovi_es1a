@@ -23,9 +23,9 @@ use rand::prelude::IndexedRandom;
 /// # Example
 ///
 /// ```
-/// use gamey::{GameY, groupExpansionBot, YBot};
+/// use gamey::{GameY, GroupExpansionBot, YBot};
 ///
-/// let bot = groupExpansionBot;
+/// let bot = GroupExpansionBot;
 /// let game = GameY::new(5);
 ///
 /// // The bot will always return Some when there are available moves

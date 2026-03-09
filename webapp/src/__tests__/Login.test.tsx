@@ -4,114 +4,84 @@ import LoginForm from '../pages/Login'
 import { afterEach, describe, expect, test, vi } from 'vitest' 
 import '@testing-library/jest-dom'
 import { MemoryRouter } from 'react-router-dom'
+import { authService } from '../services/auth.service'
+
+vi.mock('../services/auth.service', () => ({
+  authService: {
+    login: vi.fn(),
+    register: vi.fn(),
+  }
+}))
 
 describe('LoginForm', () => {
   afterEach(() => {
-    vi.restoreAllMocks()//Evita que un test afecte al siguiente restaurando de cero
+    vi.restoreAllMocks()
   })
 
-  //Login sin username ni password --> Mensaje: Please enter username and password
-  test('Login sin username ni password', async () => {//Texto: lo que se comprueba
-    render(
-      <MemoryRouter>
-        <LoginForm />
-      </MemoryRouter>
-    )//render() monta el formulario. MemoryRouter se usa como un BrowserRouter pero para tests
-    //Se necesita MemoryRouter para crear el contexto de Router en memoria, así useNavigate() funciona en el test. 
-
-    const user = userEvent.setup()//Creo un usuario virtual de pruebas
-
-    const button = screen.getByRole('button', { name: /log in!/i });
-    //screen (objeto que funciona como DOM donde esta el componente de render), getByRole('button', { name: /lets go!/i }) busca el boton. La i indica que no importa Mayus/Minus.
-    await user.click(button)//Click en el botón
+  test('shows validation error when username and password are empty', async () => {
+    render(<MemoryRouter><LoginForm /></MemoryRouter>)
+    const user = userEvent.setup()
+    await user.click(screen.getByRole('button', { name: /log in!/i }))
     
-    await waitFor(() => {//Espera que algo ocurra en el DOM.
-      expect(screen.getByText(/Please enter username and password/i)).toBeInTheDocument()//Lo esperado que ocurra. Busca ese texto en el DOM generado.
+    await waitFor(() => {
+      expect(screen.getByText(/Please enter username and password/i)).toBeInTheDocument()
     })
   })
 
-  //Login sin username
-  test('login sin username', async () => {
-    render(
-      <MemoryRouter>
-        <LoginForm />
-      </MemoryRouter>
-    );
-    const user = userEvent.setup();
-    await user.type(screen.getByLabelText(/contra/i), 'password123');
-    await user.click(screen.getByRole('button', { name: /log in!/i }));
+  test('shows validation error when username is missing', async () => {
+    render(<MemoryRouter><LoginForm /></MemoryRouter>)
+    const user = userEvent.setup()
+    await user.type(screen.getByLabelText(/contra/i), 'password123')
+    await user.click(screen.getByRole('button', { name: /log in!/i }))
 
     await waitFor(() => {
-      expect(screen.getByText(/Please enter username and password/i)).toBeInTheDocument();
-    });
-  });
+      expect(screen.getByText(/Please enter username and password/i)).toBeInTheDocument()
+    })
+  })
 
-  //Login sin contraseña
-  test('login sin contraseña', async () => {
-    render(
-      <MemoryRouter>
-        <LoginForm />
-      </MemoryRouter>
-    );
-    const user = userEvent.setup();
-    await user.type(screen.getByLabelText(/user/i), 'Pablo');
-    await user.click(screen.getByRole('button', { name: /log in!/i }));
+  test('shows validation error when password is missing', async () => {
+    render(<MemoryRouter><LoginForm /></MemoryRouter>)
+    const user = userEvent.setup()
+    await user.type(screen.getByLabelText(/user/i), 'Pablo')
+    await user.click(screen.getByRole('button', { name: /log in!/i }))
 
     await waitFor(() => {
-      expect(screen.getByText(/Please enter username and password/i)).toBeInTheDocument();
-    });
-  });
+      expect(screen.getByText(/Please enter username and password/i)).toBeInTheDocument()
+    })
+  })
 
-  //Login con credenciales incorrectas
-  test('login con credenciales incorrectas', async () => {
-    // Mock fetch para simular login fallido
-    global.fetch = vi.fn().mockResolvedValueOnce({
-      ok: false,
-      status: 401,//Simula el error
-      json: async () => ({ error: 'Invalid password' }),
-    } as Response);
+  test('shows error when credentials are incorrect', async () => {
+    vi.mocked(authService.login).mockRejectedValueOnce(
+      new Error('Invalid password')
+    )
 
-    render(
-      <MemoryRouter>
-        <LoginForm />
-      </MemoryRouter>
-    );
-    const user = userEvent.setup();
-
-    await user.type(screen.getByLabelText(/user/i), 'Pablo');
-    await user.type(screen.getByLabelText(/contra/i), '111');
-    await user.click(screen.getByRole('button', { name: /log in!/i }));
+    render(<MemoryRouter><LoginForm /></MemoryRouter>)
+    const user = userEvent.setup()
+    await user.type(screen.getByLabelText(/user/i), 'Pablo')
+    await user.type(screen.getByLabelText(/contra/i), '111')
+    await user.click(screen.getByRole('button', { name: /log in!/i }))
 
     await waitFor(() => {
-      expect(screen.getByText(/Invalid password/i)).toBeInTheDocument();
-    });
-  });
+      // El componente muestra t("errorLogin") para cualquier error de credenciales
+      expect(screen.getByText(/errorLogin/i)).toBeInTheDocument()
+    })
+  })
 
-  //Login con credenciales correctas
-  test('login con credenciales correctas', async () => {
-    // Mock fetch para login exitoso
-    global.fetch = vi.fn().mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ userId: '1', username: 'Pablo' }),
-    } as Response);//Simula la petición
+  test('shows welcome message with username on successful login', async () => {
+    vi.mocked(authService.login).mockResolvedValueOnce({
+      userId: 1,
+      username: 'Pablo'
+    })
 
-    const alertMock = vi.spyOn(window, 'alert').mockImplementation(() => {});
-
-    render(
-      <MemoryRouter>
-        <LoginForm />
-      </MemoryRouter>
-    );
-
-    const user = userEvent.setup();
-
-    await user.type(screen.getByLabelText(/user/i), 'Pablo');
-    await user.type(screen.getByLabelText(/contra/i), 'password123');
-    await user.click(screen.getByRole('button', { name: /log in!/i }));
+    render(<MemoryRouter><LoginForm /></MemoryRouter>)
+    const user = userEvent.setup()
+    await user.type(screen.getByLabelText(/user/i), 'Pablo')
+    await user.type(screen.getByLabelText(/contra/i), 'password123')
+    await user.click(screen.getByRole('button', { name: /log in!/i }))
 
     await waitFor(() => {
-      expect(alertMock).toHaveBeenCalledWith('¡Bienvenido de nuevo, Pablo!');
-    });
-  });
-
+      expect(screen.getByText(/bienvenido/i)).toBeInTheDocument()
+      expect(screen.getByText(/Pablo/i)).toBeInTheDocument()
+    })
+  })
 })
