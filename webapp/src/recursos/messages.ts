@@ -87,7 +87,9 @@ export const messages = {
     en: "English",
     it: "Italian",
     fr: "French",
-    de: "German"
+    de: "German",
+    errorLogin: "Invalid username or password",
+    errorRegistro: "User already exists or registration failed"
   },
   es: {
     welcome: "Bienvenido",
@@ -176,7 +178,9 @@ export const messages = {
     en:"Inglés",
     it:"Italiano",
     fr:"Francés",
-    de:"Alemán"
+    de:"Alemán",
+    errorLogin: "Usuario o contraseña incorrectos",
+    errorRegistro: "El usuario ya existe o el registro falló"
   },
   fr: {
     welcome: "Bienvenue",
@@ -265,7 +269,9 @@ export const messages = {
     en: "Anglais",
     it: "Italien",
     fr: "Français",
-    de: "Allemand"
+    de: "Allemand",
+    errorLogin: "Nom d'utilisateur ou mot de passe incorrect",
+    errorRegistro: "L'utilisateur existe déjà ou l'inscription a échoué"
   },
   it: {
     welcome: "Benvenuto",
@@ -354,7 +360,9 @@ export const messages = {
     en: "Inglese",
     it: "Italiano",
     fr: "Francese",
-    de: "Tedesco"
+    de: "Tedesco",
+    errorLogin: "Nome utente o password errati",
+    errorRegistro: "L'utente esiste già o la registrazione è fallita"
   },
 
   de: {
@@ -444,6 +452,8 @@ export const messages = {
     en: "Englisch",
     it: "Italienisch",
     fr: "Französisch",
-    de: "Deutsch"
+    de: "Deutsch",
+    errorLogin: "Ungültiger Benutzername oder Passwort",
+    errorRegistro: "Benutzer existiert bereits oder Registrierung fehlgeschlagen"
   }
 } 

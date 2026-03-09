@@ -1,0 +1,101 @@
+.welcome-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+  z-index: 9999;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.welcome-text {
+  font-size: 3.5rem;
+  color: white;
+  text-align: center;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.user-neon {
+  color: #60a5fa; 
+  text-shadow: 0 0 20px rgba(96, 165, 250, 0.8), 0 0 40px rgba(96, 165, 250, 0.4);
+}
+
+.loader-line {
+  width: 250px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  margin-top: 30px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.loader-line::after {
+  content: "";
+  position: absolute;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #60a5fa, transparent);
+  animation: loading-slide 1.5s infinite;
+}
+
+.auth-card-wrapper {
+  position: relative;
+  display: inline-block;
+  /* IMPORTANTE: No le ponemos flex aquí para que no mueva tu layout original */
+}
+
+.error-message-neon {
+  position: absolute;
+  top: -70px; /* Ajusta esto si ves que pisa el formulario */
+  left: 0;
+  right: 0;
+  background: rgba(40, 0, 0, 0.9);
+  border: 2px solid #ff4d4d;
+  color: #ff4d4d;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(255, 77, 77, 0.5);
+  z-index: 100;
+  pointer-events: none; /* ESTO PERMITE HACER CLIC A TRAVÉS DEL ERROR */
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+}
+
+@keyframes loading-slide { 100% { left: 100%; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.error-message-neon-bottom {
+  position: absolute;
+  bottom: 15px; /* Ajusta este valor si necesitas subirlo o bajarlo un poco */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85%;
+  background: rgba(30, 0, 0, 0.9);
+  border: 1px solid #ff4d4d;
+  color: #ff4d4d;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+  font-size: 0.85rem;
+  box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
+  text-shadow: 0 0 5px rgba(255, 77, 77, 0.8);
+  z-index: 100;
+  animation: shake 0.4s ease-in-out;
+  pointer-events: none;
+}
