@@ -7,6 +7,8 @@ services:
     image: ghcr.io/arquisoft/yovi_es1a-users:latest
     ports:
       - "3000:3000"
+    environment:
+      - RUST_API_URL=http://gamey:4000
     networks:
       - monitor-net
     env_file:
