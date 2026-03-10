@@ -92,7 +92,8 @@ export const messages = {
     errorRegistro: "User already exists or registration failed",
 
     rendirse: "Surrender",
-    confirmSurrender: "Are you sure you want to surrender?"
+    confirmSurrender: "Are you sure you want to surrender?",
+    deshacer: "Undo"
   },
   es: {
     welcome: "Bienvenido",
@@ -186,7 +187,8 @@ export const messages = {
     errorRegistro: "El usuario ya existe o el registro falló",
 
     rendirse: "Rendirse",
-    confirmSurrender: "¿Estás seguro de que quieres rendirte?"
+    confirmSurrender: "¿Estás seguro de que quieres rendirte?",
+    deshacer: "Deshacer"
   },
   fr: {
     welcome: "Bienvenue",
@@ -280,7 +282,8 @@ export const messages = {
     errorRegistro: "L'utilisateur existe déjà ou l'inscription a échoué",
 
     rendirse: "Abandonner",
-    confirmSurrender: "Êtes-vous sûr de vouloir abandonner ?"
+    confirmSurrender: "Êtes-vous sûr de vouloir abandonner ?",
+    deshacer: "Annuler"
   },
   it: {
     welcome: "Benvenuto",
@@ -374,7 +377,8 @@ export const messages = {
     errorRegistro: "L'utente esiste già o la registrazione è fallita",
 
     rendirse: "Arrendersi",
-    confirmSurrender: "Sei sicuro di volerti arrendere?"
+    confirmSurrender: "Sei sicuro di volerti arrendere?",
+    deshacer: "Annulla"
   },
 
   de: {
@@ -469,6 +473,7 @@ export const messages = {
     errorRegistro: "Benutzer existiert bereits oder Registrierung fehlgeschlagen",
 
     rendirse: "Aufgeben",
-    confirmSurrender: "Bist du sicher, dass du aufgeben willst?"
+    confirmSurrender: "Bist du sicher, dass du aufgeben willst?",
+    deshacer: "Rückgängig"
   }
 } 
