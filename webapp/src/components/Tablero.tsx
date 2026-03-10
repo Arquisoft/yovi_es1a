@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+interface TableroProps {
+  surrenderTrigger?: boolean; // Flag para indicar si se ha activado la rendición
+}
 import { useLocation, useNavigate } from "react-router-dom";
 import { gameService } from "../services/game.service";
 import { statsService } from "../services/stats.service";
@@ -26,7 +29,7 @@ const coordsToIndex = (x: number, y: number, size: number) => {
   return (row * (row + 1)) / 2 + y;
 };
 
-const Tablero: React.FC = () => {
+const Tablero: React.FC<TableroProps> = ({ surrenderTrigger }) => {
   const location = useLocation();
   const navigate = useNavigate(); 
   
@@ -55,6 +58,21 @@ const Tablero: React.FC = () => {
     setTurn("B");
     if (storedUser) setUser(JSON.parse(storedUser));
   }, [size]);
+
+  React.useEffect(() => {
+  const handleSurrender = async () => {
+    if (surrenderTrigger && !gameFinished) {
+      setGameFinished(true);
+      setWinnerMessage("TE HAS RENDIDO. HAS PERDIDO.");
+      setShowWinnerModal(true);
+      
+      // Guardamos la derrota en la BD
+      await safeSaveStats("lose", layout);
+    }
+  };
+  
+  handleSurrender();
+}, [surrenderTrigger]);
 
   React.useEffect(() => {
     const botJuegaPrimero = async () => {

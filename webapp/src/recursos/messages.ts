@@ -89,7 +89,10 @@ export const messages = {
     fr: "French",
     de: "German",
     errorLogin: "Invalid username or password",
-    errorRegistro: "User already exists or registration failed"
+    errorRegistro: "User already exists or registration failed",
+
+    rendirse: "Surrender",
+    confirmSurrender: "Are you sure you want to surrender?"
   },
   es: {
     welcome: "Bienvenido",
@@ -180,7 +183,10 @@ export const messages = {
     fr:"Francés",
     de:"Alemán",
     errorLogin: "Usuario o contraseña incorrectos",
-    errorRegistro: "El usuario ya existe o el registro falló"
+    errorRegistro: "El usuario ya existe o el registro falló",
+
+    rendirse: "Rendirse",
+    confirmSurrender: "¿Estás seguro de que quieres rendirte?"
   },
   fr: {
     welcome: "Bienvenue",
@@ -271,7 +277,10 @@ export const messages = {
     fr: "Français",
     de: "Allemand",
     errorLogin: "Nom d'utilisateur ou mot de passe incorrect",
-    errorRegistro: "L'utilisateur existe déjà ou l'inscription a échoué"
+    errorRegistro: "L'utilisateur existe déjà ou l'inscription a échoué",
+
+    rendirse: "Abandonner",
+    confirmSurrender: "Êtes-vous sûr de vouloir abandonner ?"
   },
   it: {
     welcome: "Benvenuto",
@@ -362,7 +371,10 @@ export const messages = {
     fr: "Francese",
     de: "Tedesco",
     errorLogin: "Nome utente o password errati",
-    errorRegistro: "L'utente esiste già o la registrazione è fallita"
+    errorRegistro: "L'utente esiste già o la registrazione è fallita",
+
+    rendirse: "Arrendersi",
+    confirmSurrender: "Sei sicuro di volerti arrendere?"
   },
 
   de: {
@@ -454,6 +466,9 @@ export const messages = {
     fr: "Französisch",
     de: "Deutsch",
     errorLogin: "Ungültiger Benutzername oder Passwort",
-    errorRegistro: "Benutzer existiert bereits oder Registrierung fehlgeschlagen"
+    errorRegistro: "Benutzer existiert bereits oder Registrierung fehlgeschlagen",
+
+    rendirse: "Aufgeben",
+    confirmSurrender: "Bist du sicher, dass du aufgeben willst?"
   }
 } 
