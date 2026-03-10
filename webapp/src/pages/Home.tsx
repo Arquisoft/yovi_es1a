@@ -54,13 +54,9 @@ function Home() {
               onChange={changeLangTo}
             >
           <option value="es">{t("esp")}</option>
-
           <option value="en">{t("en")}</option>
-
           <option value="it">{t("it")}</option>
-
           <option value="fr">{t("fr")}</option>
-
           <option value="de">{t("de")}</option>
         </select>
       </nav>

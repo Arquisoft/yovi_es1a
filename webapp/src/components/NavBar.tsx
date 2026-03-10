@@ -83,17 +83,35 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
       </div>
 
       <div className="nav-right">
-        <select 
-          className="control-input"
-          value={lang} 
-          onChange={changeLangTo}
-        >
-          <option value="es">{t("esp")}</option>
-          <option value="en">{t("en")}</option>
-          <option value="it">{t("it")}</option>
-          <option value="fr">{t("fr")}</option>
-          <option value="de">{t("de")}</option>
-        </select>
+        
+        {/* Contenedor para el icono */}
+        <div style={{ position: "relative", display: "inline-block", marginRight: "10px" }}>
+          
+          {/* Icono flotando */}
+          <span style={{ 
+            position: "absolute", 
+            left: "10px", 
+            top: "50%", 
+            transform: "translateY(-50%)", 
+            pointerEvents: "none", 
+            fontSize: "1.2rem" 
+          }}>
+            🌐
+          </span>
+
+          <select 
+            className="control-input"
+            value={lang} 
+            onChange={changeLangTo}
+            style={{ paddingLeft: "35px" }} /* Este padding es CLAVE: hace hueco para que el texto no pise al icono */
+          >
+            <option value="es">{t("esp")}</option>
+            <option value="en">{t("en")}</option>
+            <option value="it">{t("it")}</option>
+            <option value="fr">{t("fr")}</option>
+            <option value="de">{t("de")}</option>
+          </select>
+        </div>
 
         {!user ? (
           <>
