@@ -7,7 +7,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* 👇 ESTA ES LA CLAVE: Lo bajamos 100px para que el menú no lo tape */
   margin-top: 120px; 
   text-align: center;
 }
@@ -52,4 +51,49 @@
   cursor: not-allowed;
   border-color: #666;
   color: #666;
+}
+
+/* Estilo para el contenedor del tablero, centrado y con espacio */
+.game-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px; 
+  margin-bottom: 30px; 
+}
+
+/* Separa los dos botones entre sí */
+.game-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+/* Estilo ciberpunk azulado para el botón Deshacer */
+.btn-undo {
+  background: rgba(100, 181, 246, 0.1); /* Fondo azul sutil */
+  border: 1px solid #64b5f6; /* Borde azul neón */
+  color: #64b5f6;
+  padding: 10px 20px;
+  font-family: 'Orbitron', sans-serif; 
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-undo:hover:not(:disabled) {
+  background: rgba(100, 181, 246, 0.3);
+  box-shadow: 0 0 15px rgba(100, 181, 246, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-undo:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: #666;
+  color: #666;
+  box-shadow: none;
 }
