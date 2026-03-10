@@ -7,13 +7,24 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 2vh;
+  /* 👇 ESTA ES LA CLAVE: Lo bajamos 100px para que el menú no lo tape */
+  margin-top: 120px; 
   text-align: center;
+}
+
+/* 👇 Nueva clase para organizar el título y el botón */
+.game-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px; /* Espacio entre el título y el botón */
+  margin-bottom: 30px; /* Espacio antes del tablero */
 }
 
 .game-title {
   font-size: 1.5rem;
-  margin-bottom: 2vh;
+  margin: 0;
+  color: white; /* Por si el texto oscuro no se lee bien con tu fondo */
 }
 
 .btn-surrender {
@@ -21,7 +32,7 @@
   border: 1px solid #ff4444;
   color: #ff4444;
   padding: 10px 20px;
-  font-family: 'Orbitron', sans-serif; /* O la que uses */
+  font-family: 'Orbitron', sans-serif; 
   font-weight: bold;
   cursor: pointer;
   border-radius: 4px;
