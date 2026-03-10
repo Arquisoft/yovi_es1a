@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-interface TableroProps {
-  surrenderTrigger?: boolean; // Flag para indicar si se ha activado la rendición
-}
 import { useLocation, useNavigate } from "react-router-dom";
 import { gameService } from "../services/game.service";
 import { statsService } from "../services/stats.service";
@@ -9,8 +6,16 @@ import "./Tablero.css";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 import video from "../assets/videoLinea.mp4";
 
+// Definición de las props que recibe el componente Tablero
+interface TableroProps {
+  surrenderTrigger?: boolean;
+  undoTrigger?: number;
+  onUndoStatusChange?: (canUndo: boolean) => void;
+}
+
 type Player = "B" | "R";
 
+// Función para convertir el layout plano a formato Yen requerido por el backend
 const stringToYenLayout = (flatLayout: string, size: number) => {
   let yenLayout = "";
   let currentIndex = 0;
@@ -29,10 +34,11 @@ const coordsToIndex = (x: number, y: number, size: number) => {
   return (row * (row + 1)) / 2 + y;
 };
 
-const Tablero: React.FC<TableroProps> = ({ surrenderTrigger }) => {
+const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, onUndoStatusChange }) => {
   const location = useLocation();
   const navigate = useNavigate(); 
-  
+  const { t } = useLanguage();
+
   const { 
     tamanoSeleccionado = 5, 
     botSeleccionado = "random_bot" ,
@@ -43,37 +49,69 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger }) => {
   const size = tamanoSeleccionado;
   const getInitialLayout = (n: number) => ".".repeat((n * (n + 1)) / 2);
 
+  // Estados del juego
   const [layout, setLayout] = useState(getInitialLayout(size));
   const [turn, setTurn] = useState<Player>("B");
   const [loading, setLoading] = useState(false);
+  const [history, setHistory] = useState<string[]>([]); // Historial para "Deshacer"
   const [startTime] = useState<number>(Date.now());
   const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
+  
+  // Estados de fin de partida
   const [gameFinished, setGameFinished] = useState(false);
   const [showWinnerModal, setShowWinnerModal] = useState(false);
   const [winnerMessage, setWinnerMessage] = useState("");
 
+  // ==========================================
+  // USE EFFECTS
+  // ==========================================
+
+  // Inicializar partida y limpiar historial
   React.useEffect(() => {
     const storedUser = localStorage.getItem("user");
     setLayout(getInitialLayout(size));
     setTurn("B");
+    setHistory([]);
     if (storedUser) setUser(JSON.parse(storedUser));
   }, [size]);
 
+  // Actualizar el estado del botón Deshacer en el componente padre
   React.useEffect(() => {
-  const handleSurrender = async () => {
-    if (surrenderTrigger && !gameFinished) {
-      setGameFinished(true);
-      setWinnerMessage("TE HAS RENDIDO. HAS PERDIDO.");
-      setShowWinnerModal(true);
-      
-      // Guardamos la derrota en la BD
-      await safeSaveStats("lose", layout);
+    if (onUndoStatusChange) {
+      onUndoStatusChange(history.length > 0 && !loading && !gameFinished);
     }
-  };
-  
-  handleSurrender();
-}, [surrenderTrigger]);
+  }, [history.length, loading, gameFinished, onUndoStatusChange]);
 
+  // Manejar el gatillo de Deshacer
+  React.useEffect(() => {
+    if (undoTrigger && undoTrigger > 0 && history.length > 0) {
+      const previousLayout = history[history.length - 1]; 
+      
+      setHistory(prev => prev.slice(0, -1)); // Borramos el último paso
+      setLayout(previousLayout); // Restauramos el tablero
+      setGameFinished(false); 
+      setShowWinnerModal(false);
+
+      // Calculamos a quién le toca el turno basándonos en las fichas del tablero restaurado
+      const moves = previousLayout.split("").filter(c => c !== ".").length;
+      setTurn(moves % 2 === 0 ? "B" : "R");
+    }
+  }, [undoTrigger]);
+
+  // Manejar el gatillo de Rendición
+  React.useEffect(() => {
+    const handleSurrender = async () => {
+      if (surrenderTrigger && !gameFinished) {
+        setGameFinished(true);
+        setWinnerMessage("TE HAS RENDIDO. HAS PERDIDO.");
+        setShowWinnerModal(true);
+        await safeSaveStats("lose", layout);
+      }
+    };
+    handleSurrender();
+  }, [surrenderTrigger]);
+
+  // Primer movimiento del Bot (si procede)
   React.useEffect(() => {
     const botJuegaPrimero = async () => {
       if (modoSeleccionado === "bot" && colorUsuario === "R" && layout === getInitialLayout(size)) {
@@ -86,6 +124,8 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger }) => {
           const newLayoutArray = layout.split("");
           newLayoutArray[botIndex] = "B";
           const newLayout = newLayoutArray.join("");
+          
+          setHistory(prev => [...prev, layout]); // Guardamos antes de que mueva el bot
           setLayout(newLayout);
           
           const yenLayoutAfterBot = stringToYenLayout(newLayout, size);
@@ -111,6 +151,10 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger }) => {
     botJuegaPrimero();
   }, [modoSeleccionado, colorUsuario, size, botSeleccionado]);
 
+  // ==========================================
+  // FUNCIONES DE JUEGO
+  // ==========================================
+
   const safeSaveStats = async (result: "win" | "lose", finalBoard: string) => {
     if (!user || !user.userId) return;
     try {
@@ -132,6 +176,9 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger }) => {
 
   const play = async (index: number) => {
     if (gameFinished) return; 
+
+    // Guardamos el estado actual antes de hacer ningún cambio
+    setHistory(prev => [...prev, layout]);
 
     const newLayoutArray = layout.split("");
     newLayoutArray[index] = turn;
@@ -255,8 +302,6 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger }) => {
     return filas;
   };
 
-  const { t } = useLanguage();
-
   return (
     <div className="gameBoard">
       <video autoPlay muted loop className="videoIN">
@@ -284,7 +329,6 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger }) => {
       {loading && modoSeleccionado === "bot" && (
         <p style={{ color: '#60a5fa' }}>El Bot está calculando...</p>
       )}
-
 
       {showWinnerModal && (
           <div className="modal-overlay">
