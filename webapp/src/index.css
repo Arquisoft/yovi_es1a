@@ -66,3 +66,25 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+p, li {
+  color: #ffffff !important;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Color para los títulos de las reglas */
+h1, h2, h3 {
+  color: #60a5fa !important;
+  text-shadow: 0 0 10px rgba(96, 165, 250, 0.4);
+}
+
+/* Para resaltar las estrategias (Monte Carlo, etc.) */
+strong {
+  color: #5b99f6 !important;
+  font-weight: bold;
+}
+
+/* Evitar que el fondo del body tape el video en algunas páginas */
+body {
+  background-color: transparent !important;
+}

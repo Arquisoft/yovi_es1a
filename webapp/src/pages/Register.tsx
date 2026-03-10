@@ -1,31 +1,26 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import avatar from '../assets/avatar.png';
-import y_gris from '../assets/y_gris.png'; 
+import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/auth.service';
-import { useLanguage } from "../idiomaConf/LanguageContext";
-import video from "../assets/videoLinea.mp4";
-
+import { useLanguage } from '../idiomaConf/LanguageContext';
+import AuthForm from '../components/AuthForm';
+import NavBar from '../components/NavBar';
+import "./Register.css"; 
 
 const Register: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
+  const { t } = useLanguage();
+  
+  const [welcomeUser, setWelcomeUser] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleRegister = async (username: string, password: string, email?: string) => {
     setError(null);
 
-    if (!username.trim() || !email.trim() || !password.trim()) {
-      setError('Please fill all fields');
+    if (!username || !password || !email) {
+      setError("Please fill all fields");
       return;
     }
 
-    setLoading(true);
     try {
       const data = await authService.register(username, email, password);
 
@@ -33,84 +28,53 @@ const Register: React.FC = () => {
         userId: data.userId, 
         username: data.username
       }));
-
-      setUsername(''); setEmail(''); setPassword('');
-      alert(`¡Usuario registrado correctamente!`);
-      navigate('/jugar');
+      
+      setWelcomeUser(data.username);
+      setTimeout(() => navigate('/configureGame'), 1500);
 
     } catch (err: any) {
-      setError(err.message || 'Network error');
-    } finally {
-      setLoading(false);
+      const message = err.message || "An error occurred";
+      setError(message);
+      console.error("Error al registrar:", err);
     }
   };
 
-    //Usar el idioma
-    const { t } = useLanguage();
-
   return (
-    <div className="RegisterForm">
-      <video autoPlay muted loop className="video">
-        <source src={video} type="video/mp4" />
-        No se ha podido mostrar el video de fondo
-      </video>
-      <img src={y_gris} className="y_gris" alt="y gris" />
-      <div className="form-content">
-        <div className="title-register">
-          <img src={avatar} className="avatar" alt="avatar" />
-          <h2>{t("creaCuent")}</h2>
+    <>
+      <NavBar activeTab="register" />
+      
+      {welcomeUser ? (
+        <div className="welcome-overlay">
+          <h1 className="welcome-text">
+            {t("bienvenido")}, <br />
+            <span className="user-neon">{welcomeUser}</span>
+          </h1>
+          <div className="loader-line"></div>
         </div>
-
-        <form onSubmit={handleSubmit} className="register-form">
-          <div className="form-group">
-            <label htmlFor="username">{t("user")}</label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="form-input"
+      ) : (
+        <div className="login-container">
+          <div className="auth-card-wrapper" style={{ position: 'relative' }}>
+            
+            <AuthForm
+              title={t("creaCuent")}
+              isRegister={true}
+              buttonText="Lets go!"
+              loadingText="Entering..."
+              bottomText={t("siCuenta")}
+              bottomLinkText={t("inSes")}
+              bottomLinkPath="/login"
+              onSubmit={handleRegister}
             />
-          </div>
 
-          <div className="form-group">
-            <label htmlFor="email">{t("email")}</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="form-input"
-            />
+            {error && (
+              <div className="error-message-neon-bottom">
+                {error}
+              </div>
+            )}
           </div>
-
-          <div className="form-group">
-            <label htmlFor="password">{t("contra")}</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="form-input"
-            />
-          </div>
-
-          <button type="submit" className="submit-button" disabled={loading}> 
-            {loading ? 'Entering...' : 'Lets go!'}
-          </button>
-          
-          <div style={{ textAlign: 'center', marginTop: '1rem', color: '#666' }}>
-            {t("siCuenta")} <Link to="/login" style={{ color: '#007bff', textDecoration: 'none', fontWeight: 'bold' }}>{t("inSes")}</Link>
-          </div>
-
-          {error && (
-            <div className="error-message" style={{ marginTop: 12, color: 'red' }}>
-              {error}
-            </div>
-          )}
-        </form>
-      </div>
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 

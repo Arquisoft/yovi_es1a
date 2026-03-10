@@ -1,6 +1,7 @@
 export const messages = {
   en: {
     welcome: "Welcome",
+    inicio: "Home",
     jugar: "Play",
     estadisticas: "Statistics",
     ayuda: "Help",
@@ -13,6 +14,7 @@ export const messages = {
     oponente: "Opponent",
     movimientos: "Moves",
     duracion: "Duration",
+    
 
     bienvenido: "Welcome to Game Y",
     introducción: "Introduction",
@@ -85,10 +87,13 @@ export const messages = {
     en: "English",
     it: "Italian",
     fr: "French",
-    de: "German"
+    de: "German",
+    errorLogin: "Invalid username or password",
+    errorRegistro: "User already exists or registration failed"
   },
   es: {
     welcome: "Bienvenido",
+    inicio: "Inicio",
     jugar: "Jugar",
     estadisticas: "Estadísticas",
     ayuda: "Ayuda",
@@ -173,10 +178,13 @@ export const messages = {
     en:"Inglés",
     it:"Italiano",
     fr:"Francés",
-    de:"Alemán"
+    de:"Alemán",
+    errorLogin: "Usuario o contraseña incorrectos",
+    errorRegistro: "El usuario ya existe o el registro falló"
   },
   fr: {
     welcome: "Bienvenue",
+    inicio: "Accueil",
     jugar: "Jouer",
     estadisticas: "Statistiques",
     ayuda: "Aide",
@@ -261,10 +269,13 @@ export const messages = {
     en: "Anglais",
     it: "Italien",
     fr: "Français",
-    de: "Allemand"
+    de: "Allemand",
+    errorLogin: "Nom d'utilisateur ou mot de passe incorrect",
+    errorRegistro: "L'utilisateur existe déjà ou l'inscription a échoué"
   },
   it: {
     welcome: "Benvenuto",
+    inicio: "Inizio",
     jugar: "Gioca",
     estadisticas: "Statistiche",
     ayuda: "Aiuto",
@@ -349,11 +360,14 @@ export const messages = {
     en: "Inglese",
     it: "Italiano",
     fr: "Francese",
-    de: "Tedesco"
+    de: "Tedesco",
+    errorLogin: "Nome utente o password errati",
+    errorRegistro: "L'utente esiste già o la registrazione è fallita"
   },
 
   de: {
     welcome: "Willkommen",
+    inicio: "Startseite",
     jugar: "Spielen",
     estadisticas: "Statistiken",
     ayuda: "Hilfe",
@@ -438,6 +452,8 @@ export const messages = {
     en: "Englisch",
     it: "Italienisch",
     fr: "Französisch",
-    de: "Deutsch"
+    de: "Deutsch",
+    errorLogin: "Ungültiger Benutzername oder Passwort",
+    errorRegistro: "Benutzer existiert bereits oder Registrierung fehlgeschlagen"
   }
 } 

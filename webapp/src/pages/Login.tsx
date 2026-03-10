@@ -1,29 +1,20 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import avatar from '../assets/avatar.png';
-import y_gris from '../assets/y_gris.png';
+import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/auth.service';
-import { useLanguage } from "../idiomaConf/LanguageContext";
-import video from "../assets/videoLinea.mp4";
+import { useLanguage } from '../idiomaConf/LanguageContext';
+import AuthForm from '../components/AuthForm';
+import NavBar from '../components/NavBar';
+import "./Login.css"; 
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
+  const { t } = useLanguage();
+  
+  const [welcomeUser, setWelcomeUser] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleLogin = async (username: string, password: string) => {
     setError(null);
-
-    if (!username.trim() || !password.trim()) {
-      setError('Please enter username and password');
-      return;
-    }
-
-    setLoading(true);
     try {
       const data = await authService.login(username, password);
 
@@ -32,71 +23,47 @@ const Login: React.FC = () => {
         username: data.username
       }));
       
-      alert(`¡Bienvenido de nuevo, ${data.username}!`);
-      navigate('/jugar');
+      setWelcomeUser(data.username);
+      setTimeout(() => navigate('/configureGame'), 1500);
 
     } catch (err: any) {
-      setError(err.message || 'Error de conexión con el servidor');
-    } finally {
-      setLoading(false);
+      console.error("Error al loguear:", err);
+      setError(t("errorLogin") || "Usuario o contraseña incorrectos");
     }
   };
 
-      //Usar el idioma
-      const { t } = useLanguage();
-
   return (
-    <div className="RegisterForm">
-      <video autoPlay muted loop className="video">
-        <source src={video} type="video/mp4" />
-        No se ha podido mostrar el video de fondo
-      </video>
-      <img src={y_gris} className="y_gris" alt="y gris" />
-      <div className="form-content">
-        <div className="title-register">
-          <img src={avatar} className="avatar" alt="avatar" />
-          <h2>{t("inSes")}</h2>
+    <>
+      <NavBar activeTab="login" />
+      
+      {welcomeUser ? (
+        <div className="welcome-overlay">
+          <h1 className="welcome-text">
+            {t("bienvenido")}, <br />
+            <span className="user-neon">{welcomeUser}</span>
+          </h1>
+          <div className="loader-line"></div>
         </div>
-
-        <form onSubmit={handleSubmit} className="register-form">
-          <div className="form-group">
-            <label htmlFor="username">{t("user")}</label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="form-input"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">{t("contra")}</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="form-input"
-            />
-          </div>
-
-          <button type="submit" className="submit-button" disabled={loading}> 
-            {loading ? 'Entering...' : 'Log in!'}
-          </button>
-
-          <div style={{ textAlign: 'center', marginTop: '1rem', color: '#666' }}>
-            {t("noCuenta")} <Link to="/register" style={{ color: '#007bff', textDecoration: 'none', fontWeight: 'bold' }}>{t("regAqui")}</Link>
-          </div>
-          
+      ) : (
+        <div className="login-container">
           {error && (
-            <div className="error-message" style={{ marginTop: 12, color: 'red', textAlign: 'center' }}>
+            <div className="error-message-neon">
               {error}
             </div>
           )}
-        </form>
-      </div>
-    </div>
+          
+          <AuthForm
+            title={t("inSes")}
+            buttonText="Log in!"
+            loadingText="Entering..."
+            bottomText={t("noCuenta")}
+            bottomLinkText={t("regAqui")}
+            bottomLinkPath="/register"
+            onSubmit={handleLogin}
+          />
+        </div>
+      )}
+    </>
   );
 };
 

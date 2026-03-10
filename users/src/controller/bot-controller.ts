@@ -1,4 +1,4 @@
-const RUST_API_URL = process.env.RUST_API_URL || "http://gamey:4000";
+const RUST_API_URL = process.env.RUST_API_URL;
 import express, { Request, Response, Router } from 'express';
 
 const router: Router = express.Router();
@@ -49,6 +49,34 @@ router.post('/play', async (req: Request, res: Response) => {
     } catch (error: any) {
         console.error("Error communicating with the YEN engine:", error);
         return res.status(500).json({ error: "Internal error on Node.js server" });
+    }
+});
+
+router.post('/check-winner', async (req: Request, res: Response) => {
+    try {
+        const position = {
+            size: req.body.size,
+            layout: req.body.layout,
+            turn: 0, 
+            players: ["B", "R"]
+        };
+
+        const rustResponse = await fetch(`${RUST_API_URL}/v1/game/check_winner`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(position) 
+        });
+
+        if (!rustResponse.ok) {
+            const errorText = await rustResponse.text();
+            return res.status(500).json({ error: "Rust rechazó la petición", details: errorText });
+        }
+
+        const data = await rustResponse.json();
+        return res.status(200).json(data);
+    } catch (error: any) {
+        console.error("Error en Node:", error);
+        return res.status(500).json({ error: "No se pudo contactar con gamey:4000" });
     }
 });
 

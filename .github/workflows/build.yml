@@ -45,7 +45,7 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
         args: >
-          -Dsonar.javascript.lcov.reportPaths=users/coverage/lcov.info
+          -Dsonar.javascript.lcov.reportPaths=users/coverage/lcov.info,webapp/coverage/lcov.info
           -Dsonar.coverage.exclusions=**/*.test.ts,**/__tests__/**,**/test-cli.ts,users/src/database.ts,users/src/index.ts
           -Dsonar.test.inclusions=**/*.test.ts,**/__tests__/**
           -Dsonar.projectKey=Arquisoft_yovi_es1a

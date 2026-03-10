@@ -15,6 +15,8 @@ This project is a template with some basic functionality for the ASW labs.
 - Hugo Carbajales Quintana UO300051.
 - Sergio Argüelles Huerta UO299741.
 
+# URL Deployment: http://20.199.88.71/
+
 ## Project Structure
 
 The project is divided into three main components, each in its own directory:

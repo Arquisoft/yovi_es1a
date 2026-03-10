@@ -1,14 +1,172 @@
-.casilla.player-b {
-  background-color: #3b82f6; 
-  color: white;
-  font-weight: bold;
-  border: 2px solid #2563eb;
+
+.gameBoard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
 }
 
-.casilla.player-r {
-  background-color: #ef4444;
-  color: white;
-  font-weight: bold;
-  border: 2px solid #dc2626;
+.videoIN {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  object-fit: cover;
+  filter: brightness(0.6);
 }
 
+.tablero-grid {
+  max-height: 75vh; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+/* Cada fila del tablero */
+.tablero {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+.casilla {
+  background-color: rgba(255, 255, 255, 0.1);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent !important;
+  font-size: 0 !important;      
+  line-height: 0;              
+  text-indent: -9999px;
+}
+
+.casilla:focus {
+  outline: none;
+  box-shadow: none; 
+}
+
+.casilla:active {
+  filter: brightness(1.5);
+}
+
+/* Hover para casillas vacías */
+.casilla:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px) scale(1.05);
+}
+
+.casilla.jugador-b {
+  background: radial-gradient(circle at 35% 35%, #60a5fa, #2563eb);
+  filter: drop-shadow(0 0 8px #3b82f6);
+  animation: pulse-glow 2.5s infinite;
+}
+
+.casilla.jugador-r {
+  background: radial-gradient(circle at 35% 35%, #fb7185, #dc2626);
+  filter: drop-shadow(0 0 8px #ef4444);
+  animation: pulse-glow 2.5s infinite;
+}
+
+/* Animación de brillo neón */
+@keyframes pulse-glow {
+  0%, 100% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 5px currentColor); }
+  50% { transform: scale(0.98); filter: brightness(1.2) drop-shadow(0 0 15px currentColor); }
+}
+
+strong {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); 
+  transition: all 0.3s ease;
+  font-weight: 800;
+}
+
+
+.turno-azul {
+  color: #60a5fa !important;
+  text-shadow: 0 0 15px rgba(96, 165, 250, 0.6) !important;
+}
+
+.turno-rojo {
+  color: #fb7185 !important;
+  text-shadow: 0 0 15px rgba(251, 113, 133, 0.6) !important;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  max-width: 450px;
+}
+
+.modal-title {
+  font-size: 2.8rem !important;
+  font-weight: 900;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  display: block;
+}
+
+.modal-content .turno-azul {
+  color: #60a5fa !important;
+  text-shadow: 0 0 25px rgba(96, 165, 250, 0.9) !important;
+}
+
+.modal-content .turno-rojo {
+  color: #fb7185 !important;
+  text-shadow: 0 0 25px rgba(251, 113, 133, 0.9) !important;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.btn-modal {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.btn-modal.primary { background: #3b82f6; color: white; }
+.btn-modal.secondary { background: rgba(255,255,255,0.2); color: white; }
+.btn-modal:hover { transform: scale(1.05); }
+
+.modal-content .turno-azul {
+  color: #60a5fa !important; 
+  text-shadow: 0 0 20px rgba(96, 165, 250, 0.8) !important;
+}
+
+.modal-content .turno-rojo {
+  color: #fb7185 !important; 
+  text-shadow: 0 0 20px rgba(251, 113, 133, 0.8) !important;
+}

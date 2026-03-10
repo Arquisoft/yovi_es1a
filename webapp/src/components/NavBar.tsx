@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import avatar from '../assets/avatar.png'; 
 import { useLanguage } from "../idiomaConf/LanguageContext";
 
-interface NavBarProps {
-  activeTab: "play" | "stats" |"Ayuda";
+interface NavBarProps { 
+  activeTab: "home" | "play" | "stats" | "help" | "login" | "register" | "";
 }
 
 const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
@@ -23,10 +23,8 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
     navigate("/login");
   };
 
-  //Usar el idioma
   const { t, lang, setLang } = useLanguage();
 
-  // Función para cambiar idioma
   const changeLangTo = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = e.target.value;
     switch (selected) {
@@ -50,38 +48,46 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
     }
   };
 
-
-
-
   return (
     <nav className="nav-bar">
       <div className="nav-left">
         <button 
-          onClick={() => navigate("/jugar")}
-          className={`nav-item ${activeTab === "play" ? "active" : ""}`}
+          onClick={() => navigate("/")}
+          className={`nav-item ${activeTab === "home" ? "active" : ""}`}
         >
-          {t("jugar")}
+          {t("inicio")}
         </button>
-        <button 
-          onClick={() => navigate("/estadisticas")}
-          className={`nav-item ${activeTab === "stats" ? "active" : ""}`}
-        >
-          {t("estadisticas")}
-        </button>
-        <button 
-          onClick={() => navigate("/ayuda")}
-          className={`nav-item ${activeTab === "Ayuda" ? "active" : ""}`}
-        >
-          {t("ayuda")}
-        </button>
+
+        {user && (
+          <>
+            <button 
+              onClick={() => navigate("/configureGame")}
+              className={`nav-item ${activeTab === "play" ? "active" : ""}`}
+            >
+              {t("jugar")}
+            </button>
+            <button 
+              onClick={() => navigate("/statistics")}
+              className={`nav-item ${activeTab === "stats" ? "active" : ""}`}
+            >
+              {t("estadisticas")}
+            </button>
+            <button 
+              onClick={() => navigate("/help")}
+              className={`nav-item ${activeTab === "help" ? "active" : ""}`}
+            >
+              {t("ayuda")}
+            </button>
+          </>
+        )}
       </div>
 
       <div className="nav-right">
         <select 
-              className="control-input"
-              value={lang} 
-              onChange={changeLangTo}
-            >
+          className="control-input"
+          value={lang} 
+          onChange={changeLangTo}
+        >
           <option value="es">{t("esp")}</option>
           <option value="en">{t("en")}</option>
           <option value="it">{t("it")}</option>
@@ -89,10 +95,27 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
           <option value="de">{t("de")}</option>
         </select>
 
-        <button className="nav-item perfil" onClick={handleLogout} title="Cerrar sesión">
-          <img src={avatar} className="avatar" alt="avatar" />
-          <span className="username">{user?.username || "Invitado"}</span>
-        </button>
+        {!user ? (
+          <>
+            <button 
+              onClick={() => navigate("/login")}
+              className={`nav-item ${activeTab === "login" ? "active" : ""}`}
+            >
+              {t("iniciarSes")}
+            </button>
+            <button 
+              onClick={() => navigate("/register")}
+              className={`nav-item ${activeTab === "register" ? "active" : ""}`}
+            >
+              {t("crearCuenta")}
+            </button>
+          </>
+        ) : (
+          <button className="nav-item perfil" onClick={handleLogout} title="Cerrar sesión">
+            <img src={avatar} className="avatar" alt="avatar" />
+            <span className="username">{user.username}</span>
+          </button>
+        )}
       </div>
     </nav>
   );
