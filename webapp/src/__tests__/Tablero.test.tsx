@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest'
 import Tablero from '../components/Tablero'
@@ -297,10 +297,8 @@ describe('Board - Surrender Capability', () => {
       </MemoryRouter>
     )
 
-    // 1. Esperamos a que el tablero se inicie completamente (igual que haría un jugador)
     await screen.findByText(/TÚ \(Azul\)/i)
 
-    // 2. Disparamos la rendición re-renderizando con la prop a true
     rerender(
       <MemoryRouter initialEntries={[{ pathname: '/game' }]}>
         <Routes>
@@ -309,12 +307,10 @@ describe('Board - Surrender Capability', () => {
       </MemoryRouter>
     )
 
-    // 3. Verifica que el modal de rendición aparece
     await waitFor(() => {
       expect(screen.getByText(/TE HAS RENDIDO/i)).toBeInTheDocument()
     })
 
-    // 4. Verifica que la derrota se ha guardado en la BD
     await waitFor(() => {
       expect(statsService.saveMatchResult).toHaveBeenCalledWith(
         expect.objectContaining({ result: 'lose' })
@@ -326,7 +322,6 @@ describe('Board - Surrender Capability', () => {
 describe('Board - Undo Capability', () => {
   beforeEach(() => {
     vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'ongoing' })
-    // Dejamos que el bot responda normalmente para que deje de estar "loading"
     vi.mocked(gameService.askBotMove).mockResolvedValue({
       api_version: "1.0", bot_id: "test", game_status: 'ongoing', coords: { x: 1, y: 0, z: 0 }
     })
@@ -343,14 +338,11 @@ describe('Board - Undo Capability', () => {
       </MemoryRouter>
     )
 
-    // Al inicio, el historial está vacío, así que deshacer es falso
     expect(onUndoSpy).toHaveBeenCalledWith(false)
 
-    // Hacemos un movimiento
     const primeraCasilla = container.querySelectorAll('.casilla')[0]
     fireEvent.click(primeraCasilla)
 
-    // Después de mover y de que el bot responda (loading false), deshacer debe ser verdadero
     await waitFor(() => {
       expect(onUndoSpy).toHaveBeenCalledWith(true)
     })
@@ -367,14 +359,12 @@ describe('Board - Undo Capability', () => {
 
     const casillas = container.querySelectorAll('.casilla')
     
-    // 1. El usuario mueve (el bot responde instantáneamente por el mock)
     fireEvent.click(casillas[0])
 
     await waitFor(() => {
       expect(casillas[0]).toHaveClass('jugador-b')
     })
 
-    // 2. Disparamos la máquina del tiempo (cambiamos la prop undoTrigger a 1)
     rerender(
       <MemoryRouter initialEntries={[{ pathname: '/game' }]}>
         <Routes>
@@ -383,10 +373,121 @@ describe('Board - Undo Capability', () => {
       </MemoryRouter>
     )
 
-    // 3. Verificamos que la ficha ha desaparecido y el turno vuelve a ser nuestro
     await waitFor(() => {
       expect(casillas[0]).not.toHaveClass('jugador-b')
       expect(screen.getByText(/TÚ \(Azul\)/i)).toBeInTheDocument()
     })
+  })
+})
+describe('Board - Timer and Pass Turn Capability', () => {
+  beforeEach(() => {
+    vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'ongoing' })
+    vi.mocked(gameService.askBotMove).mockResolvedValue({
+      api_version: "1.0", bot_id: "test", game_status: 'ongoing', coords: { x: 1, y: 0, z: 0 }
+    })
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.clearAllMocks()
+  })
+
+  test('timer starts at 20s and counts down correctly', () => {
+    vi.useFakeTimers()
+    
+    render(
+      <MemoryRouter initialEntries={[{ pathname: '/game', state: { modoSeleccionado: 'humano' } }]}>
+        <Routes>
+          <Route path="/game" element={<Tablero />} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    expect(screen.getByText(/⏱️ 20s/i)).toBeInTheDocument()
+
+    act(() => {
+      vi.advanceTimersByTime(3000)
+    })
+
+    expect(screen.getByText(/⏱️ 17s/i)).toBeInTheDocument()
+  })
+
+  test('timer resets to 20s after a move is made', async () => {
+    vi.useFakeTimers() 
+    const { container } = render(
+      <MemoryRouter initialEntries={[{ pathname: '/game', state: { modoSeleccionado: 'humano', tamanoSeleccionado: 3 } }]}>
+        <Routes>
+          <Route path="/game" element={<Tablero />} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    act(() => {
+      vi.advanceTimersByTime(5000)
+    })
+    
+    expect(screen.getByText(/⏱️ 15s/i)).toBeInTheDocument()
+
+    vi.useRealTimers()
+
+    const casillas = container.querySelectorAll('.casilla')
+    fireEvent.click(casillas[0])
+
+    await waitFor(() => {
+      expect(screen.getByText(/⏱️ 20s/i)).toBeInTheDocument()
+    })
+  })
+
+  test('timer reaching 0 automatically makes a random move and passes the turn', async () => {
+    vi.useFakeTimers()
+    const { container } = render(
+      <MemoryRouter initialEntries={[{ pathname: '/game', state: { modoSeleccionado: 'humano', tamanoSeleccionado: 3 } }]}>
+        <Routes>
+          <Route path="/game" element={<Tablero />} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    expect(screen.getByText(/JUGADOR 1 \(Azul\)/i)).toBeInTheDocument()
+
+    act(() => {
+      vi.advanceTimersByTime(20000)
+    })
+
+    vi.useRealTimers()
+
+    await waitFor(() => {
+      expect(screen.getByText(/JUGADOR 2 \(Rojo\)/i)).toBeInTheDocument()
+    })
+
+    const fichasAzules = container.querySelectorAll('.casilla.jugador-b')
+    expect(fichasAzules.length).toBe(1)
+  })
+
+  test('passTurnTrigger manually executes an automatic move and passes the turn', async () => {
+    const { container, rerender } = render(
+      <MemoryRouter initialEntries={[{ pathname: '/game', state: { modoSeleccionado: 'humano', tamanoSeleccionado: 3 } }]}>
+        <Routes>
+          <Route path="/game" element={<Tablero passTurnTrigger={0} />} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    expect(screen.getByText(/JUGADOR 1 \(Azul\)/i)).toBeInTheDocument()
+
+    rerender(
+      <MemoryRouter initialEntries={[{ pathname: '/game', state: { modoSeleccionado: 'humano', tamanoSeleccionado: 3 } }]}>
+        <Routes>
+          <Route path="/game" element={<Tablero passTurnTrigger={1} />} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    await waitFor(() => {
+      expect(screen.getByText(/JUGADOR 2 \(Rojo\)/i)).toBeInTheDocument()
+    })
+
+    const fichasAzules = container.querySelectorAll('.casilla.jugador-b')
+    expect(fichasAzules.length).toBe(1)
   })
 })
