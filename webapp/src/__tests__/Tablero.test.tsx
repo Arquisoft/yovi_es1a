@@ -1,11 +1,11 @@
+// @vitest-environment jsdom
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest'
 import Tablero from '../components/Tablero'
 import { gameService } from '../services/game.service'
 import { statsService } from '../services/stats.service'
-import '@testing-library/jest-dom'
-
+import '@testing-library/jest-dom/vitest'
 vi.mock('../services/game.service')
 vi.mock('../services/stats.service')
 vi.mock('../idiomaConf/LanguageContext.tsx', () => ({
@@ -276,6 +276,117 @@ describe('Board - Additional Scenarios', () => {
     casillas.forEach(c => {
       expect(c).not.toHaveClass('jugador-b')
       expect(c).not.toHaveClass('jugador-r')
+    })
+  })
+})
+describe('Board - Surrender Capability', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
+  })
+  afterEach(() => {
+    localStorage.clear()
+  })
+
+  test('shows defeat modal and saves stats when surrenderTrigger is activated', async () => {
+    const { rerender } = render(
+      <MemoryRouter initialEntries={[{ pathname: '/game' }]}>
+        <Routes>
+          <Route path="/game" element={<Tablero surrenderTrigger={false} />} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    // 1. Esperamos a que el tablero se inicie completamente (igual que haría un jugador)
+    await screen.findByText(/TÚ \(Azul\)/i)
+
+    // 2. Disparamos la rendición re-renderizando con la prop a true
+    rerender(
+      <MemoryRouter initialEntries={[{ pathname: '/game' }]}>
+        <Routes>
+          <Route path="/game" element={<Tablero surrenderTrigger={true} />} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    // 3. Verifica que el modal de rendición aparece
+    await waitFor(() => {
+      expect(screen.getByText(/TE HAS RENDIDO/i)).toBeInTheDocument()
+    })
+
+    // 4. Verifica que la derrota se ha guardado en la BD
+    await waitFor(() => {
+      expect(statsService.saveMatchResult).toHaveBeenCalledWith(
+        expect.objectContaining({ result: 'lose' })
+      )
+    })
+  })
+})
+
+describe('Board - Undo Capability', () => {
+  beforeEach(() => {
+    vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'ongoing' })
+    // Dejamos que el bot responda normalmente para que deje de estar "loading"
+    vi.mocked(gameService.askBotMove).mockResolvedValue({
+      api_version: "1.0", bot_id: "test", game_status: 'ongoing', coords: { x: 1, y: 0, z: 0 }
+    })
+  })
+  afterEach(() => vi.clearAllMocks())
+
+  test('notifies parent via onUndoStatusChange when a move is made', async () => {
+    const onUndoSpy = vi.fn()
+    const { container } = render(
+      <MemoryRouter initialEntries={[{ pathname: '/game' }]}>
+        <Routes>
+          <Route path="/game" element={<Tablero onUndoStatusChange={onUndoSpy} />} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    // Al inicio, el historial está vacío, así que deshacer es falso
+    expect(onUndoSpy).toHaveBeenCalledWith(false)
+
+    // Hacemos un movimiento
+    const primeraCasilla = container.querySelectorAll('.casilla')[0]
+    fireEvent.click(primeraCasilla)
+
+    // Después de mover y de que el bot responda (loading false), deshacer debe ser verdadero
+    await waitFor(() => {
+      expect(onUndoSpy).toHaveBeenCalledWith(true)
+    })
+  })
+
+  test('undoTrigger restores the previous board state and turn', async () => {
+    const { container, rerender } = render(
+      <MemoryRouter initialEntries={[{ pathname: '/game' }]}>
+        <Routes>
+          <Route path="/game" element={<Tablero undoTrigger={0} />} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    const casillas = container.querySelectorAll('.casilla')
+    
+    // 1. El usuario mueve (el bot responde instantáneamente por el mock)
+    fireEvent.click(casillas[0])
+
+    await waitFor(() => {
+      expect(casillas[0]).toHaveClass('jugador-b')
+    })
+
+    // 2. Disparamos la máquina del tiempo (cambiamos la prop undoTrigger a 1)
+    rerender(
+      <MemoryRouter initialEntries={[{ pathname: '/game' }]}>
+        <Routes>
+          <Route path="/game" element={<Tablero undoTrigger={1} />} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    // 3. Verificamos que la ficha ha desaparecido y el turno vuelve a ser nuestro
+    await waitFor(() => {
+      expect(casillas[0]).not.toHaveClass('jugador-b')
+      expect(screen.getByText(/TÚ \(Azul\)/i)).toBeInTheDocument()
     })
   })
 })
