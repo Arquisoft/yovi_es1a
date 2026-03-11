@@ -186,7 +186,7 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTu
     }
     
     if (emptyIndices.length > 0) {
-      const randomIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+      const randomIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)]; // NOSONAR
       play(randomIndex);
     }
   };
