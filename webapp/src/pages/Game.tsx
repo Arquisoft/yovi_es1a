@@ -7,9 +7,8 @@ import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 const Game: React.FC = () => {
   const { t } = useLanguage();
   const [isSurrendered, setIsSurrendered] = useState(false);
-  
-  // Nuevos estados para controlar el Deshacer
   const [undoTrigger, setUndoTrigger] = useState(0);
+  const [passTurnTrigger, setPassTurnTrigger] = useState(0); // <--- NUEVO
   const [canUndo, setCanUndo] = useState(false);
 
   const handleSurrenderClick = () => {
@@ -24,6 +23,10 @@ const Game: React.FC = () => {
     }
   };
 
+  const handlePassTurnClick = () => {
+    setPassTurnTrigger(prev => prev + 1); // <--- NUEVO
+  };
+
   return (
     <div className="game-page">
       <NavBar activeTab="play" />
@@ -32,7 +35,6 @@ const Game: React.FC = () => {
         <div className="game-header">
           <h2 className="game-title">{t("partCurso")}</h2>
           
-          {/* Contenedor para agrupar los botones */}
           <div className="game-actions">
             <button 
               className="btn-undo" 
@@ -40,6 +42,13 @@ const Game: React.FC = () => {
               disabled={!canUndo || isSurrendered}
             >
               {t("deshacer") || "Deshacer"}
+            </button>
+            <button 
+              className="btn-pass" 
+              onClick={handlePassTurnClick}
+              disabled={isSurrendered}
+            >
+              {t("pasarTurno") || "Pasar"}
             </button>
 
             <button 
@@ -55,6 +64,7 @@ const Game: React.FC = () => {
         <Tablero 
           surrenderTrigger={isSurrendered} 
           undoTrigger={undoTrigger}
+          passTurnTrigger={passTurnTrigger}
           onUndoStatusChange={setCanUndo}
         /> 
       </div>

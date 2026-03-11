@@ -6,16 +6,15 @@ import "./Tablero.css";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 import video from "../assets/videoLinea.mp4";
 
-// Definición de las props que recibe el componente Tablero
 interface TableroProps {
   surrenderTrigger?: boolean;
   undoTrigger?: number;
+  passTurnTrigger?: number; 
   onUndoStatusChange?: (canUndo: boolean) => void;
 }
 
 type Player = "B" | "R";
 
-// Función para convertir el layout plano a formato Yen requerido por el backend
 const stringToYenLayout = (flatLayout: string, size: number) => {
   let yenLayout = "";
   let currentIndex = 0;
@@ -34,7 +33,9 @@ const coordsToIndex = (x: number, y: number, size: number) => {
   return (row * (row + 1)) / 2 + y;
 };
 
-const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, onUndoStatusChange }) => {
+const TURN_TIME_LIMIT = 20; 
+
+const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTurnTrigger, onUndoStatusChange }) => {
   const location = useLocation();
   const navigate = useNavigate(); 
   const { t } = useLanguage();
@@ -49,110 +50,25 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, onUndo
   const size = tamanoSeleccionado;
   const getInitialLayout = (n: number) => ".".repeat((n * (n + 1)) / 2);
 
-  // Estados del juego
+  // Estados
   const [layout, setLayout] = useState(getInitialLayout(size));
   const [turn, setTurn] = useState<Player>("B");
   const [loading, setLoading] = useState(false);
-  const [history, setHistory] = useState<string[]>([]); // Historial para "Deshacer"
+  const [history, setHistory] = useState<string[]>([]);
   const [startTime] = useState<number>(Date.now());
   const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
   
-  // Estados de fin de partida
   const [gameFinished, setGameFinished] = useState(false);
   const [showWinnerModal, setShowWinnerModal] = useState(false);
   const [winnerMessage, setWinnerMessage] = useState("");
 
-  // ==========================================
-  // USE EFFECTS
-  // ==========================================
+  const [timeLeft, setTimeLeft] = useState(TURN_TIME_LIMIT); 
 
-  // Inicializar partida y limpiar historial
-  React.useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    setLayout(getInitialLayout(size));
-    setTurn("B");
-    setHistory([]);
-    if (storedUser) setUser(JSON.parse(storedUser));
-  }, [size]);
+  const isHumanTurn = modoSeleccionado === "humano" || turn === colorUsuario;
 
-  // Actualizar el estado del botón Deshacer en el componente padre
-  React.useEffect(() => {
-    if (onUndoStatusChange) {
-      onUndoStatusChange(history.length > 0 && !loading && !gameFinished);
-    }
-  }, [history.length, loading, gameFinished, onUndoStatusChange]);
-
-  // Manejar el gatillo de Deshacer
-  React.useEffect(() => {
-    if (undoTrigger && undoTrigger > 0 && history.length > 0) {
-      const previousLayout = history[history.length - 1]; 
-      
-      setHistory(prev => prev.slice(0, -1)); // Borramos el último paso
-      setLayout(previousLayout); // Restauramos el tablero
-      setGameFinished(false); 
-      setShowWinnerModal(false);
-
-      // Calculamos a quién le toca el turno basándonos en las fichas del tablero restaurado
-      const moves = previousLayout.split("").filter(c => c !== ".").length;
-      setTurn(moves % 2 === 0 ? "B" : "R");
-    }
-  }, [undoTrigger]);
-
-  // Manejar el gatillo de Rendición
-  React.useEffect(() => {
-    const handleSurrender = async () => {
-      if (surrenderTrigger && !gameFinished) {
-        setGameFinished(true);
-        setWinnerMessage("TE HAS RENDIDO. HAS PERDIDO.");
-        setShowWinnerModal(true);
-        await safeSaveStats("lose", layout);
-      }
-    };
-    handleSurrender();
-  }, [surrenderTrigger]);
-
-  // Primer movimiento del Bot (si procede)
-  React.useEffect(() => {
-    const botJuegaPrimero = async () => {
-      if (modoSeleccionado === "bot" && colorUsuario === "R" && layout === getInitialLayout(size)) {
-        setLoading(true);
-        try {
-          const yenLayout = stringToYenLayout(layout, size);
-          const response = await gameService.askBotMove(botSeleccionado, size, 0, yenLayout);
-
-          const botIndex = coordsToIndex(response.coords.x, response.coords.y, size);
-          const newLayoutArray = layout.split("");
-          newLayoutArray[botIndex] = "B";
-          const newLayout = newLayoutArray.join("");
-          
-          setHistory(prev => [...prev, layout]); // Guardamos antes de que mueva el bot
-          setLayout(newLayout);
-          
-          const yenLayoutAfterBot = stringToYenLayout(newLayout, size);
-          const checkBot = await gameService.checkWinner(size, yenLayoutAfterBot);
-          
-          if (checkBot.status === "win") {
-            setGameFinished(true);
-            setWinnerMessage("HAS PERDIDO.");
-            setShowWinnerModal(true);
-            await safeSaveStats("lose", newLayout);
-            return;
-          }
-          
-          setTurn("R");
-        } catch (error) {
-          console.error("Error en el primer movimiento del bot:", error);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-
-    botJuegaPrimero();
-  }, [modoSeleccionado, colorUsuario, size, botSeleccionado]);
 
   // ==========================================
-  // FUNCIONES DE JUEGO
+  // FUNCIONES BASE DE JUEGO
   // ==========================================
 
   const safeSaveStats = async (result: "win" | "lose", finalBoard: string) => {
@@ -174,10 +90,10 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, onUndo
     }
   };
 
+  // 1. PRIMERO declaramos PLAY
   const play = async (index: number) => {
     if (gameFinished) return; 
 
-    // Guardamos el estado actual antes de hacer ningún cambio
     setHistory(prev => [...prev, layout]);
 
     const newLayoutArray = layout.split("");
@@ -262,6 +178,134 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, onUndo
     }
   };
 
+  // 2. DESPUÉS declaramos makeRandomMove (ya que usa la función play)
+  const makeRandomMove = () => {
+    const emptyIndices: number[] = [];
+    for (let i = 0; i < layout.length; i++) {
+      if (layout[i] === ".") emptyIndices.push(i);
+    }
+    
+    if (emptyIndices.length > 0) {
+      const randomIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+      play(randomIndex);
+    }
+  };
+
+
+  // ==========================================
+  // USE EFFECTS
+  // ==========================================
+
+  React.useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    setLayout(getInitialLayout(size));
+    setTurn("B");
+    setHistory([]);
+    if (storedUser) setUser(JSON.parse(storedUser));
+  }, [size]);
+
+  React.useEffect(() => {
+    if (onUndoStatusChange) {
+      onUndoStatusChange(history.length > 0 && !loading && !gameFinished);
+    }
+  }, [history.length, loading, gameFinished, onUndoStatusChange]);
+
+  React.useEffect(() => {
+    setTimeLeft(TURN_TIME_LIMIT);
+  }, [turn, history.length]);
+
+  React.useEffect(() => {
+    if (gameFinished || loading || !isHumanTurn) return;
+    const timerId = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timerId);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timerId);
+  }, [turn, loading, gameFinished, isHumanTurn]);
+
+  // Ejecutar movimiento por temporizador
+  React.useEffect(() => {
+    if (timeLeft === 0 && !gameFinished && !loading && isHumanTurn) {
+      makeRandomMove();
+    }
+  }, [timeLeft, gameFinished, loading, isHumanTurn]);
+
+  // Ejecutar movimiento por botón "Pasar Turno"
+  React.useEffect(() => {
+    if (passTurnTrigger && passTurnTrigger > 0 && isHumanTurn && !loading && !gameFinished) {
+      makeRandomMove();
+    }
+  }, [passTurnTrigger]);
+
+  // Efecto Deshacer
+  React.useEffect(() => {
+    if (undoTrigger && undoTrigger > 0 && history.length > 0) {
+      const previousLayout = history[history.length - 1]; 
+      setHistory(prev => prev.slice(0, -1)); 
+      setLayout(previousLayout); 
+      setGameFinished(false); 
+      setShowWinnerModal(false);
+      const moves = previousLayout.split("").filter(c => c !== ".").length;
+      setTurn(moves % 2 === 0 ? "B" : "R");
+    }
+  }, [undoTrigger]);
+
+  // Efecto Rendirse
+  React.useEffect(() => {
+    const handleSurrender = async () => {
+      if (surrenderTrigger && !gameFinished) {
+        setGameFinished(true);
+        setWinnerMessage("TE HAS RENDIDO. HAS PERDIDO.");
+        setShowWinnerModal(true);
+        await safeSaveStats("lose", layout);
+      }
+    };
+    handleSurrender();
+  }, [surrenderTrigger]);
+
+  // Primer movimiento del bot
+  React.useEffect(() => {
+    const botJuegaPrimero = async () => {
+      if (modoSeleccionado === "bot" && colorUsuario === "R" && layout === getInitialLayout(size)) {
+        setLoading(true);
+        try {
+          const yenLayout = stringToYenLayout(layout, size);
+          const response = await gameService.askBotMove(botSeleccionado, size, 0, yenLayout);
+          const botIndex = coordsToIndex(response.coords.x, response.coords.y, size);
+          const newLayoutArray = layout.split("");
+          newLayoutArray[botIndex] = "B";
+          const newLayout = newLayoutArray.join("");
+          
+          setHistory(prev => [...prev, layout]); 
+          setLayout(newLayout);
+          
+          const yenLayoutAfterBot = stringToYenLayout(newLayout, size);
+          const checkBot = await gameService.checkWinner(size, yenLayoutAfterBot);
+          
+          if (checkBot.status === "win") {
+            setGameFinished(true);
+            setWinnerMessage("HAS PERDIDO.");
+            setShowWinnerModal(true);
+            await safeSaveStats("lose", newLayout);
+            return;
+          }
+          setTurn("R");
+        } catch (error) {
+          console.error("Error en el primer movimiento del bot:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+    botJuegaPrimero();
+  }, [modoSeleccionado, colorUsuario, size, botSeleccionado]);
+
+
   const crearTablero = () => {
     const baseSize = size > 10 ? 380 : 450; 
     const cellSize = Math.min(50, Math.floor(baseSize / size)); 
@@ -313,7 +357,7 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, onUndo
         {crearTablero()}
       </div>
 
-      <p style={{ marginTop: '20px', fontSize: '1.2rem', color: 'white' }}>
+      <p style={{ marginTop: '20px', fontSize: '1.2rem', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {t("turn")}: 
         <strong className={turn === "B" ? "turno-azul" : "turno-rojo"} style={{ marginLeft: '10px' }}>
           {modoSeleccionado === "humano" 
@@ -324,6 +368,17 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, onUndo
                 ? `TÚ (${colorUsuario === "B" ? "Azul" : "Rojo"})` 
                 : `BOT (${colorUsuario === "B" ? "Rojo" : "Azul"})`)}
         </strong>
+
+        {isHumanTurn && !loading && !gameFinished && (
+          <span style={{ 
+            marginLeft: '20px', 
+            color: timeLeft <= 5 ? '#ff4444' : '#ffd700',
+            fontWeight: 'bold',
+            textShadow: '0 0 5px rgba(255, 215, 0, 0.5)'
+          }}>
+            ⏱️ {timeLeft}s
+          </span>
+        )}
       </p>
       
       {loading && modoSeleccionado === "bot" && (

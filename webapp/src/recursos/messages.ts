@@ -1,5 +1,3 @@
-import { parseArgs } from "util";
-
 export const messages = {
   en: {
     welcome: "Welcome",
@@ -192,7 +190,7 @@ export const messages = {
     rendirse: "Rendirse",
     confirmSurrender: "¿Estás seguro de que quieres rendirte?",
     deshacer: "Deshacer",
-    parseTurn: "Pasar turno"
+    pasarTurno: "Pasar turno"
   },
   fr: {
     welcome: "Bienvenue",

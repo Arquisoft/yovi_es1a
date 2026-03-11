@@ -97,3 +97,32 @@
   color: #666;
   box-shadow: none;
 }
+
+/* Para boton de pasar turno */
+.btn-pass {
+  background: rgba(255, 215, 0, 0.1); 
+  border: 1px solid #ffd700; 
+  color: #ffd700;
+  padding: 10px 20px;
+  font-family: 'Orbitron', sans-serif; 
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-pass:hover:not(:disabled) {
+  background: rgba(255, 215, 0, 0.3);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-pass:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: #666;
+  color: #666;
+  box-shadow: none;
+}
