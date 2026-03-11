@@ -1,3 +1,5 @@
+import { parseArgs } from "util";
+
 export const messages = {
   en: {
     welcome: "Welcome",
@@ -93,7 +95,8 @@ export const messages = {
 
     rendirse: "Surrender",
     confirmSurrender: "Are you sure you want to surrender?",
-    deshacer: "Undo"
+    deshacer: "Undo",
+    pasarTurno: "Pass turn"
   },
   es: {
     welcome: "Bienvenido",
@@ -188,7 +191,8 @@ export const messages = {
 
     rendirse: "Rendirse",
     confirmSurrender: "¿Estás seguro de que quieres rendirte?",
-    deshacer: "Deshacer"
+    deshacer: "Deshacer",
+    parseTurn: "Pasar turno"
   },
   fr: {
     welcome: "Bienvenue",
@@ -283,7 +287,8 @@ export const messages = {
 
     rendirse: "Abandonner",
     confirmSurrender: "Êtes-vous sûr de vouloir abandonner ?",
-    deshacer: "Annuler"
+    deshacer: "Annuler",
+    pasarTurno: "Passer le tour"
   },
   it: {
     welcome: "Benvenuto",
@@ -378,7 +383,8 @@ export const messages = {
 
     rendirse: "Arrendersi",
     confirmSurrender: "Sei sicuro di volerti arrendere?",
-    deshacer: "Annulla"
+    deshacer: "Annulla",
+    pasarTurno: "Salta turno"
   },
 
   de: {
@@ -474,6 +480,8 @@ export const messages = {
 
     rendirse: "Aufgeben",
     confirmSurrender: "Bist du sicher, dass du aufgeben willst?",
-    deshacer: "Rückgängig"
+    deshacer: "Rückgängig",
+    pasarTurno: "Zug überspringen"
+    
   }
 } 
