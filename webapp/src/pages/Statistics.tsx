@@ -68,7 +68,7 @@ const Estadisticas: React.FC = () => {
         {!loading && !error && history.length === 0 && (
           <p className="empty-text">{t("ceroPartidas")}</p>
         )}
-        <select
+        <select className="filtroResult"
           onChange={(e) => {
             setFilter(e.target.value);
             setCurrentPage(1);

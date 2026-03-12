@@ -68,7 +68,10 @@ export async function saveMatch(matchData:SaveMatchInput):Promise<IMatch>
         .populate('user', 'username');
 }*/
 
-export async function getMatchHistory(userId: string, page = 1, size = 5, result?:string): Promise<{ content: IMatch[]; page: number; size: number; totalElements: number; totalPages: number }> {
+export async function getMatchHistory(userId: string, page = 1, size = 5, 
+    result?:string
+):
+     Promise<{ content: IMatch[]; page: number; size: number; totalElements: number; totalPages: number }> {
     if (typeof userId !== 'string') {
         throw new Error('Invalid input format');
     }
