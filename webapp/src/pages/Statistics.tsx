@@ -96,15 +96,15 @@ const Estadisticas: React.FC = () => {
           </div>
         )}
       </div>
-                  <div className="pagination">
-              <button disabled={currentPage === 1} onClick={() => setCurrentPage(pag => pag - 1)}>
-                Anterior
-              </button>
-              <span>Página {currentPage} de {totalPages}</span>
-              <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(pag => pag + 1)}>
-                Siguiente
-              </button>{/* Si estas en última pagina se desactiva (el disabled)*/}
-            </div>
+      <div className="pagination">
+        <button disabled={currentPage === 1} onClick={() => setCurrentPage(pag => pag - 1)}>
+          Anterior
+        </button>
+        <span>Página {currentPage} de {totalPages}</span>
+        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(pag => pag + 1)}>
+          Siguiente
+        </button>{/* Si estas en última pagina se desactiva (el disabled)*/}
+      </div>
     </div>
   );
 };

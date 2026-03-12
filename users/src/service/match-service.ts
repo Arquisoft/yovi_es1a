@@ -56,7 +56,7 @@ export async function saveMatch(matchData:SaveMatchInput):Promise<IMatch>
     });
     return await newMatch.save();
 }
-export async function getMatchHistory(userId: string): Promise<IMatch[]> {
+/*export async function getMatchHistory(userId: string): Promise<IMatch[]> {
     if (typeof userId !== 'string') {
         throw new Error('Invalid input format');
     }
@@ -66,4 +66,34 @@ export async function getMatchHistory(userId: string): Promise<IMatch[]> {
     return await Match.find({ user: userObjectId })
         .sort({ createdAt: -1 })
         .populate('user', 'username');
+}*/
+
+export async function getMatchHistory(userId: string, page = 1, size = 5): Promise<{ content: IMatch[]; page: number; size: number; totalElements: number; totalPages: number }> {
+    if (typeof userId !== 'string') {
+        throw new Error('Invalid input format');
+    }
+    const safeUserId = userId.trim();
+    const userObjectId = new mongoose.Types.ObjectId(safeUserId);
+
+    //return await Match.find({ user: userObjectId })
+    //    .sort({ createdAt: -1 })
+    //    .populate('user', 'username');
+    const skip = (page - 1) * size;// Ejemplo: (2 - 1) * size = size → se saltan los primeros size documentos.
+
+    // Buscar partidas paginadas
+    const content = await Match.find({ user: userObjectId })//Busca las partidas del usuario 
+        .sort({ createdAt: -1 })//Ordenado por fecha (primero más recientes)
+        .skip(skip)
+        .limit(size);//Límite por página --> size
+
+    const totalElements = await Match.countDocuments({ user: userObjectId });//Total de partidas del usuario (await para esperar el resultado)
+
+    return {
+        content,
+        page,
+        size,
+        totalElements,
+        totalPages: Math.ceil(totalElements / size)//Redondea hacia arriba
+    };
+
 }

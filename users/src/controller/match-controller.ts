@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from 'express';
 import { saveMatch, getMatchHistory } from '../service/match-service'; // Agrupamos los imports del mismo archivo
-import Match, { IMatch } from '../models/match-model.ts';
+import Match, { IMatch } from '../models/match-model.ts';//Tabla base datos de partidas
 
 const router: Router = express.Router();
 
@@ -93,30 +93,32 @@ router.post('/', async (req: Request, res: Response) => {
 router.get('/user/:userId', async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const page = parseInt(req.query.page as string) || 1;   // página actual
-    const size = parseInt(req.query.size as string) || 5;  // tamaño de página
 
-    const skip = (page - 1) * size;
+    // --- 1. Validación Básica ---
+    if (!userId || userId.trim() === '') {
+        return res.status(404).json({ error: 'User ID is required' });
+    }
 
-    // Buscar partidas paginadas
-    const content = await Match.find({ user: userId })
-      .sort({ createdAt: -1 })   // opcional: ordenar por fecha
-      .skip(skip)
-      .limit(size);
+    //req.query contiene todos los parámetros de la URL que vienen después del ? que se puso en service (page y size)
+    const page = parseInt(req.query.page as string) || 1;//Página actual
+    const size = parseInt(req.query.size as string) || 5;//Size
 
-    const totalElements = await Match.countDocuments({ user: userId });
+    // --- 2. Consulta al Servicio ---
+    const history = await getMatchHistory(userId, page, size);
+        
+    // --- 3. Respuesta Exitosa ---
+    //return res.status(200).json(history);
+    res.json(history);
 
-    res.json({
-      content,
-      page,
-      size,
-      totalElements,
-      totalPages: Math.ceil(totalElements / size)
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error fetching match history" });
-  }
+  } catch (error: any) {
+        // --- 4. Manejo de Errores ---
+        if (error?.message === 'Invalid input format') {
+            return res.status(400).json({ error: error.message });
+        }
+        
+        console.error("Error fetching match history:", error);
+        return res.status(500).json({ error: 'Internal server error while fetching history' });
+    }
 });
 
 export default router;
