@@ -68,7 +68,7 @@ export async function saveMatch(matchData:SaveMatchInput):Promise<IMatch>
         .populate('user', 'username');
 }*/
 
-export async function getMatchHistory(userId: string, page = 1, size = 5): Promise<{ content: IMatch[]; page: number; size: number; totalElements: number; totalPages: number }> {
+export async function getMatchHistory(userId: string, page = 1, size = 5, result?:string): Promise<{ content: IMatch[]; page: number; size: number; totalElements: number; totalPages: number }> {
     if (typeof userId !== 'string') {
         throw new Error('Invalid input format');
     }
@@ -80,13 +80,20 @@ export async function getMatchHistory(userId: string, page = 1, size = 5): Promi
     //    .populate('user', 'username');
     const skip = (page - 1) * size;// Ejemplo: (2 - 1) * size = size → se saltan los primeros size documentos.
 
+    // query base
+    const query: any = { user: userObjectId };
+
+    //Para filtrar
+    if (result && result !== "") {
+        query.result = result;
+    }
     // Buscar partidas paginadas
-    const content = await Match.find({ user: userObjectId })//Busca las partidas del usuario 
+    const content = await Match.find(query)//Busca las partidas del usuario 
         .sort({ createdAt: -1 })//Ordenado por fecha (primero más recientes)
         .skip(skip)
         .limit(size);//Límite por página --> size
 
-    const totalElements = await Match.countDocuments({ user: userObjectId });//Total de partidas del usuario (await para esperar el resultado)
+    const totalElements = await Match.countDocuments( query );//Total de partidas del usuario (await para esperar el resultado)
 
     return {
         content,

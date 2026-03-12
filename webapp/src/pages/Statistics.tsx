@@ -20,23 +20,25 @@ const Estadisticas: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);//1 inicial
+  const [filter, setFilter] = useState("");// "" valor inicial
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
 
     if (storedUser) {
       const user = JSON.parse(storedUser);
-      fetchHistory(user.userId, currentPage);
+      setLoading(true);
+      fetchHistory(user.userId, currentPage, filter);
     } else {
       setError("No hay usuario conectado. Inicia sesión para ver tus estadísticas.");
       setLoading(false);
     }
-  }, [currentPage]);
+  }, [currentPage, filter]);//Esto es para recargar
 
-  const fetchHistory = async (userId: string, page = 1) => {
+  const fetchHistory = async (userId: string, page = 1, result="") => {
     try {
-      const data = await statsService.getMatchHistory(userId, page, 5);
+      const data = await statsService.getMatchHistory(userId, page, 5, result);
       setHistory(data.content);
       setTotalPages(data.totalPages);
       //const data = await statsService.getMatchHistory(userId);
@@ -66,7 +68,17 @@ const Estadisticas: React.FC = () => {
         {!loading && !error && history.length === 0 && (
           <p className="empty-text">{t("ceroPartidas")}</p>
         )}
-
+        <select
+          onChange={(e) => {
+            setFilter(e.target.value);
+            setCurrentPage(1);
+          }}
+        >
+        <option value="">Todos</option>
+        <option value="win">Wins</option>
+        <option value="lose">Lose</option>
+        <option value="surrender">Surrender</option>
+      </select>
         {!loading && !error && history.length > 0 && (
           <div className="tabla-container-scroll">
             <table className="tabla-stats">

@@ -33,9 +33,9 @@ export const statsService = {
       throw error;
     }
   },
-  getMatchHistory: async (userId: string, page = 1, size = 5) => {
+  getMatchHistory: async (userId: string, page = 1, size = 5, result = "") => {
     const token = localStorage.getItem('token');
-    const res = await fetch(`${API_URL}/matches/user/${userId}?page=${page}&size=${size}`, {
+    const res = await fetch(`${API_URL}/matches/user/${userId}?page=${page}&size=${size}&result=${result}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
