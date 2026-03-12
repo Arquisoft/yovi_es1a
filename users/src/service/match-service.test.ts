@@ -99,20 +99,33 @@ describe('Match service - Save Match',()=> {
     });
 }) 
 describe('Match service - Get Match History', () => {
-    it('1.It should retrieve and populate the history correctly.', async () => {
-      const fakeHistory = [{ _id: '1', result: 'win', user: { username: 'Carlos' } }];
+    it('1.It should retrieve the paginated history correctly.', async () => {
+      const fakeHistory = [{ _id: '1', result: 'win', duration: 100 }];
       
-      const mockPopulate = vi.fn().mockResolvedValue(fakeHistory);
-      const mockSort = vi.fn().mockReturnValue({ populate: mockPopulate });
+      const mockLimit = vi.fn().mockResolvedValue(fakeHistory);
+      const mockSkip = vi.fn().mockReturnValue({ limit: mockLimit });
+      const mockSort = vi.fn().mockReturnValue({ skip: mockSkip });
       (Match.find as any) = vi.fn().mockReturnValue({ sort: mockSort });
+
+      (Match.countDocuments as any) = vi.fn().mockResolvedValue(1);
 
       const result = await getMatchHistory(VALID_ID);
       
-      expect(result).toEqual(fakeHistory);
-      expect(Match.find).toHaveBeenCalled();
+      expect(result).toEqual({
+          content: fakeHistory,
+          page: 1,
+          size: 5,
+          totalElements: 1,
+          totalPages: 1
+      });
+
+      expect(Match.find).toHaveBeenCalledWith({ user: expect.anything() });
       expect(mockSort).toHaveBeenCalledWith({ createdAt: -1 });
-      expect(mockPopulate).toHaveBeenCalledWith('user', 'username');
+      expect(mockSkip).toHaveBeenCalledWith(0);
+      expect(mockLimit).toHaveBeenCalledWith(5);
+      expect(Match.countDocuments).toHaveBeenCalled();
     });
+
     it('2. It should throw an error if the userId is not a string', async () => {
         await expect(getMatchHistory(12345 as any)).rejects.toThrow('Invalid input format');
     });
