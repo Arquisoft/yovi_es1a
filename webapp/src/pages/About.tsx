@@ -10,7 +10,7 @@ const About: React.FC = () => {
 
     return (
         <div className="aboutView">
-            <NavBar activeTab="help" />
+            <NavBar activeTab="about" />
             <video autoPlay muted loop className="videoIN">
                 <source src={video} type="video/mp4" />
                 No se ha podido mostrar el video de fondo
@@ -55,6 +55,8 @@ const About: React.FC = () => {
 
         <h3>{t("proposit")}</h3>
         <p>{t("propositDesc")}</p>
+        <br></br>
+        <br></br>
         </div>
     );
 };

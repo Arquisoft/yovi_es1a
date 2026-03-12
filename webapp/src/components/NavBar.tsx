@@ -5,7 +5,7 @@ import { useLanguage } from "../idiomaConf/LanguageContext";
 import about from '../assets/about.png'; 
 
 interface NavBarProps { 
-  activeTab: "home" | "play" | "stats" | "help" | "login" | "register" | "";
+  activeTab: "home" | "play" | "stats" | "help" | "login" | "register" | "" | "about";
 }
 
 const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
