@@ -33,7 +33,22 @@ export const statsService = {
       throw error;
     }
   },
-  getMatchHistory: async (userId: string) => {
+  /*getMatchHistory: async (userId: string, page = 1, size = 10) => {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${API_URL}/matches/user/${userId}?page=${page}&size=${size}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error fetching history');
+    
+    return data;
+  }*/
+   getMatchHistory: async (userId: string) => {
     const token = localStorage.getItem('token');
     const res = await fetch(`${API_URL}/matches/user/${userId}`, {
       method: 'GET',

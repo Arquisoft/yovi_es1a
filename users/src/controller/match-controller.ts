@@ -1,5 +1,6 @@
 import express, { Request, Response, Router } from 'express';
 import { saveMatch, getMatchHistory } from '../service/match-service'; // Agrupamos los imports del mismo archivo
+import Match, { IMatch } from '../models/match-model.ts';
 
 const router: Router = express.Router();
 
@@ -88,5 +89,34 @@ router.get('/user/:userId', async (req: Request, res: Response) => {
         return res.status(500).json({ error: 'Internal server error while fetching history' });
     }
 });
+
+/*router.get('/user/:userId', async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const page = parseInt(req.query.page as string) || 1;   // página actual
+    const size = parseInt(req.query.size as string) || 10;  // tamaño de página
+
+    const skip = (page - 1) * size;
+
+    // Buscar partidas paginadas
+    const content = await Match.find({ user: userId })
+      .sort({ createdAt: -1 })   // opcional: ordenar por fecha
+      .skip(skip)
+      .limit(size);
+
+    const totalElements = await Match.countDocuments({ user: userId });
+
+    res.json({
+      content,
+      page,
+      size,
+      totalElements,
+      totalPages: Math.ceil(totalElements / size)
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error fetching match history" });
+  }
+});*/
 
 export default router;
