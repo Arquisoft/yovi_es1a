@@ -1,9 +1,11 @@
 import React from "react";
 import video from "../assets/videoLinea.mp4";
+import NavBar from "../components/NavBar.tsx";
 
 const About: React.FC = () => {
   return (
-    <div id="about">
+    <div className="aboutView">
+        <NavBar activeTab="help" />
         <video autoPlay muted loop className="videoIN">
             <source src={video} type="video/mp4" />
             No se ha podido mostrar el video de fondo
