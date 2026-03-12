@@ -94,8 +94,30 @@ export const messages = {
     rendirse: "Surrender",
     confirmSurrender: "Are you sure you want to surrender?",
     deshacer: "Undo",
-    pasarTurno: "Pass turn"
-  },
+    pasarTurno: "Pass turn",
+
+    acercaDe:"About the Project",
+    introAbout:"This project is a web application developed as part of a university lab. Its main goal is to provide a structured environment for experimentation, learning, and practicing modern web technologies.",
+    autores:"Authors",
+    tecUtil:"Technologies Used",
+    front:"Frontend: React, TypeScript, Vite",
+    back:"Backend: Node.js, Express, REST API",
+    bd:"Database: MongoDB with Mongoose",
+    contener:"Containerization: Docker & Docker Compose",
+    motor:"Game Engine: Rust",
+    estr:"Project Structure",
+    webapp:"webapp/",
+    webAppDesc:" – Frontend application",
+    users:"users/",
+    usersDesc:" – User management backend service",
+    gamey:"gamey/",
+    gameyDesc:" – Game engine module (Rust)",
+    docs:"docs/",
+    docsDesc:" – Documentation and architecture",
+    proposit:"Purpose",
+    propositDesc:"This project serves as a learning platform to explore web development, API design, and modular project structure. It focuses on clean code, maintainability, and the use of modern tools in a collaborative environment."
+
+},
   es: {
     welcome: "Bienvenido",
     inicio: "Inicio",
@@ -308,7 +330,29 @@ export const messages = {
     rendirse: "Abandonner",
     confirmSurrender: "Êtes-vous sûr de vouloir abandonner ?",
     deshacer: "Annuler",
-    pasarTurno: "Passer le tour"
+    pasarTurno: "Passer le tour",
+
+    acercaDe:"À propos du projet",
+    introAbout:"Ce projet est une application web développée dans le cadre d'un laboratoire universitaire. Son objectif principal est de fournir un environnement structuré pour l'expérimentation, l'apprentissage et la pratique des technologies web modernes.",
+    autores:"Auteurs",
+    tecUtil:"Technologies utilisées",
+    front:"Frontend : React, TypeScript, Vite",
+    back:"Backend : Node.js, Express, API REST",
+    bd:"Base de données : MongoDB avec Mongoose",
+    contener:"Conteneurisation : Docker et Docker Compose",
+    motor:"Moteur de jeu : Rust",
+    estr:"Structure du projet",
+    webapp:"webapp/",
+    webAppDesc:" – Application frontend",
+    users:"users/",
+    usersDesc:" – Service backend de gestion des utilisateurs",
+    gamey:"gamey/",
+    gameyDesc:" – Module du moteur de jeu (Rust)",
+    docs:"docs/",
+    docsDesc:" – Documentation et architecture",
+    proposit:"Objectif",
+    propositDesc:"Ce projet sert de plateforme d’apprentissage pour explorer le développement web, la conception d’API et la structure modulaire des projets. Il met l’accent sur la qualité du code, la maintenabilité et l’utilisation d’outils modernes dans un environnement collaboratif."
+
   },
   it: {
     welcome: "Benvenuto",
@@ -404,7 +448,29 @@ export const messages = {
     rendirse: "Arrendersi",
     confirmSurrender: "Sei sicuro di volerti arrendere?",
     deshacer: "Annulla",
-    pasarTurno: "Salta turno"
+    pasarTurno: "Salta turno",
+
+    acercaDe:"Informazioni sul progetto",
+    introAbout:"Questo progetto è un'applicazione web sviluppata come parte di un laboratorio universitario. Il suo obiettivo principale è fornire un ambiente strutturato per la sperimentazione, l'apprendimento e la pratica delle moderne tecnologie web.",
+    autores:"Autori",
+    tecUtil:"Tecnologie utilizzate",
+    front:"Frontend: React, TypeScript, Vite",
+    back:"Backend: Node.js, Express, API REST",
+    bd:"Database: MongoDB con Mongoose",
+    contener:"Containerizzazione: Docker e Docker Compose",
+    motor:"Motore di gioco: Rust",
+    estr:"Struttura del progetto",
+    webapp:"webapp/",
+    webAppDesc:" – Applicazione frontend",
+    users:"users/",
+    usersDesc:" – Servizio backend per la gestione degli utenti",
+    gamey:"gamey/",
+    gameyDesc:" – Modulo del motore di gioco (Rust)",
+    docs:"docs/",
+    docsDesc:" – Documentazione e architettura",
+    proposit:"Scopo",
+    propositDesc:"Questo progetto funge da piattaforma di apprendimento per esplorare lo sviluppo web, la progettazione di API e la struttura modulare dei progetti. Si concentra su codice pulito, manutenibilità e sull'uso di strumenti moderni in un ambiente collaborativo."
+
   },
 
   de: {
@@ -501,7 +567,28 @@ export const messages = {
     rendirse: "Aufgeben",
     confirmSurrender: "Bist du sicher, dass du aufgeben willst?",
     deshacer: "Rückgängig",
-    pasarTurno: "Zug überspringen"
-    
+    pasarTurno: "Zug überspringen",
+
+    acercaDe:"Über das Projekt",
+    introAbout:"Dieses Projekt ist eine Webanwendung, die im Rahmen eines Universitätslabors entwickelt wurde. Ihr Hauptziel ist es, eine strukturierte Umgebung für Experimente, Lernen und das Üben moderner Webtechnologien bereitzustellen.",
+    autores:"Autoren",
+    tecUtil:"Verwendete Technologien",
+    front:"Frontend: React, TypeScript, Vite",
+    back:"Backend: Node.js, Express, REST API",
+    bd:"Datenbank: MongoDB mit Mongoose",
+    contener:"Containerisierung: Docker & Docker Compose",
+    motor:"Game Engine: Rust",
+    estr:"Projektstruktur",
+    webapp:"webapp/",
+    webAppDesc:" – Frontend-Anwendung",
+    users:"users/",
+    usersDesc:" – Backend-Service für Benutzerverwaltung",
+    gamey:"gamey/",
+    gameyDesc:" – Game-Engine-Modul (Rust)",
+    docs:"docs/",
+    docsDesc:" – Dokumentation und Architektur",
+    proposit:"Zweck",
+    propositDesc:"Dieses Projekt dient als Lernplattform zur Erforschung von Webentwicklung, API-Design und modularer Projektstruktur. Der Fokus liegt auf sauberem Code, Wartbarkeit und der Nutzung moderner Tools in einer kollaborativen Umgebung."
+        
   }
 } 
