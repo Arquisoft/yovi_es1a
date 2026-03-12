@@ -41,7 +41,13 @@ describe('Componente Estadisticas', () => {
   test('Muestra estado de carga y luego cero partidas si el historial está vacío', async () => {
     localStorage.setItem('user', JSON.stringify({ userId: 'user123', username: 'TestUser' }));
     
-    (statsService.getMatchHistory as ReturnType<typeof vi.fn>).mockResolvedValueOnce([]);
+    (statsService.getMatchHistory as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      content: [],
+      page: 1,
+      size: 5,
+      totalElements: 0,
+      totalPages: 0
+    });
 
     render(
       <MemoryRouter>
@@ -63,7 +69,14 @@ describe('Componente Estadisticas', () => {
       { _id: '1', result: 'win', opponent: 'random_bot', totalMoves: 10, duration: 60, boardSize: 5, createdAt: '2023-01-01T10:00:00Z' },
       { _id: '2', result: 'lose', opponent: 'smart_bot', totalMoves: 15, duration: 120, boardSize: 5, createdAt: '2023-01-02T15:30:00Z' }
     ];
-    (statsService.getMatchHistory as ReturnType<typeof vi.fn>).mockResolvedValueOnce(mockHistory);
+    
+    (statsService.getMatchHistory as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      content: mockHistory,
+      page: 1,
+      size: 5,
+      totalElements: 2,
+      totalPages: 1
+    });
 
     render(
       <MemoryRouter>

@@ -63,7 +63,8 @@ describe('Integration Tests: Bot Controller', () => {
 
             await supertest(app)
                 .post('/api/bot/play')
-                .send({ position: 'some_position' });
+                // FIX: Enviamos un JSON válido para que pase la validación
+                .send({ position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." } });
 
             expect(fetchMock).toHaveBeenCalledWith(
                 expect.stringContaining('/v1/ybot/choose/random_bot'),
@@ -79,7 +80,8 @@ describe('Integration Tests: Bot Controller', () => {
 
             const res = await supertest(app)
                 .post('/api/bot/play')
-                .send({ position: 'bad-pos' });
+                // FIX: JSON válido
+                .send({ position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." } });
 
             expect(res.status).toBe(500);
             expect(res.body).toHaveProperty('error', "The Rust engine rejected the play or couldn't find the bot.");
@@ -91,11 +93,13 @@ describe('Integration Tests: Bot Controller', () => {
 
             const res = await supertest(app)
                 .post('/api/bot/play')
-                .send({ position: 'pos' });
+                // FIX: JSON válido
+                .send({ position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." } });
 
             expect(res.status).toBe(500);
             expect(res.body).toHaveProperty('error', "Internal error on Node.js server");
         });
+
         it('6. should handle non-JSON error responses from Rust engine', async () => {
             fetchMock.mockResolvedValueOnce({
                 ok: false,
@@ -104,11 +108,11 @@ describe('Integration Tests: Bot Controller', () => {
 
             const res = await supertest(app)
                 .post('/api/bot/play')
-                .send({ position: 'pos' });
+                // FIX: JSON válido
+                .send({ position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." } });
 
             expect(res.status).toBe(500);
             expect(res.body).toHaveProperty('error', "The Rust engine rejected the play or couldn't find the bot.");
-            
             expect(res.body.details).toHaveProperty('rawError', "Internal Server Error: Database Down");
         });
         it('7. should use a specific valid strategy from validBots array', async () => {

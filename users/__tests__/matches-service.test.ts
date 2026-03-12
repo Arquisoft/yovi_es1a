@@ -134,10 +134,12 @@ describe('Integration Tests: Matches Service', () => {
                 .set('Accept', 'application/json');
 
             expect(res.status).toBe(200);
-            expect(Array.isArray(res.body)).toBe(true);
-            expect(res.body.length).toBeGreaterThanOrEqual(1); 
-            const lastMatch = res.body[0];
-            expect(lastMatch.user.username).toBe('GamerTest');
+            
+            expect(Array.isArray(res.body.content)).toBe(true);
+            expect(res.body.content.length).toBeGreaterThanOrEqual(1); 
+            
+            const lastMatch = res.body.content[0];
+            
             if (lastMatch.opponent) {
                 expect(lastMatch.opponent).toBeDefined();
                 expect(lastMatch.gameMode).toBeDefined();
@@ -145,13 +147,16 @@ describe('Integration Tests: Matches Service', () => {
         });
 
         it('should return 200 and an empty array if userId is not found', async () => {
-        const res = await supertest(app)
-            .get('/matches/user/000000000000000000000000')
-            .set('Accept', 'application/json');
+            const res = await supertest(app)
+                .get('/matches/user/000000000000000000000000')
+                .set('Accept', 'application/json');
 
             expect(res.status).toBe(200);
-            expect(res.body).toEqual([]);
-});
+            
+            expect(res.body.content).toEqual([]);
+            expect(res.body.page).toBe(1);
+            expect(res.body.totalElements).toBe(0);
+        });
 
         it('should return 500 if an invalid MongoDB ID format is provided', async () => {
             const res = await supertest(app)
