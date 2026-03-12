@@ -21,24 +21,26 @@ const Estadisticas: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);//1 inicial
-  const [filter, setFilter] = useState("");// "" valor inicial
-
+  const [filters, setFilters] = useState<{ result?: string; maxMoves?: number; maxDuration?: number }>({});
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
 
     if (storedUser) {
       const user = JSON.parse(storedUser);
       setLoading(true);
-      fetchHistory(user.userId, currentPage, filter);
+      fetchHistory(user.userId, currentPage, filters);
     } else {
       setError("No hay usuario conectado. Inicia sesión para ver tus estadísticas.");
       setLoading(false);
     }
-  }, [currentPage, filter]);//Esto es para recargar
+  }, [currentPage, filters]);//Esto es para recargar
 
-  const fetchHistory = async (userId: string, page = 1, result="") => {
+  const fetchHistory = async (userId: string, page = 1, 
+    filters?: { result?: string; maxMoves?: number; maxDuration?: number }
+
+  ) => {
     try {
-      const data = await statsService.getMatchHistory(userId, page, 5, result);
+      const data = await statsService.getMatchHistory(userId, page, 5, filters);
       setHistory(data.content);
       setTotalPages(data.totalPages);
       //const data = await statsService.getMatchHistory(userId);
@@ -69,16 +71,33 @@ const Estadisticas: React.FC = () => {
           <p className="empty-text">{t("ceroPartidas")}</p>
         )}
         <select className="filtroResult"
-          onChange={(e) => {
-            setFilter(e.target.value);
-            setCurrentPage(1);
-          }}
-        >
-        <option value="">Todos</option>
-        <option value="win">Wins</option>
-        <option value="lose">Lose</option>
-        <option value="surrender">Surrender</option>
-      </select>
+            onChange={(e) => {
+              setFilters({ ...filters, result: e.target.value });
+              setCurrentPage(1);
+            }}
+          >
+          <option value="">Todos</option>
+          <option value="win">Wins</option>
+          <option value="lose">Lose</option>
+          <option value="surrender">Surrender</option>
+        </select>
+
+        <input
+          type="number"
+          placeholder="Duración máxima (s)"
+          value={filters.maxDuration || ""}
+          onChange={(e) => setFilters({ ...filters, maxDuration: Number(e.target.value) })}
+          className="filtroInput"
+        />
+
+        <input
+          type="number"
+          placeholder="Movimientos máximos"
+          value={filters.maxMoves || ""}
+          onChange={(e) => setFilters({ ...filters, maxMoves: Number(e.target.value) })}
+          className="filtroInput"
+        />
+
         {!loading && !error && history.length > 0 && (
           <div className="tabla-container-scroll">
             <table className="tabla-stats">

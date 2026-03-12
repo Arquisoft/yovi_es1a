@@ -102,10 +102,16 @@ router.get('/user/:userId', async (req: Request, res: Response) => {
     //req.query contiene todos los parámetros de la URL que vienen después del ? que se puso en service (page y size)
     const page = parseInt(req.query.page as string) || 1;//Página actual
     const size = parseInt(req.query.size as string) || 5;//Size
-    const result = req.query.result as string; // filtro opcional
+    //const result = req.query.result as string; // filtro opcional
+    const { result, maxMoves, maxDuration } = req.query;//Asigna los valores
 
+    const filters = {
+        result: result as string,
+        maxMoves: maxMoves ? parseInt(maxMoves as string) : undefined,
+        maxDuration: maxDuration ? parseInt(maxDuration as string) : undefined,
+    };
     // --- 2. Consulta al Servicio ---
-    const history = await getMatchHistory(userId, page, size, result);
+    const history = await getMatchHistory(userId, page, size, filters);
         
     // --- 3. Respuesta Exitosa ---
     //return res.status(200).json(history);
