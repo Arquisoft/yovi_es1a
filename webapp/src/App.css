@@ -292,6 +292,15 @@ button:hover {
   cursor: pointer;
 }
 
+.filtroInput{
+    background-color: #1321a3;
+  color: #ffffff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
 
 
 

@@ -34,8 +34,7 @@ export const statsService = {
     }
   },
   getMatchHistory: async (userId: string, page = 1, size = 5, 
-    //result = ""
-    filters?: { result?: string; maxMoves?: number; maxDuration?: number } // <-- nuevo tipo
+    filters?: { result?: string; maxMoves?: number; maxDuration?: number }
 
   ) => {
     const token = localStorage.getItem('token');
