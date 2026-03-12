@@ -272,3 +272,35 @@ button:hover {
   background: #5b99f6;
   border-radius: 10px;
 }
+
+.aboutView{
+  height: 100vh;/* La sección ocupa toda la pantalla */
+  overflow-y: scroll;/* Siempre muestra scroll vertical si el contenido no cabe */
+  padding: 2rem 1rem;
+  text-align: left;
+  box-sizing: border-box;
+  margin: 100px auto 0;
+}
+
+.filtroResult {
+  background-color: #1321a3;
+  color: #ffffff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.filtroInput{
+  background-color: #1321a3;
+  color: #ffffff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+

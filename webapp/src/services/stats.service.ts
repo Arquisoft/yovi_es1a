@@ -33,9 +33,20 @@ export const statsService = {
       throw error;
     }
   },
-  getMatchHistory: async (userId: string) => {
+  getMatchHistory: async (userId: string, page = 1, size = 5, 
+    filters?: { result?: string; maxMoves?: number; maxDuration?: number }
+
+  ) => {
     const token = localStorage.getItem('token');
-    const res = await fetch(`${API_URL}/matches/user/${userId}`, {
+
+    const params = new URLSearchParams();
+    params.append("page", page.toString());
+    params.append("size", size.toString());
+    if (filters?.result) params.append("result", filters.result);
+    if (filters?.maxMoves) params.append("maxMoves", filters.maxMoves.toString());
+    if (filters?.maxDuration) params.append("maxDuration", filters.maxDuration.toString());
+
+    const res = await fetch(`${API_URL}/matches/user/${userId}?page=${page}&size=${size}?${params.toString()}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
