@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import avatar from '../assets/avatar.png'; 
 import { useLanguage } from "../idiomaConf/LanguageContext";
+import about from '../assets/about.png'; 
 
 interface NavBarProps { 
   activeTab: "home" | "play" | "stats" | "help" | "login" | "register" | "";
@@ -134,6 +135,10 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
             <span className="username">{user.username}</span>
           </button>
         )}
+
+          <button className="nav-item about" title="About us">
+            <img src={about} className="about" alt="about" />
+          </button>
       </div>
     </nav>
   );

@@ -102,6 +102,21 @@
   flex-shrink: 0;
 }
 
+.about {
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+}
+
+.nav-item.about {
+  border: none;
+  border-radius: 0;
+}
+
+.nav-item.about:hover {
+  border: none;
+}
+
 .username {
   color: #000000 !important;
   font-weight: bold;
