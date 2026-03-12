@@ -94,7 +94,7 @@ router.get('/user/:userId', async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const page = parseInt(req.query.page as string) || 1;   // página actual
-    const size = parseInt(req.query.size as string) || 10;  // tamaño de página
+    const size = parseInt(req.query.size as string) || 5;  // tamaño de página
 
     const skip = (page - 1) * size;
 

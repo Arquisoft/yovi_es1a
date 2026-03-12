@@ -36,7 +36,7 @@ const Estadisticas: React.FC = () => {
 
   const fetchHistory = async (userId: string, page = 1) => {
     try {
-      const data = await statsService.getMatchHistory(userId, page, 10);
+      const data = await statsService.getMatchHistory(userId, page, 5);
       setHistory(data.content);
       setTotalPages(data.totalPages);
       //const data = await statsService.getMatchHistory(userId);
@@ -93,18 +93,18 @@ const Estadisticas: React.FC = () => {
                 ))}
               </tbody>
             </table>
-            <div className="pagination">
-  <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => prev - 1)}>
-    Anterior
-  </button>
-  <span>Página {currentPage} de {totalPages}</span>
-  <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)}>
-    Siguiente
-  </button>
-</div>
           </div>
         )}
       </div>
+                  <div className="pagination">
+              <button disabled={currentPage === 1} onClick={() => setCurrentPage(pag => pag - 1)}>
+                Anterior
+              </button>
+              <span>Página {currentPage} de {totalPages}</span>
+              <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(pag => pag + 1)}>
+                Siguiente
+              </button>{/* Si estas en última pagina se desactiva (el disabled)*/}
+            </div>
     </div>
   );
 };

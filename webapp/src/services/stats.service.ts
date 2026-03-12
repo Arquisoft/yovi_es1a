@@ -33,7 +33,7 @@ export const statsService = {
       throw error;
     }
   },
-  getMatchHistory: async (userId: string, page = 1, size = 10) => {
+  getMatchHistory: async (userId: string, page = 1, size = 5) => {
     const token = localStorage.getItem('token');
     const res = await fetch(`${API_URL}/matches/user/${userId}?page=${page}&size=${size}`, {
       method: 'GET',
