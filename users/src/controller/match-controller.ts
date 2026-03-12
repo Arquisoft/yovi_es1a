@@ -64,7 +64,7 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 
-router.get('/user/:userId', async (req: Request, res: Response) => {
+/*router.get('/user/:userId', async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
 
@@ -88,9 +88,9 @@ router.get('/user/:userId', async (req: Request, res: Response) => {
         console.error("Error fetching match history:", error);
         return res.status(500).json({ error: 'Internal server error while fetching history' });
     }
-});
+});*/
 
-/*router.get('/user/:userId', async (req: Request, res: Response) => {
+router.get('/user/:userId', async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const page = parseInt(req.query.page as string) || 1;   // página actual
@@ -117,6 +117,6 @@ router.get('/user/:userId', async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({ error: "Error fetching match history" });
   }
-});*/
+});
 
 export default router;

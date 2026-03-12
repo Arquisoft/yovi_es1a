@@ -19,28 +19,28 @@ const Estadisticas: React.FC = () => {
   const [history, setHistory] = useState<MatchRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  //const [currentPage, setCurrentPage] = useState(1);
- // const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
 
     if (storedUser) {
       const user = JSON.parse(storedUser);
-      fetchHistory(user.userId);//, currentPage);
+      fetchHistory(user.userId, currentPage);
     } else {
       setError("No hay usuario conectado. Inicia sesión para ver tus estadísticas.");
       setLoading(false);
     }
-  }, []);
+  }, [currentPage]);
 
-  const fetchHistory = async (userId: string) => {//, page = 1) => {
+  const fetchHistory = async (userId: string, page = 1) => {
     try {
-      //const data = await statsService.getMatchHistory(userId, page, 10);
-      //setHistory(data.content);
-      //setTotalPages(data.totalPages);
-      const data = await statsService.getMatchHistory(userId);
-      setHistory(data);
+      const data = await statsService.getMatchHistory(userId, page, 10);
+      setHistory(data.content);
+      setTotalPages(data.totalPages);
+      //const data = await statsService.getMatchHistory(userId);
+      //setHistory(data);
     } catch (err: any) {
       setError(err.message || "Error al cargar las estadísticas.");
     } finally {
@@ -93,7 +93,15 @@ const Estadisticas: React.FC = () => {
                 ))}
               </tbody>
             </table>
-            
+            <div className="pagination">
+  <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => prev - 1)}>
+    Anterior
+  </button>
+  <span>Página {currentPage} de {totalPages}</span>
+  <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)}>
+    Siguiente
+  </button>
+</div>
           </div>
         )}
       </div>
