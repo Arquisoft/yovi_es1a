@@ -136,7 +136,7 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
           </button>
         )}
 
-          <button className="nav-item about" title="About us">
+          <button className="nav-item about" title="About us" onClick={() => navigate("/about")}>
             <img src={about} className="about" alt="about" />
           </button>
       </div>

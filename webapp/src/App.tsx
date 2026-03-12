@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import Statistics from './pages/Statistics';
 import Help from "./pages/Help";
 import GameSettings from './pages/GameSettings';
+import About from './pages/About';
 
 import BotTester from './components/BotTester'; 
 
@@ -22,6 +23,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/about" element={<About />} />
 
       {/*Private routes */}
       <Route element={<UnloginRoute />}>
