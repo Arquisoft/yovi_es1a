@@ -84,27 +84,29 @@ export async function getMatchHistory(userId: string, page = 1, size = 5,
     //    .populate('user', 'username');
     const skip = (page - 1) * size;// Ejemplo: (2 - 1) * size = size → se saltan los primeros size documentos.
 
-    // query base
-    const query: any = { user: userObjectId };
-
-    //Para filtrar
-    //if (result && result !== "") {
-    //    query.result = result;
-    //}
+   // query base segura
+    const query: Record<string, any> = { user: userObjectId };
 
     if (filters) {
-        if (filters.result) query.result = filters.result;
-        if (filters.maxMoves) query.totalMoves = { $lte: filters.maxMoves };
-        if (filters.maxDuration) query.duration = { $lte: filters.maxDuration };
+        if (typeof filters.result === 'string' && filters.result.trim() !== '') {
+            query.result = filters.result;
+        }
+        if (typeof filters.maxMoves === 'number' && !isNaN(filters.maxMoves)) {
+            query.totalMoves = { $lte: filters.maxMoves };
+        }
+        if (typeof filters.maxDuration === 'number' && !isNaN(filters.maxDuration)) {
+            query.duration = { $lte: filters.maxDuration };
+        }
     }
 
     // Buscar partidas paginadas
-    const content = await Match.find(query)//Busca las partidas del usuario 
-        .sort({ createdAt: -1 })//Ordenado por fecha (primero más recientes)
+    const content = await Match.find(query) 
+        .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(size);//Límite por página --> size
+        .limit(size);
 
-    const totalElements = await Match.countDocuments( query );//Total de partidas del usuario (await para esperar el resultado)
+    // Total de partidas
+    const totalElements = await Match.countDocuments(query);
 
     return {
         content,
