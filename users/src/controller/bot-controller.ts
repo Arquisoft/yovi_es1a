@@ -63,7 +63,8 @@ const playHandler = async (req: Request, res: Response) => {
         if (typeof rawPosition === 'string') {
             try {
                 position = JSON.parse(rawPosition);
-            } catch (e) {
+            } catch {
+                
                 return res.status(400).json({ error: "Invalid JSON format in position parameter." });
             }
         } else {
@@ -105,8 +106,8 @@ const playHandler = async (req: Request, res: Response) => {
 };
 
 
-router.post('/play', playHandler); // Para tu Frontend React
-router.get('/play', playHandler);  // Para el Curl de tu profesor (-G)
+router.post('/play', playHandler); // Para Frontend
+router.get('/play', playHandler);  // API
 
 
 router.post('/check-winner', async (req: Request, res: Response) => {
