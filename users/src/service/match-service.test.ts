@@ -102,16 +102,23 @@ describe('Match service - Get Match History', () => {
     it('1.It should retrieve the paginated history correctly.', async () => {
       const fakeHistory = [{ _id: '1', result: 'win', duration: 100 }];
       
-      const mockLimit = vi.fn().mockResolvedValue(fakeHistory);
-      const mockSkip = vi.fn().mockReturnValue({ limit: mockLimit });
-      const mockSort = vi.fn().mockReturnValue({ skip: mockSkip });
-      (Match.find as any) = vi.fn().mockReturnValue({ sort: mockSort });
+      const queryBuilderMock: any = {
+          where: vi.fn().mockReturnThis(),
+          equals: vi.fn().mockReturnThis(),
+          lte: vi.fn().mockReturnThis(),
+          clone: vi.fn().mockReturnThis(),
+          sort: vi.fn().mockReturnThis(),
+          skip: vi.fn().mockReturnThis(),
+          limit: vi.fn().mockReturnThis(),
+          countDocuments: vi.fn().mockResolvedValue(1), // Resuelve con 1 página
+          exec: vi.fn().mockResolvedValue(fakeHistory)  // Resuelve con los datos
+      };
 
-      (Match.countDocuments as any) = vi.fn().mockResolvedValue(1);
+      (Match.find as any) = vi.fn().mockReturnValue(queryBuilderMock);
 
+      // 2. Ejecutamos el servicio
       const result = await getMatchHistory(VALID_ID);
-      
-      expect(result).toEqual({
+            expect(result).toEqual({
           content: fakeHistory,
           page: 1,
           size: 5,
@@ -119,11 +126,13 @@ describe('Match service - Get Match History', () => {
           totalPages: 1
       });
 
-      expect(Match.find).toHaveBeenCalledWith({ user: expect.anything() });
-      expect(mockSort).toHaveBeenCalledWith({ createdAt: -1 });
-      expect(mockSkip).toHaveBeenCalledWith(0);
-      expect(mockLimit).toHaveBeenCalledWith(5);
-      expect(Match.countDocuments).toHaveBeenCalled();
+      expect(Match.find).toHaveBeenCalled();
+      expect(queryBuilderMock.where).toHaveBeenCalledWith('user');
+      expect(queryBuilderMock.clone).toHaveBeenCalled();
+      expect(queryBuilderMock.sort).toHaveBeenCalledWith({ createdAt: -1 });
+      expect(queryBuilderMock.skip).toHaveBeenCalledWith(0);
+      expect(queryBuilderMock.limit).toHaveBeenCalledWith(5);
+      expect(queryBuilderMock.exec).toHaveBeenCalled();
     });
 
     it('2. It should throw an error if the userId is not a string', async () => {
