@@ -63,7 +63,8 @@ describe('Integration Tests: Bot Controller', () => {
 
             await supertest(app)
                 .post('/api/bot/play')
-                .send({ position: 'some_position' });
+                // FIX: Enviamos un JSON válido para que pase la validación
+                .send({ position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." } });
 
             expect(fetchMock).toHaveBeenCalledWith(
                 expect.stringContaining('/v1/ybot/choose/random_bot'),
@@ -79,7 +80,8 @@ describe('Integration Tests: Bot Controller', () => {
 
             const res = await supertest(app)
                 .post('/api/bot/play')
-                .send({ position: 'bad-pos' });
+                // FIX: JSON válido
+                .send({ position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." } });
 
             expect(res.status).toBe(500);
             expect(res.body).toHaveProperty('error', "The Rust engine rejected the play or couldn't find the bot.");
@@ -91,11 +93,13 @@ describe('Integration Tests: Bot Controller', () => {
 
             const res = await supertest(app)
                 .post('/api/bot/play')
-                .send({ position: 'pos' });
+                // FIX: JSON válido
+                .send({ position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." } });
 
             expect(res.status).toBe(500);
             expect(res.body).toHaveProperty('error', "Internal error on Node.js server");
         });
+
         it('6. should handle non-JSON error responses from Rust engine', async () => {
             fetchMock.mockResolvedValueOnce({
                 ok: false,
@@ -104,11 +108,11 @@ describe('Integration Tests: Bot Controller', () => {
 
             const res = await supertest(app)
                 .post('/api/bot/play')
-                .send({ position: 'pos' });
+                // FIX: JSON válido
+                .send({ position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." } });
 
             expect(res.status).toBe(500);
             expect(res.body).toHaveProperty('error', "The Rust engine rejected the play or couldn't find the bot.");
-            
             expect(res.body.details).toHaveProperty('rawError', "Internal Server Error: Database Down");
         });
         it('7. should use a specific valid strategy from validBots array', async () => {
@@ -141,6 +145,41 @@ describe('Integration Tests: Bot Controller', () => {
 
             expect(res.status).toBe(400);
             expect(res.body).toHaveProperty('error', 'Invalid strategy: fake_bot');
+        });
+        it('9. should return 400 if position string is invalid JSON (GET request)', async () => {
+            const res = await supertest(app)
+                .get('/api/bot/play')
+                .query({ position: '{esto-no-es-un-json-valido}' }); // Al usar .query(), Express lo recibe como texto
+
+            expect(res.status).toBe(400);
+            expect(res.body).toHaveProperty('error', 'Invalid JSON format in position parameter.');
+        });
+
+        it('10. should return 200 and ONLY coordinates when using GET method', async () => {
+            const mockRustResponse = {
+                coords: { x: 1, y: 0, z: 2 },
+                game_status: 'ongoing'
+            };
+
+            fetchMock.mockResolvedValueOnce({
+                ok: true,
+                json: async () => mockRustResponse
+            } as any);
+
+            const res = await supertest(app)
+                .get('/api/bot/play')
+                .query({ 
+                    position: JSON.stringify({ size: 3, turn: 0, players: ["B", "R"], layout: "B/BR/.R." }),
+                    bot_id: 'monte_carlo_bot'
+                });
+
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual({ x: 1, y: 0, z: 2 }); 
+            
+            expect(fetchMock).toHaveBeenCalledWith(
+                expect.stringContaining('/v1/ybot/choose/monte_carlo_bot'),
+                expect.anything()
+            );
         });
     });
     

@@ -101,14 +101,15 @@ describe('NavBar', () => {
     expect(mockSetLang).toHaveBeenCalledWith('de');
   });
 
-  test('It applies the default case (Spanish) if it receives an unknown value', () => {
+  test('It applies the default case (Spanish) if it receives an unknown value', async () => {
     renderWithoutUser();
-    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'zh' } });
+    
+    const select = screen.getByRole('combobox');
+    fireEvent.change(select, { target: { value: 'unknown_lang' } });
+    
     expect(mockSetLang).toHaveBeenCalledWith('es');
   });
 
-  // FIX: "jugar", "estadisticas", "ayuda" solo se renderizan cuando hay usuario.
-  // Los tests originales no ponían usuario en localStorage.
   test('It navigates to /configureGame when clicking "Jugar"', async () => {
     const user = userEvent.setup();
     renderWithUser('stats'); // usuario logueado para que aparezca el botón
@@ -128,5 +129,34 @@ describe('NavBar', () => {
     renderWithUser('play');
     await user.click(screen.getByText('ayuda'));
     expect(mockNavigate).toHaveBeenCalledWith('/help');
+  });
+  test('It navigates to /login when clicking "Iniciar Sesión" (no user logged in)', async () => {
+    const user = userEvent.setup();
+    renderWithoutUser('home');
+    
+    const loginButton = screen.getByText('iniciarSes');
+    await user.click(loginButton);
+    
+    expect(mockNavigate).toHaveBeenCalledWith('/login');
+  });
+
+  test('It navigates to /register when clicking "Crear Cuenta" (no user logged in)', async () => {
+    const user = userEvent.setup();
+    renderWithoutUser('home');
+    
+    const registerButton = screen.getByText('crearCuenta');
+    await user.click(registerButton);
+    
+    expect(mockNavigate).toHaveBeenCalledWith('/register');
+  });
+
+  test('It navigates to /about when clicking the about icon', async () => {
+    const user = userEvent.setup();
+    renderWithoutUser('home');
+    
+    const aboutButton = screen.getByTitle('About us');
+    await user.click(aboutButton);
+    
+    expect(mockNavigate).toHaveBeenCalledWith('/about');
   });
 });
