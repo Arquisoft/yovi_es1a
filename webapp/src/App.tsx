@@ -13,6 +13,7 @@ import BotTester from './components/BotTester';
 
 import './App.css';
 import Game from "./pages/Game";
+import Multiplayer from "./pages/Multiplayer";
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/about" element={<About />} />
+      <Route path="/multiplayer" element={<Multiplayer />} />
 
       {/*Private routes */}
       <Route element={<UnloginRoute />}>
