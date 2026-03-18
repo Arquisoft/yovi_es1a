@@ -11,6 +11,32 @@ const ClanManager: React.FC = () => {
   
   const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
 
+
+  const [selectedClanId, setSelectedClanId] = useState<string | null>(null);
+  const [chatMessages, setChatMessages] = useState<{username: string, text: string}[]>([]);
+  const [chatText, setChatText] = useState('');
+
+  const fetchChatMessages = async (clanId: string) => {
+        try {
+            const msgs = await clanService.getClanMessages(clanId);
+            setChatMessages(msgs);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const sendChatMessage = async () => {
+        if (!selectedClanId || !user || !chatText) return;
+
+        try {
+            await clanService.sendMessage(selectedClanId, user.userId, user.username, chatText);
+            setChatText('');
+            fetchChatMessages(selectedClanId);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
   const fetchClans = async () => {
       try {
         const data = await clanService.getAllClans();
@@ -84,10 +110,32 @@ const ClanManager: React.FC = () => {
               <li key={clan.clanId}>
                 <strong>{clan.name}</strong> - Miembros: {clan.members.join(', ')}
                 <button onClick={() =>handleAddMember(clan.clanId)}>Unirme</button>
+                <button onClick={async () => {
+                setSelectedClanId(clan.clanId);      // selecciona el clan
+                await fetchChatMessages(clan.clanId); // carga los mensajes
+                }}>Chat</button>
               </li>
             ))}
           </ul>
         )}
+        {selectedClanId && (
+  <div style={{ border: '1px solid gray', padding: '10px', marginTop: '20px', maxWidth: '400px' }}>
+    <h3>Chat del clan</h3>
+    <div style={{ height: '200px', overflowY: 'scroll', border: '1px solid #ccc', padding: '5px' }}>
+      {chatMessages.map((m, i) => (
+        <div key={i}><strong>{m.username}</strong>: {m.text}</div>
+      ))}
+    </div>
+    <input
+      type="text"
+      value={chatText}
+      onChange={e => setChatText(e.target.value)}
+      placeholder="Escribe un mensaje"
+      style={{ width: '80%' }}
+    />
+    <button onClick={sendChatMessage} style={{ width: '18%' }}>Enviar</button>
+  </div>
+)}
 
         <hr />
 

@@ -91,6 +91,7 @@ router.post('/:clanId/addUser', async (req: Request, res: Response) => {
     }
 });
 
+//Devuelve los clanes
 router.get('/', async (req: Request, res: Response) => {
   try {
     const clans = await Clan.find().populate('members', 'username email'); //Trae info del usuario
@@ -103,6 +104,33 @@ router.get('/', async (req: Request, res: Response) => {
     console.error(err);
     res.status(500).json({ error: 'Error cargando clanes' });
   }
+});
+
+// Obtener mensajes de un clan
+router.get('/:clanId/messages', async (req: Request, res: Response) => {
+    try {
+        const { clanId } = req.params;
+        const messages = await ClanService.getClanMessages(clanId);
+        res.json(messages);
+    } catch (err: any) {
+        console.error(err);
+        res.status(500).json({ error: err.message || 'Error cargando mensajes' });
+    }
+});
+
+// Enviar mensaje a un clan
+router.post('/:clanId/message', async (req: Request, res: Response) => {
+    try {
+        const { clanId } = req.params;
+        const { userId, username, text } = req.body;
+        if (!userId || !username || !text) return res.status(400).json({ error: 'Faltan datos del mensaje' });
+
+        const messages = await ClanService.sendMessage(clanId, new Types.ObjectId(userId), username, text);
+        res.json(messages);
+    } catch (err: any) {
+        console.error(err);
+        res.status(500).json({ error: err.message || 'Error enviando mensaje' });
+    }
 });
 
 export default router;

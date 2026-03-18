@@ -50,7 +50,7 @@ connectBD(); //conect bd
 app.use('/', userRoutes);  // connect with user-controller
 app.use('/matches', matchRoutes); // connect with match-controller
 app.use('/api/bot', botRoutes); //connect with bot controller
-app.use('/clans', clanRoutes); //connect with clan controller
+app.use('/clans', clanRoutes); 
 
 app.get('/health', (req: Request, res: Response) => {
     res.json({ status: 'OK', service: 'Users Service' });
