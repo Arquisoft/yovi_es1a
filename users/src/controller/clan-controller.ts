@@ -93,11 +93,11 @@ router.post('/:clanId/addUser', async (req: Request, res: Response) => {
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const clans = await Clan.find().populate('members', 'username email'); // opcional: traer info de usuario
+    const clans = await Clan.find().populate('members', 'username email'); //Trae info del usuario
     res.status(200).json(clans.map(c => ({
       clanId: c._id,
       name: c.name,
-      members: c.members.map((m: any) => m.username || m) // mostrar usernames si se pobló
+      members: c.members.map((m: any) => m.username || m) //Mostrar usuario en vez de id
     })));
   } catch (err: any) {
     console.error(err);

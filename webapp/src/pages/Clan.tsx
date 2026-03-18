@@ -8,13 +8,10 @@ const ClanManager: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [newClanName, setNewClanName] = useState<string>('');
-  const [newClanMembers, setNewClanMembers] = useState<string>('');
+  
+  const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
 
-  const [selectedClanId, setSelectedClanId] = useState<string>('');
-  const [newMemberId, setNewMemberId] = useState<string>('');
-
-  useEffect(() => {
-    const fetchClans = async () => {
+  const fetchClans = async () => {
       try {
         const data = await clanService.getAllClans();
         setClans(data);
@@ -25,34 +22,51 @@ const ClanManager: React.FC = () => {
         setLoading(false);
       }
     };
+
+  useEffect(() => {
+
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+
+    
     fetchClans();
   }, []);
 
   const handleCreateClan = async () => {
     setError(null);
     try {
-      const memberIds = newClanMembers.split(',').map(id => id.trim());//Separo por comas y quito espacios
-      const clan = await clanService.createClan(newClanName, memberIds);
-      setClans(clanes => [...clanes, clan]);//Copia todos los elementos del array anterior.
-      setNewClanName('');
-      setNewClanMembers('');
+        if (!user) {
+            setError('Debes iniciar sesión para unirte a un clan');
+            return;
+        }
+        const memberIds = [user.userId];
+        await clanService.createClan(newClanName, memberIds);
+        await fetchClans();
+
+        setNewClanName('');
     } catch (err: any) {
       console.error(err);
       setError(err.message || 'Error creando clan');
     }
   };
 
-  const handleAddMember = async () => {
+    const handleAddMember = async (clanId: string) => {
+    if (!user) {
+        setError('Debes iniciar sesión para unirte a un clan');
+        return;
+    }
     setError(null);
     try {
-        await clanService.addMemberToClan(selectedClanId, newMemberId);
-        const allClans = await clanService.getAllClans();
+        await clanService.addMemberToClan(clanId, user.userId);
+        const allClans = await clanService.getAllClans();//Actualizo clanes
         setClans(allClans);
     } catch (err: any) {
-      console.error(err);
-      setError(err.message || 'Error agregando miembro');
+        console.error(err);
+        setError(err.message || 'Error agregando miembro');
     }
-  };
+    };
 
   return (
     <>
@@ -69,6 +83,7 @@ const ClanManager: React.FC = () => {
             {clans.map(clan => (
               <li key={clan.clanId}>
                 <strong>{clan.name}</strong> - Miembros: {clan.members.join(', ')}
+                <button onClick={() =>handleAddMember(clan.clanId)}>Unirme</button>
               </li>
             ))}
           </ul>
@@ -83,30 +98,8 @@ const ClanManager: React.FC = () => {
           value={newClanName}
           onChange={e => setNewClanName(e.target.value)}
         />
-        <input
-          type="text"
-          placeholder="IDs de miembros (separados por comas)"
-          value={newClanMembers}
-          onChange={e => setNewClanMembers(e.target.value)}
-        />
         <button onClick={handleCreateClan}>Crear Clan</button>
 
-        <hr />
-
-        <h2>Agregar usuario a un clan</h2>
-        <input
-          type="text"
-          placeholder="ID del clan"
-          value={selectedClanId}
-          onChange={e => setSelectedClanId(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="ID del usuario"
-          value={newMemberId}
-          onChange={e => setNewMemberId(e.target.value)}
-        />
-        <button onClick={handleAddMember}>Agregar Usuario</button>
       </div>
     </>
   );
