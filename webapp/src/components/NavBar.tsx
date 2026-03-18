@@ -5,7 +5,7 @@ import { useLanguage } from "../idiomaConf/LanguageContext";
 import about from '../assets/about.png'; 
 
 interface NavBarProps { 
-  activeTab: "home" | "play" | "stats" | "help" | "login" | "register" | "" | "about";
+  activeTab: "home" | "play" | "stats" | "help" | "login" | "register" | "" | "about" | "clanes";
 }
 
 const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
@@ -79,6 +79,10 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
             >
               {t("ayuda")}
             </button>
+            <button 
+              onClick={() => navigate("/clanes")}
+              className={`nav-item ${activeTab === "clanes" ? "active" : ""}`}
+            ></button>
           </>
         )}
       </div>
