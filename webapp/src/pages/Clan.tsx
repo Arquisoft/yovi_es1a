@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import { clanService } from '../services/clan.service';
+import "../App.css";
 
 const ClanManager: React.FC = () => {
   const [clans, setClans] = useState<any[]>([]);
@@ -100,6 +101,7 @@ const ClanManager: React.FC = () => {
 
       <div className="clanes">
         {error && <div className="error-message-neon">{error}</div>}
+        <div className="clanes-lista">
 
         <h2>Clanes existentes</h2>
         {loading ? (
@@ -118,26 +120,30 @@ const ClanManager: React.FC = () => {
             ))}
           </ul>
         )}
+              </div>
+
         {selectedClanId && (
-  <div style={{ border: '1px solid gray', padding: '10px', marginTop: '20px', maxWidth: '400px' }}>
-    <h3>Chat del clan</h3>
-    <div style={{ height: '200px', overflowY: 'scroll', border: '1px solid #ccc', padding: '5px' }}>
-      {chatMessages.map((m, i) => (
-        <div key={i}><strong>{m.username}</strong>: {m.text}</div>
-      ))}
-    </div>
-    <input
-      type="text"
-      value={chatText}
-      onChange={e => setChatText(e.target.value)}
-      placeholder="Escribe un mensaje"
-      style={{ width: '80%' }}
-    />
-    <button onClick={sendChatMessage} style={{ width: '18%' }}>Enviar</button>
-  </div>
-)}
+        <div className='chat-Contorno'>
+            <h3>Chat del clan</h3>
+            <div className="chat">
+                {chatMessages.map((m, i) => (
+                    <div key={i}><strong>{m.username}</strong>: {m.text}</div>
+                ))}
+            </div>
+
+            <input
+                type="text"
+                value={chatText}
+                onChange={e => setChatText(e.target.value)}
+                placeholder="Escribe un mensaje"
+            />
+            <button onClick={sendChatMessage}>Enviar</button>
+        </div>
+        )}
+      </div>
 
         <hr />
+      <div className="clanes-nuevos">
 
         <h2>Crear un nuevo clan</h2>
         <input
