@@ -10,6 +10,8 @@ import userRoutes from './controller/user-controller';
 import matchRoutes from './controller/match-controller';
 import botRoutes from './controller/bot-controller';
 import connectBD from './database'; 
+import clanRoutes from './controller/clan-controller';
+
 
 const app: Application = express();
 app.disable('x-powered-by');
@@ -48,6 +50,7 @@ connectBD(); //conect bd
 app.use('/', userRoutes);  // connect with user-controller
 app.use('/matches', matchRoutes); // connect with match-controller
 app.use('/api/bot', botRoutes); //connect with bot controller
+app.use('/clans', clanRoutes); //connect with clan controller
 
 app.get('/health', (req: Request, res: Response) => {
     res.json({ status: 'OK', service: 'Users Service' });
