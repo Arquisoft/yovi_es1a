@@ -15,8 +15,8 @@ const server = http.createServer(app);
 //Initialize Socket.IO with HTTP server
 const io=new Server(server, {
     cors: {
-        origin: process.env.WEBAPP_URL || 'http://localhost:5173',
-        methods: ['GET', 'POST']
+        origin: ["http://localhost:5173", "http://localhost", process.env.WEBAPP_URL || ""],
+    methods: ["GET", "POST"]
     }
 });
 const PORT = process.env.PORT || 5000;

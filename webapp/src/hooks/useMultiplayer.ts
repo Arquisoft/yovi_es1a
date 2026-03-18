@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { socket } from '../services/socket.service';
 
 export const useMultiplayer = () => {
@@ -6,6 +6,9 @@ export const useMultiplayer = () => {
   const [roomCode, setRoomCode] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
+  const [lastOpponentMove, setLastOpponentMove] = useState<any>(null);
+  const [myColor, setMyColor] = useState<"B" | "R" | null>(null); 
+  const [opponentName, setOpponentName] = useState<string>("Jugador Online"); 
 
   useEffect(() => {
     socket.connect();
@@ -17,9 +20,16 @@ export const useMultiplayer = () => {
       setErrorMsg(null);
     });
     socket.on('roomError', (msg: string) => setErrorMsg(msg));
-    socket.on('gameStarted', (code: string) => {
-      setRoomCode(code);
+  
+    socket.on('gameStarted', (data: { roomCode: string, color: "B" | "R", opponentName: string }) => {
+      setRoomCode(data.roomCode);
+      setMyColor(data.color);
+      setOpponentName(data.opponentName); 
       setGameStarted(true);
+    });
+
+    socket.on('moveReceived', (moveData: any) => {
+      setLastOpponentMove(moveData);
     });
 
     return () => {
@@ -28,17 +38,35 @@ export const useMultiplayer = () => {
       socket.off('roomCreated');
       socket.off('roomError');
       socket.off('gameStarted');
+      socket.off('moveReceived');
       socket.disconnect();
     };
-  }, []);
-
-  const createRoom = () => socket.emit('createRoom');
+  }, []); 
   
-  const joinRoom = (code: string) => {
+  const createRoom = (username: string) => {
+    socket.emit('createRoom', username);
+  };
+  
+  const joinRoom = (code: string, username: string) => {
     if (code.trim() !== '') {
-      socket.emit('joinRoom', code.trim().toUpperCase());
+      socket.emit('joinRoom', { roomCode: code.trim().toUpperCase(), guestUsername: username });
     }
   };
 
-  return { isConnected, roomCode, errorMsg, gameStarted, createRoom, joinRoom };
+  const sendMove = useCallback((code: string, moveData: any) => {
+    socket.emit('makeMove', { roomCode: code, moveData });
+  }, []);
+
+  return { 
+    isConnected, 
+    roomCode, 
+    errorMsg, 
+    gameStarted, 
+    lastOpponentMove, 
+    myColor, 
+    opponentName,
+    createRoom, 
+    joinRoom, 
+    sendMove 
+  };
 };

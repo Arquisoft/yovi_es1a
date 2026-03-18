@@ -37,7 +37,14 @@ services:
       - "4000:4000"
     networks:
       - monitor-net
-
+  multiplayer:
+    build: 
+      context: ./multiplayer
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+    restart: unless-stopped
   prometheus:
     image: prom/prometheus
     container_name: prometheus
