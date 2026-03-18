@@ -59,6 +59,7 @@ const ClanManager: React.FC = () => {
       <NavBar activeTab="clanes" />
 
       <div className="clanes">
+        {error && <div className="error-message-neon">{error}</div>}
 
         <h2>Clanes existentes</h2>
         {loading ? (
@@ -73,6 +74,7 @@ const ClanManager: React.FC = () => {
           </ul>
         )}
 
+        <hr />
 
         <h2>Crear un nuevo clan</h2>
         <input

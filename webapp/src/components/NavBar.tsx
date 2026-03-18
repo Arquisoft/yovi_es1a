@@ -82,7 +82,8 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
             <button 
               onClick={() => navigate("/clanes")}
               className={`nav-item ${activeTab === "clanes" ? "active" : ""}`}
-            ></button>
+            >Clanes
+            </button>
           </>
         )}
       </div>

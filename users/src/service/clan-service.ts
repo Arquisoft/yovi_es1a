@@ -30,4 +30,6 @@ export class ClanService {
 
     return clan;
   }
+
+  
 }

@@ -1,6 +1,7 @@
 import express, { Request, Response, Router } from 'express';
 import { ClanService } from '../service/clan-service';
 import { Types } from 'mongoose';
+import Clan from '../models/clan-model';
 
 const router: Router = express.Router();
 
@@ -88,6 +89,20 @@ router.post('/:clanId/addUser', async (req: Request, res: Response) => {
         console.error("Error adding member to clan:", error);
         return res.status(500).json({ error: 'Error adding member to clan' });
     }
+});
+
+router.get('/', async (req: Request, res: Response) => {
+  try {
+    const clans = await Clan.find().populate('members', 'username email'); // opcional: traer info de usuario
+    res.status(200).json(clans.map(c => ({
+      clanId: c._id,
+      name: c.name,
+      members: c.members.map((m: any) => m.username || m) // mostrar usernames si se pobló
+    })));
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ error: 'Error cargando clanes' });
+  }
 });
 
 export default router;
