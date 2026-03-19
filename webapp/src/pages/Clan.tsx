@@ -12,7 +12,6 @@ const ClanManager: React.FC = () => {
   
   const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
 
-
   const [selectedClanId, setSelectedClanId] = useState<string | null>(null);
   const [chatMessages, setChatMessages] = useState<{username: string, text: string}[]>([]);
   const [chatText, setChatText] = useState('');
@@ -30,9 +29,10 @@ const ClanManager: React.FC = () => {
         if (!selectedClanId || !user || !chatText) return;
 
         try {
-            await clanService.sendMessage(selectedClanId, user.userId, user.username, chatText);
+            const newMessages = await clanService.sendMessage(selectedClanId, user.userId, user.username, chatText);
+            setChatMessages(newMessages);
             setChatText('');
-            fetchChatMessages(selectedClanId);
+            //fetchChatMessages(selectedClanId);
         } catch (err) {
             console.error(err);
         }
@@ -100,7 +100,7 @@ const ClanManager: React.FC = () => {
       <NavBar activeTab="clanes" />
 
       <div className="clanes">
-        {error && <div className="error-message-neon">{error}</div>}
+        {error}
         <div className="clanes-lista">
 
         <h2>Clanes existentes</h2>
