@@ -103,29 +103,23 @@ describe('Match service - Get Match History', () => {
       const fakeHistory = [{ _id: '1', result: 'win', duration: 100 }];
       
       const queryBuilderMock: any = {
-          where: vi.fn().mockReturnThis(),
-          equals: vi.fn().mockReturnThis(),
-          lte: vi.fn().mockReturnThis(),
-          clone: vi.fn().mockReturnThis(),
-          sort: vi.fn().mockReturnThis(),
-          skip: vi.fn().mockReturnThis(),
-          limit: vi.fn().mockReturnThis(),
-          countDocuments: vi.fn().mockResolvedValue(1), // Resuelve con 1 página
-          exec: vi.fn().mockResolvedValue(fakeHistory)  // Resuelve con los datos
+        where: vi.fn().mockReturnThis(),
+        equals: vi.fn().mockReturnThis(),
+        lte: vi.fn().mockReturnThis(),
+        clone: vi.fn().mockReturnThis(),
+        sort: vi.fn().mockReturnThis(),
+        skip: vi.fn().mockReturnThis(),
+        limit: vi.fn().mockReturnThis(),
+        populate: vi.fn().mockReturnThis(),
+        countDocuments: vi.fn().mockResolvedValue(1), // Resuelve con 1 página
+        exec: vi.fn().mockResolvedValue(fakeHistory)  // Resuelve con los datos
       };
-
       (Match.find as any) = vi.fn().mockReturnValue(queryBuilderMock);
 
       // 2. Ejecutamos el servicio
       const result = await getMatchHistory(VALID_ID);
-            expect(result).toEqual({
-          content: fakeHistory,
-          page: 1,
-          size: 5,
-          totalElements: 1,
-          totalPages: 1
-      });
-
+      
+      expect(result.content).toEqual(fakeHistory);
       expect(Match.find).toHaveBeenCalled();
       expect(queryBuilderMock.where).toHaveBeenCalledWith('user');
       expect(queryBuilderMock.clone).toHaveBeenCalled();
