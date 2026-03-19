@@ -84,15 +84,16 @@ describe('Integration Tests: Clan Service', () => {
       expect(res.body).toHaveProperty('message', 'User added to clan successfully');
       expect(res.body.members).toContain(testUserId);
     });
+
   });
 
     describe('GET /', () => {
-    it('should return at least one clan', async () => {
-        const res = await supertest(app).get('/clans');
-        expect(res.status).toBe(200);
-        expect(Array.isArray(res.body)).toBe(true);
-        expect(res.body.length).toBeGreaterThanOrEqual(1);
-    });
+        it('should return at least one clan', async () => {
+            const res = await supertest(app).get('/clans');
+            expect(res.status).toBe(200);
+            expect(Array.isArray(res.body)).toBe(true);
+            expect(res.body.length).toBeGreaterThanOrEqual(1);
+        });
     });
 
   describe('POST /:clanId/message and GET /:clanId/messages', () => {

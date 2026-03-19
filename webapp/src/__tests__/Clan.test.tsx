@@ -177,4 +177,43 @@ describe('Clan', () => {
     });
   });
 
+  test('muestra error si falla al crear clan', async () => {
+    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+
+    (clanService.getAllClans as ReturnType<typeof vi.fn>).mockResolvedValue([]);
+    (clanService.createClan as ReturnType<typeof vi.fn>)
+        .mockRejectedValueOnce(new Error('Error'));
+
+    render(<MemoryRouter><Clan /></MemoryRouter>);
+    const user = userEvent.setup();
+
+    await user.type(screen.getByPlaceholderText(/Nombre del clan/i), 'ClanError');
+    await user.click(screen.getByRole('button', { name: /Crear Clan/i }));
+
+    await waitFor(() => {
+        expect(screen.getByText(/Error/i)).toBeInTheDocument();
+    });
+  });
+
+  test('muestra error si falla al unirse a un clan', async () => {
+    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+
+    (clanService.getAllClans as ReturnType<typeof vi.fn>).mockResolvedValue([
+        { clanId: 'c1', name: 'Clan1', members: [] },
+    ]);
+
+    (clanService.addMemberToClan as ReturnType<typeof vi.fn>)
+        .mockRejectedValueOnce(new Error('Error al unirse'));
+
+    render(<MemoryRouter><Clan /></MemoryRouter>);
+    const user = userEvent.setup();
+
+    await waitFor(() => expect(screen.getByText(/Clan1/i)).toBeInTheDocument());
+    await user.click(screen.getByRole('button', { name: /Unirme/i }));
+
+    await waitFor(() => {
+        expect(screen.getByText(/Error al unirse/i)).toBeInTheDocument();
+    });
+  });
+
 });
