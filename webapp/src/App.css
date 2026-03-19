@@ -302,36 +302,111 @@ button:hover {
   cursor: pointer;
 }
 
-.chat {
-  height: 200px;
-  overflow-y: scroll;
-  border: 1px solid #ccc;
-  padding: 5px';
-}
-
-.chat-Contorno {
-  border: 1px solid gray;
-  padding: 10px;
-  margin-Top: 20px;
-  max-width: 400px;
-}
-
-.clanes {
+.clanesView{
+  overflow-y: auto;
+  padding-top: 80px;
   display: flex;
-  gap: 20px;
+  justify-content: center;
   align-items: flex-start;
 }
 
-.clanes li button {
-  margin-left: 10px;
-  margin-top: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
+/* Contenedor principal de clanes y chat */
+.clanes {
+  display: flex;
+  gap: 30px;
+  padding: 20px;
+  justify-content: center;
+  align-items: flex-start;
 }
 
-.clanes-nuevos button {
-    margin-left: 10px;
-  margin-top: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
+/* Lista de clanes (izquierda) */
+.clanes-lista {
+  background: rgba(0, 149, 255, 0.209);
+  border-radius: 15px;
+  padding: 20px;
+  min-width: 300px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.clanes-lista h2 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.clanes-lista ul {
+  padding: 0;
+}
+
+.clanes-lista li {
+  background: rgba(0, 0, 0, 0.25);
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.clanes-lista li strong {
+  font-size: 1.1rem;
+}
+
+/* Botones de clanes */
+.clanes li button, .clanes-nuevos button, .chat-Contorno button {
+  background: linear-gradient(135deg, #5b99f6 0%, #1321a3 100%);
+}
+
+/* Chat (derecha) */
+.chat-Contorno {
+  border-radius: 15px;
+  background: rgba(0, 149, 255, 0.209);
+  padding: 15px;
+  max-width: 400px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-Contorno h2 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.chat {
+  flex: 1;
+  height: 350px;
+  overflow-y: scroll;
+  border-radius: 10px;
+  padding: 10px;
+  background: rgba(0,0,0,0.2);
+}
+
+.chat div {
+  margin-bottom: 5px;
+}
+
+.chat-Contorno input {
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.clanes-nuevos {
+  background: rgba(0, 149, 255, 0.209);
+  padding: 20px;
+  border-radius: 15px;
+  max-width: 350px;
+  text-align: center;
+  margin: 20px auto;
+}
+
+.clanes-nuevos input {
+  padding: 8px;
+  border-radius: 8px;
+  width: 80%;
+  font-size: 1rem;
+  margin-bottom: 10px;
 }

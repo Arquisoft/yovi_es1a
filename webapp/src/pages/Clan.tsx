@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import { clanService } from '../services/clan.service';
 import "../App.css";
+import video from "../assets/videoLinea.mp4";
 
 const ClanManager: React.FC = () => {
   const [clans, setClans] = useState<any[]>([]);
@@ -32,7 +33,6 @@ const ClanManager: React.FC = () => {
             const newMessages = await clanService.sendMessage(selectedClanId, user.userId, user.username, chatText);
             setChatMessages(newMessages);
             setChatText('');
-            //fetchChatMessages(selectedClanId);
         } catch (err) {
             console.error(err);
         }
@@ -96,9 +96,12 @@ const ClanManager: React.FC = () => {
     };
 
   return (
-    <>
+    <div className='clanesView'>
       <NavBar activeTab="clanes" />
-
+      <video autoPlay muted loop className="videoIN">
+        <source src={video} type="video/mp4" />
+        No se ha podido mostrar el video de fondo
+      </video>
       <div className="clanes">
         {error}
         <div className="clanes-lista">
@@ -124,7 +127,7 @@ const ClanManager: React.FC = () => {
 
         {selectedClanId && (
         <div className='chat-Contorno'>
-            <h3>Chat del clan</h3>
+            <h2>Chat del clan</h2>
             <div className="chat">
                 {chatMessages.map((m, i) => (
                     <div key={i}><strong>{m.username}</strong>: {m.text}</div>
@@ -142,7 +145,6 @@ const ClanManager: React.FC = () => {
         )}
       </div>
 
-        <hr />
       <div className="clanes-nuevos">
 
         <h2>Crear un nuevo clan</h2>
@@ -155,7 +157,7 @@ const ClanManager: React.FC = () => {
         <button onClick={handleCreateClan}>Crear Clan</button>
 
       </div>
-    </>
+    </div>
   );
 };
 
