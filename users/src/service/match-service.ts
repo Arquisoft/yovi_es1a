@@ -100,19 +100,24 @@ export async function getMatchHistory(userId: string, page = 1, size = 5,
         }
     }
 
-    // Buscar partidas paginadas
+  /*  // Buscar partidas paginadas
     const content = await Match.find(query)//Busca las partidas del usuario 
         .sort({ createdAt: -1 })//Ordenado por fecha (primero más recientes)
         .skip(skip)
         .limit(size)//Límite por página --> size
         .populate('user', 'username'); //Poblar el username
-
+*/
+    // 3. Clonar la consulta antes de añadir la paginación para contar el total
+    const countQuery = queryBuilder.clone();
+    const totalElements = await countQuery.countDocuments();
     // 4. Añadir la paginación a la consulta original y ejecutar.
     const content = await queryBuilder
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(size)
+        .populate('user', 'username')
         .exec();
+
 
     return {
         content,
