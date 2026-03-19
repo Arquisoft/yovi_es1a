@@ -85,6 +85,15 @@ describe('Integration Tests: Clan Service', () => {
       expect(res.body.members).toContain(testUserId);
     });
 
+    it('should return 500 if userId is missing', async () => {
+        const res = await supertest(app)
+            .post(`/clans/${testClanId}/addUser`)
+            .send({});
+
+        expect(res.status).toBe(500);
+        expect(res.body).toHaveProperty('error', 'Error adding member to clan');
+    });
+
   });
 
     describe('GET /', () => {
@@ -123,5 +132,16 @@ describe('Integration Tests: Clan Service', () => {
       expect(Array.isArray(res.body)).toBe(true);
       expect(res.body[0]).toHaveProperty('text', 'Hello');
     });
+
+      it('should return 500 if clan does not exist', async () => {
+        const fakeClanId = new Types.ObjectId().toString();
+        const res = await supertest(app)
+            .post(`/clans/${fakeClanId}/addUser`)
+            .send({ userId: testUserId2 });
+        expect(res.status).toBe(500);
+        expect(res.body).toHaveProperty('error', 'Error adding member to clan');
+    });
   });
+
+
 });
