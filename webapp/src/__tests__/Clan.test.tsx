@@ -108,4 +108,73 @@ describe('Clan', () => {
       expect(screen.getByText(/Error cargando clanes/i)).toBeInTheDocument();
     });
   });
+
+  test('mostrar error si intenta crear clan sin estar logueado', async () => {
+    (clanService.getAllClans as ReturnType<typeof vi.fn>).mockResolvedValue([]);
+    render(<MemoryRouter><Clan /></MemoryRouter>);
+    const user = userEvent.setup();
+
+    await user.type(screen.getByPlaceholderText(/Nombre del clan/i), 'ClanSinUser');
+    await user.click(await screen.getByRole('button', { name: /Crear Clan/i }));
+
+    await waitFor(() => {
+        expect(screen.getByText(/Debes iniciar sesión para unirte a un clan/i)).toBeInTheDocument();
+    });
+  });
+
+  test('mostrar error si intenta unirse a un clan sin estar logueado', async () => {
+    (clanService.getAllClans as ReturnType<typeof vi.fn>).mockResolvedValue([
+        { clanId: 'c1', name: 'Clan1', members: [] },
+    ]);
+
+    render(<MemoryRouter><Clan /></MemoryRouter>);
+    const user = userEvent.setup();
+
+    await waitFor(() => expect(screen.getByText(/Clan1/i)).toBeInTheDocument());
+    await user.click(await screen.getByRole('button', { name: /Unirme/i }));
+
+    await waitFor(() => {
+        expect(screen.getByText(/Debes iniciar sesión para unirte a un clan/i)).toBeInTheDocument();
+    });
+  });
+
+  test('no envía mensaje si el input está vacío', async () => {
+    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+    (clanService.getAllClans as ReturnType<typeof vi.fn>).mockResolvedValue([
+        { clanId: 'c1', name: 'Clan1', members: ['u1'] },
+    ]);
+    (clanService.getClanMessages as ReturnType<typeof vi.fn>).mockResolvedValue([]);
+
+    render(<MemoryRouter><Clan /></MemoryRouter>);
+    const user = userEvent.setup();
+
+    await waitFor(() => expect(screen.getByText(/Clan1/i)).toBeInTheDocument());
+    await user.click(await screen.getByRole('button', { name: /Chat/i }));
+
+    await user.click(await screen.getByRole('button', { name: /Enviar/i }));
+    await waitFor(() => {
+        expect(clanService.sendMessage).not.toHaveBeenCalled();
+    });
+  });
+
+  test('muestra mensajes existentes al abrir chat de clan', async () => {
+    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+    (clanService.getAllClans as ReturnType<typeof vi.fn>).mockResolvedValue([
+        { clanId: 'c1', name: 'Clan1', members: ['u1'] },
+    ]);
+    (clanService.getClanMessages as ReturnType<typeof vi.fn>).mockResolvedValue([
+        { username: 'User2', text: 'Hola' },
+    ]);
+
+    render(<MemoryRouter><Clan /></MemoryRouter>);
+    const user = userEvent.setup();
+
+    await waitFor(() => expect(screen.getByText(/Clan1/i)).toBeInTheDocument());
+    await user.click(await screen.getByRole('button', { name: /Chat/i }));
+
+    await waitFor(() => {
+        expect(screen.getByText(/Hola/i)).toBeInTheDocument();
+    });
+  });
+
 });

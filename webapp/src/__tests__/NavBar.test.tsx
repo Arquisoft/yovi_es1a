@@ -130,6 +130,21 @@ describe('NavBar', () => {
     await user.click(screen.getByText('ayuda'));
     expect(mockNavigate).toHaveBeenCalledWith('/help');
   });
+
+  test('It navigates to /clanes when clicking "Clanes"', async () => {
+    const user = userEvent.setup();
+    renderWithUser('help');
+    await user.click(screen.getByText('Clanes'));
+    expect(mockNavigate).toHaveBeenCalledWith('/clanes');
+  });
+
+  test('It navigates to / when clicking "Inicio"', async () => {
+    const user = userEvent.setup();
+    renderWithUser('help');
+    await user.click(screen.getByText('inicio'));
+    expect(mockNavigate).toHaveBeenCalledWith('/');
+  });
+
   test('It navigates to /login when clicking "Iniciar Sesión" (no user logged in)', async () => {
     const user = userEvent.setup();
     renderWithoutUser('home');
