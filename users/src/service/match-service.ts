@@ -82,20 +82,22 @@ export async function getMatchHistory(userId: string, page = 1, size = 5,
     //return await Match.find({ user: userObjectId })
     //    .sort({ createdAt: -1 })
     //    .populate('user', 'username');
-    const skip = (page - 1) * size;// Ejemplo: (2 - 1) * size = size → se saltan los primeros size documentos.
+    const skip = (page - 1) * size;
 
-    // query base
-    const query: any = { user: userObjectId };
+    // 1. Usamos el Query Builder de Mongoose en lugar de un objeto {}
+    const queryBuilder = Match.find().where('user').equals(userObjectId);
 
-    //Para filtrar
-    //if (result && result !== "") {
-    //    query.result = result;
-    //}
-
+    // 2. Añado los filtros usando funciones seguras
     if (filters) {
-        if (filters.result) query.result = filters.result;
-        if (filters.maxMoves) query.totalMoves = { $lte: filters.maxMoves };
-        if (filters.maxDuration) query.duration = { $lte: filters.maxDuration };
+        if (filters.result) {
+            queryBuilder.where('result').equals(String(filters.result));
+        }
+        if (filters.maxMoves) {
+            queryBuilder.where('totalMoves').lte(Number(filters.maxMoves));
+        }
+        if (filters.maxDuration) {
+            queryBuilder.where('duration').lte(Number(filters.maxDuration));
+        }
     }
 
     // Buscar partidas paginadas
@@ -105,14 +107,18 @@ export async function getMatchHistory(userId: string, page = 1, size = 5,
         .limit(size)//Límite por página --> size
         .populate('user', 'username'); //Poblar el username
 
-    const totalElements = await Match.countDocuments( query );//Total de partidas del usuario (await para esperar el resultado)
+    // 4. Añadir la paginación a la consulta original y ejecutar.
+    const content = await queryBuilder
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(size)
+        .exec();
 
     return {
         content,
         page,
         size,
         totalElements,
-        totalPages: Math.ceil(totalElements / size)//Redondea hacia arriba
+        totalPages: Math.ceil(totalElements / size)
     };
-
 }

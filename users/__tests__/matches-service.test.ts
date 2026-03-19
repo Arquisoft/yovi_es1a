@@ -145,9 +145,9 @@ describe('Integration Tests: Matches Service', () => {
         });
 
         it('should return 200 and an empty array if userId is not found', async () => {
-        const res = await supertest(app)
-            .get('/matches/user/000000000000000000000000')
-            .set('Accept', 'application/json');
+            const res = await supertest(app)
+                .get('/matches/user/000000000000000000000000')
+                .set('Accept', 'application/json');
 
             expect(res.status).toBe(200);
             expect(res.body.content).toEqual([]);

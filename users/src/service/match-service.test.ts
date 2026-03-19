@@ -99,8 +99,8 @@ describe('Match service - Save Match',()=> {
     });
 }) 
 describe('Match service - Get Match History', () => {
-    it('1.It should retrieve and populate the history correctly.', async () => {
-      const fakeHistory = [{ _id: '1', result: 'win', user: { username: 'Carlos' } }];
+    it('1.It should retrieve the paginated history correctly.', async () => {
+      const fakeHistory = [{ _id: '1', result: 'win', duration: 100 }];
       
       const mockPopulate = vi.fn().mockResolvedValue(fakeHistory);
       const mockLimit = vi.fn().mockReturnValue({ populate: mockPopulate });
@@ -111,6 +111,9 @@ describe('Match service - Get Match History', () => {
       
       (Match.countDocuments as any) = vi.fn().mockResolvedValue(fakeHistory.length);
 
+      (Match.find as any) = vi.fn().mockReturnValue(queryBuilderMock);
+
+      // 2. Ejecutamos el servicio
       const result = await getMatchHistory(VALID_ID);
       
       expect(result.content).toEqual(fakeHistory);
@@ -122,6 +125,7 @@ describe('Match service - Get Match History', () => {
       expect(mockLimit).toHaveBeenCalled();
       expect(mockPopulate).toHaveBeenCalledWith('user', 'username');
     });
+
     it('2. It should throw an error if the userId is not a string', async () => {
         await expect(getMatchHistory(12345 as any)).rejects.toThrow('Invalid input format');
     });
