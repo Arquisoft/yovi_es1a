@@ -134,9 +134,9 @@ describe('Integration Tests: Matches Service', () => {
                 .set('Accept', 'application/json');
 
             expect(res.status).toBe(200);
-            expect(Array.isArray(res.body)).toBe(true);
-            expect(res.body.length).toBeGreaterThanOrEqual(1); 
-            const lastMatch = res.body[0];
+            expect(Array.isArray(res.body.content)).toBe(true);
+            expect(res.body.content.length).toBeGreaterThanOrEqual(1); 
+            const lastMatch = res.body.content[0];
             expect(lastMatch.user.username).toBe('GamerTest');
             if (lastMatch.opponent) {
                 expect(lastMatch.opponent).toBeDefined();
@@ -150,8 +150,10 @@ describe('Integration Tests: Matches Service', () => {
             .set('Accept', 'application/json');
 
             expect(res.status).toBe(200);
-            expect(res.body).toEqual([]);
-});
+            expect(res.body.content).toEqual([]);
+            expect(res.body.totalElements).toBe(0);
+            expect(res.body.totalPages).toBe(0);
+        });
 
         it('should return 500 if an invalid MongoDB ID format is provided', async () => {
             const res = await supertest(app)

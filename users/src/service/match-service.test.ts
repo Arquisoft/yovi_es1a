@@ -103,14 +103,23 @@ describe('Match service - Get Match History', () => {
       const fakeHistory = [{ _id: '1', result: 'win', user: { username: 'Carlos' } }];
       
       const mockPopulate = vi.fn().mockResolvedValue(fakeHistory);
-      const mockSort = vi.fn().mockReturnValue({ populate: mockPopulate });
+      const mockLimit = vi.fn().mockReturnValue({ populate: mockPopulate });
+      const mockSkip = vi.fn().mockReturnValue({ limit: mockLimit });
+      const mockSort = vi.fn().mockReturnValue({ skip: mockSkip });
+
       (Match.find as any) = vi.fn().mockReturnValue({ sort: mockSort });
+      
+      (Match.countDocuments as any) = vi.fn().mockResolvedValue(fakeHistory.length);
 
       const result = await getMatchHistory(VALID_ID);
       
-      expect(result).toEqual(fakeHistory);
+      expect(result.content).toEqual(fakeHistory);
+      expect(result.totalElements).toBe(fakeHistory.length);
+      expect(result.page).toBe(1);
       expect(Match.find).toHaveBeenCalled();
       expect(mockSort).toHaveBeenCalledWith({ createdAt: -1 });
+      expect(mockSkip).toHaveBeenCalled();
+      expect(mockLimit).toHaveBeenCalled();
       expect(mockPopulate).toHaveBeenCalledWith('user', 'username');
     });
     it('2. It should throw an error if the userId is not a string', async () => {

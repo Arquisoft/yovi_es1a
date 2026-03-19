@@ -102,7 +102,8 @@ export async function getMatchHistory(userId: string, page = 1, size = 5,
     const content = await Match.find(query)//Busca las partidas del usuario 
         .sort({ createdAt: -1 })//Ordenado por fecha (primero más recientes)
         .skip(skip)
-        .limit(size);//Límite por página --> size
+        .limit(size)//Límite por página --> size
+        .populate('user', 'username'); //Poblar el username
 
     const totalElements = await Match.countDocuments( query );//Total de partidas del usuario (await para esperar el resultado)
 
