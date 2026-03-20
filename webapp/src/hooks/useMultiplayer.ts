@@ -10,7 +10,6 @@ export const useMultiplayer = () => {
   const [opponentName, setOpponentName] = useState<string>('');
   const [lastOpponentMove, setLastOpponentMove] = useState<any>(null);
   
-  // NUEVO: Estado para guardar el tamaño que dicta el servidor
   const [boardSize, setBoardSize] = useState<number>(5);
 
   useEffect(() => {
@@ -24,12 +23,11 @@ export const useMultiplayer = () => {
       setErrorMsg('');
     });
 
-    // NUEVO: Recibimos también el 'tamano'
     socket.on('gameStarted', (data: { roomCode: string, color: 'B' | 'R', opponentName: string, tamano: number }) => {
       setRoomCode(data.roomCode);
       setMyColor(data.color);
       setOpponentName(data.opponentName);
-      setBoardSize(data.tamano); // Guardamos el tamaño oficial
+      setBoardSize(data.tamano);
       setGameStarted(true);
       setErrorMsg('');
     });

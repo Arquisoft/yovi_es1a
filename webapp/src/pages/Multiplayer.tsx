@@ -12,7 +12,7 @@ const Multiplayer: React.FC = () => {
   } = useMultiplayer();
   
   const [joinCodeInput, setJoinCodeInput] = useState('');
-  const [tamano, setTamano] = useState<number>(5); // El estado de la barra deslizable
+  const [tamano, setTamano] = useState<number>(5);
 
   const userStr = localStorage.getItem("user");
   const myUsername = userStr ? JSON.parse(userStr).username : "Invitado";
@@ -28,7 +28,6 @@ const Multiplayer: React.FC = () => {
         </p>
         
         <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-          {/* Le pasamos el boardSize oficial que dictó el servidor */}
           <Tablero 
             tamano={boardSize} 
             isOnline={true}
@@ -52,7 +51,7 @@ const Multiplayer: React.FC = () => {
         casillas.push(
           <div 
             key={`${i}-${j}`} 
-            className="casilla-mini preview-facil" // Usamos un color por defecto
+            className="casilla-mini preview-facil"
             style={{ width: `${cellSize}px`, height: `${cellSize}px` }}
           ></div>
         );
@@ -71,7 +70,6 @@ const Multiplayer: React.FC = () => {
       
       <div className="config-container">
         
-        {/* COLUMNA IZQUIERDA: CONTROLES */}
         <div className="config-controls">
           <h2 className="fixed-title">Lobby Online</h2>
           <p style={{ color: isConnected ? '#4ade80' : '#f87171', marginBottom: '15px', fontWeight: 'bold' }}>
@@ -96,7 +94,6 @@ const Multiplayer: React.FC = () => {
                 />
               </div>
 
-              {/* ¡Importante! Enviamos el username Y el tamano */}
               <button className="btn-jugar-fixed" onClick={() => createRoom(myUsername, tamano)} style={{ marginBottom: '30px' }}>
                 Crear Sala
               </button>

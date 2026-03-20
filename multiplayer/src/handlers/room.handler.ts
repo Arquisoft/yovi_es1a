@@ -2,7 +2,6 @@ import { Server, Socket } from 'socket.io';
 
 const generateRoomCode = () => Math.random().toString(36).substring(2, 7).toUpperCase();
 
-// Guardamos el nombre Y el tamaño en la memoria
 const roomsData = new Map<string, { hostName: string, tamano: number }>(); 
 
 export const registerRoomHandlers = (io: Server, socket: Socket) => {
@@ -22,13 +21,11 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
     if (numClients === 0) {
       socket.emit('roomError', 'La sala no existe o el código es incorrecto.');
     } else if (numClients === 1) {
-      // 1. CORRECCIÓN: Le decimos a TS que room existe sí o sí con el !
       const [hostSocketId] = Array.from(room!); 
       socket.join(roomCode);
       
       const roomInfo = roomsData.get(roomCode) || { hostName: 'Jugador 1', tamano: 5 };
       
-      // 2. CORRECCIÓN: Le decimos a TS que hostSocketId no es indefinido con el !
       io.to(hostSocketId!).emit('gameStarted', { 
         roomCode, color: 'B', opponentName: guestUsername, tamano: roomInfo.tamano 
       });
