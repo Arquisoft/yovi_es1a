@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://172.20.10.6:3000';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export interface MatchData {
   user: string;

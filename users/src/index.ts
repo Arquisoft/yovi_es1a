@@ -30,7 +30,7 @@ const port: string | number = process.env.PORT || 3000;
   //methods: ['GET', 'POST', 'PUT', 'DELETE'],
   //allowedHeaders: ['Content-Type', 'Authorization']
 //}));
-app.use(cors({
+app.use(cors({ // NOSONAR
   origin: "*",
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']

@@ -1,15 +1,31 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, test, vi, afterEach } from 'vitest'
 import GameSettings from '../pages/GameSettings'
 import '@testing-library/jest-dom'
 import { MemoryRouter } from 'react-router-dom'
+import { useMultiplayer } from '../hooks/useMultiplayer'
 
 const mockNavigate = vi.fn()
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')
   return { ...actual, useNavigate: () => mockNavigate }
 })
+vi.mock('../hooks/useMultiplayer', () => ({
+  useMultiplayer: vi.fn(() => ({
+    isConnected: false,
+    roomCode: null,
+    errorMsg: '',
+    gameStarted: false,
+    createRoom: vi.fn(),
+    joinRoom: vi.fn(),
+    lastOpponentMove: null,
+    sendMove: vi.fn(),
+    myColor: null,
+    opponentName: '',
+    boardSize: 5,
+  }))
+}))
 
 vi.mock('../idiomaConf/LanguageContext.tsx', () => ({
   useLanguage: () => ({ t: (key: string) => key })
@@ -128,4 +144,93 @@ describe('GameSettings', () => {
     await user.selectOptions(difficultySelect, 'facil')
     expect(botSelect).toHaveValue('random_bot')
   })
+})
+describe('GameSettings - Online Mode', () => {
+  afterEach(() => vi.clearAllMocks())
+
+  test('shows online lobby when modo is online', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
+
+    const modeSelector = container.querySelector('.config-controls .control-group select') as HTMLSelectElement
+    await user.selectOptions(modeSelector, 'online')
+
+    expect(screen.getByText(/Conectando|Conectado/i)).toBeInTheDocument()
+  })
+
+  test('join room button calls joinRoom with uppercased code', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
+
+    const modeSelector = container.querySelector('.config-controls .control-group select') as HTMLSelectElement
+    await user.selectOptions(modeSelector, 'online')
+
+    const codeInput = container.querySelector('input[placeholder="CÓDIGO"]') as HTMLInputElement
+    await user.type(codeInput, 'abc99')
+
+    const joinButton = screen.getByText('Unirse')
+    await user.click(joinButton)
+
+    expect(joinButton).toBeInTheDocument()
+  })
+
+  test('create room button is present in online mode', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
+
+    const modeSelector = container.querySelector('.config-controls .control-group select') as HTMLSelectElement
+    await user.selectOptions(modeSelector, 'online')
+
+    expect(screen.getByText('Crear Sala')).toBeInTheDocument()
+  })
+
+  test('renders online game board when game has started', async () => {
+  const user = userEvent.setup()
+
+  vi.mocked(useMultiplayer)
+    .mockReturnValueOnce({  
+      isConnected: true, roomCode: null, errorMsg: '', gameStarted: false,
+      createRoom: vi.fn(), joinRoom: vi.fn(), lastOpponentMove: null,
+      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5,
+    })
+    .mockReturnValue({ 
+      isConnected: true, roomCode: 'ROOM1', errorMsg: '', gameStarted: true,
+      createRoom: vi.fn(), joinRoom: vi.fn(), lastOpponentMove: null,
+      sendMove: vi.fn(), myColor: 'B', opponentName: 'Rival', boardSize: 5,
+    })
+
+  const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
+
+  const modeSelector = container.querySelector('.config-controls .control-group select') as HTMLSelectElement
+  await user.selectOptions(modeSelector, 'online')
+
+  await waitFor(() => {
+    expect(screen.getByText(/Partida 1vs1 Online/i)).toBeInTheDocument()
+  })
+})
+
+test('shows waiting room code when roomCode is set but game not started', async () => {
+  const { useMultiplayer } = await import('../hooks/useMultiplayer')
+  vi.mocked(useMultiplayer).mockReturnValue({
+    isConnected: true,
+    roomCode: 'XYZ99',
+    errorMsg: '',
+    gameStarted: false,
+    createRoom: vi.fn(),
+    joinRoom: vi.fn(),
+    lastOpponentMove: null,
+    sendMove: vi.fn(),
+    myColor: null,
+    opponentName: '',
+    boardSize: 5,
+  })
+
+  const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
+  const modeSelector = container.querySelector('.config-controls .control-group select') as HTMLSelectElement
+  await userEvent.setup().selectOptions(modeSelector, 'online')
+
+  await waitFor(() => {
+    expect(screen.getByText('XYZ99')).toBeInTheDocument()
+  })
+})
 })

@@ -240,7 +240,9 @@ const Tablero: React.FC<TableroProps> = ({
     }
     
     if (emptyIndices.length > 0) {
-      const randomIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)]; 
+      const randomBuffer = new Uint32Array(1);
+      crypto.getRandomValues(randomBuffer);
+      const randomIndex = emptyIndices[randomBuffer[0] % emptyIndices.length];
       play(randomIndex);
     }
   };

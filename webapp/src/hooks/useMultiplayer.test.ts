@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react'
 import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest'
-import { useMultiplayer } from '../hooks/useMultiplayer'
+import { useMultiplayer } from './useMultiplayer'
 
 const { mockSocket } = vi.hoisted(() => {
   const mockSocket = {
