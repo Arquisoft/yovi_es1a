@@ -20,6 +20,7 @@ interface TableroProps {
   lastOpponentLayout?: string | null;
   onSendMove?: (newLayout: string) => void;
   opponentName?: string;
+  tamano?: number;
   
 }
 
@@ -52,7 +53,8 @@ const Tablero: React.FC<TableroProps> = ({
   onlineColor,
   lastOpponentLayout,
   onSendMove,
-  opponentName
+  opponentName,
+  tamano
 }) => {
   const location = useLocation();
   const navigate = useNavigate(); 
@@ -66,7 +68,7 @@ const Tablero: React.FC<TableroProps> = ({
   } = location.state || {};
 
   // ADAPTACIÓN MODO ONLINE
-  const size = tamanoSeleccionado;
+  const size = tamano || tamanoSeleccionado;
   const modoReal = isOnline ? "online" : modoSeleccionado;
   const miColor = isOnline ? (onlineColor as Player) : (colorUsuario as Player);
   
