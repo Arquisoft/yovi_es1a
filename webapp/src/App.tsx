@@ -8,6 +8,7 @@ import Statistics from './pages/Statistics';
 import Help from "./pages/Help";
 import GameSettings from './pages/GameSettings';
 import About from './pages/About';
+import Clanes from './pages/Clan';
 
 import BotTester from './components/BotTester'; 
 
@@ -33,6 +34,7 @@ function App() {
         <Route path="/statistics" element={<Statistics />} />
         <Route path="/help" element={<Help />} />
         <Route path="/botTester" element={<BotTester />} />
+        <Route path="/clanes" element={<Clanes />} />
 
         <Route element={<GameAccessRoute />}>
           <Route path="/game" element={<Game />} />
