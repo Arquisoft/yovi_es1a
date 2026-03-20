@@ -34,8 +34,7 @@ describe('GameSettings', () => {
     const user = userEvent.setup()
     const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
 
-    // Use CSS class selectors to avoid picking up NavBar selects
-    const botSelector = container.querySelector('.bot-options-area .control-group:nth-child(2) select') as HTMLSelectElement
+    const botSelector = container.querySelector('.offline-options-area .control-group:nth-child(3) select') as HTMLSelectElement
 
     await user.selectOptions(botSelector, 'simple_blocker_bot')
     expect(botSelector).toHaveValue('simple_blocker_bot')
@@ -65,8 +64,8 @@ describe('GameSettings', () => {
     const user = userEvent.setup()
     const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
 
-    const difficultySelect = container.querySelector('.bot-options-area .control-group:nth-child(1) select') as HTMLSelectElement
-    const botSelect = container.querySelector('.bot-options-area .control-group:nth-child(2) select') as HTMLSelectElement
+    const difficultySelect = container.querySelector('.offline-options-area .control-group:nth-child(2) select') as HTMLSelectElement
+    const botSelect = container.querySelector('.offline-options-area .control-group:nth-child(3) select') as HTMLSelectElement
 
     await user.selectOptions(difficultySelect, 'medio')
     expect(difficultySelect).toHaveValue('medio')
@@ -86,13 +85,11 @@ describe('GameSettings', () => {
     const slider = screen.getByRole('slider')
     fireEvent.change(slider, { target: { value: '10' } })
 
-    const difficultySelect = container.querySelector('.bot-options-area .control-group:nth-child(1) select') as HTMLSelectElement
-    const botSelect = container.querySelector('.bot-options-area .control-group:nth-child(2) select') as HTMLSelectElement
+    const difficultySelect = container.querySelector('.offline-options-area .control-group:nth-child(2) select') as HTMLSelectElement
+    const botSelect = container.querySelector('.offline-options-area .control-group:nth-child(3) select') as HTMLSelectElement
     await user.selectOptions(difficultySelect, 'dificil')
     await user.selectOptions(botSelect, 'monte_carlo_bot')
 
-    // FIX: Use specific class .btn-jugar-fixed instead of getAllByRole('button')[1].
-    // getAllByRole picks up NavBar buttons too, making index [1] the wrong target.
     const playButton = container.querySelector('.btn-jugar-fixed') as HTMLElement
     await user.click(playButton)
 
@@ -108,7 +105,6 @@ describe('GameSettings', () => {
     const user = userEvent.setup()
     const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
 
-    // Mode selector is the first select inside .config-controls (not the NavBar language select)
     const modeSelector = container.querySelector('.config-controls .control-group select') as HTMLSelectElement
     expect(modeSelector).toHaveValue('bot')
 
@@ -123,8 +119,8 @@ describe('GameSettings', () => {
     const user = userEvent.setup()
     const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
 
-    const difficultySelect = container.querySelector('.bot-options-area .control-group:nth-child(1) select') as HTMLSelectElement
-    const botSelect = container.querySelector('.bot-options-area .control-group:nth-child(2) select') as HTMLSelectElement
+    const difficultySelect = container.querySelector('.offline-options-area .control-group:nth-child(2) select') as HTMLSelectElement
+    const botSelect = container.querySelector('.offline-options-area .control-group:nth-child(3) select') as HTMLSelectElement
 
     await user.selectOptions(difficultySelect, 'medio')
     await user.selectOptions(botSelect, 'priority_block_bot')
