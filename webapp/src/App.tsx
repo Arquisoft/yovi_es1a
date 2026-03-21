@@ -34,6 +34,7 @@ function App() {
         <Route path="/configureGame" element={<GameSettings />} />
         <Route path="/statistics" element={<Statistics />} />
         <Route path="/ranking" element={<Ranking />} />
+        <Route path="/ranking/:type" element={<Ranking />} />
         <Route path="/help" element={<Help />} />
         <Route path="/botTester" element={<BotTester />} />
         <Route path="/clanes" element={<Clanes />} />

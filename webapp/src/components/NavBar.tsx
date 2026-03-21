@@ -11,6 +11,7 @@ interface NavBarProps {
 const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
+  const [rankingOpen, setRankingOpen] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -24,28 +25,25 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
     navigate("/login");
   };
 
+  useEffect(() => {
+    const handleClickOutside = () => setRankingOpen(false);
+    if (rankingOpen) {
+      document.addEventListener("click", handleClickOutside);
+    }
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, [rankingOpen]);
+
   const { t, lang, setLang } = useLanguage();
 
   const changeLangTo = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = e.target.value;
     switch (selected) {
-      case "es":
-        setLang("es");
-        break;
-      case "en":
-        setLang("en");
-        break;
-      case "it":
-        setLang("it");
-        break;
-      case "fr":
-        setLang("fr");
-        break;
-      case "de":
-        setLang("de");
-        break;
-      default:
-        setLang("es");
+      case "es": setLang("es"); break;
+      case "en": setLang("en"); break;
+      case "it": setLang("it"); break;
+      case "fr": setLang("fr"); break;
+      case "de": setLang("de"); break;
+      default: setLang("es");
     }
   };
 
@@ -79,27 +77,60 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
             >
               {t("ayuda")}
             </button>
-            <button 
-              className={`nav-item ${activeTab === 'ranking' ? 'active' : ''}`}
-              onClick={() => navigate('/ranking')}
+
+            <div
+              style={{ position: "relative", display: "inline-block" }}
+              onClick={(e) => e.stopPropagation()}
             >
-              Ranking
-            </button>
+              <button
+                className={`nav-item ${activeTab === "ranking" ? "active" : ""}`}
+                onClick={() => setRankingOpen((prev) => !prev)}
+              >
+                RANKING {rankingOpen ? "▴" : "▾"}
+              </button>
+
+              {rankingOpen && (
+                <div style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: 0,
+                  zIndex: 1000,
+                  minWidth: "160px",
+                  backgroundColor: "#2a52be",
+                  borderRadius: "0 0 8px 8px",
+                  boxShadow: "0 8px 16px rgba(0,0,0,0.4)",
+                  overflow: "hidden",
+                }}>
+                  <div
+                    className="nav-item"
+                    style={{ display: "block", cursor: "pointer", width: "100%", boxSizing: "border-box" }}
+                    onClick={() => { navigate("/ranking/players"); setRankingOpen(false); }}
+                  >
+                    Ranking de jugadores
+                  </div>
+                  <div
+                    className="nav-item"
+                    style={{ display: "block", cursor: "pointer", width: "100%", boxSizing: "border-box" }}
+                    onClick={() => { navigate("/ranking/clans"); setRankingOpen(false); }}
+                  >
+                    Ranking de clanes
+                  </div>
+                </div>
+              )}
+            </div>
+
             <button 
               onClick={() => navigate("/clanes")}
               className={`nav-item ${activeTab === "clanes" ? "active" : ""}`}
-            >Clanes
+            >
+              Clanes
             </button>
           </>
         )}
       </div>
 
       <div className="nav-right">
-        
-        {/* Contenedor para el icono */}
         <div style={{ position: "relative", display: "inline-block", marginRight: "10px" }}>
-          
-          {/* Icono flotando */}
           <span style={{ 
             position: "absolute", 
             left: "10px", 
@@ -110,12 +141,11 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
           }}>
             🌐
           </span>
-
           <select 
             className="control-input"
             value={lang} 
             onChange={changeLangTo}
-            style={{ paddingLeft: "35px" }} /* Este padding es CLAVE: hace hueco para que el texto no pise al icono */
+            style={{ paddingLeft: "35px" }}
           >
             <option value="es">{t("esp")}</option>
             <option value="en">{t("en")}</option>
@@ -147,9 +177,9 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
           </button>
         )}
 
-          <button className="nav-item about" title="About us" onClick={() => navigate("/about")}>
-            <img src={about} className="about" alt="about" />
-          </button>
+        <button className="nav-item about" title="About us" onClick={() => navigate("/about")}>
+          <img src={about} className="about" alt="about" />
+        </button>
       </div>
     </nav>
   );
