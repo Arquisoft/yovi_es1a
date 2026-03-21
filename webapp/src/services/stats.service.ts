@@ -33,6 +33,20 @@ export const statsService = {
       throw error;
     }
   },
+  getRanking: async () => {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    
+    const res = await fetch(`${API_URL}/matches/ranking/global`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error fetching ranking data');
+    return data;
+  },
   getMatchHistory: async (userId: string, page = 1, size = 5, 
     filters?: { result?: string; maxMoves?: number; maxDuration?: number }
 

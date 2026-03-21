@@ -90,6 +90,52 @@ router.post('/', async (req: Request, res: Response) => {
     }
 });*/
 
+router.get('/ranking/global', async (req: Request, res: Response) => {
+    try {
+        const ranking = await Match.aggregate([
+            {
+                $group: {
+                    _id: "$user",
+                    totalMatches: { $sum: 1 },
+                    wins: {
+                        $sum: { $cond: [{ $eq: ["$result", "win"] }, 1, 0] }
+                    },
+                    losses: {
+                        $sum: { $cond: [{ $in: ["$result", ["lose", "surrender"]] }, 1, 0] }
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "userInfo"
+                }
+            },
+            { $unwind: "$userInfo" },
+            {
+                $project: {
+                    _id: 1,
+                    username: "$userInfo.username",
+                    totalMatches: 1,
+                    wins: 1,
+                    losses: 1,
+                    winRate: {
+                        $multiply: [ { $divide: ["$wins", "$totalMatches"] }, 100 ]
+                    }
+                }
+            }
+        ]);
+
+        return res.status(200).json(ranking);
+
+    } catch (error) {
+        console.error("Error fetching global ranking:", error);
+        return res.status(500).json({ error: 'Internal server error while fetching ranking' });
+    }
+});
+
 router.get('/user/:userId', async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
