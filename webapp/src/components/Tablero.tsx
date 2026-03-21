@@ -13,15 +13,12 @@ interface TableroProps {
   undoTrigger?: number;
   passTurnTrigger?: number; 
   onUndoStatusChange?: (canUndo: boolean) => void;
-  
-  // Props for online mode
   isOnline?: boolean;
   onlineColor?: Player;
   lastOpponentLayout?: string | null;
   onSendMove?: (newLayout: string) => void;
   opponentName?: string;
   tamano?: number;
-  
 }
 
 const stringToYenLayout = (flatLayout: string, size: number) => {
@@ -67,14 +64,12 @@ const Tablero: React.FC<TableroProps> = ({
     colorUsuario = "B"
   } = location.state || {};
 
-  // ADAPTACIÓN MODO ONLINE
   const size = tamano || tamanoSeleccionado;
   const modoReal = isOnline ? "online" : modoSeleccionado;
   const miColor = isOnline ? (onlineColor as Player) : (colorUsuario as Player);
   
   const getInitialLayout = (n: number) => ".".repeat((n * (n + 1)) / 2);
 
-  // Estados
   const [layout, setLayout] = useState(getInitialLayout(size));
   const [turn, setTurn] = useState<Player>("B");
   const [loading, setLoading] = useState(false);
@@ -85,16 +80,9 @@ const Tablero: React.FC<TableroProps> = ({
   const [gameFinished, setGameFinished] = useState(false);
   const [showWinnerModal, setShowWinnerModal] = useState(false);
   const [winnerMessage, setWinnerMessage] = useState("");
-
   const [timeLeft, setTimeLeft] = useState(TURN_TIME_LIMIT); 
 
-  // Determinamos si es el turno del jugador humano actual
   const isHumanTurn = modoReal === "humano" || modoReal === "online" || turn === miColor;
-
-
-  // ==========================================
-  // FUNCIONES BASE DE JUEGO
-  // ==========================================
 
   const safeSaveStats = async (result: "win" | "lose", finalBoard: string) => {
     if (!user || !user.userId) return;
@@ -125,7 +113,6 @@ const Tablero: React.FC<TableroProps> = ({
     const updatedFlatLayout = newLayoutArray.join("");
     setLayout(updatedFlatLayout);
 
-    // --- BLOQUE MODO ONLINE ---
     if (modoReal === "online") {
       setLoading(true);
       try {
@@ -142,7 +129,6 @@ const Tablero: React.FC<TableroProps> = ({
           setTurn(turn === "B" ? "R" : "B");
         }
         
-        // Emitimos el tablero al servidor para que le llegue al rival
         if (onSendMove) onSendMove(updatedFlatLayout);
         
       } catch (error) {
@@ -152,9 +138,7 @@ const Tablero: React.FC<TableroProps> = ({
       }
       return; 
     }
-    // --- FIN BLOQUE ONLINE ---
 
-    // LÓGICA MODO HUMANO LOCAL
     if (modoReal === "humano") {
       setLoading(true);
       try {
@@ -184,7 +168,6 @@ const Tablero: React.FC<TableroProps> = ({
       return; 
     }
 
-    // LÓGICA MODO BOT
     const botColor: Player = miColor === "B" ? "R" : "B";
     setTurn(botColor); 
     setLoading(true);
@@ -247,11 +230,6 @@ const Tablero: React.FC<TableroProps> = ({
     }
   };
 
-
-  // ==========================================
-  // USE EFFECTS
-  // ==========================================
-
   React.useEffect(() => {
     const storedUser = localStorage.getItem("user");
     setLayout(getInitialLayout(size));
@@ -284,21 +262,18 @@ const Tablero: React.FC<TableroProps> = ({
     return () => clearInterval(timerId);
   }, [turn, loading, gameFinished, isHumanTurn]);
 
-  // Ejecutar movimiento por temporizador
   React.useEffect(() => {
     if (timeLeft === 0 && !gameFinished && !loading && isHumanTurn && modoReal !== "online") {
       makeRandomMove();
     }
   }, [timeLeft, gameFinished, loading, isHumanTurn, modoReal]);
 
-  // Ejecutar movimiento por botón "Pasar Turno"
   React.useEffect(() => {
     if (passTurnTrigger && passTurnTrigger > 0 && isHumanTurn && !loading && !gameFinished && modoReal !== "online") {
       makeRandomMove();
     }
   }, [passTurnTrigger]);
 
-  // Efecto Deshacer (Desactivado temporalmente en Online para evitar desincronizaciones complejas)
   React.useEffect(() => {
     if (undoTrigger && undoTrigger > 0 && history.length > 0 && modoReal !== "online") {
       const previousLayout = history[history.length - 1]; 
@@ -311,7 +286,6 @@ const Tablero: React.FC<TableroProps> = ({
     }
   }, [undoTrigger]);
 
-  // Efecto Rendirse
   React.useEffect(() => {
     const handleSurrender = async () => {
       if (surrenderTrigger && !gameFinished) {
@@ -324,7 +298,6 @@ const Tablero: React.FC<TableroProps> = ({
     handleSurrender();
   }, [surrenderTrigger]);
 
-  // Primer movimiento del bot
   React.useEffect(() => {
     const botJuegaPrimero = async () => {
       if (modoReal === "bot" && miColor === "R" && layout === getInitialLayout(size)) {
@@ -361,7 +334,6 @@ const Tablero: React.FC<TableroProps> = ({
     botJuegaPrimero();
   }, [modoReal, miColor, size, botSeleccionado]);
 
-  // RECIBIR MOVIMIENTO DEL RIVAL ONLINE
   React.useEffect(() => {
     if (modoReal === "online" && lastOpponentLayout && lastOpponentLayout !== layout) {
       const procesarMovimientoRival = async () => {
@@ -385,10 +357,12 @@ const Tablero: React.FC<TableroProps> = ({
     }
   }, [lastOpponentLayout, modoReal]);
 
-
   const crearTablero = () => {
-    const baseSize = size > 10 ? 380 : 450; 
-    const cellSize = Math.min(50, Math.floor(baseSize / size)); 
+    // Escala la base para tableros gigantes
+    const baseSize = size > 20 ? 550 : size > 10 ? 450 : 400; 
+    
+    // Aseguramos que la casilla NUNCA mida menos de 6px
+    const cellSize = Math.max(6, Math.min(50, Math.floor(baseSize / size))); 
     const cellHeight = Math.floor(cellSize * 1.15);
 
     let index = 0;
@@ -402,7 +376,6 @@ const Tablero: React.FC<TableroProps> = ({
         if (valor === "B") claseColor = " jugador-b";
         if (valor === "R") claseColor = " jugador-r";
 
-        // En modo online solo puedes hacer clic si es tu turno
         const esClickeable = modoReal === "online"
           ? valor === "." && turn === miColor && !loading && !gameFinished
           : modoReal === "humano" 
@@ -418,13 +391,17 @@ const Tablero: React.FC<TableroProps> = ({
             style={{ 
               width: `${cellSize}px`, 
               height: `${cellHeight}px`,
-              margin: `${cellSize * 0.05}px` 
+              margin: `${Math.max(0.5, cellSize * 0.05)}px` 
             }}
           />
         );
         index++;
       }
-      filas.push(<div key={i} className="tablero" style={{ gap: `${cellSize * 0.1}px` }}>{casillas}</div>);
+      filas.push(
+        <div key={i} className="tablero" style={{ gap: `${Math.max(1, cellSize * 0.1)}px` }}>
+          {casillas}
+        </div>
+      );
     }
     return filas;
   };

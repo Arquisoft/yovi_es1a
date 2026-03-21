@@ -36,10 +36,22 @@ const GameSettings: React.FC = () => {
     });
   };
 
+  const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = parseInt(e.target.value);
+    if (isNaN(val)) val = 0; 
+    if (val > 50) val = 50; 
+    setTamano(val);
+  };
+
+  const handleNumberBlur = () => {
+    if (tamano < 3) setTamano(3); 
+  };
+
   const dibujarPrevisualizacion = () => {
-    const cellSize = Math.min(25, Math.floor(320 / tamano)); 
+    const tamanoPrev = tamano > 20 ? 20 : tamano; 
+    const cellSize = Math.min(25, Math.floor(320 / tamanoPrev)); 
     const filas = [];
-    for (let i = 0; i < tamano; i++) {
+    for (let i = 0; i < tamanoPrev; i++) {
       const casillas = [];
       for (let j = 0; j <= i; j++) {
         casillas.push(
@@ -52,7 +64,7 @@ const GameSettings: React.FC = () => {
       }
       filas.push(<div key={i} className="fila-mini">{casillas}</div>);
     }
-    return filas;
+    return <>{filas}</>;
   };
 
   if (gameStarted && roomCode && myColor && modo === "online") {
@@ -122,12 +134,18 @@ const GameSettings: React.FC = () => {
                   <div className="control-group">
                     <label className="fixed-label">
                         <strong>Tamaño (Si creas sala)</strong> 
-                        <span className="size-value">{tamano}</span>
+                        <input 
+                          className="size-value"
+                          type="number"
+                          value={tamano === 0 ? '' : tamano}
+                          onChange={handleNumberChange}
+                          onBlur={handleNumberBlur}
+                        />
                     </label>
                     <input 
                       className="control-input-range" 
-                      type="range" min="3" max="15" 
-                      value={tamano} 
+                      type="range" min="3" max="30" 
+                      value={tamano > 30 ? 30 : tamano} 
                       onChange={(e) => setTamano(Number(e.target.value))} 
                     />
                   </div>
@@ -167,13 +185,19 @@ const GameSettings: React.FC = () => {
               <div className="control-group">
                 <label className="fixed-label">
                     <strong>{t("tamTabl")}</strong> 
-                    <span className="size-value">{tamano}</span>
+                    <input 
+                      className="size-value"
+                      type="number"
+                      value={tamano === 0 ? '' : tamano}
+                      onChange={handleNumberChange}
+                      onBlur={handleNumberBlur}
+                    />
                 </label>
                 <input 
                   className="control-input-range" 
                   type="range" 
-                  min="3" max="15" 
-                  value={tamano} 
+                  min="3" max="30" 
+                  value={tamano > 30 ? 30 : tamano} 
                   onChange={(e) => setTamano(Number(e.target.value))} 
                 />
               </div>
@@ -258,6 +282,9 @@ const GameSettings: React.FC = () => {
               {dibujarPrevisualizacion()}
             </div>
           </div>
+          {tamano > 20 && (
+            <p className="preview-limit-text">Previsualización limitada a 20x20</p>
+          )}
         </div>
 
       </div>

@@ -155,3 +155,15 @@ html, body {
   z-index: -1;
   object-fit: cover;
 }
+
+.size-value {
+  width: 60px;
+  background: rgba(0,0,0,0.5);
+  color: #60a5fa;
+  border: 1px solid #60a5fa;
+  border-radius: 5px;
+  padding: 5px;
+  text-align: center;
+  font-weight: bold;
+  float: right; 
+}
