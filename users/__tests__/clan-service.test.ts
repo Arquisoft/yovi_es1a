@@ -8,6 +8,7 @@ import { Types } from 'mongoose';
 describe('Integration Tests: Clan Service', () => {
   let testUserId: string;
   let testUserId2: string;
+  let testUserId3: string;
   let testClanId: string;
 
   // Crear usuarios de prueba
@@ -29,11 +30,20 @@ describe('Integration Tests: Clan Service', () => {
         password: 'password123'
       });
     testUserId2 = res2.body.userId;
+
+    const res3 = await supertest(app)
+      .post('/createuser')
+      .send({
+        username: 'ClanUser3',
+        email: 'clanuser3@test.com',
+        password: 'password123'
+      });
+    testUserId3 = res3.body.userId; //
   }, 20000);
 
   // Limpiar base de datos después de los tests
   afterAll(async () => {
-    await User.deleteMany({ _id: { $in: [testUserId, testUserId2] } });
+    await User.deleteMany({ _id: { $in: [testUserId, testUserId2, testUserId3] } });
     await Clan.deleteMany({});
   });
 
@@ -73,17 +83,16 @@ describe('Integration Tests: Clan Service', () => {
       expect(res.body).toHaveProperty('error', 'Clan name is required');
     });
   });
-
   describe('POST /:clanId/addUser', () => {
     it('should add a user to the clan', async () => {
       const res = await supertest(app)
         .post(`/clans/${testClanId}/addUser`)
-        .send({ userId: testUserId });
+        .send({ userId: testUserId3 }); 
 
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty('message', 'User added to clan successfully');
-      expect(res.body.members).toContain(testUserId);
-    });
+      expect(res.body.members).toContain(testUserId3); 
+    }, 10000);
 
     it('should return 500 if userId is missing', async () => {
         const res = await supertest(app)

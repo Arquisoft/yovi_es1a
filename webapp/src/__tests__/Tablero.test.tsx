@@ -180,6 +180,31 @@ describe('Board - End of Game', () => {
       expect(statsService.saveMatchResult).not.toHaveBeenCalled()
     })
   })
+
+  test('in human mode, saves lose stats for the losing player', async () => {
+  localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
+  vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
+  const { container } = renderTablero(3, 'random_bot', 'humano', 'R')
+  fireEvent.click(container.querySelectorAll('.casilla')[0])
+  await waitFor(() => {
+    expect(statsService.saveMatchResult).toHaveBeenCalledWith(
+      expect.objectContaining({ result: 'lose' })
+    )
+  })
+})
+
+test('bot first move: shows defeat if bot wins on first move', async () => {
+  vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
+  vi.mocked(gameService.askBotMove).mockResolvedValue({
+    api_version: '1.0', bot_id: 'test', game_status: 'ongoing',
+    coords: { x: 0, y: 0, z: 0 }
+  })
+  localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
+  renderTablero(3, 'random_bot', 'bot', 'R')
+  await waitFor(() => {
+    expect(screen.getByText(/HAS PERDIDO/i)).toBeInTheDocument()
+  })
+})
 })
 
 describe('Board - Error Handling', () => {
@@ -490,4 +515,106 @@ describe('Board - Timer and Pass Turn Capability', () => {
     const fichasAzules = container.querySelectorAll('.casilla.jugador-b')
     expect(fichasAzules.length).toBe(1)
   })
+})
+describe('Board - Online Mode', () => {
+  beforeEach(() => {
+    vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'ongoing' })
+    localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
+  })
+  afterEach(() => {
+    vi.clearAllMocks()
+    localStorage.clear()
+  })
+
+  const renderOnline = (lastOpponentLayout?: string) =>
+    render(
+      <MemoryRouter initialEntries={[{ pathname: '/game' }]}>
+        <Routes>
+          <Route path="/game" element={
+            <Tablero
+              isOnline={true}
+              onlineColor="B"
+              tamano={3}
+              lastOpponentLayout={lastOpponentLayout ?? null}
+              onSendMove={vi.fn()}
+              opponentName="Rival"
+            />
+          } />
+        </Routes>
+      </MemoryRouter>
+    )
+
+  test('renders online board and shows turn indicator', () => {
+    renderOnline()
+    expect(screen.getByText(/TÚ \(Azul\)/i)).toBeInTheDocument()
+  })
+
+  test('online: clicking a cell calls onSendMove', async () => {
+    const onSendMove = vi.fn()
+    const { container } = render(
+      <MemoryRouter initialEntries={[{ pathname: '/game' }]}>
+        <Routes>
+          <Route path="/game" element={
+            <Tablero isOnline={true} onlineColor="B" tamano={3}
+              lastOpponentLayout={null} onSendMove={onSendMove} opponentName="Rival" />
+          } />
+        </Routes>
+      </MemoryRouter>
+    )
+    fireEvent.click(container.querySelectorAll('.casilla')[0])
+    await waitFor(() => {
+      expect(onSendMove).toHaveBeenCalled()
+    })
+  })
+
+  test('online: win is detected after player move', async () => {
+    vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
+    const { container } = renderOnline()
+    fireEvent.click(container.querySelectorAll('.casilla')[0])
+    await waitFor(() => {
+      expect(screen.getByText(/GANÓ EL AZUL|HAS GANADO/i)).toBeInTheDocument()
+    })
+  })
+
+  test('online: receives opponent move and updates board', async () => {
+    const { rerender } = renderOnline()
+
+    rerender(
+      <MemoryRouter initialEntries={[{ pathname: '/game' }]}>
+        <Routes>
+          <Route path="/game" element={
+            <Tablero isOnline={true} onlineColor="B" tamano={3}
+              lastOpponentLayout="R....." onSendMove={vi.fn()} opponentName="Rival" />
+          } />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    await waitFor(() => {
+      expect(screen.getByText(/TÚ \(Azul\)/i)).toBeInTheDocument()
+    })
+  })
+
+  test('online: receives opponent move and detects defeat', async () => {
+  vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'ongoing' })
+
+  const { rerender } = renderOnline()
+
+  vi.mocked(gameService.checkWinner).mockResolvedValueOnce({ status: 'win' })
+
+  rerender(
+    <MemoryRouter initialEntries={[{ pathname: '/game' }]}>
+      <Routes>
+        <Route path="/game" element={
+          <Tablero isOnline={true} onlineColor="B" tamano={3}
+            lastOpponentLayout="R....." onSendMove={vi.fn()} opponentName="Rival" />
+        } />
+      </Routes>
+    </MemoryRouter>
+  )
+
+  await waitFor(() => {
+    expect(screen.getByText(/HAS PERDIDO/i)).toBeInTheDocument()
+  })
+})
 })

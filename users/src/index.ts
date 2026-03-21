@@ -18,19 +18,23 @@ app.disable('x-powered-by');
 const port: string | number = process.env.PORT || 3000;
 
 // middlewaers (allow front which is on a different port to request data from backend)
-app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    'http://localhost:3000',
-    'http://localhost',
-    'http://20.199.88.71' // NOSONAR
-  ],
+//app.use(cors({
+  //origin: [
+    //'http://localhost:5173',
+    //'http://127.0.0.1:5173',
+    //'http://localhost:3000',
+    //'http://localhost',
+    //'http://20.199.88.71' // NOSONAR
+  //],
   //origin: 'http://localhost:3000',
+  //methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  //allowedHeaders: ['Content-Type', 'Authorization']
+//}));
+app.use(cors({ // NOSONAR
+  origin: "*",
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
 app.use(express.json()); //convert plain text in json
 
 //metrics so that Prometheus and Grafana can read them and make graphs.

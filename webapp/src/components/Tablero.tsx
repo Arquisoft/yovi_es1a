@@ -6,14 +6,23 @@ import "./Tablero.css";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 import video from "../assets/videoLinea.mp4";
 
+type Player = "B" | "R";
+
 interface TableroProps {
   surrenderTrigger?: boolean;
   undoTrigger?: number;
   passTurnTrigger?: number; 
   onUndoStatusChange?: (canUndo: boolean) => void;
+  
+  // Props for online mode
+  isOnline?: boolean;
+  onlineColor?: Player;
+  lastOpponentLayout?: string | null;
+  onSendMove?: (newLayout: string) => void;
+  opponentName?: string;
+  tamano?: number;
+  
 }
-
-type Player = "B" | "R";
 
 const stringToYenLayout = (flatLayout: string, size: number) => {
   let yenLayout = "";
@@ -35,7 +44,18 @@ const coordsToIndex = (x: number, y: number, size: number) => {
 
 const TURN_TIME_LIMIT = 20; 
 
-const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTurnTrigger, onUndoStatusChange }) => {
+const Tablero: React.FC<TableroProps> = ({ 
+  surrenderTrigger, 
+  undoTrigger, 
+  passTurnTrigger, 
+  onUndoStatusChange,
+  isOnline,
+  onlineColor,
+  lastOpponentLayout,
+  onSendMove,
+  opponentName,
+  tamano
+}) => {
   const location = useLocation();
   const navigate = useNavigate(); 
   const { t } = useLanguage();
@@ -47,7 +67,11 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTu
     colorUsuario = "B"
   } = location.state || {};
 
-  const size = tamanoSeleccionado;
+  // ADAPTACIÓN MODO ONLINE
+  const size = tamano || tamanoSeleccionado;
+  const modoReal = isOnline ? "online" : modoSeleccionado;
+  const miColor = isOnline ? (onlineColor as Player) : (colorUsuario as Player);
+  
   const getInitialLayout = (n: number) => ".".repeat((n * (n + 1)) / 2);
 
   // Estados
@@ -64,7 +88,8 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTu
 
   const [timeLeft, setTimeLeft] = useState(TURN_TIME_LIMIT); 
 
-  const isHumanTurn = modoSeleccionado === "humano" || turn === colorUsuario;
+  // Determinamos si es el turno del jugador humano actual
+  const isHumanTurn = modoReal === "humano" || modoReal === "online" || turn === miColor;
 
 
   // ==========================================
@@ -81,16 +106,15 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTu
         result,
         duration: durationSeconds,
         boardSize: size, 
-        opponent: modoSeleccionado === "humano" ? "Amigo" : botSeleccionado, 
+        opponent: modoReal === "online" ? (opponentName || "Jugador Online") : (modoReal === "humano" ? "Amigo" : botSeleccionado),
         totalMoves: moves,
-        gameMode: modoSeleccionado === "humano" ? "human" : "computer"
+        gameMode: modoReal === "bot" ? "computer" : "human"
       });
     } catch (error) {
       console.error("Error al guardar en la BD:", error);
     }
   };
 
-  // 1. PRIMERO declaramos PLAY
   const play = async (index: number) => {
     if (gameFinished) return; 
 
@@ -101,7 +125,37 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTu
     const updatedFlatLayout = newLayoutArray.join("");
     setLayout(updatedFlatLayout);
 
-    if (modoSeleccionado === "humano") {
+    // --- BLOQUE MODO ONLINE ---
+    if (modoReal === "online") {
+      setLoading(true);
+      try {
+        const yenLayout = stringToYenLayout(updatedFlatLayout, size);
+        const data = await gameService.checkWinner(size, yenLayout);
+
+        if (data.status === "win") {
+          setGameFinished(true);
+          const winnerText = turn === "B" ? "¡GANÓ EL AZUL!" : "¡GANÓ EL ROJO!";
+          setWinnerMessage(winnerText);
+          setShowWinnerModal(true);
+          await safeSaveStats("win", updatedFlatLayout); 
+        } else {
+          setTurn(turn === "B" ? "R" : "B");
+        }
+        
+        // Emitimos el tablero al servidor para que le llegue al rival
+        if (onSendMove) onSendMove(updatedFlatLayout);
+        
+      } catch (error) {
+        console.error("Error verificando victoria:", error);
+      } finally {
+        setLoading(false);
+      }
+      return; 
+    }
+    // --- FIN BLOQUE ONLINE ---
+
+    // LÓGICA MODO HUMANO LOCAL
+    if (modoReal === "humano") {
       setLoading(true);
       try {
         const yenLayout = stringToYenLayout(updatedFlatLayout, size);
@@ -113,7 +167,7 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTu
           setWinnerMessage(winnerText);
           setShowWinnerModal(true);
 
-          if (turn === colorUsuario) {
+          if (turn === miColor) {
             await safeSaveStats("win", updatedFlatLayout); 
           } else {
             await safeSaveStats("lose", updatedFlatLayout); 
@@ -130,7 +184,8 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTu
       return; 
     }
 
-    const botColor: Player = colorUsuario === "B" ? "R" : "B";
+    // LÓGICA MODO BOT
+    const botColor: Player = miColor === "B" ? "R" : "B";
     setTurn(botColor); 
     setLoading(true);
 
@@ -169,16 +224,15 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTu
         return;
       }
 
-      setTurn(colorUsuario);
+      setTurn(miColor);
     } catch (error) {
       console.error("Error communicating with the bot:", error);
-      setTurn(colorUsuario); 
+      setTurn(miColor); 
     } finally {
       setLoading(false);
     }
   };
 
-  // 2. DESPUÉS declaramos makeRandomMove (ya que usa la función play)
   const makeRandomMove = () => {
     const emptyIndices: number[] = [];
     for (let i = 0; i < layout.length; i++) {
@@ -186,7 +240,9 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTu
     }
     
     if (emptyIndices.length > 0) {
-      const randomIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)]; // NOSONAR
+      const randomBuffer = new Uint32Array(1);
+      crypto.getRandomValues(randomBuffer);
+      const randomIndex = emptyIndices[randomBuffer[0] % emptyIndices.length];
       play(randomIndex);
     }
   };
@@ -230,21 +286,21 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTu
 
   // Ejecutar movimiento por temporizador
   React.useEffect(() => {
-    if (timeLeft === 0 && !gameFinished && !loading && isHumanTurn) {
+    if (timeLeft === 0 && !gameFinished && !loading && isHumanTurn && modoReal !== "online") {
       makeRandomMove();
     }
-  }, [timeLeft, gameFinished, loading, isHumanTurn]);
+  }, [timeLeft, gameFinished, loading, isHumanTurn, modoReal]);
 
   // Ejecutar movimiento por botón "Pasar Turno"
   React.useEffect(() => {
-    if (passTurnTrigger && passTurnTrigger > 0 && isHumanTurn && !loading && !gameFinished) {
+    if (passTurnTrigger && passTurnTrigger > 0 && isHumanTurn && !loading && !gameFinished && modoReal !== "online") {
       makeRandomMove();
     }
   }, [passTurnTrigger]);
 
-  // Efecto Deshacer
+  // Efecto Deshacer (Desactivado temporalmente en Online para evitar desincronizaciones complejas)
   React.useEffect(() => {
-    if (undoTrigger && undoTrigger > 0 && history.length > 0) {
+    if (undoTrigger && undoTrigger > 0 && history.length > 0 && modoReal !== "online") {
       const previousLayout = history[history.length - 1]; 
       setHistory(prev => prev.slice(0, -1)); 
       setLayout(previousLayout); 
@@ -271,7 +327,7 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTu
   // Primer movimiento del bot
   React.useEffect(() => {
     const botJuegaPrimero = async () => {
-      if (modoSeleccionado === "bot" && colorUsuario === "R" && layout === getInitialLayout(size)) {
+      if (modoReal === "bot" && miColor === "R" && layout === getInitialLayout(size)) {
         setLoading(true);
         try {
           const yenLayout = stringToYenLayout(layout, size);
@@ -303,7 +359,31 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTu
       }
     };
     botJuegaPrimero();
-  }, [modoSeleccionado, colorUsuario, size, botSeleccionado]);
+  }, [modoReal, miColor, size, botSeleccionado]);
+
+  // RECIBIR MOVIMIENTO DEL RIVAL ONLINE
+  React.useEffect(() => {
+    if (modoReal === "online" && lastOpponentLayout && lastOpponentLayout !== layout) {
+      const procesarMovimientoRival = async () => {
+        setHistory(prev => [...prev, layout]);
+        setLayout(lastOpponentLayout);
+        
+        const yenLayout = stringToYenLayout(lastOpponentLayout, size);
+        const data = await gameService.checkWinner(size, yenLayout);
+        
+        if (data.status === "win") {
+          setGameFinished(true);
+          setWinnerMessage("HAS PERDIDO.");
+          setShowWinnerModal(true);
+          await safeSaveStats("lose", lastOpponentLayout);
+        } else {
+          setTurn(miColor);
+        }
+      };
+      
+      procesarMovimientoRival();
+    }
+  }, [lastOpponentLayout, modoReal]);
 
 
   const crearTablero = () => {
@@ -322,9 +402,12 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTu
         if (valor === "B") claseColor = " jugador-b";
         if (valor === "R") claseColor = " jugador-r";
 
-        const esClickeable = modoSeleccionado === "humano" 
-          ? valor === "." && !loading && !gameFinished 
-          : valor === "." && turn === colorUsuario && !loading && !gameFinished; 
+        // En modo online solo puedes hacer clic si es tu turno
+        const esClickeable = modoReal === "online"
+          ? valor === "." && turn === miColor && !loading && !gameFinished
+          : modoReal === "humano" 
+            ? valor === "." && !loading && !gameFinished 
+            : valor === "." && turn === miColor && !loading && !gameFinished; 
 
         casillas.push(
           <button
@@ -360,13 +443,17 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTu
       <p style={{ marginTop: '20px', fontSize: '1.2rem', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {t("turn")}: 
         <strong className={turn === "B" ? "turno-azul" : "turno-rojo"} style={{ marginLeft: '10px' }}>
-          {modoSeleccionado === "humano" 
-            ? (turn === "B" 
-                ? `JUGADOR 1 (Azul) ${colorUsuario === "B" ? "(Tú)" : "(Amigo)"}` 
-                : `JUGADOR 2 (Rojo) ${colorUsuario === "R" ? "(Tú)" : "(Amigo)"}`)
-            : (turn === colorUsuario 
-                ? `TÚ (${colorUsuario === "B" ? "Azul" : "Rojo"})` 
-                : `BOT (${colorUsuario === "B" ? "Rojo" : "Azul"})`)}
+          {modoReal === "online"
+            ? (turn === miColor 
+                ? `TÚ (${miColor === "B" ? "Azul" : "Rojo"})` 
+                : `RIVAL (${miColor === "B" ? "Rojo" : "Azul"})`)
+            : modoReal === "humano" 
+              ? (turn === "B" 
+                  ? `JUGADOR 1 (Azul) ${miColor === "B" ? "(Tú)" : "(Amigo)"}` 
+                  : `JUGADOR 2 (Rojo) ${miColor === "R" ? "(Tú)" : "(Amigo)"}`)
+              : (turn === miColor 
+                  ? `TÚ (${miColor === "B" ? "Azul" : "Rojo"})` 
+                  : `BOT (${miColor === "B" ? "Rojo" : "Azul"})`)}
         </strong>
 
         {isHumanTurn && !loading && !gameFinished && (
@@ -381,7 +468,7 @@ const Tablero: React.FC<TableroProps> = ({ surrenderTrigger, undoTrigger, passTu
         )}
       </p>
       
-      {loading && modoSeleccionado === "bot" && (
+      {loading && modoReal === "bot" && (
         <p style={{ color: '#60a5fa' }}>El Bot está calculando...</p>
       )}
 
