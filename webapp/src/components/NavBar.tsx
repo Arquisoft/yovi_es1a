@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import avatar from '../assets/avatar.png'; 
 import { useLanguage } from "../idiomaConf/LanguageContext";
 import about from '../assets/about.png'; 
+import "./NavBar.css";
 
 interface NavBarProps { 
   activeTab: "home" | "play" | "stats" | "help" | "login" | "register" | "" | "about" | "clanes" | "ranking";
