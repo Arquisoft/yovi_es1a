@@ -115,7 +115,17 @@ export const messages = {
     docs:"docs/",
     docsDesc:" – Documentation and architecture",
     proposit:"Purpose",
-    propositDesc:"This project serves as a learning platform to explore web development, API design, and modular project structure. It focuses on clean code, maintainability, and the use of modern tools in a collaborative environment."
+    propositDesc:"This project serves as a learning platform to explore web development, API design, and modular project structure. It focuses on clean code, maintainability, and the use of modern tools in a collaborative environment.",
+
+    clanesExistentes: "Existing Clans",
+    cargandoClanes: "Loading clans...",
+    miembros: "- Members:",
+    unirme: "Join",
+    chat: "chat",
+    chatClan: "Clan Chat",
+    enviar: "Send",
+    crearClan: "Create a new clan",
+    crearClanBoton: "Create Clan"
 
 },
   es: {
@@ -233,7 +243,17 @@ export const messages = {
     docs:"docs/",
     docsDesc:" – Documentación y arquitectura",
     proposit:"Propósito",
-    propositDesc:"Este proyecto sirve como plataforma de aprendizaje para explorar desarrollo web, diseño de APIs y estructura modular de proyectos. Se enfoca en la limpieza del código, la mantenibilidad y el uso de herramientas modernas en un entorno colaborativo."
+    propositDesc:"Este proyecto sirve como plataforma de aprendizaje para explorar desarrollo web, diseño de APIs y estructura modular de proyectos. Se enfoca en la limpieza del código, la mantenibilidad y el uso de herramientas modernas en un entorno colaborativo.",
+    
+    clanesExistentes: "Clanes existentes",
+    cargandoClanes:"Cargando clanes...",
+    miembros:"- Miembros:",
+    unirme: "unirme",
+    chat:"chat",
+    chatClan: "Chat del Clan",
+    enviar: "Enviar",
+    crearClan:"Crear un nuevo clan",
+    crearClanBoton: "Crear Clan"
 
   },
   fr: {
@@ -351,7 +371,17 @@ export const messages = {
     docs:"docs/",
     docsDesc:" – Documentation et architecture",
     proposit:"Objectif",
-    propositDesc:"Ce projet sert de plateforme d’apprentissage pour explorer le développement web, la conception d’API et la structure modulaire des projets. Il met l’accent sur la qualité du code, la maintenabilité et l’utilisation d’outils modernes dans un environnement collaboratif."
+    propositDesc:"Ce projet sert de plateforme d’apprentissage pour explorer le développement web, la conception d’API et la structure modulaire des projets. Il met l’accent sur la qualité du code, la maintenabilité et l’utilisation d’outils modernes dans un environnement collaboratif.",
+
+    clanesExistentes: "Clans existants",
+    cargandoClanes: "Chargement des clans...",
+    miembros: "- Membres :",
+    unirme: "Rejoindre",
+    chat: "chat",
+    chatClan: "Chat du Clan",
+    enviar: "Envoyer",
+    crearClan: "Créer un nouveau clan",
+    crearClanBoton: "Créer Clan"
 
   },
   it: {
@@ -469,8 +499,17 @@ export const messages = {
     docs:"docs/",
     docsDesc:" – Documentazione e architettura",
     proposit:"Scopo",
-    propositDesc:"Questo progetto funge da piattaforma di apprendimento per esplorare lo sviluppo web, la progettazione di API e la struttura modulare dei progetti. Si concentra su codice pulito, manutenibilità e sull'uso di strumenti moderni in un ambiente collaborativo."
+    propositDesc:"Questo progetto funge da piattaforma di apprendimento per esplorare lo sviluppo web, la progettazione di API e la struttura modulare dei progetti. Si concentra su codice pulito, manutenibilità e sull'uso di strumenti moderni in un ambiente collaborativo.",
 
+    clanesExistentes: "Clan esistenti",
+    cargandoClanes: "Caricamento clan...",
+    miembros: "- Membri:",
+    unirme: "Unisciti",
+    chat: "chat",
+    chatClan: "Chat del Clan",
+    enviar: "Invia",
+    crearClan: "Crea un nuovo clan",
+    crearClanBoton: "Crea Clan"
   },
 
   de: {
@@ -588,7 +627,17 @@ export const messages = {
     docs:"docs/",
     docsDesc:" – Dokumentation und Architektur",
     proposit:"Zweck",
-    propositDesc:"Dieses Projekt dient als Lernplattform zur Erforschung von Webentwicklung, API-Design und modularer Projektstruktur. Der Fokus liegt auf sauberem Code, Wartbarkeit und der Nutzung moderner Tools in einer kollaborativen Umgebung."
+    propositDesc:"Dieses Projekt dient als Lernplattform zur Erforschung von Webentwicklung, API-Design und modularer Projektstruktur. Der Fokus liegt auf sauberem Code, Wartbarkeit und der Nutzung moderner Tools in einer kollaborativen Umgebung.",
+
+    clanesExistentes: "Existierende Clans",
+    cargandoClanes: "Lade Clans...",
+    miembros: "- Mitglieder:",
+    unirme: "Beitreten",
+    chat: "Chat",
+    chatClan: "Clan-Chat",
+    enviar: "Senden",
+    crearClan: "Einen neuen Clan erstellen",
+    crearClanBoton: "Clan erstellen"
         
   }
 } 

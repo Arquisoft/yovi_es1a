@@ -302,31 +302,51 @@ button:hover {
   cursor: pointer;
 }
 
-.clanesView{
-  overflow-y: auto;
-  padding-top: 80px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+.clanesView {
+  display: grid;
+  height: calc(100vh - 80px);
+  gap: 70px;
+  padding-top: 130px;
+  margin-bottom: 120px;
+  width: 100%;
+  box-sizing: border-box;
+
+
 }
 
-/* Contenedor principal de clanes y chat */
-.clanes {
-  display: flex;
-  gap: 30px;
-  padding: 20px;
-  justify-content: center;
-  align-items: flex-start;
-}
-
-/* Lista de clanes (izquierda) */
-.clanes-lista {
+.clanes-nuevos {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
   background: rgba(0, 149, 255, 0.209);
   border-radius: 15px;
   padding: 20px;
-  min-width: 300px;
-  max-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  margin: 20px auto;
+
+}
+
+.clanes-nuevos input {
+  padding: 8px;
+  border-radius: 8px;
+  width: 80%;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.clanes-lista {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  background: rgba(0, 149, 255, 0.209);
+  border-radius: 15px;
+  padding: 20px;
   overflow-y: auto;
+  height: 100%;
+  width: 100%;
 }
 
 .clanes-lista h2 {
@@ -353,21 +373,18 @@ button:hover {
   font-size: 1.1rem;
 }
 
-/* Botones de clanes */
-.clanes li button, .clanes-nuevos button, .chat-Contorno button {
-  background: linear-gradient(135deg, #5b99f6 0%, #1321a3 100%);
-}
-
-/* Chat (derecha) */
 .chat-Contorno {
-  border-radius: 15px;
+  grid-column: 2 / 3;
+  grid-row: 1 / 3;
   background: rgba(0, 149, 255, 0.209);
+  border-radius: 15px;
   padding: 15px;
-  max-width: 400px;
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  height: 100%;
+  width: 100%;
+  max-width: none;
 }
 
 .chat-Contorno h2 {
@@ -377,11 +394,10 @@ button:hover {
 
 .chat {
   flex: 1;
-  height: 350px;
-  overflow-y: scroll;
+  overflow-y: auto;
   border-radius: 10px;
   padding: 10px;
-  background: rgba(0,0,0,0.2);
+  background: rgba(0,0,0,0.2);  
 }
 
 .chat div {
@@ -394,19 +410,12 @@ button:hover {
   font-size: 1rem;
 }
 
-.clanes-nuevos {
-  background: rgba(0, 149, 255, 0.209);
-  padding: 20px;
-  border-radius: 15px;
-  max-width: 350px;
-  text-align: center;
-  margin: 20px auto;
-}
-
-.clanes-nuevos input {
-  padding: 8px;
+.clanesView li button, .clanes-nuevos button, .chat-Contorno button {
+  background: linear-gradient(135deg, #5b99f6 0%, #1321a3 100%);
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
   border-radius: 8px;
-  width: 80%;
-  font-size: 1rem;
-  margin-bottom: 10px;
+  cursor: pointer;
+  margin-top: 5px;
 }
