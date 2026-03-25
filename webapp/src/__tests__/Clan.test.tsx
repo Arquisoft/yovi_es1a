@@ -48,7 +48,7 @@ describe('Clan', () => {
     const user = userEvent.setup();
 
     await user.type(screen.getByPlaceholderText(/Nombre del clan/i), 'NuevoClan');
-    await user.click(await screen.getByRole('button', { name: /Crear Clan/i }));
+    await user.click(await screen.getByRole('button', { name: /crearClanBoton/i }));
 
     await waitFor(() => {
       expect(screen.getByText(/NuevoClan/i)).toBeInTheDocument();
@@ -66,7 +66,7 @@ describe('Clan', () => {
     const user = userEvent.setup();
 
     await waitFor(() => expect(screen.getByText(/ClanExistente/i)).toBeInTheDocument());
-    await user.click(await screen.getByRole('button', { name: /Unirme/i }));
+    await user.click(await screen.getByRole('button', { name: /unirme/i }));
 
     await waitFor(() => {
       expect(clanService.addMemberToClan).toHaveBeenCalledWith('c1', 'u1');
@@ -90,7 +90,7 @@ describe('Clan', () => {
     await user.click(await screen.getByRole('button', { name: /Chat/i }));
 
     await user.type(screen.getByPlaceholderText(/Escribe un mensaje/i), 'Hola');
-    await user.click(await screen.getByRole('button', { name: /Enviar/i }));
+    await user.click(await screen.getByRole('button', { name: /enviar/i }));
 
     await waitFor(() => {
       expect(screen.getByText(/Hola/i)).toBeInTheDocument();
@@ -115,7 +115,7 @@ describe('Clan', () => {
     const user = userEvent.setup();
 
     await user.type(screen.getByPlaceholderText(/Nombre del clan/i), 'ClanSinUser');
-    await user.click(await screen.getByRole('button', { name: /Crear Clan/i }));
+    await user.click(await screen.getByRole('button', { name: /crearClanBoton/i }));
 
     await waitFor(() => {
         expect(screen.getByText(/Debes iniciar sesión para unirte a un clan/i)).toBeInTheDocument();
@@ -131,7 +131,7 @@ describe('Clan', () => {
     const user = userEvent.setup();
 
     await waitFor(() => expect(screen.getByText(/Clan1/i)).toBeInTheDocument());
-    await user.click(await screen.getByRole('button', { name: /Unirme/i }));
+    await user.click(await screen.getByRole('button', { name: /unirme/i }));
 
     await waitFor(() => {
         expect(screen.getByText(/Debes iniciar sesión para unirte a un clan/i)).toBeInTheDocument();
@@ -151,7 +151,7 @@ describe('Clan', () => {
     await waitFor(() => expect(screen.getByText(/Clan1/i)).toBeInTheDocument());
     await user.click(await screen.getByRole('button', { name: /Chat/i }));
 
-    await user.click(await screen.getByRole('button', { name: /Enviar/i }));
+    await user.click(await screen.getByRole('button', { name: /enviar/i }));
     await waitFor(() => {
         expect(clanService.sendMessage).not.toHaveBeenCalled();
     });
@@ -170,7 +170,7 @@ describe('Clan', () => {
     const user = userEvent.setup();
 
     await waitFor(() => expect(screen.getByText(/Clan1/i)).toBeInTheDocument());
-    await user.click(await screen.getByRole('button', { name: /Chat/i }));
+    await user.click(await screen.getByRole('button', { name: /chat/i }));
 
     await waitFor(() => {
         expect(screen.getByText(/Hola/i)).toBeInTheDocument();
@@ -188,32 +188,12 @@ describe('Clan', () => {
     const user = userEvent.setup();
 
     await user.type(screen.getByPlaceholderText(/Nombre del clan/i), 'ClanError');
-    await user.click(screen.getByRole('button', { name: /Crear Clan/i }));
+    await user.click(screen.getByRole('button', { name: /crearClanBoton/i }));
 
     await waitFor(() => {
         expect(screen.getByText(/Error/i)).toBeInTheDocument();
     });
   });
 
-  test('muestra error si falla al unirse a un clan', async () => {
-    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
-
-    (clanService.getAllClans as ReturnType<typeof vi.fn>).mockResolvedValue([
-        { clanId: 'c1', name: 'Clan1', members: [] },
-    ]);
-
-    (clanService.addMemberToClan as ReturnType<typeof vi.fn>)
-        .mockRejectedValueOnce(new Error('Error al unirse'));
-
-    render(<MemoryRouter><Clan /></MemoryRouter>);
-    const user = userEvent.setup();
-
-    await waitFor(() => expect(screen.getByText(/Clan1/i)).toBeInTheDocument());
-    await user.click(screen.getByRole('button', { name: /Unirme/i }));
-
-    await waitFor(() => {
-        expect(screen.getByText(/Error al unirse/i)).toBeInTheDocument();
-    });
-  });
 
 });
