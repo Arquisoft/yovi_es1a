@@ -3,6 +3,7 @@ import NavBar from '../components/NavBar';
 import { clanService } from '../services/clan.service';
 import "../App.css";
 import video from "../assets/videoLinea.mp4";
+import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 
 const ClanManager: React.FC = () => {
   const [clans, setClans] = useState<any[]>([]);
@@ -61,6 +62,8 @@ const ClanManager: React.FC = () => {
     fetchClans();
   }, []);
 
+  const { t } = useLanguage();
+  
   const handleCreateClan = async () => {
     setError(null);
     try {
@@ -105,19 +108,19 @@ const ClanManager: React.FC = () => {
         {error}
         <div className="clanes-lista">
 
-        <h2>Clanes existentes</h2>
+        <h2>{t("clanesExistentes")}</h2>
         {loading ? (
-          <p>Cargando clanes...</p>
+          <p>{t("cargandoClanes")}</p>
         ) : (
           <ul>
             {clans.map(clan => (
               <li key={clan.clanId}>
-                <strong>{clan.name}</strong> - Miembros: {clan.members.join(', ')}
-                <button onClick={() =>handleAddMember(clan.clanId)}>Unirme</button>
+                <strong>{clan.name}</strong> {t("miembros")} {clan.members.join(', ')}
+                <button onClick={() =>handleAddMember(clan.clanId)}>{t("unirme")}</button>
                 <button onClick={async () => {
                 setSelectedClanId(clan.clanId);      // selecciona el clan
                 await fetchChatMessages(clan.clanId); // carga los mensajes
-                }}>Chat</button>
+                }}>{t("chat")}</button>
               </li>
             ))}
           </ul>
@@ -126,7 +129,7 @@ const ClanManager: React.FC = () => {
 
         {selectedClanId && (
         <div className='chat-Contorno'>
-            <h2>Chat del clan</h2>
+            <h2>{t("chatClan")}</h2>
             <div className="chat">
                 {chatMessages.map((m, i) => (
                     <div key={i}><strong>{m.username}</strong>: {m.text}</div>
@@ -139,20 +142,20 @@ const ClanManager: React.FC = () => {
                 onChange={e => setChatText(e.target.value)}
                 placeholder="Escribe un mensaje"
             />
-            <button onClick={sendChatMessage}>Enviar</button>
+            <button onClick={sendChatMessage}>{t("enviar")}</button>
         </div>
         )}
 
       <div className="clanes-nuevos">
 
-        <h2>Crear un nuevo clan</h2>
+        <h2>{t("crearClan")}</h2>
         <input
           type="text"
           placeholder="Nombre del clan"
           value={newClanName}
           onChange={e => setNewClanName(e.target.value)}
         />
-        <button onClick={handleCreateClan}>Crear Clan</button>
+        <button onClick={handleCreateClan}>{t("crearClanBoton")}</button>
 
       </div>
     </div>
