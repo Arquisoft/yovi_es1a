@@ -102,7 +102,6 @@ const ClanManager: React.FC = () => {
         <source src={video} type="video/mp4" />
         No se ha podido mostrar el video de fondo
       </video>
-      <div className="clanes">
         {error}
         <div className="clanes-lista">
 
@@ -143,7 +142,6 @@ const ClanManager: React.FC = () => {
             <button onClick={sendChatMessage}>Enviar</button>
         </div>
         )}
-      </div>
 
       <div className="clanes-nuevos">
 
