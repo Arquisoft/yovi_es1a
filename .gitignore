@@ -7,3 +7,4 @@ docs/build
 webapp/.env
 .vscode/
 *.pem
+certs/
