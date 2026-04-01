@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom'; // Importante para detectar el tipo
 import NavBar from '../components/NavBar';
-import './Ranking.css';
+import "../styles/global.css";
+import "../styles/Ranking.css";
 import video from '../assets/videoLinea.mp4';
 import { statsService } from '../services/stats.service';
 

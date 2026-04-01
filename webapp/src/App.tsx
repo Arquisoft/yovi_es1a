@@ -13,7 +13,7 @@ import Ranking from './pages/Ranking';
 
 import BotTester from './components/BotTester'; 
 
-import './App.css';
+import './styles/global.css';
 import Game from "./pages/Game";
 import Multiplayer from "./pages/Multiplayer";
 

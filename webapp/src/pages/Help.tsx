@@ -1,6 +1,7 @@
 import React from "react";
 import NavBar from "../components/NavBar.tsx";
-import "./Menu.css";
+import "../styles/global.css";
+import "../styles/Help.css";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 import video from "../assets/videoLinea.mp4";
 

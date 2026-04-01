@@ -13,18 +13,18 @@
 .ranking-container {
   display: flex;
   flex-direction: column;
-  width: 85vw !important;
+  width: 85vw;
   max-width: 1000px;
-  height: auto !important;
   max-height: 85vh;
-  background: rgba(15, 23, 42, 0.7); /* Fondo oscuro azulado */
+  background: rgba(15, 23, 42, 0.7);
   backdrop-filter: blur(25px);
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 35px;
   box-sizing: border-box;
   z-index: 10;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
 }
 
 .ranking-title {
@@ -78,7 +78,8 @@
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s;
-  height: 46px; /* Para alinear con el select */
+  height: 46px;
+  margin-right: 0;
 }
 
 .btn-sort-order:hover {
@@ -92,16 +93,9 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.table-wrapper::-webkit-scrollbar {
-  width: 8px;
-}
-.table-wrapper::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-}
-.table-wrapper::-webkit-scrollbar-thumb {
-  background: #5b99f6;
-  border-radius: 4px;
-}
+.table-wrapper::-webkit-scrollbar       { width: 8px; }
+.table-wrapper::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+.table-wrapper::-webkit-scrollbar-thumb { background: #5b99f6; border-radius: 4px; }
 
 .ranking-table {
   width: 100%;
@@ -131,30 +125,11 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
-.pos-cell {
-  font-weight: bold;
-  color: #94a3b8;
-}
-
-.name-cell {
-  font-weight: bold;
-  color: #fff;
-}
-
-.win-cell {
-  color: #4ade80; /* Verde victoria */
-  font-weight: bold;
-}
-
-.lose-cell {
-  color: #f87171; /* Rojo derrota */
-  font-weight: bold;
-}
-
-.rate-cell {
-  color: #fbbf24; /* Dorado winrate */
-  font-weight: bold;
-}
+.pos-cell  { font-weight: bold; color: #94a3b8; }
+.name-cell { font-weight: bold; color: #fff; }
+.win-cell  { color: #4ade80; font-weight: bold; }
+.lose-cell { color: #f87171; font-weight: bold; }
+.rate-cell { color: #fbbf24; font-weight: bold; }
 
 .ranking-loading {
   text-align: center;
@@ -164,31 +139,19 @@
   font-weight: bold;
 }
 
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  gap: 15px;
-}
+@media (max-width: 850px) {
+  .ranking-container {
+    width: 95vw;
+    padding: 20px;
+  }
 
-.btn-page {
-  padding: 8px 16px;
-  background: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-}
+  .ranking-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-.btn-page:disabled {
-  background: #475569;
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.page-info {
-  color: white;
-  font-size: 0.9rem;
+  .btn-sort-order {
+    height: auto;
+    padding: 12px;
+  }
 }

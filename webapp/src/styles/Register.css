@@ -1,3 +1,54 @@
+.register-page {
+  min-height: 100vh;
+  padding-top: 90px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.RegisterForm {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+}
+
+.auth-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title-register {
+  display: flex;
+  flex-direction: row;
+  padding: 0rem 2rem;
+  gap: 1rem;
+  align-items: center;
+  background-color: transparent;
+  border-radius: 8px;
+  color: #60a5fa;
+  text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+  margin-bottom: 10px;
+}
+
+.title-register h2 {
+  font-size: 1.5rem;
+}
+
+.title-register .avatar {
+  width: 30px;
+  height: 30px;
+}
+
+.auth-card-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
 .welcome-overlay {
   position: fixed;
   top: 0;
@@ -22,7 +73,7 @@
 }
 
 .user-neon {
-  color: #60a5fa; 
+  color: #60a5fa;
   text-shadow: 0 0 20px rgba(96, 165, 250, 0.8), 0 0 40px rgba(96, 165, 250, 0.4);
 }
 
@@ -46,42 +97,9 @@
   animation: loading-slide 1.5s infinite;
 }
 
-.auth-card-wrapper {
-  position: relative;
-  display: inline-block;
-  /* IMPORTANTE: No le ponemos flex aquí para que no mueva tu layout original */
-}
-
-.error-message-neon {
-  position: absolute;
-  top: -70px; /* Ajusta esto si ves que pisa el formulario */
-  left: 0;
-  right: 0;
-  background: rgba(40, 0, 0, 0.9);
-  border: 2px solid #ff4d4d;
-  color: #ff4d4d;
-  padding: 10px;
-  border-radius: 8px;
-  font-weight: bold;
-  text-align: center;
-  box-shadow: 0 0 15px rgba(255, 77, 77, 0.5);
-  z-index: 100;
-  pointer-events: none; /* ESTO PERMITE HACER CLIC A TRAVÉS DEL ERROR */
-  animation: shake 0.5s ease-in-out;
-}
-
-@keyframes shake {
-  10%, 90% { transform: translate3d(-1px, 0, 0); }
-  20%, 80% { transform: translate3d(2px, 0, 0); }
-  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-}
-
-@keyframes loading-slide { 100% { left: 100%; } }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
 .error-message-neon-bottom {
   position: absolute;
-  bottom: 15px; /* Ajusta este valor si necesitas subirlo o bajarlo un poco */
+  bottom: 15px;
   left: 50%;
   transform: translateX(-50%);
   width: 85%;
@@ -98,4 +116,30 @@
   z-index: 100;
   animation: shake 0.4s ease-in-out;
   pointer-events: none;
+}
+
+@keyframes loading-slide {
+  100% { left: 100%; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+}
+
+@media (max-width: 850px) {
+  .RegisterForm {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .y_gris {
+    height: 15em;
+  }
 }

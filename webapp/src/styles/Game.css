@@ -1,0 +1,139 @@
+.game-page {
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 120px;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.game-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.game-title {
+  font-size: 1.5rem;
+  margin: 0;
+  color: white;
+}
+
+.game-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-undo {
+  background: rgba(100, 181, 246, 0.1);
+  border: 1px solid #64b5f6;
+  color: #64b5f6;
+  padding: 10px 20px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-right: 0;
+}
+
+.btn-undo:hover:not(:disabled) {
+  background: rgba(100, 181, 246, 0.3);
+  box-shadow: 0 0 15px rgba(100, 181, 246, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-undo:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: #666;
+  color: #666;
+  box-shadow: none;
+}
+
+.btn-pass {
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid #ffd700;
+  color: #ffd700;
+  padding: 10px 20px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-right: 0;
+}
+
+.btn-pass:hover:not(:disabled) {
+  background: rgba(255, 215, 0, 0.3);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-pass:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: #666;
+  color: #666;
+  box-shadow: none;
+}
+
+.btn-surrender {
+  background: rgba(255, 68, 68, 0.1);
+  border: 1px solid #ff4444;
+  color: #ff4444;
+  padding: 10px 20px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-right: 0;
+}
+
+.btn-surrender:hover:not(:disabled) {
+  background: rgba(255, 68, 68, 0.3);
+  box-shadow: 0 0 15px rgba(255, 68, 68, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-surrender:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: #666;
+  color: #666;
+}
+
+@media (max-width: 850px) {
+  .game-container {
+    margin-top: 100px;
+    padding: 0 10px;
+  }
+
+  .game-actions {
+    gap: 10px;
+  }
+
+  .btn-undo,
+  .btn-pass,
+  .btn-surrender {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+}

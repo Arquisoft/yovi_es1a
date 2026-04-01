@@ -1,0 +1,39 @@
+.multiplayer-game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  padding-top: 110px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.multiplayer-game h2 {
+  margin-bottom: 10px;
+}
+
+.multiplayer-game h4 {
+  color: #4ade80;
+  margin-bottom: 10px;
+}
+
+.multiplayer-waiting {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.multiplayer-waiting h3 {
+  color: white;
+}
+
+.multiplayer-waiting h1 {
+  font-size: 3.5rem;
+  letter-spacing: 8px;
+  color: #4ade80;
+  margin: 20px 0;
+}
+
+.multiplayer-waiting p {
+  color: #aaa;
+}

@@ -1,6 +1,15 @@
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding-top: 90px;
+  box-sizing: border-box;
+}
 
 .welcome-overlay {
-  position: fixed; 
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
@@ -10,7 +19,7 @@
   align-items: center;
   justify-content: center;
   background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
-  z-index: 9999; 
+  z-index: 9999;
   animation: fadeIn 0.5s ease-out forwards;
 }
 
@@ -19,10 +28,11 @@
   color: white;
   text-align: center;
   font-weight: 800;
+  line-height: 1.2;
 }
 
 .user-neon {
-  color: #60a5fa; 
+  color: #60a5fa;
   text-shadow: 0 0 20px rgba(96, 165, 250, 0.8);
 }
 
@@ -46,15 +56,6 @@
   animation: loading-slide 1.5s infinite;
 }
 
-@keyframes loading-slide {
-  100% { left: 100%; }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 .error-message-neon {
   background: rgba(254, 226, 226, 0.1);
   border: 1px solid #f87171;
@@ -66,19 +67,20 @@
   font-weight: bold;
   text-shadow: 0 0 10px rgba(248, 113, 113, 0.5);
   box-shadow: 0 0 15px rgba(248, 113, 113, 0.2);
-  animation: shake 0.4s ease-in-out; 
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes loading-slide {
+  100% { left: 100%; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
-}
-
-.login-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 50px;
+  25%       { transform: translateX(-5px); }
+  75%       { transform: translateX(5px); }
 }

@@ -1,20 +1,17 @@
-/* --- GameSettings.css - BLOQUEO DE MOVIMIENTO Y LETRA AJUSTADA --- */
-
 html, body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
 }
 
 .config-page {
   width: 100vw;
   height: 100vh;
   display: flex;
-  justify-content: center; 
-  align-items: center;     
-  position: fixed; 
+  justify-content: center;
+  align-items: center;
+  position: fixed;
   top: 0;
   left: 0;
   box-sizing: border-box;
@@ -23,10 +20,9 @@ html, body {
 .config-container {
   display: flex;
   flex-direction: row;
-  width: 85vw !important; 
+  width: 85vw;
   max-width: 1050px;
-  height: auto !important; 
-  max-height: 85vh; 
+  max-height: 85vh;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
@@ -36,18 +32,26 @@ html, body {
   gap: 40px;
   box-sizing: border-box;
   z-index: 10;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
 }
 
 .config-controls {
   flex: 1.2;
   display: flex;
   flex-direction: column;
-  gap: 12px; 
+  gap: 12px;
+}
+
+.config-preview {
+  flex: 0.8;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .fixed-title {
-  font-size: 0.8rem; /* Letra un poco más grande y clara */
+  font-size: 1rem;
   color: #fff;
   margin-bottom: 12px;
   text-transform: uppercase;
@@ -58,13 +62,15 @@ html, body {
   letter-spacing: 2px;
 }
 
-.control-group { width: 100%; }
+.control-group {
+  width: 100%;
+}
 
 .fixed-label {
   display: block;
   color: #ffffff;
   margin-bottom: 6px;
-  font-size: 1.1rem; /* Tamaño intermedio perfecto */
+  font-size: 1.1rem;
   font-weight: 600;
 }
 
@@ -80,8 +86,20 @@ html, body {
 }
 
 .control-input-range {
-  width: 100% !important;
+  width: 100%;
   margin: 10px 0;
+}
+
+.size-value {
+  width: 60px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #60a5fa;
+  border: 1px solid #60a5fa;
+  border-radius: 5px;
+  padding: 5px;
+  text-align: center;
+  font-weight: bold;
+  float: right;
 }
 
 .btn-jugar-fixed {
@@ -96,24 +114,23 @@ html, body {
   cursor: pointer;
   margin-top: 20px;
   transition: transform 0.2s;
+  margin-right: 0;
 }
 
 .btn-jugar-fixed:hover {
   transform: scale(1.02);
 }
 
-/* --- PREVISUALIZACIÓN CON ALTURA BLOQUEADA --- */
-.config-preview {
-  flex: 0.8;
+.online-options-area,
+.offline-options-area {
   display: flex;
   flex-direction: column;
-  /* Centramos el contenido dentro de la columna */
-  justify-content: center; 
+  gap: 12px;
 }
 
 .preview-board-fixed {
   width: 100%;
-  height: 400px !important; 
+  height: 400px;
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 15px;
   display: flex;
@@ -121,14 +138,14 @@ html, body {
   align-items: center;
   padding: 20px;
   box-sizing: border-box;
-  overflow: hidden; /* Evita que el tablero se salga si es muy grande */
+  overflow: hidden;
 }
 
 .tablero-mini-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px; /* Espacio reducido entre casillas */
+  gap: 2px;
 }
 
 .fila-mini {
@@ -142,28 +159,27 @@ html, body {
   background-color: #555;
 }
 
-.preview-facil { background-color: #4caf50 !important; box-shadow: 0 0 8px #4caf50; }
-.preview-medio { background-color: #ff9800 !important; box-shadow: 0 0 8px #ff9800; }
+.preview-facil   { background-color: #4caf50 !important; box-shadow: 0 0 8px #4caf50; }
+.preview-medio   { background-color: #ff9800 !important; box-shadow: 0 0 8px #ff9800; }
 .preview-dificil { background-color: #f44336 !important; box-shadow: 0 0 8px #f44336; }
 
-.videoIN {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
-  object-fit: cover;
+.preview-limit-text {
+  color: #aaa;
+  font-size: 0.85rem;
+  text-align: center;
+  margin-top: 8px;
 }
 
-.size-value {
-  width: 60px;
-  background: rgba(0,0,0,0.5);
-  color: #60a5fa;
-  border: 1px solid #60a5fa;
-  border-radius: 5px;
-  padding: 5px;
-  text-align: center;
-  font-weight: bold;
-  float: right; 
+@media (max-width: 850px) {
+  .config-container {
+    flex-direction: column;
+    width: 95vw;
+    max-height: 90vh;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .preview-board-fixed {
+    height: 250px;
+  }
 }

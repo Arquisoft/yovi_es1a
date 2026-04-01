@@ -1,5 +1,5 @@
 import y_dorada from '../assets/y_dorada.png';
-import '../App.css';
+import "../styles/global.css";
 import { useLanguage } from "../idiomaConf/LanguageContext";
 import video from "../assets/videoLinea.mp4";
 import NavBar from '../components/NavBar'; 
@@ -11,7 +11,7 @@ function Home() {
     <div className="App">
       <NavBar activeTab="home" />
 
-      <video autoPlay muted loop className="video">
+      <video autoPlay muted loop className="videoIN">
         <source src={video} type="video/mp4" />
         No se ha podido mostrar el video de fondo
       </video>

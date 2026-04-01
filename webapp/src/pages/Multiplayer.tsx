@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { useMultiplayer } from '../hooks/useMultiplayer';
 import Tablero from '../components/Tablero';
 import NavBar from "../components/NavBar";
-import "./GameSettings.css";
+import "../styles/global.css";
+import "../styles/GameSettings.css";
+import "../styles/Multiplayer.css";
 import video from "../assets/videoLinea.mp4";
 import { UserUtils } from '../utils/user.utils'; 
 

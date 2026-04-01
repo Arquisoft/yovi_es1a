@@ -1,6 +1,7 @@
 import React from "react";
 import video from "../assets/videoLinea.mp4";
 import NavBar from "../components/NavBar.tsx";
+import "../styles/global.css";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 
 const About: React.FC = () => {
