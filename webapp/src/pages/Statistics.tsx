@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar.tsx";
 import { statsService } from "../services/stats.service.ts";
-import "./Menu.css";
+import "../styles/global.css";
+import "../styles/Statistics.css";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 import video from "../assets/videoLinea.mp4";
 
@@ -20,11 +21,11 @@ const Estadisticas: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);//1 inicial
+  const [totalPages, setTotalPages] = useState(1);
   const [filters, setFilters] = useState<{ result?: string; maxMoves?: number; maxDuration?: number }>({});
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-
     if (storedUser) {
       const user = JSON.parse(storedUser);
       setLoading(true);
@@ -33,18 +34,15 @@ const Estadisticas: React.FC = () => {
       setError("No hay usuario conectado. Inicia sesión para ver tus estadísticas.");
       setLoading(false);
     }
-  }, [currentPage, filters]);//Esto es para recargar
+  }, [currentPage, filters]);
 
-  const fetchHistory = async (userId: string, page = 1, 
+  const fetchHistory = async (userId: string, page = 1,
     filters?: { result?: string; maxMoves?: number; maxDuration?: number }
-
   ) => {
     try {
       const data = await statsService.getMatchHistory(userId, page, 5, filters);
       setHistory(data.content);
       setTotalPages(data.totalPages);
-      //const data = await statsService.getMatchHistory(userId);
-      //setHistory(data);
     } catch (err: any) {
       setError(err.message || "Error al cargar las estadísticas.");
     } finally {
@@ -55,14 +53,45 @@ const Estadisticas: React.FC = () => {
   const { t } = useLanguage();
 
   return (
-    <div>
+    <div className="stats-page">
       <NavBar activeTab="stats" />
       <video autoPlay muted loop className="videoIN">
         <source src={video} type="video/mp4" />
-        No se ha podido mostrar el video de fondo
       </video>
+
       <div className="stats">
         <h2>{t("MisEstadisticas")}</h2>
+
+          <div className="filtros-container">
+            <select
+              className="filtroResult"
+              onChange={(e) => {
+                setFilters({ ...filters, result: e.target.value });
+                setCurrentPage(1);
+              }}
+            >
+              <option value="">Todos</option>
+              <option value="win">Wins</option>
+              <option value="lose">Lose</option>
+              <option value="surrender">Surrender</option>
+            </select>
+
+            <input
+              type="number"
+              placeholder="Duración máxima (s)"
+              value={filters.maxDuration || ""}
+              onChange={(e) => setFilters({ ...filters, maxDuration: Number(e.target.value) })}
+              className="filtroInput"
+            />
+
+            <input
+              type="number"
+              placeholder="Movimientos máximos"
+              value={filters.maxMoves || ""}
+              onChange={(e) => setFilters({ ...filters, maxMoves: Number(e.target.value) })}
+              className="filtroInput"
+            />
+          </div>
 
         {loading && <p className="loading-text">{t("cargandoPartidas")}</p>}
         {error && <p className="error-text">{error}</p>}
@@ -70,33 +99,6 @@ const Estadisticas: React.FC = () => {
         {!loading && !error && history.length === 0 && (
           <p className="empty-text">{t("ceroPartidas")}</p>
         )}
-        <select className="filtroResult"
-            onChange={(e) => {
-              setFilters({ ...filters, result: e.target.value });
-              setCurrentPage(1);
-            }}
-          >
-          <option value="">Todos</option>
-          <option value="win">Wins</option>
-          <option value="lose">Lose</option>
-          <option value="surrender">Surrender</option>
-        </select>
-
-        <input
-          type="number"
-          placeholder="Duración máxima (s)"
-          value={filters.maxDuration || ""}
-          onChange={(e) => setFilters({ ...filters, maxDuration: Number(e.target.value) })}
-          className="filtroInput"
-        />
-
-        <input
-          type="number"
-          placeholder="Movimientos máximos"
-          value={filters.maxMoves || ""}
-          onChange={(e) => setFilters({ ...filters, maxMoves: Number(e.target.value) })}
-          className="filtroInput"
-        />
 
         {!loading && !error && history.length > 0 && (
           <div className="tabla-container-scroll">
@@ -126,15 +128,17 @@ const Estadisticas: React.FC = () => {
             </table>
           </div>
         )}
-      </div>
-      <div className="pagination">
-        <button disabled={currentPage === 1} onClick={() => setCurrentPage(pag => pag - 1)}>
-          Anterior
-        </button>
-        <span>Página {currentPage} de {totalPages}</span>
-        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(pag => pag + 1)}>
-          Siguiente
-        </button>{/* Si estas en última pagina se desactiva (el disabled)*/}
+
+        <div className="pagination">
+          <button disabled={currentPage === 1} onClick={() => setCurrentPage(pag => pag - 1)}>
+            Anterior
+          </button>
+          <span>Página {currentPage} de {totalPages}</span>
+          <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(pag => pag + 1)}>
+            Siguiente
+          </button>
+        </div>
+
       </div>
     </div>
   );
