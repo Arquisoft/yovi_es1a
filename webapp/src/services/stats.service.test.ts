@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
 import { statsService, type MatchData } from '../services/stats.service'
 
