@@ -194,6 +194,135 @@ describe('Clan', () => {
         expect(screen.getByText(/Error/i)).toBeInTheDocument();
     });
   });
+  test('logs error to console when fetching clan messages fails', async () => {
+    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+    (clanService.getAllClans as ReturnType<typeof vi.fn>).mockResolvedValueOnce([
+      { clanId: 'c1', name: 'Clan1', members: ['u1'] },
+    ]);
+    (clanService.getClanMessages as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Fetch messages error'));
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(<MemoryRouter><Clan /></MemoryRouter>);
+    const user = userEvent.setup();
+
+    await waitFor(() => expect(screen.getByText(/Clan1/i)).toBeInTheDocument());
+    await user.click(await screen.getByRole('button', { name: /chat/i }));
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(expect.any(Error));
+    });
+
+    consoleSpy.mockRestore();
+  });
+
+  test('logs error to console when sending a chat message fails', async () => {
+    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+    (clanService.getAllClans as ReturnType<typeof vi.fn>).mockResolvedValueOnce([
+      { clanId: 'c1', name: 'Clan1', members: ['u1'] },
+    ]);
+    (clanService.getClanMessages as ReturnType<typeof vi.fn>).mockResolvedValueOnce([]);
+    (clanService.sendMessage as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Send message error'));
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(<MemoryRouter><Clan /></MemoryRouter>);
+    const user = userEvent.setup();
+
+    await waitFor(() => expect(screen.getByText(/Clan1/i)).toBeInTheDocument());
+    await user.click(await screen.getByRole('button', { name: /chat/i }));
+
+    await user.type(screen.getByPlaceholderText(/Escribe un mensaje/i), 'Fail message');
+    await user.click(await screen.getByRole('button', { name: /enviar/i }));
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(expect.any(Error));
+    });
+
+    consoleSpy.mockRestore();
+  });
+
+  test('displays specific error message when adding a member fails', async () => {
+    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+    (clanService.getAllClans as ReturnType<typeof vi.fn>).mockResolvedValue([
+      { clanId: 'c1', name: 'Clan1', members: [] },
+    ]);
+    (clanService.addMemberToClan as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Custom join error'));
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(<MemoryRouter><Clan /></MemoryRouter>);
+    const user = userEvent.setup();
+
+    await waitFor(() => expect(screen.getByText(/Clan1/i)).toBeInTheDocument());
+    await user.click(await screen.getByRole('button', { name: /unirme/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Custom join error')).toBeInTheDocument();
+      expect(consoleSpy).toHaveBeenCalledWith(expect.any(Error));
+    });
+
+    consoleSpy.mockRestore();
+  });
+
+  test('displays fallback error message when adding a member fails without specific message', async () => {
+    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+    (clanService.getAllClans as ReturnType<typeof vi.fn>).mockResolvedValue([
+      { clanId: 'c1', name: 'Clan1', members: [] },
+    ]);
+    (clanService.addMemberToClan as ReturnType<typeof vi.fn>).mockRejectedValueOnce({});
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(<MemoryRouter><Clan /></MemoryRouter>);
+    const user = userEvent.setup();
+
+    await waitFor(() => expect(screen.getByText(/Clan1/i)).toBeInTheDocument());
+    await user.click(await screen.getByRole('button', { name: /unirme/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Error agregando miembro')).toBeInTheDocument();
+    });
+
+    consoleSpy.mockRestore();
+  });
+
+  test('displays fallback error message when creating a clan fails without specific message', async () => {
+    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+    (clanService.getAllClans as ReturnType<typeof vi.fn>).mockResolvedValue([]);
+    (clanService.createClan as ReturnType<typeof vi.fn>).mockRejectedValueOnce({});
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(<MemoryRouter><Clan /></MemoryRouter>);
+    const user = userEvent.setup();
+
+    await user.type(screen.getByPlaceholderText(/Nombre del clan/i), 'ClanError');
+    await user.click(screen.getByRole('button', { name: /crearClanBoton/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Error creando clan')).toBeInTheDocument();
+    });
+
+    consoleSpy.mockRestore();
+  });
+
+  test('does not send message if user is not logged in', async () => {
+    (clanService.getAllClans as ReturnType<typeof vi.fn>).mockResolvedValue([
+      { clanId: 'c1', name: 'Clan1', members: [] },
+    ]);
+    (clanService.getClanMessages as ReturnType<typeof vi.fn>).mockResolvedValue([]);
+
+    render(<MemoryRouter><Clan /></MemoryRouter>);
+    const user = userEvent.setup();
+
+    await waitFor(() => expect(screen.getByText(/Clan1/i)).toBeInTheDocument());
+    
+    const chatButtons = screen.getAllByRole('button', { name: /chat/i });
+    await user.click(chatButtons[0]);
+
+    await user.type(screen.getByPlaceholderText(/Escribe un mensaje/i), 'Hello');
+    await user.click(screen.getByRole('button', { name: /enviar/i }));
+
+    await waitFor(() => {
+      expect(clanService.sendMessage).not.toHaveBeenCalled();
+    });
+  });
 
 
 });
