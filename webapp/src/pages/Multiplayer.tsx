@@ -2,20 +2,20 @@ import React, { useState } from 'react';
 import { useMultiplayer } from '../hooks/useMultiplayer';
 import Tablero from '../components/Tablero';
 import NavBar from "../components/NavBar";
-import "./GameSettings.css"; // ¡Reutilizamos tu CSS magistral!
+import "./GameSettings.css";
 import video from "../assets/videoLinea.mp4";
+import { UserUtils } from '../utils/user.utils'; 
 
 const Multiplayer: React.FC = () => {
   const { 
     isConnected, roomCode, errorMsg, gameStarted, 
-    createRoom, joinRoom, lastOpponentMove, sendMove, myColor, opponentName, boardSize 
+    createRoom, joinRoom, lastOpponentMove, sendMove, myColor, opponentName, boardSize, leaveMatchGracefully
   } = useMultiplayer();
   
   const [joinCodeInput, setJoinCodeInput] = useState('');
   const [tamano, setTamano] = useState<number>(5);
 
-  const userStr = localStorage.getItem("user");
-  const myUsername = userStr ? JSON.parse(userStr).username : "Invitado";
+  const myUsername = UserUtils.getUsername();
 
   // VISTA 1: El juego real una vez emparejados
   if (gameStarted && roomCode && myColor) {
@@ -35,6 +35,7 @@ const Multiplayer: React.FC = () => {
             lastOpponentLayout={lastOpponentMove}
             onSendMove={(newLayout) => sendMove(roomCode, newLayout)}
             opponentName={opponentName}
+            onLeave={leaveMatchGracefully}
           />
         </div>
       </div>

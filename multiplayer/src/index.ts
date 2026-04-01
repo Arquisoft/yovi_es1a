@@ -4,8 +4,11 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { registerRoomHandlers } from './handlers/room.handler.js';
+import { RoomService } from './services/room.service.js';
 
 dotenv.config();
+
+const mapSocketToRoom = new Map<string, string>();
 
 const app = express();
 app.use(cors());
@@ -21,9 +24,11 @@ const io=new Server(server, {
 });
 const PORT = process.env.PORT || 5000;
 
-//Conexion logic
 io.on('connection', (socket) => {
     console.log(`User connected: ${socket.id}`);
+    
+    RoomService.handleDisconnect(socket.id); 
+
     registerRoomHandlers(io, socket);
 });
 

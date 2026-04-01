@@ -1,43 +1,27 @@
+// handlers/room.handler.ts
 import { Server, Socket } from 'socket.io';
-
-const generateRoomCode = () => Math.random().toString(36).substring(2, 7).toUpperCase();
-
-const roomsData = new Map<string, { hostName: string, tamano: number }>(); 
+import { RoomService } from '../services/room.service.js';
 
 export const registerRoomHandlers = (io: Server, socket: Socket) => {
-  
-  socket.on('createRoom', ({ hostUsername, tamano }) => {
-    const roomCode = generateRoomCode();
+  socket.on('createRoom', ({ hostUsername, tamano, hostId }) => {
+    const roomCode = RoomService.createRoom(socket.id, hostUsername, tamano, hostId);
     socket.join(roomCode);
-    roomsData.set(roomCode, { hostName: hostUsername, tamano });
     socket.emit('roomCreated', roomCode);
-    console.log(`🏠 Sala [${roomCode}] creada por ${hostUsername} (Tablero: ${tamano}x${tamano})`);
   });
 
-  socket.on('joinRoom', ({ roomCode, guestUsername }) => {
+  socket.on('joinRoom', ({ roomCode, guestUsername, guestId }) => {
+    console.log('joinRoom recibido:', { roomCode, guestUsername, guestId });
     const room = io.sockets.adapter.rooms.get(roomCode);
-    const numClients = room ? room.size : 0;
+    if (!room || room.size === 0) return socket.emit('roomError', 'La sala no existe.');
+    if (room.size >= 2) return socket.emit('roomError', 'Sala llena.');
+    const hostSocketId = Array.from(room)[0];
+    if (!hostSocketId) return;
+    const roomInfo = RoomService.joinRoom(socket.id, roomCode, guestId);
 
-    if (numClients === 0) {
-      socket.emit('roomError', 'La sala no existe o el código es incorrecto.');
-    } else if (numClients === 1) {
-      const [hostSocketId] = Array.from(room!); 
+    if (roomInfo) {
       socket.join(roomCode);
-      
-      const roomInfo = roomsData.get(roomCode) || { hostName: 'Jugador 1', tamano: 5 };
-      
-      io.to(hostSocketId!).emit('gameStarted', { 
-        roomCode, color: 'B', opponentName: guestUsername, tamano: roomInfo.tamano 
-      });
-      
-      socket.emit('gameStarted', { 
-        roomCode, color: 'R', opponentName: roomInfo.hostName, tamano: roomInfo.tamano 
-      });
-
-      roomsData.delete(roomCode);
-      console.log(`🤝 Partida iniciada: ${roomInfo.hostName} vs ${guestUsername} (Tablero: ${roomInfo.tamano})`);
-    } else {
-      socket.emit('roomError', 'La sala ya está llena.');
+      io.to(hostSocketId).emit('gameStarted', { roomCode, color: 'B', opponentName: guestUsername, tamano: roomInfo.tamano });
+      socket.emit('gameStarted', { roomCode, color: 'R', opponentName: roomInfo.hostName, tamano: roomInfo.tamano });
     }
   });
 
@@ -45,7 +29,30 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
     socket.to(roomCode).emit('moveReceived', moveData);
   });
 
-  socket.on('disconnect', () => {
-    console.log(`🔴 Usuario desconectado: ${socket.id}`);
+  socket.on('leaveMatchGracefully', () => {
+    const { roomCode } = RoomService.handleDisconnect(socket.id);
+    
+    if (roomCode) {
+        socket.to(roomCode).emit('matchFinishedCleanup');
+        console.log(`🧹 Sala ${roomCode} limpiada pacíficamente.`);
+    }
+    RoomService.cleanExit(socket.id);
   });
+
+  socket.on('disconnect', () => {
+    const { roomCode, userId } = RoomService.handleDisconnect(socket.id);
+
+    setTimeout(() => {
+        if (roomCode) {
+            io.to(roomCode).emit('opponent_disconnected');
+            
+            if (userId) {
+                console.log(`⚖️ Desconexión abrupta. Castigando a ${userId}`);
+                RoomService.applyPunishment(userId);
+            }
+        }
+        
+        RoomService.deleteSocketData(socket.id);
+    }, 500);
+});
 };

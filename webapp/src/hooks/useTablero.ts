@@ -162,7 +162,8 @@ export const useTablero = (props: any) => {
   useEffect(() => { setTimeLeft(TURN_TIME_LIMIT); }, [turn, history.length]);
 
   useEffect(() => {
-    if (gameFinished || loading || !isHumanTurn) return;
+    if (gameFinished || loading || !isHumanTurn || modoReal === "online") return;
+    
     const timerId = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) { clearInterval(timerId); return 0; }
@@ -170,7 +171,7 @@ export const useTablero = (props: any) => {
       });
     }, 1000);
     return () => clearInterval(timerId);
-  }, [turn, loading, gameFinished, isHumanTurn]);
+  }, [turn, loading, gameFinished, isHumanTurn, modoReal]);
 
   useEffect(() => {
     if (timeLeft === 0 && !gameFinished && !loading && isHumanTurn && modoReal !== "online") makeRandomMove();
@@ -232,21 +233,26 @@ export const useTablero = (props: any) => {
   }, [modoReal, miColor, size, botSeleccionado]);
 
   useEffect(() => {
-    if (modoReal === "online" && lastOpponentLayout && lastOpponentLayout !== layout) {
-      const procesarMovimientoRival = async () => {
-        setHistory(prev => [...prev, layout]);
-        setLayout(lastOpponentLayout);
-        const data = await gameService.checkWinner(size, stringToYenLayout(lastOpponentLayout, size));
-        if (data.status === "win") {
-          setGameFinished(true);
-          setWinnerMessage("HAS PERDIDO.");
-          setShowWinnerModal(true);
-          await safeSaveStats("lose", lastOpponentLayout);
-        } else setTurn(miColor);
-      };
-      procesarMovimientoRival();
-    }
-  }, [lastOpponentLayout, modoReal]);
+    if (modoReal !== "online" || !lastOpponentLayout || lastOpponentLayout === layout) return;
+    if (gameFinished) return;
+
+    const procesarMovimientoRival = async () => {
+      setHistory(prev => [...prev, layout]);
+      setLayout(lastOpponentLayout);
+      const data = await gameService.checkWinner(size, stringToYenLayout(lastOpponentLayout, size));
+      
+      if (data.status === "win") {
+        setGameFinished(true);
+        setWinnerMessage("HAS PERDIDO.");
+        setShowWinnerModal(true);
+        await safeSaveStats("lose", lastOpponentLayout); 
+      } else {
+        setTurn(miColor);
+        setLoading(false);
+      }
+    };
+    procesarMovimientoRival();
+  }, [lastOpponentLayout, modoReal, size, miColor]);
 
   return {
     layout, turn, loading, gameFinished, showWinnerModal, winnerMessage, timeLeft,

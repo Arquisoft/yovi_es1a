@@ -18,13 +18,13 @@ interface TableroProps {
   onSendMove?: (newLayout: string) => void;
   opponentName?: string;
   tamano?: number;
+  onLeave?: () => void;
 }
 
 const Tablero: React.FC<TableroProps> = (props) => {
   const navigate = useNavigate(); 
   const { t } = useLanguage();
 
-  // Consumimos toda la lógica desde nuestro nuevo Custom Hook
   const { 
     layout, turn, loading, gameFinished, showWinnerModal, winnerMessage, timeLeft,
     isHumanTurn, modoReal, miColor, size, play
@@ -89,7 +89,7 @@ const Tablero: React.FC<TableroProps> = (props) => {
               : (turn === miColor ? `TÚ (${miColor === "B" ? "Azul" : "Rojo"})` : `BOT (${miColor === "B" ? "Rojo" : "Azul"})`)}
         </strong>
 
-        {isHumanTurn && !loading && !gameFinished && (
+        {isHumanTurn && !loading && !gameFinished && modoReal !== "online" && (
           <span style={{ marginLeft: '20px', color: timeLeft <= 5 ? '#ff4444' : '#ffd700', fontWeight: 'bold' }}>
             ⏱️ {timeLeft}s
           </span>
@@ -105,8 +105,24 @@ const Tablero: React.FC<TableroProps> = (props) => {
                 {winnerMessage}
               </h2>
               <div className="modal-actions">
-                <button className="btn-modal primary" onClick={() => window.location.reload()}>{t("jugar")}</button>
-                <button className="btn-modal secondary" onClick={() => navigate("/")}>{t("inicio")}</button>
+                
+                <button className="btn-modal primary" onClick={() => {
+                   if (modoReal === "online") {
+                     if (props.onLeave) props.onLeave();
+                     setTimeout(() => { navigate("/multiplayer"); }, 150);
+                   } else {
+                     window.location.reload();
+                   }
+                }}>
+                  {modoReal === "online" ? "Volver al Lobby" : t("jugar")}
+                </button>
+                
+                <button className="btn-modal secondary" onClick={() => {
+                      if (props.onLeave) props.onLeave(); 
+                      setTimeout(() => { navigate("/statistics"); }, 150);
+                }}>
+                    {t("estadisticas")}
+                </button>
               </div>
             </div>
           </div>
