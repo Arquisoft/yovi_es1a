@@ -7,6 +7,8 @@ import { registerRoomHandlers } from './handlers/room.handler.js';
 
 dotenv.config();
 
+const mapSocketToRoom = new Map<string, string>();
+
 const app = express();
 app.use(cors());
 //["http://localhost:5173", "http://localhost", process.env.WEBAPP_URL || ""]
@@ -24,7 +26,7 @@ const PORT = process.env.PORT || 5000;
 //Conexion logic
 io.on('connection', (socket) => {
     console.log(`User connected: ${socket.id}`);
-    registerRoomHandlers(io, socket);
+    registerRoomHandlers(io, socket,mapSocketToRoom);
 });
 
 //Start server

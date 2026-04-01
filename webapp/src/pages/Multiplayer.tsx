@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { useMultiplayer } from '../hooks/useMultiplayer';
 import Tablero from '../components/Tablero';
 import NavBar from "../components/NavBar";
-import "./GameSettings.css"; // ¡Reutilizamos tu CSS magistral!
+import "./GameSettings.css";
 import video from "../assets/videoLinea.mp4";
 
 const Multiplayer: React.FC = () => {
   const { 
     isConnected, roomCode, errorMsg, gameStarted, 
-    createRoom, joinRoom, lastOpponentMove, sendMove, myColor, opponentName, boardSize 
+    createRoom, joinRoom, lastOpponentMove, sendMove, myColor, opponentName, boardSize
   } = useMultiplayer();
   
   const [joinCodeInput, setJoinCodeInput] = useState('');
@@ -40,7 +40,6 @@ const Multiplayer: React.FC = () => {
       </div>
     );
   }
-
   // VISTA 2: El Lobby con la misma estética de GameSettings
   const dibujarPrevisualizacion = () => {
     const cellSize = Math.min(25, Math.floor(320 / tamano)); 
