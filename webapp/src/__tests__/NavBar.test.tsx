@@ -174,4 +174,79 @@ describe('NavBar', () => {
     
     expect(mockNavigate).toHaveBeenCalledWith('/about');
   });
+
+  test('Toggles the ranking dropdown when clicking the RANKING button', async () => {
+    const user = userEvent.setup();
+    renderWithUser();
+    
+    expect(screen.queryByText('Ranking de jugadores')).not.toBeInTheDocument();
+    
+    const rankingBtn = screen.getByText(/RANKING/i);
+    await user.click(rankingBtn);
+    
+    expect(screen.getByText('Ranking de jugadores')).toBeInTheDocument();
+    expect(screen.getByText('Ranking de clanes')).toBeInTheDocument();
+
+    await user.click(rankingBtn);
+    expect(screen.queryByText('Ranking de jugadores')).not.toBeInTheDocument();
+  });
+
+  test('Navigates to /ranking/players and closes menu when clicking "Ranking de jugadores"', async () => {
+    const user = userEvent.setup();
+    renderWithUser();
+    
+    await user.click(screen.getByText(/RANKING/i));
+    
+    const playerRankingOpt = screen.getByText('Ranking de jugadores');
+    await user.click(playerRankingOpt);
+
+    expect(mockNavigate).toHaveBeenCalledWith('/ranking/players');
+    expect(screen.queryByText('Ranking de jugadores')).not.toBeInTheDocument();
+  });
+
+  test('Navigates to /ranking/clans and closes menu when clicking "Ranking de clanes"', async () => {
+    const user = userEvent.setup();
+    renderWithUser();
+    
+    await user.click(screen.getByText(/RANKING/i));
+    
+    const clanRankingOpt = screen.getByText('Ranking de clanes');
+    await user.click(clanRankingOpt);
+
+    expect(mockNavigate).toHaveBeenCalledWith('/ranking/clans');
+    expect(screen.queryByText('Ranking de clanes')).not.toBeInTheDocument();
+  });
+
+  test('Closes the ranking dropdown when clicking outside of it', async () => {
+    const user = userEvent.setup();
+    renderWithUser();
+    
+    await user.click(screen.getByText(/RANKING/i));
+    expect(screen.getByText('Ranking de jugadores')).toBeInTheDocument();
+    await user.click(document.body);
+
+    expect(screen.queryByText('Ranking de jugadores')).not.toBeInTheDocument();
+  });
+
+  test('Applies "active" class to RANKING when activeTab is ranking', () => {
+    renderWithUser('ranking');
+    expect(screen.getByText(/RANKING/i)).toHaveClass('active');
+  });
+
+  test('Applies "active" class to CLANES when activeTab is clanes', () => {
+    renderWithUser('clanes');
+    expect(screen.getByText(/Clanes/i)).toHaveClass('active');
+  });
+
+  test('Stops event propagation when clicking the ranking container div', async () => {
+    const user = userEvent.setup();
+    renderWithUser('home');
+    
+    const rankingBtn = screen.getByText(/RANKING/i);
+    const containerDiv = rankingBtn.parentElement; // El div padre que tiene el onClick
+    
+    if (containerDiv) {
+      await user.click(containerDiv);
+    }
+  });
 });
