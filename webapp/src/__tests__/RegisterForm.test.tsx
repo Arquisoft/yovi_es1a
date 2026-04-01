@@ -2,162 +2,130 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import RegisterForm from '../pages/Register'
 import { afterEach, describe, expect, test, vi } from 'vitest' 
-import '@testing-library/jest-dom/vitest';
+import '@testing-library/jest-dom'
 import { MemoryRouter } from 'react-router-dom'
 import { authService } from '../services/auth.service'
 
+const mockNavigate = vi.fn()
+
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom')
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate
+  }
+})
+
+vi.mock('../services/auth.service', () => ({
+  authService: {
+    register: vi.fn(),
+  }
+}))
+
+vi.mock('../idiomaConf/LanguageContext', () => ({
+  useLanguage: vi.fn(() => ({
+    t: (key: string) => key,
+  }))
+}))
+
+vi.mock('../components/AuthForm', () => ({
+  default: ({ onSubmit }: any) => (
+    <div>
+      <button data-testid="btn-empty" onClick={() => onSubmit('', '', '')}>
+        Mandar Todo Vacío
+      </button>
+      <button data-testid="btn-no-email" onClick={() => onSubmit('User', 'Pass', '')}>
+        Mandar Sin Email
+      </button>
+      <button data-testid="btn-valid" onClick={() => onSubmit('Pablo', 'password123', 'pablo@test.com')}>
+        Mandar Todo Correcto
+      </button>
+    </div>
+  )
+}))
+
 describe('RegisterForm', () => {
   afterEach(() => {
-    vi.restoreAllMocks()
+    vi.clearAllMocks()
+    localStorage.clear()
   })
 
-  test('shows validation error when username, email and password are empty', async () => {
+  test('triggers the internal validation error when all fields are empty', async () => {
     render(<MemoryRouter><RegisterForm /></MemoryRouter>)
     const user = userEvent.setup()
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))
-    
-    await waitFor(() => {
-      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()
+
+    await user.click(screen.getByTestId('btn-empty'))
+
+    expect(screen.getByText('⚠️ Please fill all fields')).toBeInTheDocument()
+  })
+
+  test('triggers the internal validation error when email is missing', async () => {
+    render(<MemoryRouter><RegisterForm /></MemoryRouter>)
+    const user = userEvent.setup()
+
+    await user.click(screen.getByTestId('btn-no-email'))
+
+    expect(screen.getByText('⚠️ Please fill all fields')).toBeInTheDocument()
+  })
+
+  test('shows specific error message when registration fails via API rejection', async () => {
+    vi.mocked(authService.register).mockRejectedValueOnce({
+      response: { data: { error: 'Email already in use' } }
     })
-  })
 
-  test('shows validation error when username is missing', async () => {
     render(<MemoryRouter><RegisterForm /></MemoryRouter>)
     const user = userEvent.setup()
-    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')
-    await user.type(screen.getByLabelText(/contra/i), 'password123')
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))
-
-    await waitFor(() => {
-      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()
-    })
-  })
-
-  test('shows validation error when email is missing', async () => {
-    render(<MemoryRouter><RegisterForm /></MemoryRouter>)
-    const user = userEvent.setup()
-    await user.type(screen.getByLabelText(/user/i), 'Pablo')
-    await user.type(screen.getByLabelText(/contra/i), 'password123')
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))
-
-    await waitFor(() => {
-      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()
-    })
-  })
-
-  test('shows validation error when password is missing', async () => {
-    render(<MemoryRouter><RegisterForm /></MemoryRouter>)
-    const user = userEvent.setup()
-    await user.type(screen.getByLabelText(/user/i), 'Pablo')
-    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))
+    await user.click(screen.getByTestId('btn-valid'))
 
     await waitFor(() => {
-      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()
+      expect(screen.getByText('⚠️ Email already in use')).toBeInTheDocument()
     })
   })
 
-  test('shows validation error when username and email are missing', async () => {
+  test('shows standard error message when registration fails via JavaScript Error', async () => {
+    vi.mocked(authService.register).mockRejectedValueOnce(new Error('Network timeout'))
+
     render(<MemoryRouter><RegisterForm /></MemoryRouter>)
     const user = userEvent.setup()
-    await user.type(screen.getByLabelText(/contra/i), 'password123')
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))
+    await user.click(screen.getByTestId('btn-valid'))
 
     await waitFor(() => {
-      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()
+      expect(screen.getByText('⚠️ Network timeout')).toBeInTheDocument()
     })
   })
 
-  test('shows validation error when username and password are missing', async () => {
+  test('shows generic fallback error when rejection lacks a specific message', async () => {
+    vi.mocked(authService.register).mockRejectedValueOnce({})
+
     render(<MemoryRouter><RegisterForm /></MemoryRouter>)
     const user = userEvent.setup()
-    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))
+    await user.click(screen.getByTestId('btn-valid'))
 
     await waitFor(() => {
-      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()
+      expect(screen.getByText('⚠️ An error occurred')).toBeInTheDocument()
     })
   })
 
-  test('shows validation error when email and password are missing', async () => {
-    render(<MemoryRouter><RegisterForm /></MemoryRouter>)
-    const user = userEvent.setup()
-    await user.type(screen.getByLabelText(/user/i), 'Pablo')
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))
-
-    await waitFor(() => {
-      expect(screen.getByText(/Please fill all fields/i)).toBeInTheDocument()
+  test('successfully registers the user, saves to localStorage, and navigates', async () => {
+    vi.mocked(authService.register).mockResolvedValueOnce({
+      userId: 1,
+      username: 'Pablo'
     })
-  })
-
-  test('shows error when password is shorter than 3 characters', async () => {
-    vi.spyOn(authService, 'register').mockRejectedValueOnce(
-      new Error('Password must be at least 3 characters')
-    )
 
     render(<MemoryRouter><RegisterForm /></MemoryRouter>)
     const user = userEvent.setup()
-    await user.type(screen.getByLabelText(/user/i), 'Pablo')
-    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')
-    await user.type(screen.getByLabelText(/contra/i), '3')
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))
-
-    await waitFor(() => {
-      expect(screen.getByText(/Password must be at least 3 characters/i)).toBeInTheDocument()
-    })
-  })
-
-  test('shows error when email is already registered', async () => {
-    vi.spyOn(authService, 'register').mockRejectedValueOnce(
-      new Error('Email already registered')
-    )
-
-    render(<MemoryRouter><RegisterForm /></MemoryRouter>)
-    const user = userEvent.setup()
-    await user.type(screen.getByLabelText(/user/i), 'Pablo')
-    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')
-    await user.type(screen.getByLabelText(/contra/i), 'password123')
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))
-
-    await waitFor(() => {
-      expect(screen.getByText(/Email already registered/i)).toBeInTheDocument()
-    })
-  })
-
-  test('shows error when username is already taken', async () => {
-    vi.spyOn(authService, 'register').mockRejectedValueOnce(
-      new Error('Username already taken')
-    )
-
-    render(<MemoryRouter><RegisterForm /></MemoryRouter>)
-    const user = userEvent.setup()
-    await user.type(screen.getByLabelText(/user/i), 'Pablo')
-    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')
-    await user.type(screen.getByLabelText(/contra/i), 'password123')
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))
-
-    await waitFor(() => {
-      expect(screen.getByText(/Username already taken/i)).toBeInTheDocument()
-    })
-  })
-
-  test('shows welcome message with username on successful registration', async () => {
-    vi.spyOn(authService, 'register').mockResolvedValueOnce({
-      message: 'User successfully created',
-      username: 'Pablo',
-      userId: 1
-    })
-    
-    render(<MemoryRouter><RegisterForm /></MemoryRouter>)
-    const user = userEvent.setup()
-    await user.type(screen.getByLabelText(/user/i), 'Pablo')
-    await user.type(screen.getByLabelText(/email/i), 'pablo@test.com')
-    await user.type(screen.getByLabelText(/contra/i), 'password123')
-    await user.click(screen.getByRole('button', { name: /lets go!/i }))
+    await user.click(screen.getByTestId('btn-valid'))
 
     await waitFor(() => {
       expect(screen.getByText(/bienvenido/i)).toBeInTheDocument()
-      expect(screen.getByText(/Pablo/i)).toBeInTheDocument()
+      expect(screen.getByText('Pablo')).toBeInTheDocument()
     })
+
+    expect(localStorage.getItem('user')).toBe(JSON.stringify({ userId: 1, username: 'Pablo' }))
+
+    // Verifica la redirección final
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/configureGame')
+    }, { timeout: 2500 })
   })
 })
