@@ -4,7 +4,7 @@ import Estadisticas from '../pages/Statistics';
 import { statsService } from '../services/stats.service';
 
 import { describe, expect, test, beforeEach, vi } from 'vitest';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 
 vi.mock('../services/stats.service.ts', () => ({
   statsService: {

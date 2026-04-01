@@ -3,6 +3,11 @@ import { renderHook, act } from '@testing-library/react'
 import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest'
 import { useMultiplayer } from './useMultiplayer'
 
+vi.mock('react-router-dom', () => ({
+  useNavigate: () => vi.fn(),
+  useLocation: () => ({ state: {} })
+}))
+
 const { mockSocket } = vi.hoisted(() => {
   const mockSocket = {
     connected: false,
@@ -169,6 +174,7 @@ describe('useMultiplayer', () => {
     })
 
     expect(mockSocket.emit).toHaveBeenCalledWith('createRoom', {
+      hostId: null,
       hostUsername: 'Alice',
       tamano: 7,
     })
@@ -182,6 +188,7 @@ describe('useMultiplayer', () => {
     })
 
     expect(mockSocket.emit).toHaveBeenCalledWith('joinRoom', {
+      guestId: null,
       roomCode: 'ABC123',
       guestUsername: 'Bob',
     })

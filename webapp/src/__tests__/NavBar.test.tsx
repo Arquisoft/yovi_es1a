@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, test, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import NavBar from '../components/NavBar';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', async () => {

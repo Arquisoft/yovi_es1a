@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, test, vi, afterEach } from 'vitest'
 import GameSettings from '../pages/GameSettings'
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom/vitest';
 import { MemoryRouter } from 'react-router-dom'
 import { useMultiplayer } from '../hooks/useMultiplayer'
 
@@ -41,9 +41,7 @@ describe('GameSettings', () => {
     
     const slider = screen.getByRole('slider')
     fireEvent.change(slider, { target: { value: '7' } })
-
-    const labelStrong = screen.getByText(/tamTabl/i)
-    expect(labelStrong.closest('label')).toHaveTextContent('7')
+    expect(slider).toHaveValue('7')
   })
 
   test('allows you to choose a rival bot in the opponent selector', async () => {
@@ -191,12 +189,12 @@ describe('GameSettings - Online Mode', () => {
     .mockReturnValueOnce({  
       isConnected: true, roomCode: null, errorMsg: '', gameStarted: false,
       createRoom: vi.fn(), joinRoom: vi.fn(), lastOpponentMove: null,
-      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5,leaveMatchGracefully: jest.fn()
+      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5,leaveMatchGracefully: vi.fn()
     })
     .mockReturnValue({ 
       isConnected: true, roomCode: 'ROOM1', errorMsg: '', gameStarted: true,
       createRoom: vi.fn(), joinRoom: vi.fn(), lastOpponentMove: null,
-      sendMove: vi.fn(), myColor: 'B', opponentName: 'Rival', boardSize: 5,leaveMatchGracefully: jest.fn()
+      sendMove: vi.fn(), myColor: 'B', opponentName: 'Rival', boardSize: 5,leaveMatchGracefully: vi.fn()
     })
 
   const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
@@ -222,7 +220,7 @@ test('shows waiting room code when roomCode is set but game not started', async 
     sendMove: vi.fn(),
     myColor: null,
     opponentName: '',
-    boardSize: 5,leaveMatchGracefully: jest.fn()
+    boardSize: 5,leaveMatchGracefully: vi.fn()
   })
 
   const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)

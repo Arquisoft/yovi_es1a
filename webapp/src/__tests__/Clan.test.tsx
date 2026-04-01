@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import Clan from '../pages/Clan';
 import { clanService } from '../services/clan.service';
 import { describe, expect, test, beforeEach, vi } from 'vitest';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 
 vi.mock('../services/clan.service', () => ({
   clanService: {

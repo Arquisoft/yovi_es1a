@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { vi, describe, test, expect, beforeEach } from 'vitest';
 import { UnloginRoute, GameAccessRoute } from '../components/Routes';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 
 describe('Routes', () => {
   

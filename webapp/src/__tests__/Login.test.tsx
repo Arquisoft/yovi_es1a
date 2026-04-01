@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import LoginForm from '../pages/Login'
 import { afterEach, describe, expect, test, vi } from 'vitest' 
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom/vitest';
 import { MemoryRouter } from 'react-router-dom'
 import { authService } from '../services/auth.service'
 
