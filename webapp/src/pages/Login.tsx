@@ -4,7 +4,8 @@ import { authService } from '../services/auth.service';
 import { useLanguage } from '../idiomaConf/LanguageContext';
 import AuthForm from '../components/AuthForm';
 import NavBar from '../components/NavBar';
-import "./Login.css"; 
+import "../styles/global.css";
+import "../styles/Login.css";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -32,39 +33,36 @@ const Login: React.FC = () => {
     }
   };
 
-  return (
-    <>
-      <NavBar activeTab="login" />
-      
-      {welcomeUser ? (
-        <div className="welcome-overlay">
-          <h1 className="welcome-text">
-            {t("bienvenido")}, <br />
-            <span className="user-neon">{welcomeUser}</span>
-          </h1>
-          <div className="loader-line"></div>
-        </div>
-      ) : (
-        <div className="login-container">
-          {error && (
-            <div className="error-message-neon">
-              {error}
-            </div>
-          )}
-          
-          <AuthForm
-            title={t("inSes")}
-            buttonText="Log in!"
-            loadingText="Entering..."
-            bottomText={t("noCuenta")}
-            bottomLinkText={t("regAqui")}
-            bottomLinkPath="/register"
-            onSubmit={handleLogin}
-          />
-        </div>
-      )}
-    </>
-  );
+return (
+  <>
+    <NavBar activeTab="login" />
+    
+    {welcomeUser ? (
+      <div className="welcome-overlay">
+        <h1 className="welcome-text">
+          {t("bienvenido")}, <br />
+          <span className="user-neon">{welcomeUser}</span>
+        </h1>
+        <div className="loader-line"></div>
+      </div>
+    ) : (
+      <>
+        {error && (
+          <div className="error-message-neon">{error}</div>
+        )}
+        <AuthForm
+          title={t("inSes")}
+          buttonText="Log in!"
+          loadingText="Entering..."
+          bottomText={t("noCuenta")}
+          bottomLinkText={t("regAqui")}
+          bottomLinkPath="/register"
+          onSubmit={handleLogin}
+        />
+      </>
+    )}
+  </>
+);
 };
 
 export default Login;
