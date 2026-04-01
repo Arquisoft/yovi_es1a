@@ -95,6 +95,100 @@ describe('statsService.saveMatchResult', () => {
   })
 })
 
+// ── getRanking ───────────────────────────────────────────────────────────
+
+describe('statsService.getRanking', () => {
+  test('calls fetch with correct URL for global ranking', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ([]),
+    })
+
+    await statsService.getRanking()
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.stringContaining('/matches/ranking/global'),
+      expect.objectContaining({ method: 'GET' })
+    )
+  })
+
+  test('returns ranking data on success', async () => {
+    const mockData = [{ user: 'Player1', wins: 10 }, { user: 'Player2', wins: 5 }]
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockData,
+    })
+
+    const result = await statsService.getRanking()
+    expect(result).toEqual(mockData)
+  })
+
+  test('throws specific error when response is not ok and provides error message', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: 'Ranking unavailable' }),
+    })
+
+    await expect(statsService.getRanking()).rejects.toThrow('Ranking unavailable')
+  })
+
+  test('throws fallback error when response is not ok and provides no error message', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({}),
+    })
+
+    await expect(statsService.getRanking()).rejects.toThrow('Error fetching ranking data')
+  })
+})
+
+// ── getClanRanking ───────────────────────────────────────────────────────────
+
+describe('statsService.getClanRanking', () => {
+  test('calls fetch with correct URL for global clan ranking', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ([]),
+    })
+
+    await statsService.getClanRanking()
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.stringContaining('/clans/ranking/global'),
+      expect.objectContaining({ method: 'GET' })
+    )
+  })
+
+  test('returns clan ranking data on success', async () => {
+    const mockData = [{ clan: 'Warriors', points: 5000 }]
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockData,
+    })
+
+    const result = await statsService.getClanRanking()
+    expect(result).toEqual(mockData)
+  })
+
+  test('throws specific error when response is not ok and provides error message', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: 'Clan ranking unavailable' }),
+    })
+
+    await expect(statsService.getClanRanking()).rejects.toThrow('Clan ranking unavailable')
+  })
+
+  test('throws fallback error when response is not ok and provides no error message', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({}),
+    })
+
+    await expect(statsService.getClanRanking()).rejects.toThrow('Error fetching clan ranking data')
+  })
+})
+
 // ── getMatchHistory ───────────────────────────────────────────────────────────
 
 describe('statsService.getMatchHistory', () => {

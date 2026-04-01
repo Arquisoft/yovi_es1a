@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import Estadisticas from '../pages/Statistics'; 
 import { statsService } from '../services/stats.service';
@@ -22,13 +23,13 @@ vi.mock('../idiomaConf/LanguageContext.tsx', () => ({
   }),
 }));
 
-describe('Componente Estadisticas', () => {
+describe('Estadisticas Component', () => {
   beforeEach(() => {
     localStorage.clear();
     vi.clearAllMocks();
   });
 
-  test('Muestra error si no hay usuario en localStorage', () => {
+  test('displays an error message when no user is found in localStorage', () => {
     render(
       <MemoryRouter>
         <Estadisticas />
@@ -38,14 +39,13 @@ describe('Componente Estadisticas', () => {
     expect(screen.getByText('No hay usuario conectado. Inicia sesión para ver tus estadísticas.')).toBeInTheDocument();
   });
 
-  test('Muestra estado de carga y luego cero partidas si el historial está vacío', async () => {
+  test('displays loading state followed by empty state when match history is empty', async () => {
     localStorage.setItem('user', JSON.stringify({ userId: 'user123', username: 'TestUser' }));
     
     (statsService.getMatchHistory as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       content: [],
       totalPages: 1,
     });
-
 
     render(
       <MemoryRouter>
@@ -60,7 +60,7 @@ describe('Componente Estadisticas', () => {
     });
   });
 
-  test('Muestra la tabla con el historial de partidas correctamente', async () => {
+  test('renders the match history table correctly with provided data', async () => {
     localStorage.setItem('user', JSON.stringify({ userId: 'user123', username: 'TestUser' }));
     
     const mockHistory = [
@@ -87,7 +87,7 @@ describe('Componente Estadisticas', () => {
     });
   });
 
-  test('Maneja un error del servidor con mensaje específico', async () => {
+  test('handles server errors with specific error messages', async () => {
     localStorage.setItem('user', JSON.stringify({ userId: 'user123' }));
     
     (statsService.getMatchHistory as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Fallo crítico en la BD'));
@@ -103,7 +103,7 @@ describe('Componente Estadisticas', () => {
     });
   });
 
-  test('Maneja un error genérico del servidor', async () => {
+  test('handles generic server errors', async () => {
     localStorage.setItem('user', JSON.stringify({ userId: 'user123' }));
     
     (statsService.getMatchHistory as ReturnType<typeof vi.fn>).mockRejectedValueOnce({});
@@ -116,6 +116,71 @@ describe('Componente Estadisticas', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Error al cargar las estadísticas.')).toBeInTheDocument();
+    });
+  });
+
+  test('updates filter states and reloads history when inputs change', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem('user', JSON.stringify({ userId: 'user123' }));
+    
+    const mockGetHistory = statsService.getMatchHistory as ReturnType<typeof vi.fn>;
+    mockGetHistory.mockResolvedValue({ content: [], totalPages: 1 });
+
+    render(
+      <MemoryRouter>
+        <Estadisticas />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => expect(mockGetHistory).toHaveBeenCalledTimes(1));
+
+    const resultSelect = screen.getByRole('combobox');
+    const durationInput = screen.getByPlaceholderText('Duración máxima (s)');
+    const movesInput = screen.getByPlaceholderText('Movimientos máximos');
+
+    await user.selectOptions(resultSelect, 'win');
+    await user.type(durationInput, '50');
+    await user.type(movesInput, '20');
+
+    await waitFor(() => {
+      expect(mockGetHistory).toHaveBeenLastCalledWith('user123', 1, 5, expect.objectContaining({
+        result: 'win',
+        maxDuration: 50,
+        maxMoves: 20
+      }));
+    });
+  });
+
+  test('navigates between pages correctly using pagination buttons', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem('user', JSON.stringify({ userId: 'user123' }));
+    
+    const mockGetHistory = statsService.getMatchHistory as ReturnType<typeof vi.fn>;
+    mockGetHistory.mockResolvedValue({ content: [], totalPages: 3 });
+
+    render(
+      <MemoryRouter>
+        <Estadisticas />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Página 1 de 3')).toBeInTheDocument();
+    });
+
+    const btnSiguiente = screen.getByText('Siguiente');
+    const btnAnterior = screen.getByText('Anterior');
+
+    await user.click(btnSiguiente);
+    await waitFor(() => {
+      expect(screen.getByText('Página 2 de 3')).toBeInTheDocument();
+      expect(mockGetHistory).toHaveBeenLastCalledWith('user123', 2, 5, expect.any(Object));
+    });
+
+    await user.click(btnAnterior);
+    await waitFor(() => {
+      expect(screen.getByText('Página 1 de 3')).toBeInTheDocument();
+      expect(mockGetHistory).toHaveBeenLastCalledWith('user123', 1, 5, expect.any(Object));
     });
   });
 });
