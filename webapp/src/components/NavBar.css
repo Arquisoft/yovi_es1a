@@ -72,6 +72,31 @@
   align-items: center;
 }
 
+.nav-item.about {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.nav-item.about:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.nav-item.about img {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  filter: brightness(0) invert(1);
+}
+
 @media (max-width: 1100px) {
   .nav-item {
     font-size: 0.75rem;
