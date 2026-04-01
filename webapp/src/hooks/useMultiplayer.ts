@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { socket } from '../services/socket.service';
+import { matchService } from '../services/match.service';
+import { UserUtils } from '../utils/user.utils';
 
 export const useMultiplayer = () => {
   const navigate = useNavigate();
@@ -13,100 +15,76 @@ export const useMultiplayer = () => {
   const [lastOpponentMove, setLastOpponentMove] = useState<any>(null);
   const [boardSize, setBoardSize] = useState<number>(5);
 
+  const opponentNameRef = useRef(opponentName);
+  useEffect(() => {
+    opponentNameRef.current = opponentName;
+  }, [opponentName]);
+
+  const leaveMatchGracefully = () => {
+    socket.emit('leaveMatchGracefully');
+    setTimeout(() => {
+      setGameStarted(false);
+      setRoomCode(null);
+    }, 100);
+  };
+
   useEffect(() => {
     socket.connect();
 
-    socket.on('connect', () => setIsConnected(true));
-    socket.on('disconnect', () => setIsConnected(false));
-
-    socket.on('roomCreated', (code: string) => {
-      setRoomCode(code);
-      setErrorMsg('');
-    });
-
-    socket.on('gameStarted', (data: { roomCode: string, color: 'B' | 'R', opponentName: string, tamano: number }) => {
+    const onConnect = () => setIsConnected(true);
+    const onDisconnect = () => setIsConnected(false);
+    const onRoomCreated = (code: string) => { setRoomCode(code); setErrorMsg(''); };
+    const onGameStarted = (data: any) => {
       setRoomCode(data.roomCode);
       setMyColor(data.color);
       setOpponentName(data.opponentName);
       setBoardSize(data.tamano);
       setGameStarted(true);
       setErrorMsg('');
-    });
+    };
+    const onRoomError = (msg: string) => setErrorMsg(msg);
+    const onMoveReceived = (moveData: any) => setLastOpponentMove(moveData);
 
-    socket.on('roomError', (msg: string) => setErrorMsg(msg));
-    socket.on('moveReceived', (moveData: any) => setLastOpponentMove(moveData));
+    const onOpponentDisconnected = async () => {
+      alert("¡Tu oponente se ha desconectado!");
+      setGameStarted(false);
+      const userId = UserUtils.getUserId();
+      if (userId) await matchService.saveWinByAbandonment(userId, opponentNameRef.current);
+      navigate('/statistics');
+    };
 
-    socket.on('opponent_disconnected', async (data: any) => {
-      console.log("¡Recibido aviso de desconexión del backend!", data.message);
-      alert("¡Victoria por abandono! Tu oponente se ha desconectado.");
-      
+    const onMatchFinishedCleanup = () => {
       setGameStarted(false);
       setRoomCode(null);
-      
-      const userStr = localStorage.getItem("user");
-      const userObj = userStr ? JSON.parse(userStr) : null;
-      const userId = userObj?.userId || userObj?._id || userObj?.id;
-      if (userId) {
-        try {
-          console.log("Enviando victoria a BD para el usuario:", userId);
-          
-          const response = await fetch('/api/matches', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              user: userId,
-              result: "win",
-              duration: 0,
-              opponent: opponentName || "Jugador Desconectado",
-              totalMoves: 0,
-              gameMode: "online"
-            })
-          });
+    };
 
-          if (!response.ok) {
-            // Si falla, leemos el error exacto que devuelve tu Node.js
-            const errorData = await response.json();
-            console.error("❌ El backend rechazó la partida. Status:", response.status, "Motivo:", errorData);
-          } else {
-            console.log("✅ ¡Victoria guardada con éxito en la Base de Datos!");
-          }
-        } catch (error) {
-          console.error("❌ Error de red al intentar contactar con el backend:", error);
-        }
-      } else {
-        console.error("❌ No hay usuario logueado, no se puede guardar la partida.");
-      }
-
-      // Después de intentar guardar (y solo después), navegamos
-      navigate('/statistics');
-    });
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+    socket.on('roomCreated', onRoomCreated);
+    socket.on('gameStarted', onGameStarted);
+    socket.on('roomError', onRoomError);
+    socket.on('moveReceived', onMoveReceived);
+    socket.on('opponent_disconnected', onOpponentDisconnected);
+    socket.on('matchFinishedCleanup', onMatchFinishedCleanup);
 
     return () => {
-      socket.off('connect');
-      socket.off('disconnect');
-      socket.off('roomCreated');
-      socket.off('gameStarted');
-      socket.off('roomError');
-      socket.off('moveReceived');
-      socket.off('opponent_disconnected');
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+      socket.off('roomCreated', onRoomCreated);
+      socket.off('gameStarted', onGameStarted);
+      socket.off('roomError', onRoomError);
+      socket.off('moveReceived', onMoveReceived);
+      socket.off('opponent_disconnected', onOpponentDisconnected);
+      socket.off('matchFinishedCleanup', onMatchFinishedCleanup);
     };
-  }, [navigate, opponentName]);
-
+  }, []);
 
   const createRoom = (username: string, tamano: number) => {
-    const userStr = localStorage.getItem("user");
-    const userObj = userStr ? JSON.parse(userStr) : null;
-    const userId = userObj?.userId || userObj?._id || userObj?.id;
-
-    socket.emit('createRoom', { hostUsername: username, tamano, hostId: userId });
+    socket.emit('createRoom', { hostUsername: username, tamano, hostId: UserUtils.getUserId() });
   };
 
   const joinRoom = (code: string, username: string) => {
-    const userStr = localStorage.getItem("user");
-    const userObj = userStr ? JSON.parse(userStr) : null;
-    const userId = userObj?.userId || userObj?._id || userObj?.id;
-
-    socket.emit('joinRoom', { roomCode: code.toUpperCase(), guestUsername: username, guestId: userId });
+    socket.emit('joinRoom', { roomCode: code.toUpperCase(), guestUsername: username, guestId: UserUtils.getUserId() });
   };
 
   const sendMove = (code: string, moveData: any) => {
@@ -114,7 +92,8 @@ export const useMultiplayer = () => {
   };
 
   return { 
-    isConnected, roomCode, errorMsg, gameStarted, myColor, opponentName, lastOpponentMove, boardSize, 
-    createRoom, joinRoom, sendMove
+    isConnected, roomCode, errorMsg, gameStarted, myColor, 
+    opponentName, lastOpponentMove, boardSize, 
+    createRoom, joinRoom, sendMove, leaveMatchGracefully 
   };
 };

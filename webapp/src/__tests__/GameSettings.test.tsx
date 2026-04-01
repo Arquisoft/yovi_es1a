@@ -191,12 +191,12 @@ describe('GameSettings - Online Mode', () => {
     .mockReturnValueOnce({  
       isConnected: true, roomCode: null, errorMsg: '', gameStarted: false,
       createRoom: vi.fn(), joinRoom: vi.fn(), lastOpponentMove: null,
-      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5
+      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5,leaveMatchGracefully: jest.fn()
     })
     .mockReturnValue({ 
       isConnected: true, roomCode: 'ROOM1', errorMsg: '', gameStarted: true,
       createRoom: vi.fn(), joinRoom: vi.fn(), lastOpponentMove: null,
-      sendMove: vi.fn(), myColor: 'B', opponentName: 'Rival', boardSize: 5
+      sendMove: vi.fn(), myColor: 'B', opponentName: 'Rival', boardSize: 5,leaveMatchGracefully: jest.fn()
     })
 
   const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
@@ -222,7 +222,7 @@ test('shows waiting room code when roomCode is set but game not started', async 
     sendMove: vi.fn(),
     myColor: null,
     opponentName: '',
-    boardSize: 5
+    boardSize: 5,leaveMatchGracefully: jest.fn()
   })
 
   const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
