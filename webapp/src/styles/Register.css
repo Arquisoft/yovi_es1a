@@ -1,0 +1,145 @@
+.register-page {
+  min-height: 100vh;
+  padding-top: 90px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.RegisterForm {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+}
+
+.auth-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title-register {
+  display: flex;
+  flex-direction: row;
+  padding: 0rem 2rem;
+  gap: 1rem;
+  align-items: center;
+  background-color: transparent;
+  border-radius: 8px;
+  color: #60a5fa;
+  text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+  margin-bottom: 10px;
+}
+
+.title-register h2 {
+  font-size: 1.5rem;
+}
+
+.title-register .avatar {
+  width: 30px;
+  height: 30px;
+}
+
+.auth-card-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.welcome-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+  z-index: 9999;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.welcome-text {
+  font-size: 3.5rem;
+  color: white;
+  text-align: center;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.user-neon {
+  color: #60a5fa;
+  text-shadow: 0 0 20px rgba(96, 165, 250, 0.8), 0 0 40px rgba(96, 165, 250, 0.4);
+}
+
+.loader-line {
+  width: 250px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  margin-top: 30px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.loader-line::after {
+  content: "";
+  position: absolute;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #60a5fa, transparent);
+  animation: loading-slide 1.5s infinite;
+}
+
+.error-message-neon-bottom {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85%;
+  background: rgba(30, 0, 0, 0.9);
+  border: 1px solid #ff4d4d;
+  color: #ff4d4d;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+  font-size: 0.85rem;
+  box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
+  text-shadow: 0 0 5px rgba(255, 77, 77, 0.8);
+  z-index: 100;
+  animation: shake 0.4s ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes loading-slide {
+  100% { left: 100%; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+}
+
+@media (max-width: 850px) {
+  .RegisterForm {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .y_gris {
+    height: 15em;
+  }
+}
