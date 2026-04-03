@@ -15,6 +15,7 @@ interface AuthFormProps {
   bottomLinkText: string;
   bottomLinkPath: string;
   onSubmit: (username: string, password: string, email?: string) => Promise<void>;
+  outsideError?: string | null;
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({
@@ -25,7 +26,8 @@ const AuthForm: React.FC<AuthFormProps> = ({
   bottomText,
   bottomLinkText,
   bottomLinkPath,
-  onSubmit
+  onSubmit,
+  outsideError,
 }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -116,9 +118,9 @@ const AuthForm: React.FC<AuthFormProps> = ({
               </Link>
             </div>
 
-            {error && (
+            {(error || outsideError) && (
               <div className="error-message-neon" style={{ marginTop: 12 }}>
-                {error}
+                {outsideError || error}
               </div>
             )}
           </form>
