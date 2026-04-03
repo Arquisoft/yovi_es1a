@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-
 dotenv.config(); 
+import { verifyToken } from './middleware/auth-middleware';
 
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
@@ -52,9 +52,9 @@ app.use(metricsMiddleware);
 connectBD(); //conect bd
 
 app.use('/', userRoutes);  // connect with user-controller
-app.use('/matches', matchRoutes); // connect with match-controller
-app.use('/api/bot', botRoutes); //connect with bot controller
-app.use('/clans', clanRoutes); 
+app.use('/matches', verifyToken, matchRoutes);
+app.use('/api/bot', verifyToken, botRoutes);
+app.use('/clans', verifyToken, clanRoutes);
 
 app.get('/health', (req: Request, res: Response) => {
     res.json({ status: 'OK', service: 'Users Service' });
