@@ -1,5 +1,6 @@
 import express, { Request, Response, Router } from 'express';
 import { createUser, login } from '../service/user-service'; // Agrupamos las importaciones
+import jwt from 'jsonwebtoken';
 
 // Instead of putting all the routes directly into the main index.ts file, 
 // express.Router() creates a mini-server dedicated solely to users.
@@ -64,12 +65,20 @@ router.post('/login', async (req: Request, res: Response) => {
     try {
         // --- 1. Llamada al Servicio ---
         const user = await login(req.body);
+
+        // Generar el token
+        const token = jwt.sign(
+            { userId: user._id.toString(), username: user.username },
+            process.env.JWT_SECRET as string,
+            { expiresIn: '24h' }
+        );
         
         // --- 2. Respuesta Exitosa ---
         return res.status(200).json({
             message: 'Login successful',
             userId: user._id,
-            username: user.username
+            username: user.username,
+            token
         });
 
     } catch (error: any) {
