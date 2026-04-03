@@ -1,4 +1,4 @@
-const NODE_API_URL = import.meta.env.VITE_API_URL;
+import { authFetch } from './api';
 
 export interface BotMoveResponse {
   api_version: string;
@@ -6,25 +6,23 @@ export interface BotMoveResponse {
   coords: { x: number; y: number; z: number };
   game_status: string;
 }
+
 export interface CheckWinnerResponse {
   status: string;
 }
+
 export const gameService = {
   askBotMove: async (botId: string, size: number, turn: number, layout: string): Promise<BotMoveResponse> => {
     try {
       const positionYen = {
         size,
-        turn: turn,
+        turn,
         players: ["B", "R"],
         layout,
       };
-      const response = await fetch(`${NODE_API_URL}/api/bot/play`, {
+      const response = await authFetch('/api/bot/play', {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          position: positionYen,
-          strategy: botId
-        }),
+        body: JSON.stringify({ position: positionYen, strategy: botId }),
       });
 
       if (!response.ok) {
@@ -43,11 +41,11 @@ export const gameService = {
       throw error;
     }
   },
+
   checkWinner: async (size: number, layout: string): Promise<CheckWinnerResponse> => {
     try {
-      const response = await fetch(`${NODE_API_URL}/api/bot/check-winner`, {
+      const response = await authFetch('/api/bot/check-winner', {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ size, layout }),
       });
 
