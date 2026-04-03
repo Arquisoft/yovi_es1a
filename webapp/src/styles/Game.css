@@ -1,6 +1,7 @@
 .game-page {
-  width: 100%;
-  min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
   box-sizing: border-box;
 }
 
@@ -8,9 +9,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 120px;
+  padding-top: 70px;
+  height: 100vh;
   text-align: center;
-  padding: 0 20px;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .game-header {
