@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import "../styles/global.css";
-import "../styles/Game.css";
+import "../styles/GameSettings.css";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 import video from "../assets/videoLinea.mp4";
 import { useMultiplayer } from '../hooks/useMultiplayer';
