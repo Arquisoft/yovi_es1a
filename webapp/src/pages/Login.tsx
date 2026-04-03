@@ -22,6 +22,10 @@ const Login: React.FC = () => {
         userId: data.userId, 
         username: data.username
       }));
+      
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+      }
       setWelcomeUser(data.username);
       setTimeout(() => navigate('/configureGame'), 1500);
     } catch (err: any) {
