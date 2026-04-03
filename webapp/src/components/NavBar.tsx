@@ -23,6 +23,7 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
     navigate("/login");
   };
 
