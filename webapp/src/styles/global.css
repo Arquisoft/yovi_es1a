@@ -380,3 +380,11 @@ button:focus-visible {
   transform: scale(1.02);
   box-shadow: 0 0 15px rgba(91, 153, 246, 0.5);
 }
+
+.auth-page {
+  overflow: hidden;
+}
+
+.register-form {
+  overflow: hidden;
+}
