@@ -19,7 +19,7 @@ describe('Integration Tests: Matches Service', () => {
             });
             
         testUserId = res.body.userId;
-        const secret = process.env.JWT_SECRET || 'jwt_token';
+        const secret = process.env.JWT_SECRET || 'jwt_token_secret';
         testToken = jwt.sign({ id: testUserId, email: 'gamertest@test.com' }, secret, { expiresIn: '1h' });
 
     }, 15000);
