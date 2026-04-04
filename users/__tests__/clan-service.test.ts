@@ -5,6 +5,7 @@ import User from '../src/models/user-model';
 import Clan from '../src/models/clan-model';
 import { Types } from 'mongoose';
 import jwt from 'jsonwebtoken';
+import { ClanService } from '../src/service/clan-service';
 
 describe('Integration Tests: Clan Service', () => {
   let testUserId: string;
@@ -52,6 +53,30 @@ describe('Integration Tests: Clan Service', () => {
     await Clan.deleteMany({});
   });
 
+  describe('GET /ranking/global', () => {
+    it('should return 200 and the clan ranking', async () => {
+      const res = await supertest(app)
+        .get('/clans/ranking/global')
+        .set('Authorization', `Bearer ${testToken}`);
+      
+      expect(res.status).toBe(200);
+      expect(Array.isArray(res.body)).toBe(true);
+    });
+
+    it('should return 500 if there is a DB error fetching the ranking', async () => {
+      const spy = vi.spyOn(Clan, 'aggregate').mockRejectedValueOnce(new Error('Fake DB Error'));
+      
+      const res = await supertest(app)
+        .get('/clans/ranking/global')
+        .set('Authorization', `Bearer ${testToken}`);
+      
+      expect(res.status).toBe(500);
+      expect(res.body).toHaveProperty('error', 'Error interno obteniendo el ranking de clanes');
+      
+      spy.mockRestore();
+    });
+  });
+  
   describe('POST /createClan', () => {
     it('should create a clan successfully', async () => {
       const res = await supertest(app)
@@ -166,5 +191,38 @@ describe('Integration Tests: Clan Service', () => {
     });
   });
 
+  it('should return 500 if sending a message fails internally', async () => {
+      const spy = vi.spyOn(ClanService, 'sendMessage').mockRejectedValueOnce(new Error('Mensaje roto'));
+      const res = await supertest(app)
+        .post(`/clans/${testClanId}/message`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send({ userId: testUserId, username: 'ClanUser1', text: 'Hello' });
 
-});
+      expect(res.status).toBe(500);
+      expect(res.body.error).toContain('Mensaje roto');
+      spy.mockRestore();
+    });
+
+    it('should get messages for the clan', async () => {
+      const res = await supertest(app).get(`/clans/${testClanId}/messages`).set('Authorization', `Bearer ${testToken}`);
+      expect(res.status).toBe(200);
+    });
+
+    it('should return 500 if getting messages fails internally', async () => {
+      const spy = vi.spyOn(ClanService, 'getClanMessages').mockRejectedValueOnce(new Error('No hay mensajes'));
+      const res = await supertest(app).get(`/clans/${testClanId}/messages`).set('Authorization', `Bearer ${testToken}`);
+      
+      expect(res.status).toBe(500);
+      expect(res.body.error).toContain('No hay mensajes');
+      spy.mockRestore();
+    });
+
+    it('should return 500 if clan does not exist', async () => {
+        const fakeClanId = new Types.ObjectId().toString();
+        const res = await supertest(app)
+            .post(`/clans/${fakeClanId}/addUser`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .send({ userId: testUserId2 });
+        expect(res.status).toBe(500);
+    });
+  });

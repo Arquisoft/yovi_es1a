@@ -12,7 +12,7 @@ setWorldConstructor(CustomWorld)
 
 Before(async function () {
   // Allow turning off headless mode and enabling slow motion/devtools via env vars
-  const headless = true // Cambiar a false para ver el navegador en acción
+  const headless = false // Cambiar a false para ver el navegador en acción
   const slowMo = 0 // Aumentar a 50 o 100 para ralentizar las acciones y verlas mejor
   const devtools = false // Cambiar a true para abrir con DevTools
 
@@ -20,7 +20,6 @@ Before(async function () {
   this.page = await this.browser.newPage({
   locale: 'es-ES' 
   });
-  this.page = await this.browser.newPage()
 })
 
 After(async function () {
