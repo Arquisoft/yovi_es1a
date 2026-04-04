@@ -199,4 +199,4 @@ describe('Ranking Component', () => {
       expect(screen.getByText('Página 1 de 2')).toBeInTheDocument();
     });
   });
-});
+}); 
