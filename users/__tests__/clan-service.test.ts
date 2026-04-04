@@ -50,7 +50,7 @@ describe('Integration Tests: Clan Service', () => {
   // Limpiar base de datos después de los tests
   afterAll(async () => {
     await User.deleteMany({ _id: { $in: [testUserId, testUserId2, testUserId3] } });
-    await Clan.deleteMany({});
+    await Clan.deleteOne({ _id: testClanId });
   });
 
   describe('GET /ranking/global', () => {
