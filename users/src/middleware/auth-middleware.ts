@@ -25,7 +25,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): vo
     }
 
     try {
-        const secret = process.env.JWT_SECRET as string;
+        const secret = process.env.JWT_SECRET || 'jwt_token_secret';
         const decoded = verify(token, secret) as UserPayload;
         req.user = decoded;
 
