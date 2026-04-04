@@ -42,7 +42,7 @@ describe('Integration Tests: Clan Service', () => {
       });
     testUserId3 = res3.body.userId;
 
-    const secret = process.env.JWT_SECRET as string;
+    const secret = process.env.JWT_SECRET || 'jwt_token_secret';
     testToken = jwt.sign({ id: testUserId, email: 'clanuser1@test.com' }, secret, { expiresIn: '1h' });
 
   }, 20000);
