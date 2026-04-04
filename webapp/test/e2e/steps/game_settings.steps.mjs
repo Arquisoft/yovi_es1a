@@ -10,49 +10,53 @@ Given('I am logged in and on the game configuration page', async function () {
 });
 
 When('I select the mode {string}', async function (modeText) {
-  const modeSelect = this.page
-    .locator('.control-group')
-    .filter({ hasText: /Modo de Juego/i })
-    .locator('select');
-  await modeSelect.waitFor({ state: 'visible' });
-  await modeSelect.selectOption({ label: modeText });
-});
-
-When('I set the board size to {string}', async function (size) {
-  const slider = this.page.locator('.control-input-range');
-  await slider.waitFor({ state: 'visible' });
-  await slider.fill(size);
+  const selectLocator = this.page.locator('.control-group').filter({ hasText: /Modo de Juego/i }).locator('select');
+  
+  let valueToSelect = "bot";
+  if (modeText.includes("Local") || modeText.includes("2 Jugadores")) {
+    valueToSelect = "humano";
+  } else if (modeText.includes("Online")) {
+    valueToSelect = "online";
+  }
+  
+  await selectLocator.selectOption(valueToSelect);
 });
 
 When('I select the difficulty {string}', async function (difficultyText) {
-  const diffSelect = this.page
-    .locator('.control-group')
-    .filter({ hasText: /Nivel de Dificultad/i })
-    .locator('select');
-  await diffSelect.waitFor({ state: 'visible' });
-  await diffSelect.selectOption({ label: difficultyText });
+  const selectLocator = this.page.locator('.control-group').filter({ hasText: /Nivel de Dificultad/i }).locator('select');
+  
+  let valueToSelect = "facil";
+  if (difficultyText === "Intermedio") valueToSelect = "medio";
+  if (difficultyText === "Experto") valueToSelect = "dificil";
+  
+  await selectLocator.selectOption(valueToSelect);
 });
 
-When('I select the opponent {string}', async function (opponentText) {
-  const botSelect = this.page
-    .locator('.control-group')
-    .filter({ hasText: /Elige tu oponente/i })
-    .locator('select');
-  await this.page.waitForSelector(`option:has-text("${opponentText}")`, {
-    state: 'attached',
-    timeout: 5000
-  });
-  await botSelect.selectOption({ label: opponentText });
+When('I set the board size to {string}', async function (size) {
+    const sizeInput = this.page.locator('input.size-value');
+    await sizeInput.fill(size);
+    await sizeInput.dispatchEvent('change');
+});
+
+When('I select the opponent {string}', async function (botName) {
+  const selectLocator = this.page.locator('.control-group').filter({ hasText: /Elige tu oponente/i }).locator('select');
+  
+  let valueToSelect = "random_bot";
+  if (botName === "Monte Carlo") valueToSelect = "monte_carlo_bot";
+  if (botName.includes("Ataque en Triángulo")) valueToSelect = "triangle_attack_bot";
+  
+  await selectLocator.selectOption(valueToSelect);
 });
 
 When('I select the starting player {string}', async function (playerText) {
-  const startSelect = this.page
-    .locator('.control-group')
-    .filter({ hasText: /¿Quién empieza la partida\?/i })
-    .locator('select');
-  await startSelect.waitFor({ state: 'visible' });
-  await startSelect.selectOption({ label: playerText });
-  await this.page.waitForTimeout(300);
+  const selectLocator = this.page.locator('.control-group').filter({ hasText: /¿Quién empieza la partida\?/i }).locator('select');
+  
+  let valueToSelect = "B"; 
+  if (playerText.includes("Máquina") || playerText.includes("invitado") || playerText.includes("Rojo")) {
+    valueToSelect = "R";
+  }
+  
+  await selectLocator.selectOption(valueToSelect);
 });
 
 When('I select {string} as the starting player', async function (playerValue) {

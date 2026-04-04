@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL;
+import { authFetch } from './api';
 
 export interface MatchData {
   user: string;
@@ -12,14 +12,9 @@ export interface MatchData {
 
 export const statsService = {
   saveMatchResult: async (matchData: MatchData) => {
-    const token = localStorage.getItem('token');
     try {
-      const res = await fetch(`${API_URL}/matches/`, {
+      const res = await authFetch('/matches/', {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
         body: JSON.stringify(matchData),
       });
 
@@ -33,40 +28,24 @@ export const statsService = {
       throw error;
     }
   },
-  getRanking: async () => {
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    
-    const res = await fetch(`${API_URL}/matches/ranking/global`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
 
+  getRanking: async () => {
+    const res = await authFetch('/matches/ranking/global');
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Error fetching ranking data');
     return data;
   },
-  getClanRanking: async () => {
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    
-    const res = await fetch(`${API_URL}/clans/ranking/global`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
 
+  getClanRanking: async () => {
+    const res = await authFetch('/clans/ranking/global');
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Error fetching clan ranking data');
     return data;
   },
-  getMatchHistory: async (userId: string, page = 1, size = 5, 
+
+  getMatchHistory: async (userId: string, page = 1, size = 5,
     filters?: { result?: string; maxMoves?: number; maxDuration?: number }
-
   ) => {
-    const token = localStorage.getItem('token');
-
     const params = new URLSearchParams();
     params.append("page", page.toString());
     params.append("size", size.toString());
@@ -74,17 +53,9 @@ export const statsService = {
     if (filters?.maxMoves) params.append("maxMoves", filters.maxMoves.toString());
     if (filters?.maxDuration) params.append("maxDuration", filters.maxDuration.toString());
 
-    const res = await fetch(`${API_URL}/matches/user/${userId}?page=${page}&size=${size}?${params.toString()}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        "Authorization": `Bearer ${token}`
-      }
-    });
-
+    const res = await authFetch(`/matches/user/${userId}?${params.toString()}`);
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Error fetching history');
-    
     return data;
   }
 };

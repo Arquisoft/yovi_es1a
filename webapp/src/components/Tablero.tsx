@@ -31,8 +31,15 @@ const Tablero: React.FC<TableroProps> = (props) => {
   } = useTablero(props);
 
   const crearTablero = () => {
-    const baseSize = size > 20 ? 550 : size > 10 ? 450 : 400; 
-    const cellSize = Math.max(6, Math.min(50, Math.floor(baseSize / size))); 
+    const navbarHeight = 60;
+    const headerHeight = 150;
+    const turnInfoHeight = 60;
+    const availableHeight = window.innerHeight - navbarHeight - headerHeight - turnInfoHeight;
+    const availableWidth = window.innerWidth - 150;
+    
+    const maxByHeight = Math.floor(availableHeight / (size * 1.15));
+    const maxByWidth = Math.floor(availableWidth / size);
+    const cellSize = Math.max(4, Math.min(50, maxByHeight, maxByWidth));
     const cellHeight = Math.floor(cellSize * 1.15);
 
     let index = 0;

@@ -28,8 +28,9 @@ vi.mock('../idiomaConf/LanguageContext', () => ({
   }))
 }))
 
+// El mock de AuthForm ahora renderiza el outsideError para que los tests lo vean
 vi.mock('../components/AuthForm', () => ({
-  default: ({ onSubmit }: any) => (
+  default: ({ onSubmit, outsideError }: any) => (
     <div>
       <button data-testid="btn-empty" onClick={() => onSubmit('', '', '')}>
         Mandar Todo Vacío
@@ -40,6 +41,7 @@ vi.mock('../components/AuthForm', () => ({
       <button data-testid="btn-valid" onClick={() => onSubmit('Pablo', 'password123', 'pablo@test.com')}>
         Mandar Todo Correcto
       </button>
+      {outsideError && <div>{`⚠️ ${outsideError}`}</div>}
     </div>
   )
 }))
@@ -56,7 +58,7 @@ describe('RegisterForm', () => {
 
     await user.click(screen.getByTestId('btn-empty'))
 
-    expect(screen.getByText('⚠️ Please fill all fields')).toBeInTheDocument()
+    expect(screen.getByText('⚠️ Por favor rellena todos los campos')).toBeInTheDocument()
   })
 
   test('triggers the internal validation error when email is missing', async () => {
@@ -65,7 +67,7 @@ describe('RegisterForm', () => {
 
     await user.click(screen.getByTestId('btn-no-email'))
 
-    expect(screen.getByText('⚠️ Please fill all fields')).toBeInTheDocument()
+    expect(screen.getByText('⚠️ Por favor rellena todos los campos')).toBeInTheDocument()
   })
 
   test('shows specific error message when registration fails via API rejection', async () => {
@@ -123,7 +125,6 @@ describe('RegisterForm', () => {
 
     expect(localStorage.getItem('user')).toBe(JSON.stringify({ userId: 1, username: 'Pablo' }))
 
-    // Verifica la redirección final
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/configureGame')
     }, { timeout: 2500 })

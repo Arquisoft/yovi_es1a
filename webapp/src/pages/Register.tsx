@@ -17,20 +17,17 @@ const Register: React.FC = () => {
   const handleRegister = async (username: string, password: string, email?: string) => {
     setError(null);
     if (!username || !password || !email) {
-      setError("Please fill all fields");
+      setError("Por favor rellena todos los campos");
       return;
     }
-
     try {
       const data = await authService.register(username, email, password);
       localStorage.setItem("user", JSON.stringify({
         userId: data.userId, 
         username: data.username
       }));
-      
       setWelcomeUser(data.username);
       setTimeout(() => navigate('/configureGame'), 1500);
-
     } catch (err: any) {
       const message = err.response?.data?.error || err.message || "An error occurred";
       setError(message);
@@ -38,24 +35,17 @@ const Register: React.FC = () => {
   };
 
   return (
-  <>
-    <NavBar activeTab="register" />
-    
-    {welcomeUser ? (
-      <div className="welcome-overlay">
-        <h1 className="welcome-text">
-          {t("bienvenido")}, <br />
-          <span className="user-neon">{welcomeUser}</span>
-        </h1>
-        <div className="loader-line"></div>
-      </div>
-    ) : (
-      <>
-        {error && (
-          <div className="error-message-neon-bottom">
-            ⚠️ {error}
-          </div>
-        )}
+    <>
+      <NavBar activeTab="register" />
+      {welcomeUser ? (
+        <div className="welcome-overlay">
+          <h1 className="welcome-text">
+            {t("bienvenido")}, <br />
+            <span className="user-neon">{welcomeUser}</span>
+          </h1>
+          <div className="loader-line"></div>
+        </div>
+      ) : (
         <AuthForm
           title={t("creaCuent")}
           isRegister={true}
@@ -65,11 +55,11 @@ const Register: React.FC = () => {
           bottomLinkText={t("inSes")}
           bottomLinkPath="/login"
           onSubmit={handleRegister}
+          outsideError={error}
         />
-      </>
-    )}
-  </>
-);
+      )}
+    </>
+  );
 };
 
 export default Register;

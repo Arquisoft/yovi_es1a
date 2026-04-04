@@ -4,8 +4,10 @@ import app from '../src/index';
 import User from '../src/models/user-model'; 
 import Match from '../src/models/match-model';
 import * as MatchService from '../src/service/match-service';
+import jwt from 'jsonwebtoken';
 describe('Integration Tests: Matches Service', () => {
     let testUserId: string;
+    let testToken: string;
     //Create an user
     beforeAll(async () => {
         const res = await supertest(app)
@@ -15,7 +17,11 @@ describe('Integration Tests: Matches Service', () => {
                 email: 'gamertest@test.com',      
                 password: 'password123'  
             });
-        testUserId = res.body.userId; // save real id in db
+            
+        testUserId = res.body.userId;
+        const secret = process.env.JWT_SECRET as string;
+        testToken = jwt.sign({ id: testUserId, email: 'gamertest@test.com' }, secret, { expiresIn: '1h' });
+
     }, 15000);
 
     //When finish delete user and games
@@ -28,6 +34,7 @@ describe('Integration Tests: Matches Service', () => {
         it('should save a new match and return 201', async () => {
             const res = await supertest(app)
                 .post('/matches')
+                .set('Authorization', `Bearer ${testToken}`)
                 .send({
                     user: testUserId,
                     result: 'win',
@@ -53,6 +60,7 @@ describe('Integration Tests: Matches Service', () => {
         it('should return 400 if required fields are missing', async () => {
             const res = await supertest(app)
                 .post('/matches')
+                .set('Authorization', `Bearer ${testToken}`)
                 .send({
                     user: testUserId,
                 });
@@ -64,6 +72,7 @@ describe('Integration Tests: Matches Service', () => {
         it('should return 400 if user ID is missing', async () => {
             const res = await supertest(app)
                 .post('/matches')
+                .set('Authorization', `Bearer ${testToken}`)
                 .send({
                     result: 'win',
                     duration: 120
@@ -76,6 +85,7 @@ describe('Integration Tests: Matches Service', () => {
         it('should return 400 if duration is negative', async () => {
             const res = await supertest(app)
                 .post('/matches')
+                .set('Authorization', `Bearer ${testToken}`)
                 .send({
                     user: testUserId,
                     result: 'win',
@@ -89,6 +99,7 @@ describe('Integration Tests: Matches Service', () => {
         it('should return 400 if result is not win, lose, or surrender', async () => {
             const res = await supertest(app)
                 .post('/matches')
+                .set('Authorization', `Bearer ${testToken}`)
                 .send({
                     user: testUserId,
                     result: 'trap',
@@ -102,6 +113,7 @@ describe('Integration Tests: Matches Service', () => {
         it('should return 500 if an invalid MongoDB ID is provided', async () => {
             const res = await supertest(app)
                 .post('/matches')
+                .set('Authorization', `Bearer ${testToken}`)
                 .send({
                     user: 'id-falso-que-rompe-mongoose', 
                     result: 'win',
@@ -114,6 +126,7 @@ describe('Integration Tests: Matches Service', () => {
         it('should return 400 if totalMoves is negative', async () => {
             const res = await supertest(app)
                 .post('/matches')
+                .set('Authorization', `Bearer ${testToken}`)
                 .send({
                     user: testUserId,
                     result: 'win',
@@ -131,6 +144,7 @@ describe('Integration Tests: Matches Service', () => {
         it('should return 200 and the match history for a valid user', async () => {
             const res = await supertest(app)
                 .get(`/matches/user/${testUserId}`)
+                .set('Authorization', `Bearer ${testToken}`)
                 .set('Accept', 'application/json');
 
             expect(res.status).toBe(200);
@@ -147,6 +161,7 @@ describe('Integration Tests: Matches Service', () => {
         it('should return 200 and an empty array if userId is not found', async () => {
             const res = await supertest(app)
                 .get('/matches/user/000000000000000000000000')
+                .set('Authorization', `Bearer ${testToken}`)
                 .set('Accept', 'application/json');
 
             expect(res.status).toBe(200);
@@ -158,6 +173,7 @@ describe('Integration Tests: Matches Service', () => {
         it('should return 500 if an invalid MongoDB ID format is provided', async () => {
             const res = await supertest(app)
                 .get(`/matches/user/idfalse`)
+                .set('Authorization', `Bearer ${testToken}`)
                 .set('Accept', 'application/json');
 
             expect(res.status).toBe(500);
@@ -167,6 +183,7 @@ describe('Integration Tests: Matches Service', () => {
         it('should return 404 if userId is whitespace', async () => {
             const res = await supertest(app)
                 .get('/matches/user/%20')
+                .set('Authorization', `Bearer ${testToken}`)
                 .set('Accept', 'application/json');
 
             expect(res.status).toBe(404);
@@ -178,6 +195,7 @@ describe('Integration Tests: Matches Service', () => {
 
             const res = await supertest(app)
                 .get(`/matches/user/${testUserId}`)
+                .set('Authorization', `Bearer ${testToken}`)
                 .set('Accept', 'application/json');
 
             expect(res.status).toBe(400);

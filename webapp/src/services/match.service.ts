@@ -1,11 +1,10 @@
-const NODE_API_URL = import.meta.env.VITE_API_URL || '';
+import { authFetch } from './api';
 
 export const matchService = {
   saveWinByAbandonment: async (userId: string, opponentName: string): Promise<boolean> => {
     try {
-      const response = await fetch(`${NODE_API_URL}/matches`, {
+      const response = await authFetch('/matches', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           user: userId,
           result: "win",
@@ -23,10 +22,7 @@ export const matchService = {
       return true;
     } catch (error) {
       console.error("Error al guardar la victoria por abandono:", error);
-      return false; 
+      return false;
     }
   },
-
-  // getRankingGlobal: async () => { ... }
-  // getUserHistory: async (userId) => { ... }
 };

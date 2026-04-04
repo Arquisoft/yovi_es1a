@@ -26,6 +26,11 @@ vi.mock('../components/NavBar', () => ({
   default: () => <div data-testid="navbar-mock">NavBar</div>,
 }));
 
+// Mock del video para evitar errores en jsdom
+vi.mock('../assets/videoLinea.mp4', () => ({
+  default: 'mocked-video.mp4',
+}));
+
 describe('Ranking Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -199,4 +204,4 @@ describe('Ranking Component', () => {
       expect(screen.getByText('Página 1 de 2')).toBeInTheDocument();
     });
   });
-}); 
+});

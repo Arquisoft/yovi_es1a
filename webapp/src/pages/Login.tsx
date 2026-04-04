@@ -18,38 +18,34 @@ const Login: React.FC = () => {
     setError(null);
     try {
       const data = await authService.login(username, password);
-
       localStorage.setItem("user", JSON.stringify({
         userId: data.userId, 
         username: data.username
       }));
       
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+      }
       setWelcomeUser(data.username);
       setTimeout(() => navigate('/configureGame'), 1500);
-
     } catch (err: any) {
       console.error("Error al loguear:", err);
       setError(t("errorLogin") || "Usuario o contraseña incorrectos");
     }
   };
 
-return (
-  <>
-    <NavBar activeTab="login" />
-    
-    {welcomeUser ? (
-      <div className="welcome-overlay">
-        <h1 className="welcome-text">
-          {t("bienvenido")}, <br />
-          <span className="user-neon">{welcomeUser}</span>
-        </h1>
-        <div className="loader-line"></div>
-      </div>
-    ) : (
-      <>
-        {error && (
-          <div className="error-message-neon">{error}</div>
-        )}
+  return (
+    <>
+      <NavBar activeTab="login" />
+      {welcomeUser ? (
+        <div className="welcome-overlay">
+          <h1 className="welcome-text">
+            {t("bienvenido")}, <br />
+            <span className="user-neon">{welcomeUser}</span>
+          </h1>
+          <div className="loader-line"></div>
+        </div>
+      ) : (
         <AuthForm
           title={t("inSes")}
           buttonText="Log in!"
@@ -58,11 +54,11 @@ return (
           bottomLinkText={t("regAqui")}
           bottomLinkPath="/register"
           onSubmit={handleLogin}
+          outsideError={error}
         />
-      </>
-    )}
-  </>
-);
+      )}
+    </>
+  );
 };
 
 export default Login;

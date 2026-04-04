@@ -25,8 +25,6 @@ afterEach(() => {
   localStorage.clear()
 })
 
-// ── saveMatchResult ───────────────────────────────────────────────────────────
-
 describe('statsService.saveMatchResult', () => {
   test('calls fetch with correct URL, method and headers', async () => {
     mockFetch.mockResolvedValueOnce({
@@ -95,8 +93,6 @@ describe('statsService.saveMatchResult', () => {
   })
 })
 
-// ── getRanking ───────────────────────────────────────────────────────────
-
 describe('statsService.getRanking', () => {
   test('calls fetch with correct URL for global ranking', async () => {
     mockFetch.mockResolvedValueOnce({
@@ -106,10 +102,8 @@ describe('statsService.getRanking', () => {
 
     await statsService.getRanking()
 
-    expect(mockFetch).toHaveBeenCalledWith(
-      expect.stringContaining('/matches/ranking/global'),
-      expect.objectContaining({ method: 'GET' })
-    )
+    const [url] = mockFetch.mock.calls[0]
+    expect(url).toContain('/matches/ranking/global')
   })
 
   test('returns ranking data on success', async () => {
@@ -142,8 +136,6 @@ describe('statsService.getRanking', () => {
   })
 })
 
-// ── getClanRanking ───────────────────────────────────────────────────────────
-
 describe('statsService.getClanRanking', () => {
   test('calls fetch with correct URL for global clan ranking', async () => {
     mockFetch.mockResolvedValueOnce({
@@ -153,10 +145,8 @@ describe('statsService.getClanRanking', () => {
 
     await statsService.getClanRanking()
 
-    expect(mockFetch).toHaveBeenCalledWith(
-      expect.stringContaining('/clans/ranking/global'),
-      expect.objectContaining({ method: 'GET' })
-    )
+    const [url] = mockFetch.mock.calls[0]
+    expect(url).toContain('/clans/ranking/global')
   })
 
   test('returns clan ranking data on success', async () => {
@@ -189,8 +179,6 @@ describe('statsService.getClanRanking', () => {
   })
 })
 
-// ── getMatchHistory ───────────────────────────────────────────────────────────
-
 describe('statsService.getMatchHistory', () => {
   test('calls fetch with correct URL including userId', async () => {
     mockFetch.mockResolvedValueOnce({
@@ -200,10 +188,8 @@ describe('statsService.getMatchHistory', () => {
 
     await statsService.getMatchHistory('user123')
 
-    expect(mockFetch).toHaveBeenCalledWith(
-      expect.stringContaining('/matches/user/user123'),
-      expect.objectContaining({ method: 'GET' })
-    )
+    const [url] = mockFetch.mock.calls[0]
+    expect(url).toContain('/matches/user/user123')
   })
 
   test('returns data on success', async () => {
