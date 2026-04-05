@@ -50,29 +50,40 @@ This diagram shows the game life cycle in its standard form (playing against the
 @startuml
 actor User
 participant WebApp
-participant GameLogic
+participant UsersService
+participant Gamey
 database Db
 
+
+
 User -> WebApp: Log in
-WebApp -> Db: Check user credentials
-Db --> WebApp: Returns user data
+WebApp -> UsersService: Validate credentials
+UsersService -> Db: Check user data
+Db --> UsersService: User data
+UsersService --> WebApp: Authentication result
 User -> WebApp: Select strategy, Y game type, difficulty, and board size
-WebApp -> GameLogic: Create board
-GameLogic --> WebApp: Board validated
-loop
+WebApp -> Gamey: Create game (YEN)
+Gamey --> WebApp: Initial board state
+
+loop Game loop
     User -> WebApp: Movement
-    WebApp -> GameLogic: Check if game has ended
+    WebApp -> Gamey: Send move (YEN)
+    Gamey -> Gamey: Check game status
+
     alt Game ended
-        GameLogic --> WebApp: Return result
-        WebApp --> User: Show game result
+        Gamey --> WebApp: Result (win/lose)
+        WebApp --> User: Display result
         break
     else Game continues
-        WebApp -> GameLogic: Requests machine movement
-        GameLogic --> WebApp: Returns movement
+        Gamey -> Gamey: Computes machine movement
+        Gamey --> WebApp: Returns movement (YEN)
         WebApp --> User: Shows machine movement
     end
 end
-WebApp -> Db: Save statistics
+
+WebApp -> UsersService: Send match result
+UsersService -> Db: Store statistics
+
 @enduml
 ----
 
@@ -85,23 +96,26 @@ This diagram shows the life cycle of the game in which a bot participates agains
 @startuml
 actor Bot
 participant API
-participant GameLogic
+participant Gamey
 
 Bot -> API: Select strategy, Y game type, difficulty, and board size
-API -> GameLogic: Create board
-GameLogic --> API: Board validated
+API -> Gamey: Initialize game
+Gamey --> API: Initial board
 
-loop
-    Bot -> API: Movement
-    API -> GameLogic: Check if game has ended
+
+loop Game loop
+    Bot -> API: Send move (YEN)
+    API -> Gamey: Apply move
+    Gamey -> Gamey: Check game status
+
     alt Game ended
-        GameLogic --> API: Return result
-        API --> Bot: Show game result
+        Gamey --> API: Result
+        API --> Bot: Return result
         break
     else Game continues
-        API -> GameLogic: Requests machine movement
-        GameLogic --> API: Returns movement
-        API --> Bot: Shows machine movement
+        API -> Gamey: Request machine move
+        Gamey --> API: Returns movement (YEN)
+        API --> Bot: Return move
     end
 end
 @enduml
@@ -116,18 +130,22 @@ This diagram shows the different interactions that take place when a user regist
 @startuml
 actor User
 participant WebApp
+participant UsersService
 database Db
 
-User -> WebApp: Register account
-WebApp -> Db: Check if credentials exists
+User -> WebApp: Submit registration form
+WebApp -> UsersService: Create user
+UsersService -> Db: Check if user exists
 alt User already exists
-    Db --> WebApp: Send denegation
-    WebApp --> User: Shows denegation
+    Db --> UsersService: User found
+    UsersService --> WebApp: Error (user exists)
+    WebApp --> User: Show error message
 else New user
-    Db --> WebApp: Credentials validation successful
-    WebApp -> Db: Save new user credentials
-    Db --> WebApp: Send confirmation
-    WebApp --> User: Shows confirmation
+    Db --> UsersService: User not found
+    UsersService -> Db: Save new user
+    Db --> UsersService: Confirmation
+    UsersService --> WebApp: Success
+    WebApp --> User: Show confirmation
 end
 @enduml
 ----
