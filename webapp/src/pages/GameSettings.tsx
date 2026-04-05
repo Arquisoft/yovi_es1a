@@ -50,7 +50,7 @@ const GameSettings: React.FC = () => {
 
   const dibujarPrevisualizacion = () => {
     const tamanoPrev = tamano > 20 ? 20 : tamano; 
-    const cellSize = Math.min(25, Math.floor(320 / tamanoPrev)); 
+    const cellSize = Math.floor(280 / 20);
     const filas = [];
     for (let i = 0; i < tamanoPrev; i++) {
       const casillas = [];
