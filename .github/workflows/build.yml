@@ -31,8 +31,10 @@ jobs:
       env:
         MONGODB_URI: mongodb://localhost:27017/testdb
       run: npm --prefix users run test:coverage
-    - run: npm --prefix webapp run test:coverage
-    - run: npm --prefix multiplayer run test:coverage
+    - name: Run webapp tests with coverage
+      run: npm --prefix webapp run test:coverage
+    - name: Run multiplayer tests with coverage
+      run: npm --prefix multiplayer run coverage
     - name: Install cargo-llvm-cov
       run: cargo install cargo-llvm-cov --locked
     - name: Generate gamey code coverage
