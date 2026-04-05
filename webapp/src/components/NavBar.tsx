@@ -83,6 +83,8 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
             <div
               style={{ position: "relative", display: "inline-block" }}
               onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => e.stopPropagation()} 
+              role="presentation"
             >
               <button
                 className={`nav-item ${activeTab === "ranking" ? "active" : ""}`}
@@ -103,17 +105,38 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
                   boxShadow: "0 8px 16px rgba(0,0,0,0.4)",
                   overflow: "hidden",
                 }}>
+                  {/* Opción 1: Ranking de Jugadores */}
                   <div
                     className="nav-item"
                     style={{ display: "block", cursor: "pointer", width: "100%", boxSizing: "border-box" }}
                     onClick={() => { navigate("/ranking/players"); setRankingOpen(false); }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        navigate("/ranking/players");
+                        setRankingOpen(false);
+                      }
+                    }}
+                    tabIndex={0}
+                    role="button"
                   >
                     Ranking de jugadores
                   </div>
+
+                  {/* Opción 2: Ranking de Clanes (Restaurado) */}
                   <div
                     className="nav-item"
                     style={{ display: "block", cursor: "pointer", width: "100%", boxSizing: "border-box" }}
                     onClick={() => { navigate("/ranking/clans"); setRankingOpen(false); }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        navigate("/ranking/clans");
+                        setRankingOpen(false);
+                      }
+                    }}
+                    tabIndex={0}
+                    role="button"
                   >
                     Ranking de clanes
                   </div>
