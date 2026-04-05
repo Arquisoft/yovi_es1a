@@ -73,12 +73,7 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
             >
               {t("estadisticas")}
             </button>
-            <button 
-              onClick={() => navigate("/help")}
-              className={`nav-item ${activeTab === "help" ? "active" : ""}`}
-            >
-              {t("ayuda")}
-            </button>
+            
 
             <div
               style={{ position: "relative", display: "inline-block" }}
@@ -149,6 +144,13 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
               className={`nav-item ${activeTab === "clanes" ? "active" : ""}`}
             >
               Clanes
+            </button>
+
+            <button 
+              onClick={() => navigate("/help")}
+              className={`nav-item ${activeTab === "help" ? "active" : ""}`}
+            >
+              {t("ayuda")}
             </button>
           </>
         )}
