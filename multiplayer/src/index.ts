@@ -13,9 +13,9 @@ const allowedOrigins = [
   'http://localhost',
   'https://localhost',
   'http://localhost:5173',
-  'http://20.199.88.71/',
-  process.env.WEBAPP_URL || ''
-].filter(Boolean);
+   process.env.PRODUCTION_URL,
+   process.env.WEBAPP_URL || ''
+].filter(Boolean) as string[];
 const app = express();
 app.use(cors({
   origin: allowedOrigins,

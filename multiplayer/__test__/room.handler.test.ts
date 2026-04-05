@@ -64,7 +64,7 @@ describe('Integration Tests: Multiplayer Room Handlers', () => {
 
       hostClient.on('roomCreated', (roomCode) => {
         expect(typeof roomCode).toBe('string');
-        expect(roomCode.length).toBe(5);
+        expect(roomCode.length).toBe(6);
         resolve();
       });
     });
