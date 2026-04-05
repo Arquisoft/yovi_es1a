@@ -144,7 +144,6 @@ describe('useTablero Hook', () => {
     vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'ongoing' });
 
     const { result, rerender } = renderHook((props) => useTablero(props), {
-      // AQUÍ ESTÁ EL TRUCO: Añadimos surrenderTrigger: false para que TypeScript no llore luego
       initialProps: { isOnline: true, onlineColor: 'B', tamano: 3, lastOpponentLayout: getInitialLayout(3), surrenderTrigger: false }
     });
     
@@ -157,4 +156,81 @@ describe('useTablero Hook', () => {
     
     expect(result.current.layout).toBe(getInitialLayout(3));
   });
+
+
+  test('undoTrigger reverts to previous layout and changes turn', async () => {
+      mockLocationState.mockReturnValue({ modoSeleccionado: 'humano' });
+      const { result, rerender } = renderHook((props) => useTablero(props), {
+        initialProps: { undoTrigger: 0 }
+      });
+
+      const layoutInicial = result.current.layout;
+
+      await act(async () => {
+        await result.current.play(0);
+      });
+      
+      expect(result.current.layout).not.toBe(layoutInicial);
+      expect(result.current.turn).toBe("R");
+
+      rerender({ undoTrigger: 1 });
+
+      expect(result.current.layout).toBe(layoutInicial);
+      expect(result.current.turn).toBe("B");
+      expect(result.current.gameFinished).toBe(false);
+    });
+
+    test('passTurnTrigger forces a random move', async () => {
+      mockLocationState.mockReturnValue({ modoSeleccionado: 'humano' });
+      const { result, rerender } = renderHook((props) => useTablero(props), {
+        initialProps: { passTurnTrigger: 0 }
+      });
+
+      const initialLayout = result.current.layout;
+
+      await act(async () => {
+        rerender({ passTurnTrigger: 1 });
+      });
+
+      expect(result.current.layout).not.toBe(initialLayout);
+    });
+
+    test('processes valid opponent move in online mode', async () => {
+      mockLocationState.mockReturnValue({ modoSeleccionado: 'online' });
+      vi.mocked(gameService.checkWinner).mockResolvedValueOnce({ status: 'ongoing' });
+
+      const { result, rerender } = renderHook((props) => useTablero(props), {
+        initialProps: { isOnline: true, onlineColor: 'R', tamano: 3, lastOpponentLayout: getInitialLayout(3) }
+      });
+
+      const moveFromOpponent = getInitialLayout(3).replace('.', 'B');
+
+      await act(async () => {
+        rerender({ isOnline: true, onlineColor: 'R', tamano: 3, lastOpponentLayout: moveFromOpponent });
+      });
+
+      expect(result.current.layout).toBe(moveFromOpponent);
+      expect(result.current.turn).toBe("R");
+    });
+
+    test('bot plays first when selected color is R and mode is bot', async () => {
+      mockLocationState.mockReturnValue({ modoSeleccionado: 'bot', colorUsuario: 'R', botSeleccionado: 'random_bot' });
+      
+      vi.mocked(gameService.askBotMove).mockResolvedValueOnce({ 
+        coords: { x: 0, y: 0, z: 0 }, 
+        game_status: 'ongoing',
+        api_version: '1.0',
+        bot_id: 'random_bot'        
+      });
+      vi.mocked(gameService.checkWinner).mockResolvedValueOnce({ status: 'ongoing' });
+
+      const { result } = renderHook(() => useTablero({}));
+
+      await act(async () => {
+        await new Promise(resolve => setTimeout(resolve, 0));
+      });
+
+      expect(result.current.layout).not.toBe(getInitialLayout(3));
+      expect(result.current.turn).toBe("R"); 
+    });
 });

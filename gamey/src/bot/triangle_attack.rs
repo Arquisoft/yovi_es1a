@@ -83,7 +83,7 @@ fn score_cell(board: &GameY, coords: &Coordinates, player: PlayerId, board_size:
     score
 }
  
-fn edge_proximity(coords: &Coordinates, board_size: u32) -> i32 {
+fn edge_proximity(coords: &Coordinates, _board_size: u32) -> i32 {
     let x = coords.x() as i32;
     let y = coords.y() as i32;
     let z = coords.z() as i32;

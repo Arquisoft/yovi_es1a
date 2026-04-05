@@ -168,8 +168,6 @@ describe('useMultiplayer', () => {
     expect(result.current.isConnected).toBe(true)
   })
 
-  // ── TESTS PARA LÍNEAS FALTANTES ──────────────────────────────────────────
-
   test('leaveMatchGracefully emits event and resets state after timeout', () => {
     vi.useFakeTimers()
     const { result } = renderHook(() => useMultiplayer())
