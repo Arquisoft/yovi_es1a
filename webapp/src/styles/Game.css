@@ -123,6 +123,85 @@
   color: #999;
 }
 
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; 
+}
+
+.custom-modal-content {
+  background-color: #2c2f33; 
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  max-width: 400px;
+  width: 90%;
+  animation: popIn 0.3s ease-out; 
+}
+
+.custom-modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.custom-modal-content p {
+  margin-bottom: 25px;
+  color: #b9bbbe;
+}
+
+.custom-modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.btn-modal-cancel, .btn-modal-confirm {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s;
+}
+
+.btn-modal-cancel {
+  background-color: #4f545c;
+  color: white;
+}
+
+.btn-modal-cancel:hover {
+  background-color: #686d73;
+}
+
+.btn-modal-confirm {
+  background-color: #f04747; 
+  color: white;
+}
+
+.btn-modal-confirm:hover {
+  background-color: #d83c3c;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 @media (max-width: 850px) {
   .game-container {
     margin-top: 100px;
