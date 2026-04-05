@@ -125,11 +125,11 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
-.pos-cell  { font-weight: bold; color: #94a3b8; }
+.pos-cell  { font-weight: bold; color: #cbd5e1; }
 .name-cell { font-weight: bold; color: #fff; }
 .win-cell  { color: #4ade80; font-weight: bold; }
-.lose-cell { color: #f87171; font-weight: bold; }
-.rate-cell { color: #fbbf24; font-weight: bold; }
+.lose-cell { color: #fca5a5; font-weight: bold; }
+.rate-cell { color: #fcd34d; font-weight: bold; }
 
 .ranking-loading {
   text-align: center;
