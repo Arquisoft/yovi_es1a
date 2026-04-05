@@ -99,8 +99,8 @@ const Ranking: React.FC = () => {
 
         <div className="ranking-controls">
           <div className="control-group-ranking">
-            <label>Ordenar por:</label>
-            <select value={sortBy} onChange={handleSortChange} className="ranking-select">
+            <label htmlFor="sort-select">Ordenar por:</label>
+              <select id="sort-select" value={sortBy} onChange={handleSortChange} className="ranking-select">
               <option value="winRate">Porcentaje de victoria (%)</option>
               <option value="wins">Partidas ganadas</option>
               <option value="losses">Partidas perdidas</option>
