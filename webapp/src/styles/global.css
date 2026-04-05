@@ -310,6 +310,7 @@ button:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .auth-inner {
@@ -334,6 +335,7 @@ button:focus-visible {
   backdrop-filter: blur(15px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+  overflow: hidden;
 }
 
 .form-group {
@@ -379,12 +381,4 @@ button:focus-visible {
 .submit-button:hover:not(:disabled) {
   transform: scale(1.02);
   box-shadow: 0 0 15px rgba(91, 153, 246, 0.5);
-}
-
-.auth-page {
-  overflow: hidden;
-}
-
-.register-form {
-  overflow: hidden;
 }
