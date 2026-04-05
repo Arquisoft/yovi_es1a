@@ -97,17 +97,13 @@ This diagram shows the life cycle of the game in which a bot participates agains
 actor Bot
 participant API
 participant Gamey
-
-Bot -> API: Select strategy, Y game type, difficulty, and board size
+Bot -> API: Select strategy and game type
 API -> Gamey: Initialize game
 Gamey --> API: Initial board
-
-
 loop Game loop
     Bot -> API: Send move (YEN)
     API -> Gamey: Apply move
     Gamey -> Gamey: Check game status
-
     alt Game ended
         Gamey --> API: Result
         API --> Bot: Return result
