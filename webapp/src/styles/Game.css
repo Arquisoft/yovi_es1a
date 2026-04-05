@@ -62,7 +62,7 @@
   opacity: 0.5;
   cursor: not-allowed;
   border-color: #666;
-  color: #666;
+  color: #999;
   box-shadow: none;
 }
 
@@ -91,7 +91,7 @@
   opacity: 0.5;
   cursor: not-allowed;
   border-color: #666;
-  color: #666;
+  color: #999;
   box-shadow: none;
 }
 
@@ -120,7 +120,7 @@
   opacity: 0.5;
   cursor: not-allowed;
   border-color: #666;
-  color: #666;
+  color: #999;
 }
 
 @media (max-width: 850px) {
