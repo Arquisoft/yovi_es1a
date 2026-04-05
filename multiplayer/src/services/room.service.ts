@@ -45,7 +45,7 @@ export const RoomService = {
   },
 
   applyPunishment: (userId: string) => {
-  fetch('https://users:3000/api/matches', {
+  fetch('https://nginx/api/matches/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
