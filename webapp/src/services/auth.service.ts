@@ -10,6 +10,9 @@ export const authService = {
     
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Error trying login');
+    if (data.token) {
+      localStorage.setItem('token', data.token);
+    }
     return data;
   },
 

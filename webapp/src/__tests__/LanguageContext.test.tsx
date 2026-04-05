@@ -1,7 +1,7 @@
 import { render, screen, act } from "@testing-library/react";
 import { describe, expect, test, beforeEach, vi } from "vitest";
 import { LanguageProvider, useLanguage } from "../idiomaConf/LanguageContext"; 
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 
 const TestComponent = () => {
   const { lang, setLang, t } = useLanguage();

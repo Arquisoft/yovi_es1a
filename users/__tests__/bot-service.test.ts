@@ -1,11 +1,32 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach, beforeAll, afterAll } from 'vitest';
 import supertest from 'supertest';
 import app from '../src/index';
-
+import jwt from 'jsonwebtoken';
+import User from '../src/models/user-model';
 const fetchMock = vi.spyOn(globalThis, 'fetch');
 
 describe('Integration Tests: Bot Controller', () => {
+    let testUserId: string;
+    let testToken: string;
+    beforeAll(async () => {
+        const res = await supertest(app)
+            .post('/createuser')
+            .send({
+                username: 'BotTester',
+                email: 'bottester@test.com',
+                password: 'password123'
+            });
+        testUserId = res.body.userId;
 
+        const secret = process.env.JWT_SECRET || 'jwt_token_secret';
+        testToken = jwt.sign({ id: testUserId, email: 'bottester@test.com' }, secret, { expiresIn: '1h' });
+    }, 15000);
+    
+    afterAll(async () => {
+        if (testUserId) {
+            await User.deleteOne({ _id: testUserId });
+        }
+    });
     afterEach(() => {
         vi.clearAllMocks();
     });
@@ -14,6 +35,7 @@ describe('Integration Tests: Bot Controller', () => {
         it('1. should return 400 if position is missing', async () => {
             const res = await supertest(app)
                 .post('/api/bot/play')
+                .set('Authorization', `Bearer ${testToken}`)
                 .send({ strategy: 'random_bot' })
                 .set('Accept', 'application/json');
 
@@ -34,6 +56,7 @@ describe('Integration Tests: Bot Controller', () => {
 
             const res = await supertest(app)
                 .post('/api/bot/play')
+                .set('Authorization', `Bearer ${testToken}`)
                 .send({ 
                     position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/BR/.R." },
                     strategy: 'random'
@@ -63,7 +86,7 @@ describe('Integration Tests: Bot Controller', () => {
 
             await supertest(app)
                 .post('/api/bot/play')
-                // FIX: Enviamos un JSON válido para que pase la validación
+                .set('Authorization', `Bearer ${testToken}`)
                 .send({ position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." } });
 
             expect(fetchMock).toHaveBeenCalledWith(
@@ -80,6 +103,7 @@ describe('Integration Tests: Bot Controller', () => {
 
             const res = await supertest(app)
                 .post('/api/bot/play')
+                .set('Authorization', `Bearer ${testToken}`)
                 // FIX: JSON válido
                 .send({ position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." } });
 
@@ -93,6 +117,7 @@ describe('Integration Tests: Bot Controller', () => {
 
             const res = await supertest(app)
                 .post('/api/bot/play')
+                .set('Authorization', `Bearer ${testToken}`)
                 // FIX: JSON válido
                 .send({ position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." } });
 
@@ -108,6 +133,7 @@ describe('Integration Tests: Bot Controller', () => {
 
             const res = await supertest(app)
                 .post('/api/bot/play')
+                .set('Authorization', `Bearer ${testToken}`)
                 // FIX: JSON válido
                 .send({ position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." } });
 
@@ -123,6 +149,7 @@ describe('Integration Tests: Bot Controller', () => {
 
             const res = await supertest(app)
                 .post('/api/bot/play')
+                .set('Authorization', `Bearer ${testToken}`)
                 .send({ 
                     position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." }, 
                     strategy: 'monte_carlo_bot' // Estrategia válida
@@ -138,6 +165,7 @@ describe('Integration Tests: Bot Controller', () => {
         it('8. should return 400 if an invalid strategy is provided', async () => {
             const res = await supertest(app)
                 .post('/api/bot/play')
+                .set('Authorization', `Bearer ${testToken}`)
                 .send({ 
                     position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." }, 
                     strategy: 'fake_bot'
@@ -149,6 +177,7 @@ describe('Integration Tests: Bot Controller', () => {
         it('9. should return 400 if position string is invalid JSON (GET request)', async () => {
             const res = await supertest(app)
                 .get('/api/bot/play')
+                .set('Authorization', `Bearer ${testToken}`)
                 .query({ position: '{esto-no-es-un-json-valido}' }); // Al usar .query(), Express lo recibe como texto
 
             expect(res.status).toBe(400);
@@ -168,6 +197,7 @@ describe('Integration Tests: Bot Controller', () => {
 
             const res = await supertest(app)
                 .get('/api/bot/play')
+                .set('Authorization', `Bearer ${testToken}`)
                 .query({ 
                     position: JSON.stringify({ size: 3, turn: 0, players: ["B", "R"], layout: "B/BR/.R." }),
                     bot_id: 'monte_carlo_bot'
@@ -192,6 +222,7 @@ describe('Integration Tests: Bot Controller', () => {
 
             const res = await supertest(app)
                 .post('/api/bot/check-winner')
+                .set('Authorization', `Bearer ${testToken}`)
                 .send({ size: 3, layout: 'B/BB/B..' });
 
             expect(res.status).toBe(200);
@@ -214,6 +245,7 @@ describe('Integration Tests: Bot Controller', () => {
 
             const res = await supertest(app)
                 .post('/api/bot/check-winner')
+                .set('Authorization', `Bearer ${testToken}`)
                 .send({ size: 3, layout: 'invalid_layout' });
 
             expect(res.status).toBe(500);
@@ -226,6 +258,7 @@ describe('Integration Tests: Bot Controller', () => {
 
             const res = await supertest(app)
                 .post('/api/bot/check-winner')
+                .set('Authorization', `Bearer ${testToken}`)
                 .send({ size: 3, layout: 'B/BB/B..' });
 
             expect(res.status).toBe(500);

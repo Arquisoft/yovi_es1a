@@ -1,0 +1,152 @@
+.stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 80px;
+  padding-bottom: 20px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+.stats-page {
+  min-height: 100vh;
+  position: relative;
+}
+
+.stats h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.loading-text,
+.empty-text {
+  color: #60a5fa;
+  font-size: 1.1rem;
+  margin-top: 20px;
+}
+
+.error-text {
+  color: #f87171;
+  font-size: 1.1rem;
+  margin-top: 20px;
+}
+
+.filtros-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.filtroResult {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-weight: bold;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.filtroInput {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-family: inherit;
+  font-size: 1rem;
+  margin: 5px;
+  width: 220px;
+}
+
+.filtroInput::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.filtroInput:focus,
+.filtroResult:focus {
+  outline: none;
+  border-color: #5b99f6;
+}
+
+.tabla-container-scroll {
+  max-height: 60vh;
+  overflow-y: auto;
+  margin-top: 20px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tabla-container-scroll::-webkit-scrollbar       { width: 8px; }
+.tabla-container-scroll::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+.tabla-container-scroll::-webkit-scrollbar-thumb { background: #5b99f6; border-radius: 4px; }
+
+.tabla-stats {
+  width: 100%;
+  border-collapse: collapse;
+  color: #ffffff;
+}
+
+.tabla-stats thead {
+  position: sticky;
+  top: 0;
+  background-color: #5b99f6;
+  z-index: 1;
+}
+
+.tabla-stats th {
+  padding: 15px;
+  text-align: left;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.tabla-stats td {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+}
+
+.tabla-stats tr:hover td {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.res-win {
+  color: #00ff00 !important;
+  text-shadow: 0 0 12px rgba(0, 255, 0, 0.8);
+  font-weight: 900 !important;
+}
+
+.res-lose,
+.res-surrender {
+  color: #ff0000 !important;
+  text-shadow: 0 0 12px rgba(255, 0, 0, 0.8);
+  font-weight: 900 !important;
+}
+
+@media (max-width: 850px) {
+  .stats {
+    padding: 10px;
+  }
+
+  .tabla-container-scroll {
+    max-height: 50vh;
+  }
+
+  .filtroResult,
+  .filtroInput {
+    width: 90%;
+    margin: 5px auto;
+    display: block;
+  }
+}

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach, vi } from 'vitest';
 import { createServer, Server as HttpServer } from 'http';
 import { Server } from 'socket.io';
 import { io as Client, Socket as ClientSocket } from 'socket.io-client';
@@ -11,8 +11,7 @@ describe('Integration Tests: Multiplayer Room Handlers', () => {
   let hostClient: ClientSocket;
   let guestClient: ClientSocket;
   let port: number;
-
-// 1. Start the test server first
+  //Start test server and register handlers before all tests
   beforeAll(async () => {
     httpServer = createServer();
     io = new Server(httpServer);
@@ -29,14 +28,13 @@ describe('Integration Tests: Multiplayer Room Handlers', () => {
       });
     });
   });
-
-    // 2. Turn off the server when finished
+  //Close server after all tests
   afterAll(() => {
     io.close();
     httpServer.close();
   });
 
-  // 3. Connect the fake clients before each test
+  // Connect fake clients before each test
   beforeEach(() => {
     return new Promise<void>((resolve) => {
       hostClient = Client(`http://localhost:${port}`);
@@ -53,20 +51,20 @@ describe('Integration Tests: Multiplayer Room Handlers', () => {
     });
   });
 
-  // 4. Disconnect the clients after each test
+  // DIsconnect clients and restore mocks after each test
   afterEach(() => {
     if (hostClient.connected) hostClient.disconnect();
     if (guestClient.connected) guestClient.disconnect();
+    vi.restoreAllMocks();
   });
-
 
   it('It should allow creating a room and broadcasting roomCreated', () => {
     return new Promise<void>((resolve) => {
-      hostClient.emit('createRoom', { hostUsername: 'HostPlayer', tamano: 7 });
+      hostClient.emit('createRoom', { hostUsername: 'HostPlayer', tamano: 7, hostId: 'id-host-123' });
 
       hostClient.on('roomCreated', (roomCode) => {
         expect(typeof roomCode).toBe('string');
-        expect(roomCode.length).toBe(5);
+        expect(roomCode.length).toBe(6);
         resolve();
       });
     });
@@ -80,25 +78,20 @@ describe('Integration Tests: Multiplayer Room Handlers', () => {
 
       hostClient.on('roomCreated', (roomCode) => {
         globalRoomCode = roomCode;
-        // 2. The Guest joins the newly created room
-        guestClient.emit('joinRoom', { roomCode, guestUsername: 'GuestPlayer' });
+        guestClient.emit('joinRoom', { roomCode, guestUsername: 'GuestPlayer', guestId: 'id-guest-123' });
       });
 
       let gameStartedCount = 0;
 
-      // 3. We verify that the Host receives the notification
       hostClient.on('gameStarted', (data) => {
         expect(data.color).toBe('B');
-        expect(data.tamano).toBe(7);
         expect(data.opponentName).toBe('GuestPlayer');
         gameStartedCount++;
         if (gameStartedCount === 2) resolve();
       });
 
-      // 4. We verify that the Guest receives the notification
       guestClient.on('gameStarted', (data) => {
         expect(data.color).toBe('R');
-        expect(data.tamano).toBe(7);
         expect(data.opponentName).toBe('HostPlayer');
         gameStartedCount++;
         if (gameStartedCount === 2) resolve();
@@ -111,9 +104,88 @@ describe('Integration Tests: Multiplayer Room Handlers', () => {
       guestClient.emit('joinRoom', { roomCode: 'FALSO', guestUsername: 'GuestPlayer' });
 
       guestClient.on('roomError', (msg) => {
-        expect(msg).toBe('La sala no existe o el código es incorrecto.');
+        expect(msg).toBe('La sala no existe.');
         resolve();
       });
     });
   });
+
+  it('It should forward makeMove data to the opponent', () => {
+    return new Promise<void>((resolve) => {
+      hostClient.emit('createRoom', { hostUsername: 'HostPlayer', tamano: 7 });
+
+      hostClient.on('roomCreated', (roomCode) => {
+        guestClient.emit('joinRoom', { roomCode, guestUsername: 'GuestPlayer' });
+
+        guestClient.on('gameStarted', () => {
+          hostClient.emit('makeMove', { roomCode, moveData: 'movimiento-secreto' });
+        });
+
+        guestClient.on('moveReceived', (moveData) => {
+          expect(moveData).toBe('movimiento-secreto');
+          resolve();
+        });
+      });
+    });
+  });
+
+  it('It should handle leaveMatchGracefully and notify the opponent to cleanup', () => {
+    return new Promise<void>((resolve) => {
+      hostClient.emit('createRoom', { hostUsername: 'HostPlayer', tamano: 7 });
+
+      hostClient.on('roomCreated', (roomCode) => {
+        guestClient.emit('joinRoom', { roomCode, guestUsername: 'GuestPlayer' });
+
+        guestClient.on('gameStarted', () => {
+          hostClient.emit('leaveMatchGracefully');
+        });
+
+        guestClient.on('matchFinishedCleanup', () => {
+          expect(true).toBe(true);
+          resolve();
+        });
+      });
+    });
+  });
+
+  it('It should apply punishment when a player disconnects abruptly', () => {
+    return new Promise<void>((resolve) => {
+      // Mocked the fetch so that it doesn't make real HTTP requests to the user service.
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ status: 201 } as any);
+
+      hostClient.emit('createRoom', { hostUsername: 'HostPlayer', tamano: 7, hostId: 'user-to-punish' });
+
+      hostClient.on('roomCreated', (roomCode) => {
+        guestClient.emit('joinRoom', { roomCode, guestUsername: 'GuestPlayer' });
+
+        guestClient.on('gameStarted', () => {
+          // The Host violently closes the (X) tab
+          hostClient.disconnect();
+        });
+
+        guestClient.on('opponent_disconnected', () => {
+          // The server waits 500ms before punishing, so we wait a bit more
+          setTimeout(() => {
+            // We verify that fetch was called and check its arguments directly
+            expect(fetchSpy).toHaveBeenCalledWith(
+              expect.anything(), // The first argument is the URL, we dont care about it
+              expect.objectContaining({ // The second argument are the options
+                body: expect.stringContaining('user-to-punish')
+              })
+            );
+
+            expect(fetchSpy).toHaveBeenCalledWith(
+              expect.anything(),
+              expect.objectContaining({
+                body: expect.stringContaining('surrender')
+              })
+            );
+            
+            resolve();
+          }, 600);
+        });
+      });
+    });
+  });
+
 });

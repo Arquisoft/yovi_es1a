@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import * as jwt from 'jsonwebtoken';
+import pkg from 'jsonwebtoken';
+const { verify } = pkg;
 
 interface UserPayload {
     userId: string;
@@ -24,8 +25,8 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): vo
     }
 
     try {
-        const secret = process.env.JWT_SECRET as string;
-        const decoded = jwt.verify(token, secret) as UserPayload;
+        const secret = process.env.JWT_SECRET || 'jwt_token_secret';
+        const decoded = verify(token, secret) as UserPayload;
         req.user = decoded;
 
         next();

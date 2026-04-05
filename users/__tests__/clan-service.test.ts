@@ -4,14 +4,16 @@ import app from '../src/index'; // tu Express app
 import User from '../src/models/user-model';
 import Clan from '../src/models/clan-model';
 import { Types } from 'mongoose';
+import jwt from 'jsonwebtoken';
+import { ClanService } from '../src/service/clan-service';
 
 describe('Integration Tests: Clan Service', () => {
   let testUserId: string;
   let testUserId2: string;
   let testUserId3: string;
   let testClanId: string;
+  let testToken: string;
 
-  // Crear usuarios de prueba
   beforeAll(async () => {
     const res1 = await supertest(app)
       .post('/createuser')
@@ -21,7 +23,7 @@ describe('Integration Tests: Clan Service', () => {
         password: 'password123'
       });
     testUserId = res1.body.userId;
-
+    
     const res2 = await supertest(app)
       .post('/createuser')
       .send({
@@ -38,19 +40,48 @@ describe('Integration Tests: Clan Service', () => {
         email: 'clanuser3@test.com',
         password: 'password123'
       });
-    testUserId3 = res3.body.userId; //
+    testUserId3 = res3.body.userId;
+
+    const secret = process.env.JWT_SECRET || 'jwt_token_secret';
+    testToken = jwt.sign({ id: testUserId, email: 'clanuser1@test.com' }, secret, { expiresIn: '1h' });
+
   }, 20000);
 
   // Limpiar base de datos después de los tests
   afterAll(async () => {
     await User.deleteMany({ _id: { $in: [testUserId, testUserId2, testUserId3] } });
-    await Clan.deleteMany({});
+    await Clan.deleteOne({ _id: testClanId });
   });
 
+  describe('GET /ranking/global', () => {
+    it('should return 200 and the clan ranking', async () => {
+      const res = await supertest(app)
+        .get('/clans/ranking/global')
+        .set('Authorization', `Bearer ${testToken}`);
+      
+      expect(res.status).toBe(200);
+      expect(Array.isArray(res.body)).toBe(true);
+    });
+
+    it('should return 500 if there is a DB error fetching the ranking', async () => {
+      const spy = vi.spyOn(Clan, 'aggregate').mockRejectedValueOnce(new Error('Fake DB Error'));
+      
+      const res = await supertest(app)
+        .get('/clans/ranking/global')
+        .set('Authorization', `Bearer ${testToken}`);
+      
+      expect(res.status).toBe(500);
+      expect(res.body).toHaveProperty('error', 'Error interno obteniendo el ranking de clanes');
+      
+      spy.mockRestore();
+    });
+  });
+  
   describe('POST /createClan', () => {
     it('should create a clan successfully', async () => {
       const res = await supertest(app)
         .post('/clans/createClan')
+        .set('Authorization', `Bearer ${testToken}`)
         .send({
           name: 'TestClan',
           memberIds: [testUserId, testUserId2]
@@ -68,6 +99,7 @@ describe('Integration Tests: Clan Service', () => {
     it('should return 400 if name is missing', async () => {
       const res = await supertest(app)
         .post('/clans/createClan')
+        .set('Authorization', `Bearer ${testToken}`)
         .send({ memberIds: [testUserId] });
 
       expect(res.status).toBe(400);
@@ -77,6 +109,7 @@ describe('Integration Tests: Clan Service', () => {
     it('should return 400 if memberIds is missing', async () => {
       const res = await supertest(app)
         .post('/clans/createClan')
+        .set('Authorization', `Bearer ${testToken}`)
         .send({ name: 'ClanWithoutMembers' });
 
       expect(res.status).toBe(400);
@@ -87,6 +120,7 @@ describe('Integration Tests: Clan Service', () => {
     it('should add a user to the clan', async () => {
       const res = await supertest(app)
         .post(`/clans/${testClanId}/addUser`)
+        .set('Authorization', `Bearer ${testToken}`)
         .send({ userId: testUserId3 }); 
 
       expect(res.status).toBe(200);
@@ -97,6 +131,7 @@ describe('Integration Tests: Clan Service', () => {
     it('should return 500 if userId is missing', async () => {
         const res = await supertest(app)
             .post(`/clans/${testClanId}/addUser`)
+            .set('Authorization', `Bearer ${testToken}`)
             .send({});
 
         expect(res.status).toBe(500);
@@ -107,7 +142,8 @@ describe('Integration Tests: Clan Service', () => {
 
     describe('GET /', () => {
         it('should return at least one clan', async () => {
-            const res = await supertest(app).get('/clans');
+            const res = await supertest(app).get('/clans')
+            .set('Authorization', `Bearer ${testToken}`);
             expect(res.status).toBe(200);
             expect(Array.isArray(res.body)).toBe(true);
             expect(res.body.length).toBeGreaterThanOrEqual(1);
@@ -118,6 +154,7 @@ describe('Integration Tests: Clan Service', () => {
     it('should send a message to the clan', async () => {
       const res = await supertest(app)
         .post(`/clans/${testClanId}/message`)
+        .set('Authorization', `Bearer ${testToken}`)
         .send({ userId: testUserId, username: 'ClanUser1', text: 'Hello' });
 
       expect(res.status).toBe(200);
@@ -129,6 +166,7 @@ describe('Integration Tests: Clan Service', () => {
     it('should return 400 if message data is missing', async () => {
       const res = await supertest(app)
         .post(`/clans/${testClanId}/message`)
+        .set('Authorization', `Bearer ${testToken}`)
         .send({ userId: testUserId });
 
       expect(res.status).toBe(400);
@@ -136,7 +174,7 @@ describe('Integration Tests: Clan Service', () => {
     });
 
     it('should get messages for the clan', async () => {
-      const res = await supertest(app).get(`/clans/${testClanId}/messages`);
+      const res = await supertest(app).get(`/clans/${testClanId}/messages`).set('Authorization', `Bearer ${testToken}`);
       expect(res.status).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
       expect(res.body[0]).toHaveProperty('text', 'Hello');
@@ -146,11 +184,45 @@ describe('Integration Tests: Clan Service', () => {
         const fakeClanId = new Types.ObjectId().toString();
         const res = await supertest(app)
             .post(`/clans/${fakeClanId}/addUser`)
+            .set('Authorization', `Bearer ${testToken}`)
             .send({ userId: testUserId2 });
         expect(res.status).toBe(500);
         expect(res.body).toHaveProperty('error', 'Error adding member to clan');
     });
   });
 
+  it('should return 500 if sending a message fails internally', async () => {
+      const spy = vi.spyOn(ClanService, 'sendMessage').mockRejectedValueOnce(new Error('Mensaje roto'));
+      const res = await supertest(app)
+        .post(`/clans/${testClanId}/message`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send({ userId: testUserId, username: 'ClanUser1', text: 'Hello' });
 
-});
+      expect(res.status).toBe(500);
+      expect(res.body.error).toContain('Mensaje roto');
+      spy.mockRestore();
+    });
+
+    it('should get messages for the clan', async () => {
+      const res = await supertest(app).get(`/clans/${testClanId}/messages`).set('Authorization', `Bearer ${testToken}`);
+      expect(res.status).toBe(200);
+    });
+
+    it('should return 500 if getting messages fails internally', async () => {
+      const spy = vi.spyOn(ClanService, 'getClanMessages').mockRejectedValueOnce(new Error('No hay mensajes'));
+      const res = await supertest(app).get(`/clans/${testClanId}/messages`).set('Authorization', `Bearer ${testToken}`);
+      
+      expect(res.status).toBe(500);
+      expect(res.body.error).toContain('No hay mensajes');
+      spy.mockRestore();
+    });
+
+    it('should return 500 if clan does not exist', async () => {
+        const fakeClanId = new Types.ObjectId().toString();
+        const res = await supertest(app)
+            .post(`/clans/${fakeClanId}/addUser`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .send({ userId: testUserId2 });
+        expect(res.status).toBe(500);
+    });
+  });

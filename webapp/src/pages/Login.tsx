@@ -4,7 +4,8 @@ import { authService } from '../services/auth.service';
 import { useLanguage } from '../idiomaConf/LanguageContext';
 import AuthForm from '../components/AuthForm';
 import NavBar from '../components/NavBar';
-import "./Login.css"; 
+import "../styles/global.css";
+import "../styles/Login.css";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -17,15 +18,16 @@ const Login: React.FC = () => {
     setError(null);
     try {
       const data = await authService.login(username, password);
-
       localStorage.setItem("user", JSON.stringify({
         userId: data.userId, 
         username: data.username
       }));
       
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+      }
       setWelcomeUser(data.username);
       setTimeout(() => navigate('/configureGame'), 1500);
-
     } catch (err: any) {
       console.error("Error al loguear:", err);
       setError(t("errorLogin") || "Usuario o contraseña incorrectos");
@@ -35,7 +37,6 @@ const Login: React.FC = () => {
   return (
     <>
       <NavBar activeTab="login" />
-      
       {welcomeUser ? (
         <div className="welcome-overlay">
           <h1 className="welcome-text">
@@ -45,23 +46,16 @@ const Login: React.FC = () => {
           <div className="loader-line"></div>
         </div>
       ) : (
-        <div className="login-container">
-          {error && (
-            <div className="error-message-neon">
-              {error}
-            </div>
-          )}
-          
-          <AuthForm
-            title={t("inSes")}
-            buttonText="Log in!"
-            loadingText="Entering..."
-            bottomText={t("noCuenta")}
-            bottomLinkText={t("regAqui")}
-            bottomLinkPath="/register"
-            onSubmit={handleLogin}
-          />
-        </div>
+        <AuthForm
+          title={t("inSes")}
+          buttonText="Log in!"
+          loadingText="Entering..."
+          bottomText={t("noCuenta")}
+          bottomLinkText={t("regAqui")}
+          bottomLinkPath="/register"
+          onSubmit={handleLogin}
+          outsideError={error}
+        />
       )}
     </>
   );

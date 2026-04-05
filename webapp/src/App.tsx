@@ -9,10 +9,11 @@ import Help from "./pages/Help";
 import GameSettings from './pages/GameSettings';
 import About from './pages/About';
 import Clanes from './pages/Clan';
+import Ranking from './pages/Ranking';
 
 import BotTester from './components/BotTester'; 
 
-import './App.css';
+import './styles/global.css';
 import Game from "./pages/Game";
 import Multiplayer from "./pages/Multiplayer";
 
@@ -32,6 +33,8 @@ function App() {
       <Route element={<UnloginRoute />}>
         <Route path="/configureGame" element={<GameSettings />} />
         <Route path="/statistics" element={<Statistics />} />
+        <Route path="/ranking" element={<Ranking />} />
+        <Route path="/ranking/:type" element={<Ranking />} />
         <Route path="/help" element={<Help />} />
         <Route path="/botTester" element={<BotTester />} />
         <Route path="/clanes" element={<Clanes />} />

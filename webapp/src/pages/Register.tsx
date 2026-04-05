@@ -4,7 +4,8 @@ import { authService } from '../services/auth.service';
 import { useLanguage } from '../idiomaConf/LanguageContext';
 import AuthForm from '../components/AuthForm';
 import NavBar from '../components/NavBar';
-import "./Register.css"; 
+import "../styles/global.css";
+import "../styles/Register.css";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -15,34 +16,27 @@ const Register: React.FC = () => {
 
   const handleRegister = async (username: string, password: string, email?: string) => {
     setError(null);
-
     if (!username || !password || !email) {
-      setError("Please fill all fields");
+      setError("Por favor rellena todos los campos");
       return;
     }
-
     try {
       const data = await authService.register(username, email, password);
-
       localStorage.setItem("user", JSON.stringify({
         userId: data.userId, 
         username: data.username
       }));
-      
       setWelcomeUser(data.username);
       setTimeout(() => navigate('/configureGame'), 1500);
-
     } catch (err: any) {
-      const message = err.message || "An error occurred";
+      const message = err.response?.data?.error || err.message || "An error occurred";
       setError(message);
-      console.error("Error al registrar:", err);
     }
   };
 
   return (
     <>
       <NavBar activeTab="register" />
-      
       {welcomeUser ? (
         <div className="welcome-overlay">
           <h1 className="welcome-text">
@@ -52,27 +46,17 @@ const Register: React.FC = () => {
           <div className="loader-line"></div>
         </div>
       ) : (
-        <div className="login-container">
-          <div className="auth-card-wrapper" style={{ position: 'relative' }}>
-            
-            <AuthForm
-              title={t("creaCuent")}
-              isRegister={true}
-              buttonText="Lets go!"
-              loadingText="Entering..."
-              bottomText={t("siCuenta")}
-              bottomLinkText={t("inSes")}
-              bottomLinkPath="/login"
-              onSubmit={handleRegister}
-            />
-
-            {error && (
-              <div className="error-message-neon-bottom">
-                {error}
-              </div>
-            )}
-          </div>
-        </div>
+        <AuthForm
+          title={t("creaCuent")}
+          isRegister={true}
+          buttonText="Lets go!"
+          loadingText="Entering..."
+          bottomText={t("siCuenta")}
+          bottomLinkText={t("inSes")}
+          bottomLinkPath="/login"
+          onSubmit={handleRegister}
+          outsideError={error}
+        />
       )}
     </>
   );

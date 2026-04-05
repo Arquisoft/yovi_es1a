@@ -4,7 +4,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 80vh;
+  width: 100%;
+  flex: 1;
+  overflow: hidden;
 }
 
 .videoIN {
@@ -19,15 +21,32 @@
 }
 
 .tablero-grid {
-  max-height: 75vh; 
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: visible;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-/* Cada fila del tablero */
+.tablero-grid::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.tablero-grid::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+}
+.tablero-grid::-webkit-scrollbar-thumb {
+  background: #5b99f6;
+  border-radius: 5px;
+}
+.tablero-grid::-webkit-scrollbar-thumb:hover {
+  background: #1321a3;
+}
+
 .tablero {
   display: flex;
   justify-content: center;

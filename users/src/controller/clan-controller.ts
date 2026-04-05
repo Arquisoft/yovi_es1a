@@ -20,6 +20,63 @@ const isValidationError = (msg: string): boolean => {
 // RUTAS
 // ==========================================
 
+router.get('/ranking/global', async (req: Request, res: Response) => {
+    try {
+        const ranking = await Clan.aggregate([
+            {
+                $lookup: {
+                    from: "matches", 
+                    localField: "members",
+                    foreignField: "user",
+                    as: "clanMatches"
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    totalMatches: { $size: "$clanMatches" },
+                    wins: {
+                        $size: {
+                            $filter: {
+                                input: "$clanMatches",
+                                as: "match",
+                                cond: { $eq: ["$$match.result", "win"] }
+                            }
+                        }
+                    },
+                    losses: {
+                        $size: {
+                            $filter: {
+                                input: "$clanMatches",
+                                as: "match",
+                                cond: { $in: ["$$match.result", ["lose", "surrender"]] }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $addFields: {
+                    winRate: {
+                        $cond: [
+                            { $gt: ["$totalMatches", 0] }, 
+                            { $multiply: [{ $divide: ["$wins", "$totalMatches"] }, 100] }, 
+                            0 
+                        ]
+                    }
+                }
+            }
+        ]);
+
+        return res.status(200).json(ranking);
+
+    } catch (error) {
+        console.error("Error fetching clan ranking:", error);
+        return res.status(500).json({ error: 'Error interno obteniendo el ranking de clanes' });
+    }
+});
+
 //Crear un clan
 router.post('/createClan', async (req: Request, res: Response) => {
     try {

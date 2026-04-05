@@ -30,107 +30,117 @@ impl YBot for TriangleAttackBot {
     fn name(&self) -> &str {
         "triangle_attack_bot"
     }
-
+ 
     fn choose_move(&self, board: &GameY) -> Option<Coordinates> {
         let available_cells = board.available_cells();
         if available_cells.is_empty() {
             return None;
         }
-
+ 
         let actual_player = board.next_player()?;
         let board_size = board.board_size();
-
-        let mut pivots = Vec::new();
-
-        for &cell_index in available_cells {
-            let coords = Coordinates::from_index(cell_index, board_size);
-            
-            let my_neighbors_count = count_my_neighbors(board, &coords, actual_player);
-
-            if my_neighbors_count >= 2 {
-                pivots.push(cell_index);
-            }
-        }
-
-        // 2. Select move
-        let chosen_index = if !pivots.is_empty() {
-            pivots.choose(&mut rand::rng()).copied()?
-        } else {
-            let my_cells = board.cells_for_player(actual_player);
-            let mut expansion_moves = Vec::new();
-
-            for cell in my_cells {
-                let neighbors = board.get_neighbors(&cell);
-                for n in neighbors {
-                    let n_idx = n.to_index(board_size);
-                    if available_cells.contains(&n_idx) {
-                        expansion_moves.push(n_idx);
-                    }
-                }
-            }
-
-            if !expansion_moves.is_empty() {
-                expansion_moves.choose(&mut rand::rng()).copied()?
-            } else {
-                available_cells.choose(&mut rand::rng()).copied()?
-            }
-        };
-
-        Some(Coordinates::from_index(chosen_index, board_size))
+ 
+        let mut scored: Vec<(u32, i32)> = available_cells
+            .iter()
+            .map(|&idx| {
+                let coords = Coordinates::from_index(idx, board_size);
+                let score = score_cell(board, &coords, actual_player, board_size);
+                (idx, score)
+            })
+            .collect();
+ 
+        scored.sort_by(|a, b| b.1.cmp(&a.1));
+ 
+        let top_score = scored[0].1;
+        let top_candidates: Vec<u32> = scored
+            .iter()
+            .filter(|(_, s)| *s >= top_score - 1)
+            .map(|(idx, _)| *idx)
+            .collect();
+ 
+        let chosen = top_candidates.choose(&mut rand::rng()).copied()?;
+        Some(Coordinates::from_index(chosen, board_size))
     }
 }
-
-
+ 
+fn score_cell(board: &GameY, coords: &Coordinates, player: PlayerId, board_size: u32) -> i32 {
+    let mut score = 0i32;
+ 
+    let my_neighbors = count_my_neighbors(board, coords, player);
+    score += my_neighbors as i32 * 3;
+ 
+    if my_neighbors >= 2 {
+        score += 5;
+    }
+ 
+    let edge_score = edge_proximity(coords, board_size);
+    score += edge_score;
+ 
+    if my_neighbors == 0 {
+        score -= 2;
+    }
+ 
+    score
+}
+ 
+fn edge_proximity(coords: &Coordinates, _board_size: u32) -> i32 {
+    let x = coords.x() as i32;
+    let y = coords.y() as i32;
+    let z = coords.z() as i32;
+ 
+    let mut bonus = 0i32;
+ 
+    if x == 0 { bonus += 3; }
+    else if x == 1 { bonus += 1; }
+ 
+    if y == 0 { bonus += 3; }
+    else if y == 1 { bonus += 1; }
+ 
+    if z == 0 { bonus += 3; }
+    else if z == 1 { bonus += 1; }
+ 
+    bonus
+}
+ 
 fn count_my_neighbors(board: &GameY, coords: &Coordinates, my_id: PlayerId) -> usize {
-    let mut count = 0;
-    let neighbors = board.get_neighbors(coords);
-
-    for neighbor in neighbors {
-        if board.player_at(&neighbor) == Some(my_id) {
-            count += 1;
-        }
-    }
-    count
+    board.get_neighbors(coords)
+        .iter()
+        .filter(|n| board.player_at(n) == Some(my_id))
+        .count()
 }
-
+ 
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::{Movement, PlayerId};
-
+ 
     #[test]
     fn test_triangle_attack_bot_name() {
         let bot = TriangleAttackBot;
         assert_eq!(bot.name(), "triangle_attack_bot");
     }
-
+ 
     #[test]
     fn test_triangle_attack_bot_returns_move_on_empty_board() {
         let bot = TriangleAttackBot;
         let game = GameY::new(5);
-
         let chosen_move = bot.choose_move(&game);
         assert!(chosen_move.is_some());
     }
-
+ 
     #[test]
     fn test_triangle_attack_bot_returns_valid_coordinates() {
         let bot = TriangleAttackBot;
         let game = GameY::new(5);
-
         let coords = bot.choose_move(&game).unwrap();
         let index = coords.to_index(game.board_size());
-
-        // Index should be within the valid range for a size-5 board (15 cells)
         assert!(index < 15);
     }
-
+ 
     #[test]
     fn test_triangle_attack_bot_returns_none_on_full_board() {
         let bot = TriangleAttackBot;
         let mut game = GameY::new(2);
-
-        // Fill the board (size 2 has 3 cells)
         let moves = vec![
             Movement::Placement {
                 player: PlayerId::new(0),
@@ -145,43 +155,33 @@ mod tests {
                 coords: Coordinates::new(0, 0, 1),
             },
         ];
-
         for mv in moves {
             game.add_move(mv).unwrap();
         }
-
         assert!(game.available_cells().is_empty());
-        let chosen_move = bot.choose_move(&game);
-        assert!(chosen_move.is_none());
+        assert!(bot.choose_move(&game).is_none());
     }
-
+ 
     #[test]
     fn test_triangle_attack_bot_chooses_from_available_cells() {
         let bot = TriangleAttackBot;
         let mut game = GameY::new(3);
-
         game.add_move(Movement::Placement {
             player: PlayerId::new(0),
             coords: Coordinates::new(2, 0, 0),
-        })
-        .unwrap();
-
+        }).unwrap();
         let coords = bot.choose_move(&game).unwrap();
         let index = coords.to_index(game.board_size());
-
         assert!(game.available_cells().contains(&index));
     }
-
+ 
     #[test]
     fn test_triangle_attack_bot_multiple_calls_return_valid_moves() {
         let bot = TriangleAttackBot;
         let game = GameY::new(7);
-
         for _ in 0..10 {
             let coords = bot.choose_move(&game).unwrap();
             let index = coords.to_index(game.board_size());
-
-            // Total cells for size 7 = 28
             assert!(index < 28);
             assert!(game.available_cells().contains(&index));
         }

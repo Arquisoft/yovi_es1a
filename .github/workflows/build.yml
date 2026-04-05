@@ -26,11 +26,15 @@ jobs:
         node-version: 22
     - run: npm --prefix users ci
     - run: npm --prefix webapp ci
+    - run: npm --prefix multiplayer ci
     - name: Run users tests with coverage
       env:
         MONGODB_URI: mongodb://localhost:27017/testdb
       run: npm --prefix users run test:coverage
-    - run: npm --prefix webapp run test:coverage
+    - name: Run webapp tests with coverage
+      run: npm --prefix webapp run test:coverage
+    - name: Run multiplayer tests with coverage
+      run: npm --prefix multiplayer run coverage
     - name: Install cargo-llvm-cov
       run: cargo install cargo-llvm-cov --locked
     - name: Generate gamey code coverage
@@ -45,8 +49,11 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
         args: >
-          -Dsonar.javascript.lcov.reportPaths=users/coverage/lcov.info,webapp/coverage/lcov.info
-          -Dsonar.coverage.exclusions=**/*.test.ts,**/__tests__/**,**/test-cli.ts,users/src/database.ts,users/src/index.ts
-          -Dsonar.test.inclusions=**/*.test.ts,**/__tests__/**
           -Dsonar.projectKey=Arquisoft_yovi_es1a
           -Dsonar.organization=arquisoft
+          -Dsonar.javascript.lcov.reportPaths=webapp/coverage/lcov.info,users/coverage/lcov.info,multiplayer/coverage/lcov.info
+          -Dsonar.rust.lcov.reportPaths=gamey/lcov.info
+          -Dsonar.sources=webapp/src,users/src,gamey/src,multiplayer/src
+          -Dsonar.tests=webapp/src,users/__tests__,gamey/src,multiplayer/__test__
+          -Dsonar.test.inclusions=**/*.test.tsx,**/*.test.ts,**/*.test.js,**/*.spec.ts
+          -Dsonar.exclusions=webapp/src/recursos/messages.ts,**/*.test.tsx,**/*.test.ts,**/*.test.js,**/*.spec.ts

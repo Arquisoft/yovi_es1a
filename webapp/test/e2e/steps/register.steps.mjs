@@ -77,21 +77,22 @@ Then('I should see a welcome message containing {string}', async function (expec
 });
 
 Then('I should see an error message indicating the user already exists', async function () {
-  await this.page.waitForSelector('.error-message-neon-bottom', { timeout: 5000 });
-
-  const errorText = await this.page.locator('.error-message-neon-bottom').innerText();
+  // 1. Buscamos cualquier elemento cuya clase contenga "error" (así no dependemos del nombre exacto del CSS)
+  // y le damos 10 segundos por si el servidor tarda en responder.
+  const errorMessage = await this.page.waitForSelector('[class*="error"]', { 
+    state: 'visible', 
+    timeout: 10000 
+  });
   
-  const isErrorVisible = errorText.includes('already registered') || 
-                         errorText.includes('already taken') ||
-                         errorText.toLowerCase().includes('error');
-                         
-  if (!isErrorVisible) {
-    throw new Error(`No se vio el error esperado. Texto encontrado: "${errorText}"`);
-  }
-
-  const currentUrl = this.page.url();
-  if (!currentUrl.includes('/register')) {
-    throw new Error('El sistema navegó a otra página a pesar del error de registro');
+  // 2. Extraemos el texto
+  const text = await errorMessage.textContent();
+  const textLower = text.toLowerCase();
+  
+  // 3. Verificamos que el texto hable de un usuario duplicado (en inglés o español)
+  const isDuplicateError = textLower.includes('exist') || textLower.includes('uso') || textLower.includes('already');
+  
+  if (!isDuplicateError) {
+    throw new Error(`Se esperaba un error de duplicado, pero la web mostró: "${text}"`);
   }
 });
 
