@@ -1,4 +1,8 @@
-const generateRoomCode = () => Math.random().toString(36).substring(2, 7).toUpperCase();
+import crypto from 'crypto';
+
+const generateRoomCode = () => {
+  return crypto.randomBytes(3).toString('hex').toUpperCase();
+};
 
 const roomsData = new Map<string, { hostName: string, tamano: number }>(); 
 const mapSocketToRoom = new Map<string, string>();
@@ -41,7 +45,7 @@ export const RoomService = {
   },
 
   applyPunishment: (userId: string) => {
-  fetch('http://users:3000/matches', {
+  fetch('https://users:3000/api/matches', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

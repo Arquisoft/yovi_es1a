@@ -39,6 +39,7 @@ services:
       - monitor-net 
     environment:
       - PORT=5000
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
     restart: unless-stopped
   prometheus:
     image: prom/prometheus

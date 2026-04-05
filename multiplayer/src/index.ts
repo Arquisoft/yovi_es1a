@@ -9,18 +9,27 @@ import { RoomService } from './services/room.service.js';
 dotenv.config();
 
 const mapSocketToRoom = new Map<string, string>();
-
+const allowedOrigins = [
+  'http://localhost',
+  'https://localhost',
+  'http://localhost:5173',
+  'http://20.199.88.71/',
+  process.env.WEBAPP_URL || ''
+].filter(Boolean);
 const app = express();
-app.use(cors());
-//["http://localhost:5173", "http://localhost", process.env.WEBAPP_URL || ""]
-//Create HTTP server from Express app
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
+
 const server = http.createServer(app);
 //Initialize Socket.IO with HTTP server
 const io=new Server(server, {
     cors: {
-        origin: "*",
-    methods: ["GET", "POST"]
-    }
+    origin: allowedOrigins,
+    methods: ["GET", "POST"],
+    credentials: true
+  }
 });
 const PORT = process.env.PORT || 5000;
 
