@@ -29,10 +29,10 @@ endif::arc42help[]
 [cols="1,2",options="header"]
 |===
 |Constraint |Explanation
-| **Team Size** | The team consists of 5 members: José Iván, Adrián, Fernando, Hugo, and Sergio.
-| **Timeframe** | The project must be tested, code completed and discussed before the final submission.
-| **Meetings** | Weekly meetings will be held during laboratory sessions to track progress, besides possible meetings to discuss some issues or problems throught the week.
-| **Version Control** | GitHub is the chosen platform for repository hosting and version control.
+| **Team Size & Roles** | The team consists of 5 members: José Iván, Adrián, Fernando, Hugo, and Sergio. Responsibilities are distributed across full-stack development, devops, and documentation.
+| **Timeframe & Deadlines** | The project is bound by the academic semester schedule. It must be fully tested, documented, and deployed before the final subject submission.
+| **Methodology & Meetings** | The team follows an iterative, Agile-based approach. Weekly meetings are held during laboratory sessions to track progress, with ad-hoc meetings throughout the week to resolve blockers.
+| **Version Control & Tracking** | GitHub is the mandatory platform for repository hosting, version control, and issue tracking (using GitHub Projects/Issues).
 |===
 
 === Political and Convention Constraints
