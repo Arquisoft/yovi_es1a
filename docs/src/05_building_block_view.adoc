@@ -93,4 +93,9 @@ Contained Building Blocks::
 | *Responsibility:* Implements the core logic of the Game of Y. It validates moves, calculates bot strategies (Monte Carlo, Minimax, etc.), and checks win conditions using the YEN notation. +
 *Technology:* Rust. +
 *Location:* `/gamey` directory.
+
+| **MongoDB**
+| *Responsibility:* The central database used to persist user profiles, encrypted credentials, active match states, and global ranking statistics. +
+*Technology:* MongoDB (NoSQL Document Database). +
+*Location:* External Docker container / Atlas Cloud.
 |===
