@@ -1105,133 +1105,112 @@ Refer to details in the following sections.</p>
 <div class="sect3">
 <h4 id="_frontend">4.1.1. Frontend</h4>
 <div class="paragraph">
-<p>We chose React combined with TypeScript for the user interface development. React&#8217;s component-based architecture is ideal for modularizing the complex visualization of the game board and managing the reactive state of the match. The adoption of TypeScript adds a static typing system that drastically reduces compile-time errors, especially when manipulating game data structures, guaranteeing more robust and self-documenting code.</p>
-</div>
-<div class="paragraph">
-<p><strong>Quality goals:</strong> usability, maintainability, robustness.</p>
-</div>
-<div class="paragraph">
-<p><strong>Key constraints:</strong> The system must be accessible from any modern web browser, managing communication with the backend asynchronously via JSON.</p>
+<p>We chose React combined with TypeScript for the user interface development. React&#8217;s component-based architecture is ideal for modularizing the complex visualization of the game board and managing the reactive state of the match. The adoption of TypeScript adds a static typing system that drastically reduces compile-time errors.
+<strong>Quality goals:</strong> usability, maintainability, robustness.
+<strong>Key constraints:</strong> The system must be accessible from any modern web browser, managing communication with the backend asynchronously via JSON and WebSockets.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_backend">4.1.2. Backend</h4>
+<h4 id="_backend_microservices">4.1.2. Backend (Microservices)</h4>
 <div class="paragraph">
-<p>For the backend, on one hand, we chose Rust as it offers native performance, utilizing 100% of the CPU power, which guarantees low and predictable response times. Additionally, it prevents common errors such as null pointers or race conditions at compile time. This is crucial for a server that must be robust and not crash in the middle of a match.
-Rust&#8217;s type system allows invalid game states to be represented as compilation errors or controlled errors, rather than runtime exceptions. On the other hand, we also use Node.js for user management and standard web APIs. Node.js is excellent for creating fast REST APIs (such as user registration), while Rust is superior for the algorithmic logic of the game.</p>
-</div>
-<div class="paragraph">
-<p><strong>Quality goals:</strong> interoperability, scalability, and robustness.</p>
-</div>
-<div class="paragraph">
-<p><strong>Key constraints:</strong> The system is restricted to using the YEN string format to represent the game state. This is the strict contract between client and server.</p>
+<p>For the backend, we adopted a polyglot microservices approach:
+1. <strong>Rust (<code>gamey</code>):</strong> Offers native performance and memory safety, guaranteeing low and predictable response times for the complex algorithmic logic of the game and AI bots.
+2. <strong>Node.js (<code>users</code>):</strong> Excellent for creating fast REST APIs to manage user registration, authentication (JWT), and database interactions.
+3. <strong>Node.js (<code>multiplayer</code>):</strong> A dedicated service handling WebSocket connections to ensure low-latency gameplay without blocking the main user API.
+<strong>Quality goals:</strong> interoperability, scalability, and robustness.
+<strong>Key constraints:</strong> The Rust engine is restricted to using the strict YEN string format as the contract for game states.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_database">4.1.3. Database</h4>
+<h4 id="_real_time_communication_websockets">4.1.3. Real-Time Communication (WebSockets)</h4>
 <div class="paragraph">
-<p>We chose MongoDB as our primary database because of its flexibility. Unlike traditional databases that use rigid tables, MongoDB stores information in "documents," a format that perfectly complements our coding technologies (Node.js and React).
-This choice allows us to achieve two key things: first, agility, as we can change what data we store about users or games without having to restructure the entire system each time. And second, speed, ensuring that saving game histories is fast and doesn&#8217;t interrupt the player experience.</p>
-</div>
-<div class="paragraph">
-<p><strong>Quality goals:</strong> Agility in development and speed of response.</p>
-</div>
-<div class="paragraph">
-<p><strong>Key constraints:</strong> The system must be able to store varied game data without a fixed structure, while maintaining security for user account data.
-==== Containers
-Docker was selected for service containerization as it combines both Node.js and Rust. Furthermore, Docker guarantees absolute consistency of the environment between development machines and the production server. It also greatly facilitates the coordination of the microservices architecture, isolating the specific dependencies of each language to avoid conflicts and simplify joint deployment.</p>
-</div>
-<div class="paragraph">
-<p><strong>Quality goals:</strong> portability, deployability, scalability, reproducibility.</p>
-</div>
-<div class="paragraph">
-<p><strong>Key constraints:</strong> The host environment must have a compatible container runtime capable of coordinating multiple containers simultaneously.</p>
+<p>We selected <strong>Socket.io</strong> over standard HTTP polling for multiplayer interactions. Socket.io maintains a persistent, bi-directional TCP connection, allowing the server to push moves to opponents instantly. It also provides built-in "Rooms," which drastically simplifies the logic for matchmaking and isolating 1vs1 games.
+<strong>Quality goals:</strong> low latency, real-time performance, efficiency.
+<strong>Key constraints:</strong> Requires a stateful connection, demanding a dedicated microservice to manage memory overhead effectively.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_monitoring">4.1.4. Monitoring</h4>
+<h4 id="_api_gateway_security">4.1.4. API Gateway &amp; Security</h4>
 <div class="paragraph">
-<p>We chose the combination of Prometheus and Grafana to implement the system&#8217;s monitoring and observability strategy. Prometheus acts as a time-series database, responsible for collecting technical metrics from the backend. Grafana connects to this data to visualize it on graphical dashboards in real-time. This decision is critical to quantitatively validate our performance requirements and detect what is slowing down the microservices architecture.</p>
-</div>
-<div class="paragraph">
-<p><strong>Quality goals:</strong> observability, performance, availability.</p>
-</div>
-<div class="paragraph">
-<p><strong>Key constraints:</strong> The services (both the Node.js one and the Rust engine) must be programmed to expose their metrics at a web address with a standard format that Prometheus can read periodically.</p>
+<p>We implemented <strong>Nginx</strong> as a Reverse Proxy and API Gateway. Instead of exposing multiple microservice ports to the internet, Nginx provides a single, secure entry point (Port 443). It handles SSL/TLS termination, hiding the internal complexity of the Docker network and routing traffic to the correct service based on the URL path.
+<strong>Quality goals:</strong> security, isolation, parity between Dev/Prod environments.
+<strong>Key constraints:</strong> All external traffic must be encrypted via HTTPS using SSL certificates.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_modeling_tools">4.1.5. Modeling Tools</h4>
+<h4 id="_database">4.1.5. Database</h4>
 <div class="paragraph">
-<p>PlantUML was selected to ensure agility in creating UML diagrams (Sequence, Class, Component). Unlike "drag and drop" visual tools, PlantUML ensures consistent and standardized aesthetics for all project diagrams, regardless of who creates them, allowing developers to focus on logical content rather than graphic design.</p>
-</div>
-<div class="paragraph">
-<p><strong>Quality goals:</strong> consistency, efficiency, clarity.</p>
-</div>
-<div class="paragraph">
-<p><strong>Key constraints:</strong> The source format must be plain text editable with any standard IDE and renderable without proprietary software licenses.</p>
+<p>We chose <strong>MongoDB Atlas</strong> (Cloud NoSQL) as our primary database. Its document-oriented structure perfectly complements Node.js and React. This allows us to achieve agility when evolving game data structures without migrating rigid SQL tables, and ensures high availability in the cloud.
+<strong>Quality goals:</strong> agility in development, high availability, speed of response.
+<strong>Key constraints:</strong> Must store varied game data without a fixed structure while securing user credentials.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_version_control">4.1.6. Version Control</h4>
+<h4 id="_containers_and_cloud_deployment">4.1.6. Containers and Cloud Deployment</h4>
 <div class="paragraph">
-<p>We use GitHub to centralize code and facilitate teamwork. It allows us to develop new features in parallel using branches, avoiding conflicts between colleagues. Additionally, it protects project quality through the use of Pull Requests, ensuring that all new code is reviewed and approved by another colleague before being integrated into the main version.</p>
+<p><strong>Docker and Docker Compose</strong> were selected to containerize the services. This guarantees absolute consistency between local development machines and our <strong>Azure Virtual Machine</strong> production environment. It isolates dependencies (Node vs. Rust) and allows us to define the entire infrastructure as code.
+<strong>Quality goals:</strong> portability, deployability, reproducibility.
+<strong>Key constraints:</strong> The host environment (Azure VM) must run a Docker engine to orchestrate the internal <code>monitor-net</code> bridge network.</p>
 </div>
-<div class="paragraph">
-<p><strong>Quality goals:</strong> collaboration, code integrity, maintainability.</p>
 </div>
+<div class="sect3">
+<h4 id="_monitoring">4.1.7. Monitoring</h4>
 <div class="paragraph">
-<p><strong>Key constraints:</strong> Every change must undergo a mandatory review (Pull Request) and have passing tests (green tests) before it can be merged.</p>
+<p>We chose the combination of <strong>Prometheus and Grafana</strong>. Prometheus acts as a time-series database scraping technical metrics from the backend, while Grafana visualizes this data on real-time dashboards.
+<strong>Quality goals:</strong> observability, performance validation.
+<strong>Key constraints:</strong> Services must expose metrics at a standard <code>/metrics</code> endpoint.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_modeling_version_control">4.1.8. Modeling &amp; Version Control</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>PlantUML:</strong> Ensures agile, version-controllable, and consistent UML diagrams purely from text.</p>
+</li>
+<li>
+<p><strong>GitHub:</strong> Centralizes code, manages parallel development via branches, and enforces quality through mandatory Pull Requests.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_high_level_decomposition">4.2. High-level Decomposition</h3>
-<div class="paragraph">
-<p>The following describes the fundamental architectural patterns that structure the communication and organization of the system.</p>
-</div>
 <div class="sect3">
 <h4 id="_microservices_architecture">4.2.1. Microservices Architecture</h4>
 <div class="paragraph">
-<p>We opted to divide the backend system into autonomous services (<strong>Users Service</strong> and <strong>Gamey Service</strong>) instead of using a monolith. This decision allows decoupling the user management logic from the game logic, facilitating the use of specialized technologies for each task. Furthermore, it improves fault tolerance: if the user service goes down, the game could continue functioning (and vice versa).</p>
-</div>
-<div class="paragraph">
-<p><strong>Quality goals:</strong> modifiability, scalability, technological independence.</p>
-</div>
-<div class="paragraph">
-<p><strong>Key constraints:</strong> Each microservice must own its own data and run in an isolated container, communicating with others solely over the network.</p>
+<p>We divided the backend into autonomous services (<code>users</code>, <code>gamey</code>, <code>multiplayer</code>). This decouples user management, real-time networking, and game logic. If the user service experiences high load, the multiplayer game loop remains unaffected.
+<strong>Quality goals:</strong> modifiability, scalability, technological independence.
+<strong>Key constraints:</strong> Services run in isolated containers, communicating solely over the internal Docker network.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_single_page_application_spa">4.2.2. Single Page Application (SPA)</h4>
+<h4 id="_api_gateway_pattern">4.2.2. API Gateway Pattern</h4>
 <div class="paragraph">
-<p>The frontend has been designed following the SPA pattern using React. This completely separates the presentation layer from the business logic. By loading the application once and updating content dynamically, we offer a much more fluid and fast user experience, similar to a desktop application, avoiding constant page reloads.</p>
-</div>
-<div class="paragraph">
-<p><strong>Quality goals:</strong> usability, interoperability, performance.</p>
-</div>
-<div class="paragraph">
-<p><strong>Key constraints:</strong> The client is responsible for managing routing and view state, offloading the task of rendering HTML from the server.</p>
+<p>Nginx acts as the facade for the system. Clients do not know if they are talking to Rust or Node.js; they simply send requests to the Nginx gateway, which routes <code>/api/gamey/</code> to Rust and <code>/socket.io/</code> to the multiplayer service.
+<strong>Quality goals:</strong> security, simplicity for clients.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_rest_architectural_style">4.2.3. REST Architectural Style</h4>
+<h4 id="_single_page_application_spa">4.2.3. Single Page Application (SPA)</h4>
 <div class="paragraph">
-<p>To connect the Frontend with the Microservices, we use a REST architecture. The use of the standard HTTP protocol and JSON format ensures the system is easy to understand and test. As a universal standard, it allows our TypeScript frontend to communicate seamlessly with a Rust backend and a Node.js backend without the need for complex adapters.</p>
+<p>The React frontend separates the presentation layer from business logic. By loading once and updating dynamically via WebSockets and REST, it offers a fluid, app-like experience.
+<strong>Quality goals:</strong> usability, interoperability.</p>
 </div>
-<div class="paragraph">
-<p><strong>Quality goals:</strong> simplicity, interoperability, decoupling.</p>
 </div>
+<div class="sect3">
+<h4 id="_hybrid_communication_rest_event_driven">4.2.4. Hybrid Communication: REST &amp; Event-Driven</h4>
 <div class="paragraph">
-<p><strong>Key constraints:</strong> Communication must be stateless. This means the server does not save information about the previous request; each message from the client must contain all necessary information to be processed.</p>
+<p>We use a dual approach:
+* <strong>REST (HTTP/JSON):</strong> Used for stateless, transactional operations (e.g., login, fetching match history, requesting an AI move).
+* <strong>Event-Driven (WebSockets):</strong> Used for stateful, real-time synchronization during active gameplay, pushing events to clients instantly.
+<strong>Quality goals:</strong> low latency, appropriate tool for the job.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_strategies_for_quality_goals">4.3. Strategies for Quality Goals</h3>
-<div class="paragraph">
-<p>The following table relates our quality goals to specific scenarios and the architectural strategies implemented to resolve them.</p>
-</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 16.6666%;">
@@ -1247,39 +1226,49 @@ Docker was selected for service containerization as it combines both Node.js and
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Performance</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The game requires complex AI calculations to develop the match without freezing the server or increasing latency.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Rust Engine:</strong> We use Rust to process complex moves instantly.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Performance (Real-time)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Players need to see their opponent&#8217;s move instantly to maintain the flow of the game.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>WebSockets (Socket.io):</strong> A persistent bi-directional connection pushes updates in milliseconds, avoiding HTTP overhead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Performance (Computation)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The game requires complex AI calculations without freezing the server.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Rust Engine:</strong> We use Rust to process complex moves instantly and return the result.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Security</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system must prevent unauthorized access and protect data in transit.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Nginx &amp; JWT:</strong> Nginx enforces HTTPS (SSL Termination) and acts as a shield. The Node.js middleware validates JWT tokens before allowing access to private APIs.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Interoperability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The Frontend (TypeScript), User Service (Node.js), and Game Engine (Rust) must exchange data without friction.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>REST &amp; JSON Standard:</strong> Strict use of standard HTTP protocols. The <strong>YEN notation</strong> acts as a universal data contract, avoiding language-specific binary formats.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Frontend (TypeScript), User Service (Node.js), and Engine (Rust) must exchange data.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>JSON Standard:</strong> Strict use of the <strong>YEN notation</strong> as a universal data contract, avoiding language-specific binary formats.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Modifiability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The team needs to update the AI strategy without the risk of introducing errors into the User Login system.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Microservices:</strong> Strict separation of concerns. The Engine and User Service are isolated containers; changing one does not require recompiling or redeploying the other.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The team needs to update the AI or the multiplayer logic without breaking the login system.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Microservices:</strong> Strict separation of concerns. Services are isolated containers; changing one does not require redeploying the others.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Usability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Players expect a fluid experience, similar to a native app, without page reloads during the game.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>React SPA (Single Page Application):</strong> The interface loads once and updates dynamically. TypeScript ensures type safety, preventing runtime errors.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Players expect a fluid experience without page reloads.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>React SPA:</strong> The interface updates dynamically based on incoming WebSocket events.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Robustness</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A specific match causes a critical error due to an illegal state or server failure.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Stateless Design &amp; Docker:</strong> Since the Rust engine saves no state, a request failure does not corrupt server memory. Docker allows immediate restarts without data loss (persistence is handled by Node.js).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Robustness / Availability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A container crashes, or a server reboots.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker Restart Policies &amp; Atlas:</strong> Docker automatically revives crashed containers. MongoDB Atlas ensures database high availability outside the main VM.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Observability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Developers need to identify why a specific move took longer than expected or failed.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Prometheus &amp; Grafana:</strong> Services expose technical metrics (e.g., calculation time). Grafana dashboards visualize this data in real-time to detect problems.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Developers need to identify why a move failed or a server is slow.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Prometheus &amp; Grafana:</strong> Services expose metrics. Grafana dashboards visualize this data in real-time.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Portability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">New developers need to spin up the project on different operating systems.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker Compose:</strong> All infrastructure is defined as code. A single command ("docker-compose up") replicates the production environment locally.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Developers need to replicate the exact Azure production environment locally.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker Compose:</strong> All infrastructure is defined as code, mimicking the cloud setup locally with a single command.</p></td>
 </tr>
 </tbody>
 </table>
