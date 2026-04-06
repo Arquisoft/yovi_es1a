@@ -3,7 +3,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-technical-risks]]
 == Risks and Technical Debts
 
-
 ifdef::arc42help[]
 [role="arc42help"]
 ****
@@ -18,38 +17,46 @@ This should be your motto for systematic detection and evaluation of risks and t
 .Form
 List of risks and/or technical debts, probably including suggested measures to minimize, mitigate or avoid risks or reduce technical debts.
 
-
 .Further Information
-
 See https://docs.arc42.org/section-11/[Risks and Technical Debt] in the arc42 documentation.
-
 ****
 endif::arc42help[]
+
+=== Technical Risks
 
 [cols="1,3", options="header"]
 |===
 | Risk | Description
 
 | **Inexperience in Microservices Architectures**
-| The team has limited experience in designing large-scale software architectures with multiple interconnected modules. This introduces the risk of defining incorrect boundaries between services or creating circular dependencies that complicate development.
+| The team had limited initial experience in designing large-scale software architectures. While the system is now functional, there remains an ongoing risk regarding the maintenance of boundaries between services (WebApp, Users, Gamey, Multiplayer) and avoiding circular dependencies as new features are added.
 
 | **Rust learning curve**
-| Rust is a language we've never used before, so the learning curve is going to be very steep. There's a risk that implementing even simple features will take longer than expected due to the language's complexity and our inexperience.
+| Rust is a language we had never used before, introducing a steep learning curve. The risk remains that implementing complex game logic updates or debugging memory safety issues in the `gamey` engine might take longer than expected due to the language's complexity.
 
-| **Inexperience in using Docker**
-| Setting up internal networks, volumes, and container communication (with Node.js and Rust) can create deployment and configuration problems that delay integration testing or implementation.
+| **Inexperience in using Docker & Orchestration**
+| Setting up internal bridge networks (`monitor-net`), volumes, and multi-container communication was challenging. Misconfigurations in the `docker-compose.yml` or reverse proxy routing could potentially cause downtime during future deployments.
+
+| **WebSocket Scalability (Single Point of Failure)**
+| The new `multiplayer` service uses Socket.io for real-time game state synchronization. Currently, this service runs as a single instance. If traffic scales massively, horizontally scaling Socket.io will require implementing a Redis adapter/backplane, which is currently not configured, posing a risk of dropped connections under heavy load.
 
 | **Data Consistency**
-| When using a database without a rigid schema, there is a risk of data inconsistency if the model evolves and data migrations are not performed to update older documents.
+| When using a database without a rigid schema like MongoDB, there is a risk of data inconsistency if the domain model evolves and data migrations are not properly performed to update older documents (e.g., legacy user profiles or match records).
 |===
+
+
+=== Technical Debts
 
 [cols="1,3", options="header"]
 |===
 | Technical debt | Description 
 
-| **Non-persistent Game State**
-| The current architecture manages active game sessions entirely in-memory within the Gamey Service. There is no real-time persistence layer for the game state (MongoDB is currently restricted to User management), meaning that any service restart or crash results in the immediate loss of all active matches.
+| **Active Match State Volatility (In-Memory)**
+| While completed matches and user stats are now successfully persisted in MongoDB, the *active* live state of a multiplayer game relies heavily on the memory of the `multiplayer` and `gamey` services. A sudden crash or restart of these containers will result in the immediate drop of all ongoing live matches, as there is no real-time caching layer (like Redis) to recover active session states.
 
-| **Error Handling**
-| Backend error handling is fundamental. The lack of a centralized logging and exception management strategy will hinder the diagnosis of problems in production.
+| **Lack of Observability and Monitoring**
+| The system currently lacks a centralized monitoring and metrics solution. Although tools like Prometheus and Grafana are planned and partially scaffolded in the infrastructure, they are not yet fully configured. To diagnose bugs or check system health, developers must manually inspect isolated console logs inside each Docker container.
+
+| **Manual TLS/SSL Certificate Management**
+| We have successfully implemented HTTPS via Nginx as a reverse proxy, enhancing security. However, the SSL certificates (`cert.pem`, `key.pem`) are currently managed manually. This introduces the technical debt of having to manually track expiration dates and renew them, instead of using an automated solution like Certbot/Let's Encrypt.
 |===

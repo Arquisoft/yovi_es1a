@@ -32,21 +32,25 @@ endif::arc42help[]
 ....
 @startmindmap
 * Quality
-** Interoperability (High)
-*** Standardized YEN Format
-*** No Data Adapters (Direct Mapping)
 ** Security (High)
-*** Server Authority (Anti-Cheat)
-*** Input Validation
-** Modifiability (High)
-*** Interface AI Strategies
-*** Decoupled Game Engine
+*** JWT Authentication & Route Protection
+*** SSL/TLS Encryption (Nginx)
+*** Server Authority (Anti-Cheat & Validation)
+** Availability (High)
+*** Docker Container Auto-restart
+*** Cloud Database HA (MongoDB Atlas)
+** Performance (High)
+*** Real-time WebSocket Sync (<100ms)
+*** Fast State Reconstruction & Parsing
+** Interoperability (Medium)
+*** Standardized YEN Format via HTTP APIs
+*** Cross-Origin Resource Sharing (CORS)
+** Modifiability (Medium)
+*** Microservices Decoupling
+*** Pluggable AI Strategies (Rust Traits)
 ** Observability (Medium)
-*** Contextual Logging (GameID)
-*** Structured Error Responses
-** Performance (Medium)
-*** Fast State Reconstruction (<200ms)
-*** Low Latency Parsing (<50ms)
+*** Prometheus Metrics Scraping
+*** Grafana Real-time Dashboards
 @endmindmap
 ....
 
@@ -77,15 +81,19 @@ endif::arc42help[]
 |===
 |Ref |Attribute |Source |Stimulus |Artifact |Environment |Response |Measure |Priority (Imp, Diff)
 
-| SC-01 | Interoperability | Backend | Sends a move request in YEN format | Rust game engine | Normal operation (runtime) | The engine processes the string directly without data mapping adapters | Processing time < 50 ms | High, Low
+| SC-01 | Security | Unauthenticated User / Script | Attempts to request a bot move without a valid JWT token via API | Node.js Backend (`users` microservice) | Normal operation (runtime) | The API gateway routes the request, but the middleware intercepts and rejects it with a 401/403 status. | 0 unauthorized engine executions; < 50ms rejection time | High, Low
 
-| SC-02 | Modifiability | Developer | Wants to add a new AI strategy | Rust source code (AI module) | Design/Maintenance time | The new strategy is added by implementing an existing interface | 0 lines of code modified in the main game engine | High, Medium
+| SC-02 | Availability | Internal System Fault | The `gamey` Rust container crashes unexpectedly due to an unhandled panic or OOM | Docker Engine (Host) | Normal Operation | Docker detects the container exit and automatically restarts it via the `unless-stopped` policy. | System recovers without manual intervention; Downtime < 5 seconds | High, Low
 
-| SC-03 | Performance | User | Refreshes the webpage to resume a game | Complete System (Frontend + Backend + Rust) | Normal Operation | The system analyzes the YEN string and reconstructs the 3D board | Interaction Time < 200 ms | Medium, High
+| SC-03 | Performance | Connected Player | Makes a valid move on the board | WebSocket Server (`multiplayer`) | Peak Load (Multiple active matches) | The server validates the move, updates the state, and broadcasts the event to the opponent in the same Room. | End-to-end sync latency < 100 ms | High, Medium
 
-| SC-04 | Observability | Malicious User/Bot Error | Sends out-of-bounds coordinates (e.g., "Z: 99") | Server (Backend) | Normal Operation | The system logs the incident with context and returns a 400 error | The log includes GameID and the YEN string; Server uptime: 100% (no crashes) | Medium, Low
+| SC-04 | Observability | System Admin | Wants to check the current load and API health | Prometheus / Grafana | Normal Operation | The admin opens the Grafana dashboard and views real-time metrics scraped from the Docker containers and Node endpoints. | Dashboard loads in < 2 seconds; Data freshness < 15 seconds | Medium, Medium
 
-| SC-05 | Security | Cheater User | Sends a fake request claiming victory ("winner": true) without playing | Backend (Validation Logic) | Normal Operation | The server ignores the client data, checks the move history, and rejects the request | 0% of corrupted games in the database; Server authority is maintained | High, Medium
+| SC-05 | Interoperability | `users` Microservice | Sends a YEN-formatted payload to evaluate a board state | Rust Game Engine (`gamey`) | Normal operation | The Rust engine deserializes the JSON directly into its internal structures without requiring extra mapping adapters. | Processing time < 50 ms | Medium, Low
+
+| SC-06 | Security (Anti-Cheat) | Malicious Client | Sends a fake request claiming victory ("winner": true) or an illegal move | Backend (Validation Logic in Rust) | Normal Operation | The server ignores the client's claim, re-evaluates the board state using Union-Find, and rejects the illegal state. | 0% of corrupted games persisted to MongoDB; Server authority maintained | High, High
+
+| SC-07 | Modifiability | Backend Developer | Needs to add a new "Minimax" AI bot | Rust Engine Source Code | Design/Maintenance time | The new strategy is added by implementing the existing `YBot` trait and registering it in the Factory. | 0 lines of core game logic modified | Medium, Medium
 |===
 
 ifdef::arc42help[]

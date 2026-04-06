@@ -5,7 +5,7 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_yovi_es1a&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Arquisoft_yovi_es1a)
 [![CodeScene Average Code Health](https://codescene.io/projects/76239/status-badges/average-code-health)](https://codescene.io/projects/76239)
 
-This project is a template with some basic functionality for the ASW labs.
+This project is a complete microservices-based platform for the Game of Y, developed for the ASW labs.
 
 # Contributors
 
@@ -15,155 +15,72 @@ This project is a template with some basic functionality for the ASW labs.
 - Hugo Carbajales Quintana UO300051.
 - Sergio Argüelles Huerta UO299741.
 
-# URL Deployment: http://20.199.88.71/
+# URL Deployment: https://20.199.88.71/
 
 ## Project Structure
 
-The project is divided into three main components, each in its own directory:
+The project follows a microservices architecture orchestrated by Docker Compose:
 
-- `webapp/`: A frontend application built with React, Vite, and TypeScript.
-- `users/`: A backend service for managing users, built with Node.js and Express.
-- `gamey/`: A Rust game engine and bot service.
-- `docs/`: Architecture documentation sources following Arc42 template
+- `webapp/`: A Single Page Application (SPA) built with React, Vite, and TypeScript.
+- `users/`: A Node.js/Express REST API for user management, MongoDB interactions, and JWT authentication.
+- `multiplayer/`: A Node.js microservice handling real-time gameplay via WebSockets (Socket.io).
+- `gamey/`: The core game engine and AI bot service built in Rust.
+- `docs/`: Architecture documentation sources following the Arc42 template.
+- `nginx.conf`: Configuration file for the API Gateway and Reverse Proxy.
+- `docker-compose.yml`: Infrastructure as Code to deploy the entire stack.
 
-Each component has its own `package.json` file with the necessary scripts to run and test the application.
+## Key Features
 
-## Basic Features
-
-- **User Registration**: The web application provides a simple form to register new users.
-- **User Service**: The user service receives the registration request, simulates some processing, and returns a welcome message.
-- **GameY**: A basic Game engine which only chooses a random piece.
+- **Authentication & Security**: Secure user registration and login using JWT and password hashing.
+- **Real-Time Multiplayer**: Play 1vs1 matches instantly against other users using WebSocket rooms.
+- **Advanced AI Opponents**: Play against various bot strategies calculated natively in Rust.
+- **Cloud Database**: Persistent storage for users, clans, and match history using MongoDB Atlas.
+- **API Gateway**: Nginx acts as a reverse proxy, enforcing HTTPS and routing traffic securely.
+- **Observability**: Built-in metrics and monitoring dashboards using Prometheus and Grafana.
 
 ## Components
 
+### API Gateway (Nginx)
+Acts as the single entry point for the application. It handles SSL/TLS termination and routes traffic based on the URL path (`/api/gamey`, `/api/bot`, `/socket.io/`, etc.) to the isolated internal Docker containers.
+
 ### Webapp
-
-The `webapp` is a single-page application (SPA) created with [Vite](https://vitejs.dev/) and [React](https://reactjs.org/).
-
-- `src/App.tsx`: The main component of the application.
-- `src/RegisterForm.tsx`: The component that renders the user registration form.
-- `package.json`: Contains scripts to run, build, and test the webapp.
-- `vite.config.ts`: Configuration file for Vite.
-- `Dockerfile`: Defines the Docker image for the webapp.
+The `webapp` is the frontend client created with [Vite](https://vitejs.dev/) and [React](https://reactjs.org/). It connects to the backend exclusively via the Nginx gateway using REST for data and WebSockets for live gameplay.
 
 ### Users Service
+The `users` service handles the business logic. It connects to MongoDB Atlas to manage credentials, validates JWT tokens, and acts as a middleware to route AI requests to the Rust engine.
 
-The `users` service is a simple REST API built with [Node.js](https://nodejs.org/) and [Express](https://expressjs.com/).
+### Multiplayer Service
+A dedicated Socket.io server that handles active game sessions. It isolates the heavy memory overhead of maintaining persistent TCP connections from the main REST API.
 
-- `users-service.js`: The main file for the user service. It defines an endpoint `/createuser` to handle user creation.
-- `package.json`: Contains scripts to start the service.
-- `Dockerfile`: Defines the Docker image for the user service.
+### Gamey (Rust Engine)
+The algorithmic core built with [Rust](https://www.rust-lang.org/). It calculates winning paths using Union-Find algorithms and processes AI strategies via the YEN notation format.
 
-### Gamey
-
-The `gamey` component is a Rust-based game engine with bot support, built with [Rust](https://www.rust-lang.org/) and [Cargo](https://doc.rust-lang.org/cargo/).
-
-- `src/main.rs`: Entry point for the application.
-- `src/lib.rs`: Library exports for the gamey engine.
-- `src/bot/`: Bot implementation and registry.
-- `src/core/`: Core game logic including actions, coordinates, game state, and player management.
-- `src/notation/`: Game notation support (YEN, YGN).
-- `src/web/`: Web interface components.
-- `Cargo.toml`: Project manifest with dependencies and metadata.
-- `Dockerfile`: Defines the Docker image for the gamey service.
+---
 
 ## Running the Project
 
-You can run this project using Docker (recommended) or locally without Docker.
+Given the microservices topology and the Nginx API Gateway, **running the project via Docker is strictly required**.
 
-### With Docker
+### Prerequisites
+- [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) installed.
+- `mkcert` installed on your machine (to generate local SSL certificates).
 
-This is the easiest way to get the project running. You need to have [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) installed.
-
-1. **Build and run the containers:**
-    From the root directory of the project, run:
-
-```bash
-docker-compose up --build
-```
-
-This command will build the Docker images for both the `webapp` and `users` services and start them.
-
-2.**Access the application:**
-- Web application: [http://localhost](http://localhost)
-- User service API: [http://localhost:3000](http://localhost:3000)
-- Gamey API: [http://localhost:4000](http://localhost:4000)
-
-### Without Docker
-
-To run the project locally without Docker, you will need to run each component in a separate terminal.
-
-#### Prerequisites
-
-* [Node.js](https://nodejs.org/) and npm installed.
-
-#### 1. Running the User Service
-
-Navigate to the `users` directory:
+### 1. Generate SSL Certificates
+Nginx requires certificates to enable HTTPS. Create a `certs` folder in the root directory and generate them:
 
 ```bash
-cd users
+mkdir certs
+cd certs
+mkcert -install
+mkcert -cert-file cert.pem -key-file key.pem localhost 127.0.0.1
+cd ..
 ```
+### 2. Environment Variables
+Ensure you have a `.env` file in the `users/` and `multiplayer/` directories containing your `MONGO_URI` and `JWT_SECRET`.
 
-Install dependencies:
+### 3. Build and Run
+From the root directory of the project, run:
 
 ```bash
-npm install
+docker-compose up -d --build
 ```
-
-Run the service:
-
-```bash
-npm start
-```
-
-The user service will be available at `http://localhost:3000`.
-
-#### 2. Running the Web Application
-
-Navigate to the `webapp` directory:
-
-```bash
-cd webapp
-```
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Run the application:
-
-```bash
-npm run dev
-```
-
-The web application will be available at `http://localhost:5173`.
-
-#### 3. Running the GameY application
-
-At this moment the GameY application is not needed but once it is needed you should also start it from the command line.
-
-## Available Scripts
-
-Each component has its own set of scripts defined in its `package.json`. Here are some of the most important ones:
-
-### Webapp (`webapp/package.json`)
-
-- `npm run dev`: Starts the development server for the webapp.
-- `npm test`: Runs the unit tests.
-- `npm run test:e2e`: Runs the end-to-end tests.
-- `npm run start:all`: A convenience script to start both the `webapp` and the `users` service concurrently.
-
-### Users (`users/package.json`)
-
-- `npm start`: Starts the user service.
-- `npm test`: Runs the tests for the service.
-
-### Gamey (`gamey/Cargo.toml`)
-
-- `cargo build`: Builds the gamey application.
-- `cargo test`: Runs the unit tests.
-- `cargo run`: Runs the gamey application.
-- `cargo doc`: Generates documentation for the GameY engine application
