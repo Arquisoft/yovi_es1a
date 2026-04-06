@@ -49,17 +49,17 @@ endif::arc42help[]
 
 The main requirements of the system are:
 
-- Provide a usable and functional version of the game with a variable board.
+- **Game Mechanics:** Provide a functional version of the strategic game with a variable hexagonal board, including advanced match controls such as undoing moves, passing turns, and surrendering.
 
-- Available on the web.
+- **Platform:** Available as a responsive web application.
 
-- Offer different strategies for playing the game with different difficulty levels selectable by the player.
+- **Game Modes:** Offer multiplayer capabilities as well as a single-player mode against a computer bot.
 
-- Allow users to register on the system.
+- **AI Integration:** The computer bot must be integrated via an external API (Rust engine) offering different strategies and difficulty levels.
 
-- Allow users to view their game history (statistical data such as the number of games played, win/loss statistics, etc.).
+- **User Management:** Allow users to securely register, log in, and manage their profiles.
 
-- Offer the option to play against a computer or a bot with an API.
+- **Analytics & History:** Allow users to view their personal game history, win/loss statistics, and a global ranking of all players in the system.
 
 === Quality Goals
 
