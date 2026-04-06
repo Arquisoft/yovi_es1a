@@ -49,58 +49,48 @@ Contained Building Blocks::
 | **Data Persistence** | The MongoDB database cluster that securely stores user profiles, encrypted passwords, and match statistics.
 |===
 
-=== Level 2
+=== Level 2: Backend Services Decomposition
 
-This level shows the decomposition of the system into the three main services defined in the project structure.
+This level zooms into the "Backend Microservices" building block, detailing the distinct autonomous services that handle users, real-time gameplay, and heavy AI computation.
 
 [plantuml]
 ----
 @startuml
-package "Frontend" {
-    component "WebApp" as webapp
-}
-
-package "Backend Services" {
-    component "Users Service" as users
-    component "GameY Engine" as gamey
+package "Backend Microservices" {
+    component "Users Service\n(Port 3000)" as users
+    component "Multiplayer Service\n(Port 5000)" as multi
+    component "GameY Engine\n(Port 4000)" as gamey
 }
 
 database "MongoDB" as db
 
-webapp --> users : HTTP /createuser
-webapp --> gamey : HTTP /game
-users ..> db : Reads/Writes
+users --> gamey : Internal HTTP (Bot Logic)
+users ..> db : Profile & Stats queries
+multi ..> db : Active match state updates
 @enduml
 ----
 
 Motivation::
-The system follows a modular architecture to separate the user interface from the logic services.
-* **WebApp**: Handles UI and client-side logic.
-* **Users Service**: Manages user registration and data.
-* **GameY Engine**: Handles the specific rules and logic of the board game.
+To achieve high availability and separation of concerns, the backend is not a single server. Heavy AI calculations (Rust) are isolated from real-time socket connections (Multiplayer) and standard HTTP REST traffic (Users).
 
-Contained Building Blocks
+Contained Building Blocks::
 
 [cols="1,4", options="header"]
 |===
 | **Building Block** | **Description**
 
-| **WebApp**
-| *Responsibility:* Provides the graphical interface for the user. It communicates with the backend services to perform actions. +
-*Technology:* React, Vite, TypeScript. +
-*Location:* `/webapp` directory.
-
 | **Users Service**
-| *Responsibility:* Manages user registration and stores user information. It exposes a REST API. +
-*Technology:* Node.js, Express. +
+| *Responsibility:* Manages user registration, JWT authentication, and historical statistics retrieval. It acts as a standard REST API. +
+*Technology:* Node.js, Express, Mongoose. +
 *Location:* `/users` directory.
 
+| **Multiplayer Service**
+| *Responsibility:* Maintains stateful, real-time WebSocket connections with active players, managing game rooms and broadcasting piece movements instantly. +
+*Technology:* Node.js, Socket.io. +
+*Location:* `/multiplayer` directory.
+
 | **GameY Engine**
-| *Responsibility:* Implements the core logic of the Game of Y, including move validation and bot strategies using Rust for performance. +
+| *Responsibility:* Implements the core logic of the Game of Y. It validates moves, calculates bot strategies (Monte Carlo, Minimax, etc.), and checks win conditions using the YEN notation. +
 *Technology:* Rust. +
 *Location:* `/gamey` directory.
-
-| **MongoDB**
-| *Responsibility:* Database used to persist user data and game history. +
-*Technology:* MongoDB.
 |===
