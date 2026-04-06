@@ -41,49 +41,42 @@ endif::arc42help[]
 
 This section displays sequence diagrams. These show the interaction of objects in different scenarios.
 
-=== Game lifecycle against the computer
+=== Game lifecycle against the computer (PvE)
 
-This diagram shows the game life cycle in its standard form (playing against the machine).
+This diagram illustrates the standard single-player workflow. The React frontend communicates with the Node.js backend, which internally delegates the heavy AI computation to the Rust Game Engine.
 
 [plantuml]
 ----
 @startuml
 actor User
-participant WebApp
-participant UsersService
-participant Gamey
-database Db
+participant "React SPA" as WebApp
+participant "API Gateway" as Gateway
+participant "Users API\n(Node.js)" as UsersService
+participant "GameY Engine\n(Rust)" as Gamey
+database MongoDB as Db
 
+User -> WebApp: Select PvE mode & difficulty
+WebApp -> Gateway: POST /api/matches/new
+Gateway -> UsersService: Forward
+UsersService -> Db: Create match record
+UsersService --> WebApp: Match created (Initial YEN)
 
+loop Game loop (Player Turn)
+    User -> WebApp: Makes move on Hex board
+    WebApp -> Gateway: POST /api/bot/play (User YEN)
+    Gateway -> UsersService: Forward
+    UsersService -> Gamey: HTTP POST /api/gamey/calculate
+    Gamey -> Gamey: Process rules & generate Bot move
+    Gamey --> UsersService: Return new state (Bot YEN)
+    UsersService -> Db: Update match state
+    UsersService --> Gateway: 200 OK (New YEN state)
+    Gateway --> WebApp: Display bot move
+    WebApp --> User: Render updated board
 
-User -> WebApp: Log in
-WebApp -> UsersService: Validate credentials
-UsersService -> Db: Check user data
-Db --> UsersService: User data
-UsersService --> WebApp: Authentication result
-User -> WebApp: Select strategy, Y game type, difficulty, and board size
-WebApp -> Gamey: Create game (YEN)
-Gamey --> WebApp: Initial board state
-
-loop Game loop
-    User -> WebApp: Movement
-    WebApp -> Gamey: Send move (YEN)
-    Gamey -> Gamey: Check game status
-
-    alt Game ended
-        Gamey --> WebApp: Result (win/lose)
-        WebApp --> User: Display result
-        break
-    else Game continues
-        Gamey -> Gamey: Computes machine movement
-        Gamey --> WebApp: Returns movement (YEN)
-        WebApp --> User: Shows machine movement
+    alt Game ends (Win/Lose/Draw)
+        UsersService -> Db: Mark match as finished & update stats
     end
 end
-
-WebApp -> UsersService: Send match result
-UsersService -> Db: Store statistics
-
 @enduml
 ----
 
