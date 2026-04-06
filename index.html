@@ -497,7 +497,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_architecture_and_design_patterns">8.2. Architecture and design patterns</a></li>
 <li><a href="#_security_concepts">8.3. Security concepts</a></li>
 <li><a href="#_data_persistence_and_exchange">8.4. Data persistence and exchange</a></li>
-<li><a href="#_user_interface_and_ux_concepts">8.5. User Interface and UX concepts</a></li>
+<li><a href="#_testing_and_quality_assurance_concepts">8.5. Testing and Quality Assurance Concepts</a></li>
+<li><a href="#_user_interface_and_ux_concepts">8.6. User Interface and UX concepts</a></li>
 </ul>
 </li>
 <li><a href="#section-design-decisions">9. Architecture Decisions</a></li>
@@ -1957,7 +1958,26 @@ on this list.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_user_interface_and_ux_concepts">8.5. User Interface and UX concepts</h3>
+<h3 id="_testing_and_quality_assurance_concepts">8.5. Testing and Quality Assurance Concepts</h3>
+<div class="paragraph">
+<p>To guarantee the reliability and performance of the distributed system, testing is approached at multiple levels:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Load and Performance Testing</strong>: We use <strong>Gatling</strong> to simulate concurrent user traffic against our API gateway. This allows us to validate how the microservices (especially the Node.js API and the Rust engine) handle high volumes of simultaneous requests, ensuring the system remains responsive under stress.</p>
+</li>
+<li>
+<p><strong>Unit and Integration Testing</strong>: Conducted at the microservice level (e.g., Jest for Node.js, <code>cargo test</code> for Rust) to ensure individual components behave as expected before being containerized.</p>
+</li>
+<li>
+<p><strong>Code Quality Analysis</strong>: We integrate static analysis tools (like SonarCloud and CodeScene) within our CI/CD pipelines to monitor code health and prevent the introduction of vulnerabilities.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_user_interface_and_ux_concepts">8.6. User Interface and UX concepts</h3>
 <div class="ulist">
 <ul>
 <li>
