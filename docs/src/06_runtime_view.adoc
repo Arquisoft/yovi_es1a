@@ -119,29 +119,34 @@ end
 
 === User registration
 
-This diagram shows the different interactions that take place when a user registers.
+This diagram shows the different interactions that take place when a user registers, routing through the API Gateway and securing the password.
 
 [plantuml]
 ----
 @startuml
 actor User
-participant WebApp
-participant UsersService
-database Db
+participant "React SPA" as WebApp
+participant "API Gateway\n(Nginx)" as Gateway
+participant "Users API\n(Node.js)" as UsersService
+database MongoDB as Db
 
 User -> WebApp: Submit registration form
-WebApp -> UsersService: Create user
+WebApp -> Gateway: POST /api/users/register
+Gateway -> UsersService: Forward request
 UsersService -> Db: Check if user exists
 alt User already exists
     Db --> UsersService: User found
-    UsersService --> WebApp: Error (user exists)
+    UsersService --> Gateway: 409 Conflict (User exists)
+    Gateway --> WebApp: 409 Conflict
     WebApp --> User: Show error message
 else New user
     Db --> UsersService: User not found
-    UsersService -> Db: Save new user
+    UsersService -> UsersService: Hash password (e.g., Bcrypt)
+    UsersService -> Db: Save new user document
     Db --> UsersService: Confirmation
-    UsersService --> WebApp: Success
-    WebApp --> User: Show confirmation
+    UsersService --> Gateway: 201 Created
+    Gateway --> WebApp: 201 Created
+    WebApp --> User: Show confirmation & redirect to Login
 end
 @enduml
 ----
