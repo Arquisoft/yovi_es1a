@@ -53,7 +53,7 @@ connectBD(); //conect bd
 
 app.use('/', userRoutes);  // connect with user-controller
 app.use('/matches', verifyToken, matchRoutes);
-app.use('/api/bot', verifyToken, botRoutes);
+app.use('/api/bot', botRoutes);
 app.use('/clans', verifyToken, clanRoutes);
 
 app.get('/health', (req: Request, res: Response) => {
