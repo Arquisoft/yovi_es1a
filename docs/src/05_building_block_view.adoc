@@ -14,28 +14,39 @@ endif::arc42help[]
 
 === Whitebox Overall System (Level 1)
 
-The following diagram shows the main interaction between the user and the system.
+The following diagram shows the main high-level subsystems of the Yovi System and how they interact to serve the end user.
 
 [plantuml]
 ----
 @startuml
 actor "User" as user
-component "Yovi System" as yovi
 
-user .right.> yovi : Uses
+package "Yovi System Boundary" {
+    component "API Gateway\n(Nginx)" as gateway
+    component "Frontend SPA\n(React)" as frontend
+    component "Backend Microservices\n(Node.js & Rust)" as backend
+    database "Data Persistence\n(MongoDB)" as db
+}
+
+user --> gateway : HTTPS / WSS requests
+gateway --> frontend : Serves static files
+gateway --> backend : Routes API & WebSockets
+backend --> db : Reads / Writes
 @enduml
 ----
 
 Motivation::
-Yovi (refering to our group game) is a web application that allows users to play the "Game of Y". The system acts as a single unit for the end user, providing registration, game logic, and history tracking.
+The system follows a modular, decoupled architecture. Instead of a monolith, it is split into a static frontend, a cluster of backend microservices, and a persistent database, all shielded by a single reverse proxy gateway. This ensures security, scalability, and easier maintenance.
 
 Contained Building Blocks::
 
-[cols="1,2",options="header"]
+[cols="1,3",options="header"]
 |===
 | **Name** | **Responsibility**
-| **User** | End-user interacting with the application via a web browser.
-| **Yovi System** | The complete software solution handling the game logic and user data.
+| **API Gateway** | Acts as the single point of entry, handles SSL termination, and routes traffic to the correct internal block.
+| **Frontend SPA** | Client-side application running in the user's browser, responsible for the UI and UX.
+| **Backend Microservices** | A collection of internal APIs that handle user authentication, real-time multiplayer networking, and heavy game logic.
+| **Data Persistence** | The MongoDB database cluster that securely stores user profiles, encrypted passwords, and match statistics.
 |===
 
 === Level 2
