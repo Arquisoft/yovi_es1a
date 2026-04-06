@@ -2119,7 +2119,7 @@ concrete and measurable.</p>
 <h3 id="_quality_tree">10.1. Quality Tree</h3>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/RP51IyD048Nl_HLpZ06X2DvwQ6XQ3RIrjY1udEvEqu5aDipELkklboGgA5xdpNplyMOU3TLQ5jzYDydXEM73TftaELHYfA4ZnIFtCyWUkJxVJF8yXuEXU5JF7-JXTRc5LT0MRT2s0KeqXC9ZPwGHifALdC46kuwbxWbm89VqBvJqGWf5idCOjKACRnTdGXitAkcImGisxD4uI4_Q1Cyd_YVZaF-4Zg2eu62AHZLJ7BIIN4XTGnuUi2LOIir2FUtf64alFxGDUKxjo5i4CNgtX0siGrspr93rrrNvtOacPqd9mr8rAEmfTa7YO0axqbFVaJZwZLrXjBvF8zYJ2n8730U1R7OtdRPnN5k7DrYZaRWhx53ZO3-x7_GvYVzwuIS0" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/RP91Rvj048Nl_XLpYYYIrUJUGwX9QbSXfYnArEEmZ64Ks4MpirRTNry1RXLLkQwUlc_Uqzu7HT6HNJlYj4dXHyI1zR99Kp1aex1U8Dbprt_Qf6aAtrzhoABsv9GjAdi7Dr3vg0IbU2KxFor9Ovu-rqy67foLoxGaa-UEtQyLP4ZE90lBhvBCAMztFQ723RpWmEt2d-EGdP47R7ZuxvpSspSIs7cdo6xb-QtGKcf9x0OVMyXHiS50iCyWARphVFuLCXqmBFYIvEHbH6VfFRqY7BRA8y4hDMPMAPYBiv1ykRkz7SEQUiIWO1ILe2BhNL29zhfCYHBOTRFZu9J4JoJ_QXJKSXolSoYw5gNbtzJ2puTdU9plKJWpmhwkIyZAGrWBYGzXUnJks455mKUn1AP7OTT1iZjMPkbK-9PF_A6iO2i-a9pPKe2Sh8_Ji9wPGZd4hiDc8CWEO5HGgMCAa5GnADI2hEjensP6V2WenO-aFSK01Qcm3M2iuFJNyKtmX0xV3PnZw1kFqeRDFRds-X__0000" alt="diagram">
 </div>
 </div>
 <div class="sidebarblock arc42help">
@@ -2182,58 +2182,80 @@ concrete and measurable.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC-01</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Interoperability</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Backend</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sends a move request in YEN format</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Rust game engine</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Security</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unauthenticated User / Script</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Attempts to request a bot move without a valid JWT token via API</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Node.js Backend (<code>users</code> microservice)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Normal operation (runtime)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The engine processes the string directly without data mapping adapters</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Processing time &lt; 50 ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The API gateway routes the request, but the middleware intercepts and rejects it with a 401/403 status.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0 unauthorized engine executions; &lt; 50ms rejection time</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">High, Low</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC-02</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Modifiability</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Developer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Wants to add a new AI strategy</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Rust source code (AI module)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Design/Maintenance time</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The new strategy is added by implementing an existing interface</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0 lines of code modified in the main game engine</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">High, Medium</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Availability</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Internal System Fault</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>gamey</code> Rust container crashes unexpectedly due to an unhandled panic or OOM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Docker Engine (Host)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Normal Operation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Docker detects the container exit and automatically restarts it via the <code>unless-stopped</code> policy.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System recovers without manual intervention; Downtime &lt; 5 seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">High, Low</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC-03</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Performance</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Refreshes the webpage to resume a game</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Complete System (Frontend + Backend + Rust)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Normal Operation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system analyzes the YEN string and reconstructs the 3D board</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Interaction Time &lt; 200 ms</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium, High</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Connected Player</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Makes a valid move on the board</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WebSocket Server (<code>multiplayer</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Peak Load (Multiple active matches)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The server validates the move, updates the state, and broadcasts the event to the opponent in the same Room.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">End-to-end sync latency &lt; 100 ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">High, Medium</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC-04</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Observability</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Malicious User/Bot Error</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sends out-of-bounds coordinates (e.g., "Z: 99")</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Server (Backend)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System Admin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wants to check the current load and API health</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prometheus / Grafana</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Normal Operation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system logs the incident with context and returns a 400 error</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The log includes GameID and the YEN string; Server uptime: 100% (no crashes)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium, Low</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The admin opens the Grafana dashboard and views real-time metrics scraped from the Docker containers and Node endpoints.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dashboard loads in &lt; 2 seconds; Data freshness &lt; 15 seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium, Medium</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC-05</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Security</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Cheater User</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sends a fake request claiming victory ("winner": true) without playing</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Backend (Validation Logic)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interoperability</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>users</code> Microservice</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sends a YEN-formatted payload to evaluate a board state</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rust Game Engine (<code>gamey</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Normal operation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Rust engine deserializes the JSON directly into its internal structures without requiring extra mapping adapters.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Processing time &lt; 50 ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium, Low</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SC-06</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Security (Anti-Cheat)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Malicious Client</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sends a fake request claiming victory ("winner": true) or an illegal move</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Backend (Validation Logic in Rust)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Normal Operation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The server ignores the client data, checks the move history, and rejects the request</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0% of corrupted games in the database; Server authority is maintained</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">High, Medium</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The server ignores the client&#8217;s claim, re-evaluates the board state using Union-Find, and rejects the illegal state.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0% of corrupted games persisted to MongoDB; Server authority maintained</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">High, High</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SC-07</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Modifiability</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Backend Developer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Needs to add a new "Minimax" AI bot</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rust Engine Source Code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Design/Maintenance time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new strategy is added by implementing the existing <code>YBot</code> trait and registering it in the Factory.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0 lines of core game logic modified</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium, Medium</p></td>
 </tr>
 </tbody>
 </table>
