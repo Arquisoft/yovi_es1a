@@ -41,13 +41,13 @@ endif::arc42help[]
 @startuml
 skinparam componentStyle uml2
 
-actor "Player" as player
+actor "User" as user
 actor "Administrator" as admin
 actor "Bot (AI)" as bot
 
 component  "Yovi System" as yovi
 
-player --> yovi : Registers, configures matches,\nplays and checks stats
+user --> yovi : Registers, configures matches,\nplays and checks stats
 admin --> yovi : Monitors system health & metrics
 bot --> yovi : Consults match state and\nmakes automatic moves
 
@@ -56,7 +56,7 @@ bot --> yovi : Consults match state and\nmakes automatic moves
 
 **Diagram elements:**
 
-* **Player:** The end-user who interacts with the web application to play games (against bots or other players in real-time) and manage their profile.
+* **User:** The end-user who interacts with the web application to play games (against bots or other players in real-time) and manage their profile.
 * **Administrator:** The technical user responsible for overseeing the system's stability and performance via the internal monitoring dashboards.
 * **Bot (AI):** Conceptual actor representing the internal artificial intelligence engine that plays against the user.
 * **Yovi:** The complete system boundary. It acts as a unified solution that encapsulates the game engines, real-time communications, user management, data persistence, and the observability infrastructure.
@@ -80,9 +80,9 @@ skinparam componentBackgroundColor white
 skinparam packageBackgroundColor #F2F2F2
 skinparam defaultTextAlignment center
 
-actor "Player" as player
+actor "User" as user
 actor "Administrator" as admin
-node "Load Tester" as gatling
+node "Load Tester (Gatling)" as gatling
 
 rectangle "Web Browser" as browser {
     component "React App (SPA)" as spa
@@ -104,7 +104,7 @@ node "Docker Host (IP: 20.199.88.71)" {
 
 database "MongoDB" as mongo
 
-player -> browser : Interacts
+user -> browser : Interacts
 browser -right-> nginx : HTTPS [443] / WSS [443]
 gatling -down-> nginx : Simulates Traffic\n[HTTPS / WSS]
 
@@ -131,7 +131,7 @@ prom -up-> users : Scrapes Metrics
 The Yovi system operates behind a reverse proxy that acts as the single point of entry, providing secure interfaces for external communication and managing a private Docker bridge network (`monitor-net`) for internal microservices. The communication channels are detailed below:
 
 * **External Access Interfaces (Public):**
-** **Nginx Reverse Proxy & TLS Termination:** Binds to ports `80` (redirects to HTTPS) and `443` (SSL). It uses configured certificates (`cert.pem`, `key.pem`) to encrypt all traffic from Players and Gatling load tests.
+** **Nginx Reverse Proxy & TLS Termination:** Binds to ports `80` (redirects to HTTPS) and `443` (SSL). It uses configured certificates (`cert.pem`, `key.pem`) to encrypt all traffic from Users and Gatling load tests.
 ** **Frontend Delivery (`/`):** Nginx routes root traffic to the `webapp` container (port 80) to serve the React Single Page Application.
 ** **Node.js User & Bot API (`/api/`, `/api/bot/`, `/api/matches/`):** Handled by the `users` service on internal port `3000`. This includes authentication, user stats, and the artificial intelligence bot logic engine.
 ** **Rust Game API (`/api/gamey/`):** Routed to the `gamey` service on internal port `4000` for complex game mechanics calculation.
