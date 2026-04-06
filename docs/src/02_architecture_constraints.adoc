@@ -37,6 +37,15 @@ endif::arc42help[]
 
 === Political and Convention Constraints
 
+[cols="1,2",options="header"]
+|===
+|Constraint |Explanation
+| **Arc42 Architecture** | The software architecture documentation must strictly follow the Arc42 template structure to ensure consistency and readability.
+| **Language** | The documentation, code variables, and inline code comments must be written in English, adhering to international software engineering standards.
+| **Coding Standards** | The team must adhere to Clean Code principles, utilizing standard formatting tools (like ESLint/Prettier) to maintain code quality.
+| **Conventional Commits** | All repository commits must follow the Conventional Commits specification (or at least must be clear enough) to maintain a clean and semantic project history.
+|===
+
 === Technical Constraints
 
 [cols="1,2",options="header"]
