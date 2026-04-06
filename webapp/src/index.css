@@ -1,4 +1,33 @@
 :root {
+  /* ==========================================
+     SISTEMA DE DISEÑO GLOBAL (VARIABLES)
+     ========================================== */
+  
+  /* Colores de Navegación */
+  --nav-bg-color: #1321a3;
+  --nav-dropdown-color: #2a52be;
+
+  /* Equipo Azul (Jugador B) */
+  --player-b-light: #60a5fa;
+  --player-b-dark: #2563eb;
+  --player-b-shadow: #3b82f6;
+  --player-b-glow: rgba(96, 165, 250, 0.6);
+  --player-b-glow-strong: rgba(96, 165, 250, 0.9);
+
+  /* Equipo Rojo (Jugador R) */
+  --player-r-light: #fb7185;
+  --player-r-dark: #dc2626;
+  --player-r-shadow: #ef4444;
+  --player-r-glow: rgba(251, 113, 133, 0.6);
+  --player-r-glow-strong: rgba(251, 113, 133, 0.9);
+
+  /* Fondos Translúcidos (Glassmorphism) */
+  --glass-light: rgba(255, 255, 255, 0.1);
+  --glass-medium: rgba(255, 255, 255, 0.2);
+  --glass-heavy: rgba(255, 255, 255, 0.4);
+  --overlay-dark: rgba(0, 0, 0, 0.7);
+
+  /* Tipografía base */
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -13,6 +42,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ==========================================
+   ESTILOS BASE
+   ========================================== */
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -26,6 +59,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: transparent !important; /* Evitar tapar el video */
 }
 
 h1 {
@@ -66,23 +100,18 @@ button:focus-visible {
 }
 
 p, li {
-  color: #ffffff !important;
+  color: var(--color-text-white) !important;
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
 }
 
 /* Color para los títulos de las reglas */
 h1, h2, h3 {
-  color: #60a5fa !important;
+  color: var(--player-b-light) !important;
   text-shadow: 0 0 10px rgba(96, 165, 250, 0.4);
 }
 
 /* Para resaltar las estrategias (Monte Carlo, etc.) */
 strong {
-  color: #5b99f6 !important;
+  color: var(--player-b-light) !important;
   font-weight: bold;
-}
-
-/* Evitar que el fondo del body tape el video en algunas páginas */
-body {
-  background-color: transparent !important;
 }

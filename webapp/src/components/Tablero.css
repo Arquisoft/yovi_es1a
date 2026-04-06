@@ -1,4 +1,3 @@
-
 .gameBoard {
   display: flex;
   flex-direction: column;
@@ -31,21 +30,11 @@
   overflow: hidden;
 }
 
-.tablero-grid::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-.tablero-grid::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 5px;
-}
-.tablero-grid::-webkit-scrollbar-thumb {
-  background: #5b99f6;
-  border-radius: 5px;
-}
-.tablero-grid::-webkit-scrollbar-thumb:hover {
-  background: #1321a3;
-}
+/* Scrollbar con colores del sistema */
+.tablero-grid::-webkit-scrollbar { width: 10px; height: 10px; }
+.tablero-grid::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); border-radius: 5px; }
+.tablero-grid::-webkit-scrollbar-thumb { background: var(--player-b-light); border-radius: 5px; }
+.tablero-grid::-webkit-scrollbar-thumb:hover { background: var(--nav-bg-color); }
 
 .tablero {
   display: flex;
@@ -54,7 +43,7 @@
 }
 
 .casilla {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--glass-light);
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   border: none;
   cursor: pointer;
@@ -77,45 +66,43 @@
   filter: brightness(1.5);
 }
 
-/* Hover para casillas vacías */
 .casilla:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: var(--glass-heavy);
   transform: translateY(-2px) scale(1.05);
 }
 
+/* Fichas dinámicas usando variables */
 .casilla.jugador-b {
-  background: radial-gradient(circle at 35% 35%, #60a5fa, #2563eb);
-  filter: drop-shadow(0 0 8px #3b82f6);
+  background: radial-gradient(circle at 35% 35%, var(--player-b-light), var(--player-b-dark));
+  filter: drop-shadow(0 0 8px var(--player-b-shadow));
   animation: pulse-glow 2.5s infinite;
 }
 
 .casilla.jugador-r {
-  background: radial-gradient(circle at 35% 35%, #fb7185, #dc2626);
-  filter: drop-shadow(0 0 8px #ef4444);
+  background: radial-gradient(circle at 35% 35%, var(--player-r-light), var(--player-r-dark));
+  filter: drop-shadow(0 0 8px var(--player-r-shadow));
   animation: pulse-glow 2.5s infinite;
 }
 
-/* Animación de brillo neón */
 @keyframes pulse-glow {
   0%, 100% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 5px currentColor); }
   50% { transform: scale(0.98); filter: brightness(1.2) drop-shadow(0 0 15px currentColor); }
 }
 
 strong {
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); 
+  text-shadow: 0 0 10px var(--glass-medium); 
   transition: all 0.3s ease;
   font-weight: 800;
 }
 
-
 .turno-azul {
-  color: #60a5fa !important;
-  text-shadow: 0 0 15px rgba(96, 165, 250, 0.6) !important;
+  color: var(--player-b-light) !important;
+  text-shadow: 0 0 15px var(--player-b-glow) !important;
 }
 
 .turno-rojo {
-  color: #fb7185 !important;
-  text-shadow: 0 0 15px rgba(251, 113, 133, 0.6) !important;
+  color: var(--player-r-light) !important;
+  text-shadow: 0 0 15px var(--player-r-glow) !important;
 }
 
 .modal-overlay {
@@ -124,7 +111,7 @@ strong {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.7);
+  background: var(--overlay-dark);
   backdrop-filter: blur(10px);
   display: flex;
   justify-content: center;
@@ -133,9 +120,9 @@ strong {
 }
 
 .modal-content {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--glass-light);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--glass-medium);
   border-radius: 20px;
   padding: 40px;
   text-align: center;
@@ -151,14 +138,15 @@ strong {
   display: block;
 }
 
+/* Modal text glows with strong variables */
 .modal-content .turno-azul {
-  color: #60a5fa !important;
-  text-shadow: 0 0 25px rgba(96, 165, 250, 0.9) !important;
+  color: var(--player-b-light) !important;
+  text-shadow: 0 0 25px var(--player-b-glow-strong) !important;
 }
 
 .modal-content .turno-rojo {
-  color: #fb7185 !important;
-  text-shadow: 0 0 25px rgba(251, 113, 133, 0.9) !important;
+  color: var(--player-r-light) !important;
+  text-shadow: 0 0 25px var(--player-r-glow-strong) !important;
 }
 
 .modal-actions {
@@ -176,16 +164,6 @@ strong {
   transition: transform 0.2s;
 }
 
-.btn-modal.primary { background: #3b82f6; color: white; }
-.btn-modal.secondary { background: rgba(255,255,255,0.2); color: white; }
+.btn-modal.primary { background: var(--player-b-shadow); color: white; }
+.btn-modal.secondary { background: var(--glass-medium); color: white; }
 .btn-modal:hover { transform: scale(1.05); }
-
-.modal-content .turno-azul {
-  color: #60a5fa !important; 
-  text-shadow: 0 0 20px rgba(96, 165, 250, 0.8) !important;
-}
-
-.modal-content .turno-rojo {
-  color: #fb7185 !important; 
-  text-shadow: 0 0 20px rgba(251, 113, 133, 0.8) !important;
-}
