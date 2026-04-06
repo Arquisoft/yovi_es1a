@@ -1,8 +1,4 @@
 :root {
-  /* ==========================================
-     SISTEMA DE DISEÑO GLOBAL (VARIABLES)
-     ========================================== */
-  
   /* Colores de Navegación */
   --nav-bg-color: #1321a3;
   --nav-dropdown-color: #2a52be;
@@ -10,7 +6,7 @@
   /* Equipo Azul (Jugador B) */
   --player-b-light: #60a5fa;
   --player-b-dark: #2563eb;
-  --player-b-shadow: #3b82f6;
+  --player-b-shadow: #5b99f6;
   --player-b-glow: rgba(96, 165, 250, 0.6);
   --player-b-glow-strong: rgba(96, 165, 250, 0.9);
 
@@ -20,6 +16,30 @@
   --player-r-shadow: #ef4444;
   --player-r-glow: rgba(251, 113, 133, 0.6);
   --player-r-glow-strong: rgba(251, 113, 133, 0.9);
+
+  /* Estados de Partida */
+  --color-success: #00ff00;
+  --color-success-glow: rgba(0, 255, 0, 0.8);
+  --color-danger: #ff0000;
+  --color-danger-glow: rgba(255, 0, 0, 0.8);
+
+  /* Colores de Alertas/Errores Genéricos */
+  --color-error: #f87171;
+  --color-error-bg: rgba(254, 226, 226, 0.1);
+  --color-error-shadow: rgba(248, 113, 113, 0.5);
+
+  /* Botones de Acción (Deshacer, Pasar, Rendirse) */
+  --btn-undo-color: #64b5f6;
+  --btn-undo-bg: rgba(100, 181, 246, 0.1);
+  --btn-undo-hover: rgba(100, 181, 246, 0.3);
+
+  --btn-pass-color: #ffd700;
+  --btn-pass-bg: rgba(255, 215, 0, 0.1);
+  --btn-pass-hover: rgba(255, 215, 0, 0.3);
+
+  --btn-surrender-color: #ff4444;
+  --btn-surrender-bg: rgba(255, 68, 68, 0.1);
+  --btn-surrender-hover: rgba(255, 68, 68, 0.3);
 
   /* Fondos Translúcidos (Glassmorphism) */
   --glass-light: rgba(255, 255, 255, 0.1);
@@ -42,10 +62,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ==========================================
-   ESTILOS BASE
-   ========================================== */
-
 a {
   font-weight: 500;
   color: #646cff;
@@ -59,7 +75,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: transparent !important; /* Evitar tapar el video */
+  background-color: transparent !important;
 }
 
 h1 {
@@ -100,17 +116,15 @@ button:focus-visible {
 }
 
 p, li {
-  color: var(--color-text-white) !important;
+  color: #ffffff !important;
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
 }
 
-/* Color para los títulos de las reglas */
 h1, h2, h3 {
   color: var(--player-b-light) !important;
   text-shadow: 0 0 10px rgba(96, 165, 250, 0.4);
 }
 
-/* Para resaltar las estrategias (Monte Carlo, etc.) */
 strong {
   color: var(--player-b-light) !important;
   font-weight: bold;

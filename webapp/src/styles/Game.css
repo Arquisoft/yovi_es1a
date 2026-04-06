@@ -38,9 +38,9 @@
 }
 
 .btn-undo {
-  background: rgba(100, 181, 246, 0.1);
-  border: 1px solid #64b5f6;
-  color: #64b5f6;
+  background: var(--btn-undo-bg);
+  border: 1px solid var(--btn-undo-color);
+  color: var(--btn-undo-color);
   padding: 10px 20px;
   font-family: 'Orbitron', sans-serif;
   font-weight: bold;
@@ -53,8 +53,8 @@
 }
 
 .btn-undo:hover:not(:disabled) {
-  background: rgba(100, 181, 246, 0.3);
-  box-shadow: 0 0 15px rgba(100, 181, 246, 0.5);
+  background: var(--btn-undo-hover);
+  box-shadow: 0 0 15px var(--btn-undo-hover);
   transform: translateY(-2px);
 }
 
@@ -67,9 +67,9 @@
 }
 
 .btn-pass {
-  background: rgba(255, 215, 0, 0.1);
-  border: 1px solid #ffd700;
-  color: #ffd700;
+  background: var(--btn-pass-bg);
+  border: 1px solid var(--btn-pass-color);
+  color: var(--btn-pass-color);
   padding: 10px 20px;
   font-family: 'Orbitron', sans-serif;
   font-weight: bold;
@@ -82,8 +82,8 @@
 }
 
 .btn-pass:hover:not(:disabled) {
-  background: rgba(255, 215, 0, 0.3);
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+  background: var(--btn-pass-hover);
+  box-shadow: 0 0 15px var(--btn-pass-hover);
   transform: translateY(-2px);
 }
 
@@ -96,9 +96,9 @@
 }
 
 .btn-surrender {
-  background: rgba(255, 68, 68, 0.1);
-  border: 1px solid #ff4444;
-  color: #ff4444;
+  background: var(--btn-surrender-bg);
+  border: 1px solid var(--btn-surrender-color);
+  color: var(--btn-surrender-color);
   padding: 10px 20px;
   font-family: 'Orbitron', sans-serif;
   font-weight: bold;
@@ -111,8 +111,8 @@
 }
 
 .btn-surrender:hover:not(:disabled) {
-  background: rgba(255, 68, 68, 0.3);
-  box-shadow: 0 0 15px rgba(255, 68, 68, 0.5);
+  background: var(--btn-surrender-hover);
+  box-shadow: 0 0 15px var(--btn-surrender-hover);
   transform: translateY(-2px);
 }
 
@@ -129,7 +129,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6); 
+  background-color: var(--overlay-dark); 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -183,7 +183,7 @@
 }
 
 .btn-modal-confirm {
-  background-color: #f04747; 
+  background-color: var(--color-danger); 
   color: white;
 }
 
@@ -192,14 +192,8 @@
 }
 
 @keyframes popIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 @media (max-width: 850px) {
@@ -207,14 +201,8 @@
     margin-top: 100px;
     padding: 0 10px;
   }
-
-  .game-actions {
-    gap: 10px;
-  }
-
-  .btn-undo,
-  .btn-pass,
-  .btn-surrender {
+  .game-actions { gap: 10px; }
+  .btn-undo, .btn-pass, .btn-surrender {
     padding: 8px 14px;
     font-size: 0.85rem;
   }
