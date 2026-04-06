@@ -1,6 +1,14 @@
 import { authFetch } from './api';
 
 export const matchService = {
+  /**
+   * Registra automáticamente una victoria en la base de datos cuando el oponente 
+   * se desconecta o abandona la partida multijugador online.
+   * 
+   * @param userId - El ID del jugador que permanece en la partida (el ganador).
+   * @param opponentName - El nombre del jugador que abandonó (o fallback genérico).
+   * @returns `true` si la partida se guardó correctamente, `false` si hubo un error.
+   */
   saveWinByAbandonment: async (userId: string, opponentName: string): Promise<boolean> => {
     try {
       const response = await authFetch('/matches', {
