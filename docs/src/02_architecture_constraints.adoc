@@ -37,9 +37,17 @@ endif::arc42help[]
 
 === Political and Convention Constraints
 
+=== Technical Constraints
+
 [cols="1,2",options="header"]
 |===
 |Constraint |Explanation
-| **Arc42** | The documentation must follow the Arc42 template structure.
-| **Language** |  The documentation and code comments must be written in English, as it's the standard.
+| **React, TypeScript & Vite** | The frontend must be developed using React and TypeScript, utilizing Vite as the fast build tool and development server.
+| **Node.js & Express** | The backend and user management services will be implemented using Node.js and Express.
+| **MongoDB** | The persistence layer for user profiles, match history, and global statistics must be implemented using MongoDB.
+| **WebSockets (Socket.io)** | Real-time multiplayer synchronization and game state updates must be handled via WebSockets using Socket.io.
+| **Rust Game Engine** | The core logic and AI for the "Game of Y" must be implemented in Rust to ensure maximum computational performance.
+| **Docker** | The entire system (frontend, backend, database, and Rust engine) must be containerized using Docker and orchestrated with Docker Compose.
+| **GitHub Actions** | CI/CD pipelines must be managed using GitHub Actions for automated testing, building, and deployment.
+| **YEN Notation** | Game moves and state representation must strictly follow the standard YEN (Y-Game Extended Notation).
 |===
