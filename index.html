@@ -481,10 +481,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#section-runtime-view">6. Runtime View</a>
 <ul class="sectlevel2">
-<li><a href="#_game_lifecycle_against_the_computer_pve">6.1. Game lifecycle against the computer (PvE)</a></li>
+<li><a href="#_game_lifecycle_against_the_computer">6.1. Game lifecycle against the computer</a></li>
 <li><a href="#_bot_against_application">6.2. Bot against Application</a></li>
 <li><a href="#_user_registration">6.3. User registration</a></li>
-<li><a href="#_real_time_multiplayer_match_pvp">6.4. Real-time Multiplayer Match (PvP)</a></li>
 </ul>
 </li>
 <li><a href="#section-deployment-view">7. Deployment View</a>
@@ -1570,13 +1569,13 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <p>This section displays sequence diagrams. These show the interaction of objects in different scenarios.</p>
 </div>
 <div class="sect2">
-<h3 id="_game_lifecycle_against_the_computer_pve">6.1. Game lifecycle against the computer (PvE)</h3>
+<h3 id="_game_lifecycle_against_the_computer">6.1. Game lifecycle against the computer</h3>
 <div class="paragraph">
-<p>This diagram illustrates the standard single-player workflow. The React frontend communicates with the Node.js backend, which internally delegates the heavy AI computation to the Rust Game Engine.</p>
+<p>This diagram shows the game life cycle in its standard form (playing against the machine).</p>
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/XLAnRjim5Dpv5OSCXZoq2ZfwAEBKRcAqTeJOGH0WonFvxB2HI86ahFhl2z9AAoTfEmWWoBjxT_TquGEvqDQL81cimvrd9nfoGKlTa0auksMI0UjYUWRokETosZIdY6cnm1K5xkYGCFtv51I5FQR5uj5aAwluumy_JkZqi6Qtrv9FALTKymFcPgSDFvhijlLXt0-e-I0K1Ih9CvRMxEpiChxCIY6Y83vyxgrEiEQAPK2ndwEsYZ62qjkjbcqL3k88Yl3UzGJ5pNg3d1gTrnJa4_lSS2VwvuWSEfxWgtKTEIM6jn4rAoVuufW28-d0iRHlS0EVouIIYQAGBOmEcYeyp5TZ8IfhcvGRwPGL5HtOOTCwCnO0y3hrafxPexPxXZMuvfyeRRGPiVyCNTgGDnKTa2N9D3wI_bl0YujX2MbJ4rnlDiLWn2xUvf8gsLOKk9Ul-J2W5CvAzXwkhTXZX1qRTh7CInjIh27hZQTR3gqpCDp1XyZA8krtblTsTTUeFxjAf7UWmye-dP_ZvXko5NTH-SXvrTLW8JFjKwtbqF_B9le0qRXHxD0cCwhVMO9I5Ou_01lbaTrhat-tdlEPe-uuzM_9bkIU-rpaiTL6-oTM6FLJad6V5DWe4RyBDggjgry0" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/TLB1Rjim3BtpAtXiWHIx-r2qQ8PXmBP3ZMxeaPROMAWi6IALmllwGNASEiboC629Z-yzFl51b9BcmGCPZGbVX1ECbDGPDr9G_CFTupYUN1MCj9pspl19uHiDF84bfOw4STi101GqtjqVY1hy4NVe0ip7KbZJDVYRlBEaZ2QnvQ2ElC0QKbgsNODFFPjtp8MzACAsmxiBjfTZ-PHYvUSnQrzq3AcB0HDBzdhXkcNFHb4qaV9ksk0hxcXWr6da3LhtzkPCzZfja8B5BbAoAEulh-QiwJJubBYCLxjlNh_-keLQEF7qFRWo-CAZf0pWOnmh2PO_G4GyT_apxddWeBLueTnoi3Z4_Q9RG0VjJtSrrMgko6Q12YC_lovoi6phrQfxvU2vneSt7ovyyL7uzeXTx1pUgC6jaz7Jj2I-uBh4z5vFx8LdLHE3kf1PpfK_VSTXpCg20vdU1Qvp7gEuvbLp2dA4hcBvh-6sZnzN13XOAD_LjPwp9pNzUiFETxhLcERWdQWp0l30mUR1_mC0" alt="diagram">
 </div>
 </div>
 </div>
@@ -1594,22 +1593,11 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <div class="sect2">
 <h3 id="_user_registration">6.3. User registration</h3>
 <div class="paragraph">
-<p>This diagram shows the different interactions that take place when a user registers, routing through the API Gateway and securing the password.</p>
+<p>This diagram shows the different interactions that take place when a user registers.</p>
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/XP91RzD048Nl-okUUa29H9E2kE03Qfe8g0GbmbHSk8oz4sV1tZMpuwRvzsWT5vpIgDUPx-rxyxINKKcqQsf3fGR1RMGnBOcwqhNa5MTVcKf5lbwSWIA-Sx5essDYiRx61rBUqVw7dznKpjzFUtWO7jF98MAnlavii3px6GzqlyXPxbp9nf9IGP7nEVWghAuIi2gCIH3EtmqvCkHTqJY5SEMY2gaB7fiWZJa02HrIP5X_oRzXJgsRTybgVX2nc858y3X4XlT1TYGMmhyxZch6sqIlYWpBBPU_u3P8ZuBlNTHegDR-AL0jJ7R_C0U0LO7p_vnwU1CwRtlcs6Xyn9kBjrW6lwbTgPZS_lESziA_fumw6ajwwA6R8KM6V1jsO94WQ3X6gjXm7HatlElFUYQt3teo-sF1HufRj1JZBeZ5X6VLx2MkIjctEdrIdZhEwOxXXp2meUmQzdewLRhMITD_XsVwV7tn2ajXKhOd2tpCFDrVEJB52mXR9rmgDE1Jg9mtxAsvP6-xflu3" alt="diagram">
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_real_time_multiplayer_match_pvp">6.4. Real-time Multiplayer Match (PvP)</h3>
-<div class="paragraph">
-<p>This diagram details the WebSocket communication used for real-time multiplayer games, handled by the dedicated Multiplayer service.</p>
-</div>
-<div class="imageblock plantuml">
-<div class="content">
-<img src="https://www.plantuml.com/plantuml/png/fL9VI-D047_VJp7iK_gWa3psGVIiY72LnU0LuQ1CiqDlxvATTJEf-EsFR59jf8hYMvZVtzd9UIiOfMjgXPLm16rgVAO8kGPimUHlniKmBbJ0AAvo0Rs0lZ0tS8r2J_YSyF5xIbfsjRWms9GKTwwYtpuhkVf7SkfubfI9f2mARh0bMBBVyk97ZomsIfaSJixsxdEuPE-f4iXMPJbJuxXd99Svt8TjH4iW32lQ34dA5D_t68kCbAl62UY_xFpwiQEEz9ZnBfo00yOIfVe39WVq5am1sMKa588xvcRsobvivZ0YpS5RDaaTgU9ez-IJCp3vFZeHrkdEP3LaDzw9mneUhcvdXuBYKmB5GU0Q6-hZuITpK000HrvawBTkU4SQiYJkcM-t_uMrisaftX7Kl7NLbDVlNUAEe1KKEiGchJa4zkHb4ZXqAxxSxUFC_CDCylRe7z9sCPAt5FNqflTXM3_TiSzh8JC5h9nlZz_d9VN5aQnMv-HjrzJ_0G00" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/XP0zRiCm38LtdUADxP0BU2XIs5sx64LcIgOJePPaa5BIthwmd00EYgOh-V7zSA-P99Sm6N8v2JwKnSmasJi_Kymui7sTvxlHmcZFSlQEpK2PB2cZiyOi6-nUhaSD-cA3pn0-Uir2sQU8CKamAx2WMx46hJ1bHbbIR3SBsTa6xOdT9_nO2V2Nrwo6fZKJQ1AcuVis1u3EOlVBfS9ZAd6epBtH9lwRI18yRRoUwy4j_LMuGNzA5t2b0wlIaGrFodZdozhbSPIOyfznrjuzdHdnNxKsnT5Bg8z-NAqlph7gWpfkgyLnC7kEGmdJ3m00" alt="diagram">
 </div>
 </div>
 <div style="page-break-after: always;"></div>
@@ -2812,7 +2800,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2026-02-23 16:48:09 +0100
+Last updated 2026-02-16 21:36:32 +0100
 </div>
 </div>
 </body>
