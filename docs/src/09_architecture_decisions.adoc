@@ -40,7 +40,7 @@ endif::arc42help[]
 |Decision |Reason
 
 | **Microservices Architecture**
-| We separated the application into decoupled services (`users`, `gamey`, `webapp`). This allows us to use the best technology for each specific problem (Rust for performance, Node.js for I/O) and enables independent development and deployment cycles.
+| We separated the application into decoupled services (`users`, `gamey`, `webapp`, `multiplayer`). This allows us to use the best technology for each specific problem (Rust for performance, Node.js for I/O) and enables independent development and deployment cycles.
 
 | **React**
 | We use React for the `webapp` frontend because it allows us to build fast, scalable, and easy-to-maintain interfaces using a component-based architecture.
@@ -58,10 +58,22 @@ endif::arc42help[]
 | The `gamey` engine requires high performance for game logic and bot calculations. Rust provides memory safety without a garbage collector and meets the project's core requirements.
 
 | **MongoDB & Mongoose**
-| MongoDB is the persistence layer, deployed as an independent container. We use **Mongoose** (in `users/src/database.js`) to manage connections and schemas. The connection string is decoupled using the `MONGODB_URI` environment variable in `.env`, following the 12-Factor App methodology for config.
+| MongoDB Atlas is the cloud-hosted persistence layer. We use **Mongoose** (in `users/src/database.js`) to manage connections and schemas. The connection string is decoupled using the `MONGODB_URI` environment variable in `.env`, following the 12-Factor App methodology for config.
 
 | **Docker & Docker Compose**
-| Used to orchestrate the entire system. It defines independent containers for `webapp`, `users`, `gamey`, and the `mongo` database, linking them via an internal network. This ensures the environment is reproducible and eliminates configuration issues between development and production.
+| Used to orchestrate the entire system. It defines independent containers for `webapp`, `users`, `gamey`, `multiplayer`, and monitoring tools, linking them via an internal network. This ensures the environment is reproducible and eliminates configuration issues between development and production.
+
+| **Nginx as Reverse Proxy**
+| Nginx is used as the single HTTPS entry point for all client traffic. It terminates TLS, routes requests to the appropriate internal service based on URL path (/api/*, /socket.io/*, /*), and eliminates CORS issues by proxying all communication through a single origin. Internal service ports are never exposed directly to the client.
+
+| **JWT Authentication**
+| JSON Web Tokens are used to authenticate users after login. The token is signed with a secret key, stored in the client's localStorage, and sent in the `Authorization: Bearer` header on every protected API request. This avoids server-side session state and enables stateless authentication across services.
+
+| **Socket.io (WebSockets) for Multiplayer**
+| The real-time online multiplayer feature requires bidirectional, low-latency communication between players. Socket.io was chosen over HTTP polling to synchronize game moves instantly. It runs as an independent `multiplayer` service and is proxied through Nginx via WebSocket upgrade.
+
+| **Modular CSS Architecture**
+| Frontend styles are split into a shared `global.css` file (navbar, video background, pagination, typography) and per-page CSS files. This prevents style conflicts between components developed by different team members, reduces specificity issues, and improves maintainability.
 
 | **GitHub Actions**
 | We use it for CI/CD pipelines to automatically build, test, and check the quality of the code on every push, ensuring continuous integration and early error detection.
