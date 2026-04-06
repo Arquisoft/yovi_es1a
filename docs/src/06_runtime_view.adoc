@@ -143,3 +143,45 @@ else New user
 end
 @enduml
 ----
+
+=== Real-time Multiplayer Match (PvP)
+
+This diagram details the WebSocket communication used for real-time multiplayer games, handled by the dedicated Multiplayer service.
+
+[plantuml]
+----
+@startuml
+actor "Player 1" as P1
+actor "Player 2" as P2
+participant "API Gateway" as Gateway
+participant "Multiplayer Service\n(Socket.io)" as Multi
+database MongoDB as Db
+
+P1 -> Gateway: Connect (WSS)
+Gateway -> Multi: Upgrade to WebSocket
+P2 -> Gateway: Connect (WSS)
+Gateway -> Multi: Upgrade to WebSocket
+
+P1 -> Multi: Emit "join_queue"
+P2 -> Multi: Emit "join_queue"
+Multi -> Multi: Match P1 and P2 (Create Room)
+Multi -> Db: Create multiplayer match record
+Multi --> P1: Emit "match_started" (Initial YEN)
+Multi --> P2: Emit "match_started" (Initial YEN)
+
+opt Gameplay Loop
+    P1 -> Multi: Emit "player_move" (YEN)
+    Multi -> Multi: Validate move logic
+    Multi -> Db: Save state
+    Multi --> P2: Emit "opponent_move" (YEN)
+    
+    P2 -> Multi: Emit "player_move" (YEN)
+    Multi -> Db: Save state
+    Multi --> P1: Emit "opponent_move" (YEN)
+end
+
+P1 -> Multi: Emit "surrender"
+Multi -> Db: Update match stats (P2 Wins)
+Multi --> P2: Emit "opponent_surrendered"
+@enduml
+----
