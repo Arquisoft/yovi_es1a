@@ -1,5 +1,8 @@
 import { authFetch } from './api';
 
+/**
+ * Representa los datos necesarios para registrar el resultado de una partida en la base de datos.
+ */
 export interface MatchData {
   user: string;
   result: 'win' | 'lose' | 'surrender';
@@ -11,6 +14,13 @@ export interface MatchData {
 }
 
 export const statsService = {
+  /**
+   * Guarda las estadísticas de una partida finalizada en el backend.
+   * 
+   * @param matchData - Objeto con los detalles de la partida (duración, oponente, resultado, etc).
+   * @returns Confirmación del servidor tras guardar los datos.
+   * @throws Lanza un error si la base de datos no puede guardar las estadísticas.
+   */
   saveMatchResult: async (matchData: MatchData) => {
     try {
       const res = await authFetch('/matches/', {
@@ -29,6 +39,11 @@ export const statsService = {
     }
   },
 
+  /**
+   * Obtiene el ranking global de los mejores jugadores.
+   * 
+   * @returns Lista de jugadores ordenados por su puntuación o ratio de victorias.
+   */
   getRanking: async () => {
     const res = await authFetch('/matches/ranking/global');
     const data = await res.json();
@@ -36,6 +51,11 @@ export const statsService = {
     return data;
   },
 
+  /**
+   * Obtiene el ranking global de clanes.
+   * 
+   * @returns Lista de clanes ordenados por su puntuación colectiva.
+   */
   getClanRanking: async () => {
     const res = await authFetch('/clans/ranking/global');
     const data = await res.json();
@@ -43,12 +63,25 @@ export const statsService = {
     return data;
   },
 
-  getMatchHistory: async (userId: string, page = 1, size = 5,
+  /**
+   * Recupera el historial de partidas de un usuario específico, con paginación y filtros.
+   * 
+   * @param userId - ID único del jugador.
+   * @param page - Número de página para la paginación (por defecto 1).
+   * @param size - Cantidad de partidas por página (por defecto 5).
+   * @param filters - (Opcional) Filtros para buscar por resultado, movimientos o duración máxima.
+   * @returns El historial paginado de partidas del jugador.
+   */
+  getMatchHistory: async (
+    userId: string, 
+    page = 1, 
+    size = 5,
     filters?: { result?: string; maxMoves?: number; maxDuration?: number }
   ) => {
     const params = new URLSearchParams();
     params.append("page", page.toString());
     params.append("size", size.toString());
+    
     if (filters?.result) params.append("result", filters.result);
     if (filters?.maxMoves) params.append("maxMoves", filters.maxMoves.toString());
     if (filters?.maxDuration) params.append("maxDuration", filters.maxDuration.toString());
