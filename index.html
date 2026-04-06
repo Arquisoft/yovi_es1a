@@ -456,6 +456,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_technical_constraints">2.1. Technical Constraints</a></li>
 <li><a href="#_organizational_constraints">2.2. Organizational Constraints</a></li>
 <li><a href="#_political_and_convention_constraints">2.3. Political and Convention Constraints</a></li>
+<li><a href="#_technical_constraints_2">2.4. Technical Constraints</a></li>
 </ul>
 </li>
 <li><a href="#section-context-and-scope">3. Context and Scope</a>
@@ -475,14 +476,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#section-building-block-view">5. Building Block View</a>
 <ul class="sectlevel2">
 <li><a href="#_whitebox_overall_system_level_1">5.1. Whitebox Overall System (Level 1)</a></li>
-<li><a href="#_level_2">5.2. Level 2</a></li>
+<li><a href="#_level_2_backend_services_decomposition">5.2. Level 2: Backend Services Decomposition</a></li>
 </ul>
 </li>
 <li><a href="#section-runtime-view">6. Runtime View</a>
 <ul class="sectlevel2">
-<li><a href="#_game_lifecycle_against_the_computer">6.1. Game lifecycle against the computer</a></li>
+<li><a href="#_game_lifecycle_against_the_computer_pve">6.1. Game lifecycle against the computer (PvE)</a></li>
 <li><a href="#_bot_against_application">6.2. Bot against Application</a></li>
 <li><a href="#_user_registration">6.3. User registration</a></li>
+<li><a href="#_real_time_multiplayer_match_pvp">6.4. Real-time Multiplayer Match (PvP)</a></li>
 </ul>
 </li>
 <li><a href="#section-deployment-view">7. Deployment View</a>
@@ -635,22 +637,22 @@ If requirements documents exist this overview should refer to these documents.</
 <div class="ulist">
 <ul>
 <li>
-<p>Provide a usable and functional version of the game with a variable board.</p>
+<p><strong>Game Mechanics:</strong> Provide a functional version of the strategic game with a variable hexagonal board, including advanced match controls such as undoing moves, passing turns, and surrendering.</p>
 </li>
 <li>
-<p>Available on the web.</p>
+<p><strong>Platform:</strong> Available as a responsive web application.</p>
 </li>
 <li>
-<p>Offer different strategies for playing the game with different difficulty levels selectable by the player.</p>
+<p><strong>Game Modes:</strong> Offer multiplayer capabilities as well as a single-player mode against a computer bot.</p>
 </li>
 <li>
-<p>Allow users to register on the system.</p>
+<p><strong>AI Integration:</strong> The computer bot must be integrated via an external API (Rust engine) offering different strategies and difficulty levels.</p>
 </li>
 <li>
-<p>Allow users to view their game history (statistical data such as the number of games played, win/loss statistics, etc.).</p>
+<p><strong>User Management:</strong> Allow users to securely register, log in, and manage their profiles.</p>
 </li>
 <li>
-<p>Offer the option to play against a computer or a bot with an API.</p>
+<p><strong>Analytics &amp; History:</strong> Allow users to view their personal game history, win/loss statistics, and a global ranking of all players in the system.</p>
 </li>
 </ul>
 </div>
@@ -698,28 +700,28 @@ If you as an architect do not know how the quality of your work will be judged&#
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Usability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system should be easy for users to use and learn how to use correctly. This will encourage them to use the application again and enjoy the experience.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Usability &amp; Accessibility</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system should be intuitive for users to learn and play. It must include clear UI feedback (e.g., turn indicators, neon glow effects) and consider basic accessibility standards so a wider range of users can enjoy the experience.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Functionality</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system must consider and implement the requirements correctly, allowing users to play the game Y with different strategies, register in the application, consult their statistics&#8230;&#8203;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Availability (Web)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application must be highly available and easily accessible via a web browser without requiring local installations by the end-user.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Accessibility</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application must be available from the Web.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Interoperability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The core backend must be able to seamlessly communicate with external microservices, specifically the external Rust-based API engine that calculates the bot&#8217;s movements.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Performance</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The app should respond to user requests within a reasonable timeframe. This prevents users from abandoning the app and ensures a positive experience that encourages them to return.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The app should respond to user requests (especially AI move calculations and database queries) within a reasonable timeframe. This prevents users from abandoning the app and ensures a smooth gameplay experience.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Maintainability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system should be easy to maintain and extend. This is achieved by following good programming practices, maintaining excellent communication within the development team&#8230;&#8203;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system should be easy to maintain and extend. This is achieved by following good programming practices (Clean Code, JSDoc), modularizing components (e.g., React Modals, CSS variables), and using containerization (Docker).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Security</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The private data of registered users must be kept safe.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The private data and credentials of registered users must be kept safe, securely stored in the database, and authenticated correctly.</p></td>
 </tr>
 </tbody>
 </table>
@@ -870,20 +872,20 @@ These stakeholders determine the extent and the level of detail of your work and
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Team Size</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The team consists of 5 members: José Iván, Adrián, Fernando, Hugo, and Sergio.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Team Size &amp; Roles</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The team consists of 5 members: José Iván, Adrián, Fernando, Hugo, and Sergio. Responsibilities are distributed across full-stack development, devops, and documentation.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Timeframe</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The project must be tested, code completed and discussed before the final submission.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Timeframe &amp; Deadlines</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The project is bound by the academic semester schedule. It must be fully tested, documented, and deployed before the final subject submission.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Meetings</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Weekly meetings will be held during laboratory sessions to track progress, besides possible meetings to discuss some issues or problems throught the week.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Methodology &amp; Meetings</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The team follows an iterative, Agile-based approach. Weekly meetings are held during laboratory sessions to track progress, with ad-hoc meetings throughout the week to resolve blockers.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Version Control</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">GitHub is the chosen platform for repository hosting and version control.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Version Control &amp; Tracking</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GitHub is the mandatory platform for repository hosting, version control, and issue tracking (using GitHub Projects/Issues).</p></td>
 </tr>
 </tbody>
 </table>
@@ -903,12 +905,69 @@ These stakeholders determine the extent and the level of detail of your work and
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Arc42</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The documentation must follow the Arc42 template structure.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Arc42 Architecture</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The software architecture documentation must strictly follow the Arc42 template structure to ensure consistency and readability.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Language</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The documentation and code comments must be written in English, as it&#8217;s the standard.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The documentation, code variables, and inline code comments must be written in English, adhering to international software engineering standards.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Coding Standards</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The team must adhere to Clean Code principles, utilizing standard formatting tools (like ESLint/Prettier) to maintain code quality.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Conventional Commits</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All repository commits must follow the Conventional Commits specification (or at least must be clear enough) to maintain a clean and semantic project history.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_technical_constraints_2">2.4. Technical Constraints</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Constraint</th>
+<th class="tableblock halign-left valign-top">Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>React, TypeScript &amp; Vite</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The frontend must be developed using React and TypeScript, utilizing Vite as the fast build tool and development server.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Node.js &amp; Express</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The backend and user management services will be implemented using Node.js and Express.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MongoDB</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The persistence layer for user profiles, match history, and global statistics must be implemented using MongoDB.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>WebSockets (Socket.io)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Real-time multiplayer synchronization and game state updates must be handled via WebSockets using Socket.io.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Rust Game Engine</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The core logic and AI for the "Game of Y" must be implemented in Rust to ensure maximum computational performance.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The entire system (frontend, backend, database, and Rust engine) must be containerized using Docker and orchestrated with Docker Compose.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GitHub Actions</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD pipelines must be managed using GitHub Actions for automated testing, building, and deployment.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>YEN Notation</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Game moves and state representation must strictly follow the standard YEN (Y-Game Extended Notation).</p></td>
 </tr>
 </tbody>
 </table>
@@ -1334,26 +1393,26 @@ Refer to details in the following sections.</p>
 <div class="sect2">
 <h3 id="_whitebox_overall_system_level_1">5.1. Whitebox Overall System (Level 1)</h3>
 <div class="paragraph">
-<p>The following diagram shows the main interaction between the user and the system.</p>
+<p>The following diagram shows the main high-level subsystems of the Yovi System and how they interact to serve the end user.</p>
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/7Sh12O0m343HUwO87Q03U11ta1uybXgqq3IIf8BRYrx_-ujvLX_S81SNnP2CD60s74OAHVYIJjqnR79NN1zpujyVkIl0Ts7KUfmUvx_XXCd8OA6-3sul" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/NP2zRW9138JxVOhH5OWK93r510Zbfo0wSKGe4erlrvmsSBjaxID1KTuzMWwAfFLyCnvx8af9ktPlo6fCA5w5Km4ITCB9c0FP7JMCuYqUFQgJABUOnIuuIgS2tmO0R6mFCN1G5DFo6O-a_4cdJHY-D3vytPpZcdxudtz8CIW7XwgSRi9moMIrDsmlod_7ZEmk6nRUfYYSZjwov5tHyUsxO81b9vUCkcVF4OwKQX96CISbb9p4YtAml0d3HGnDdCzwbwlDZp7vVen6zzVc6EDfjIeht65TLKZyqR6ecAkSqMjdZ55nEh90bDHRRFsU_wANQXXZ6JjbGVxS06kkgsXth6AkHAPTdK4c9tbzyifY9XnSr-v_0G00" alt="diagram">
 </div>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Motivation</dt>
 <dd>
-<p>Yovi (refering to our group game) is a web application that allows users to play the "Game of Y". The system acts as a single unit for the end user, providing registration, game logic, and history tracking.</p>
+<p>The system follows a modular, decoupled architecture. Instead of a monolith, it is split into a static frontend, a cluster of backend microservices, and a persistent database, all shielded by a single reverse proxy gateway. This ensures security, scalability, and easier maintenance.</p>
 </dd>
 <dt class="hdlist1">Contained Building Blocks</dt>
 </dl>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
+<col style="width: 25%;">
+<col style="width: 75%;">
 </colgroup>
 <thead>
 <tr>
@@ -1363,49 +1422,42 @@ Refer to details in the following sections.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>User</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">End-user interacting with the application via a web browser.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>API Gateway</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Acts as the single point of entry, handles SSL termination, and routes traffic to the correct internal block.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Yovi System</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The complete software solution handling the game logic and user data.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Frontend SPA</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Client-side application running in the user&#8217;s browser, responsible for the UI and UX.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Backend Microservices</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A collection of internal APIs that handle user authentication, real-time multiplayer networking, and heavy game logic.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Data Persistence</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The MongoDB database cluster that securely stores user profiles, encrypted passwords, and match statistics.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_level_2">5.2. Level 2</h3>
+<h3 id="_level_2_backend_services_decomposition">5.2. Level 2: Backend Services Decomposition</h3>
 <div class="paragraph">
-<p>This level shows the decomposition of the system into the three main services defined in the project structure.</p>
+<p>This level zooms into the "Backend Microservices" building block, detailing the distinct autonomous services that handle users, real-time gameplay, and heavy AI computation.</p>
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/ROwxQWCn44LxVSL5lUtUXN5CNaqWn0ucvKYwB8kjaP2q3Y7atyFkaWSXvTmvzyniQvFIXdWsMVn9EiBUbgID6YpU3G3u57DIQeCzqbtbR24LhtIIi_amFyMT-1CrOCzowJthFuBdobA_WCapZCbVx4uYNt2ZNQyprKdastWiI1CdbR0FIRjqlPlMmHapFuJ5OZCxiSRzuV28bI-KnZ7xpKp6RsQSp5nRBZS83ciyKK9T7KlVMCsM6ePu_WG0" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/NSvDIyD058NX_VoAGnRIBbe2wgQBKeEYWe50wq9mSpDpZKFd8yxS58hutwMfHEZwl0-SJHPACdYdUj9xwXX5HNhFmQ2sEiNCwM0rvmBV2W1qz7qC70J5Q-QKiJq7xs7Mn2IuBijoNe0oXjDyQUh1YUqT7JbTojj9-bDqAH_9yniUGcV3H6ucqf7de_fHof1GIvbHr35qyRuQPzCgDVx1Oh4-nrZXEGYdG0vFkrs3MHK5Bx6pUlxNBfThc1OhD2b-MCUumbP8Chu6JfQp6e_-PtTQx87XIVGdif0mXjwGS5OR3cRmxXS0" alt="diagram">
 </div>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Motivation</dt>
 <dd>
-<p>The system follows a modular architecture to separate the user interface from the logic services.</p>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>WebApp</strong>: Handles UI and client-side logic.</p>
-</li>
-<li>
-<p><strong>Users Service</strong>: Manages user registration and data.</p>
-</li>
-<li>
-<p><strong>GameY Engine</strong>: Handles the specific rules and logic of the board game.</p>
-</li>
-</ul>
-</div>
+<p>To achieve high availability and separation of concerns, the backend is not a single server. Heavy AI calculations (Rust) are isolated from real-time socket connections (Multiplayer) and standard HTTP REST traffic (Users).</p>
 </dd>
+<dt class="hdlist1">Contained Building Blocks</dt>
 </dl>
-</div>
-<div class="paragraph">
-<p>Contained Building Blocks</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1420,27 +1472,28 @@ Refer to details in the following sections.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>WebApp</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Provides the graphical interface for the user. It communicates with the backend services to perform actions.<br>
-<strong>Technology:</strong> React, Vite, TypeScript.<br>
-<strong>Location:</strong> <code>/webapp</code> directory.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Users Service</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Manages user registration and stores user information. It exposes a REST API.<br>
-<strong>Technology:</strong> Node.js, Express.<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Manages user registration, JWT authentication, and historical statistics retrieval. It acts as a standard REST API.<br>
+<strong>Technology:</strong> Node.js, Express, Mongoose.<br>
 <strong>Location:</strong> <code>/users</code> directory.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Multiplayer Service</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Maintains stateful, real-time WebSocket connections with active players, managing game rooms and broadcasting piece movements instantly.<br>
+<strong>Technology:</strong> Node.js, Socket.io.<br>
+<strong>Location:</strong> <code>/multiplayer</code> directory.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GameY Engine</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Implements the core logic of the Game of Y, including move validation and bot strategies using Rust for performance.<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Implements the core logic of the Game of Y. It validates moves, calculates bot strategies (Monte Carlo, Minimax, etc.), and checks win conditions using the YEN notation.<br>
 <strong>Technology:</strong> Rust.<br>
 <strong>Location:</strong> <code>/gamey</code> directory.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MongoDB</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Database used to persist user data and game history.<br>
-<strong>Technology:</strong> MongoDB.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> The central database used to persist user profiles, encrypted credentials, active match states, and global ranking statistics.<br>
+<strong>Technology:</strong> MongoDB (NoSQL Document Database).<br>
+<strong>Location:</strong> External Docker container / Atlas Cloud.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1517,13 +1570,13 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <p>This section displays sequence diagrams. These show the interaction of objects in different scenarios.</p>
 </div>
 <div class="sect2">
-<h3 id="_game_lifecycle_against_the_computer">6.1. Game lifecycle against the computer</h3>
+<h3 id="_game_lifecycle_against_the_computer_pve">6.1. Game lifecycle against the computer (PvE)</h3>
 <div class="paragraph">
-<p>This diagram shows the game life cycle in its standard form (playing against the machine).</p>
+<p>This diagram illustrates the standard single-player workflow. The React frontend communicates with the Node.js backend, which internally delegates the heavy AI computation to the Rust Game Engine.</p>
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/TLB1Rjim3BtpAtXiWHIx-r2qQ8PXmBP3ZMxeaPROMAWi6IALmllwGNASEiboC629Z-yzFl51b9BcmGCPZGbVX1ECbDGPDr9G_CFTupYUN1MCj9pspl19uHiDF84bfOw4STi101GqtjqVY1hy4NVe0ip7KbZJDVYRlBEaZ2QnvQ2ElC0QKbgsNODFFPjtp8MzACAsmxiBjfTZ-PHYvUSnQrzq3AcB0HDBzdhXkcNFHb4qaV9ksk0hxcXWr6da3LhtzkPCzZfja8B5BbAoAEulh-QiwJJubBYCLxjlNh_-keLQEF7qFRWo-CAZf0pWOnmh2PO_G4GyT_apxddWeBLueTnoi3Z4_Q9RG0VjJtSrrMgko6Q12YC_lovoi6phrQfxvU2vneSt7ovyyL7uzeXTx1pUgC6jaz7Jj2I-uBh4z5vFx8LdLHE3kf1PpfK_VSTXpCg20vdU1Qvp7gEuvbLp2dA4hcBvh-6sZnzN13XOAD_LjPwp9pNzUiFETxhLcERWdQWp0l30mUR1_mC0" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/XLAnRjim5Dpv5OSCXZoq2ZfwAEBKRcAqTeJOGH0WonFvxB2HI86ahFhl2z9AAoTfEmWWoBjxT_TquGEvqDQL81cimvrd9nfoGKlTa0auksMI0UjYUWRokETosZIdY6cnm1K5xkYGCFtv51I5FQR5uj5aAwluumy_JkZqi6Qtrv9FALTKymFcPgSDFvhijlLXt0-e-I0K1Ih9CvRMxEpiChxCIY6Y83vyxgrEiEQAPK2ndwEsYZ62qjkjbcqL3k88Yl3UzGJ5pNg3d1gTrnJa4_lSS2VwvuWSEfxWgtKTEIM6jn4rAoVuufW28-d0iRHlS0EVouIIYQAGBOmEcYeyp5TZ8IfhcvGRwPGL5HtOOTCwCnO0y3hrafxPexPxXZMuvfyeRRGPiVyCNTgGDnKTa2N9D3wI_bl0YujX2MbJ4rnlDiLWn2xUvf8gsLOKk9Ul-J2W5CvAzXwkhTXZX1qRTh7CInjIh27hZQTR3gqpCDp1XyZA8krtblTsTTUeFxjAf7UWmye-dP_ZvXko5NTH-SXvrTLW8JFjKwtbqF_B9le0qRXHxD0cCwhVMO9I5Ou_01lbaTrhat-tdlEPe-uuzM_9bkIU-rpaiTL6-oTM6FLJad6V5DWe4RyBDggjgry0" alt="diagram">
 </div>
 </div>
 </div>
@@ -1541,11 +1594,22 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <div class="sect2">
 <h3 id="_user_registration">6.3. User registration</h3>
 <div class="paragraph">
-<p>This diagram shows the different interactions that take place when a user registers.</p>
+<p>This diagram shows the different interactions that take place when a user registers, routing through the API Gateway and securing the password.</p>
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/XP0zRiCm38LtdUADxP0BU2XIs5sx64LcIgOJePPaa5BIthwmd00EYgOh-V7zSA-P99Sm6N8v2JwKnSmasJi_Kymui7sTvxlHmcZFSlQEpK2PB2cZiyOi6-nUhaSD-cA3pn0-Uir2sQU8CKamAx2WMx46hJ1bHbbIR3SBsTa6xOdT9_nO2V2Nrwo6fZKJQ1AcuVis1u3EOlVBfS9ZAd6epBtH9lwRI18yRRoUwy4j_LMuGNzA5t2b0wlIaGrFodZdozhbSPIOyfznrjuzdHdnNxKsnT5Bg8z-NAqlph7gWpfkgyLnC7kEGmdJ3m00" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/XP91RzD048Nl-okUUa29H9E2kE03Qfe8g0GbmbHSk8oz4sV1tZMpuwRvzsWT5vpIgDUPx-rxyxINKKcqQsf3fGR1RMGnBOcwqhNa5MTVcKf5lbwSWIA-Sx5essDYiRx61rBUqVw7dznKpjzFUtWO7jF98MAnlavii3px6GzqlyXPxbp9nf9IGP7nEVWghAuIi2gCIH3EtmqvCkHTqJY5SEMY2gaB7fiWZJa02HrIP5X_oRzXJgsRTybgVX2nc858y3X4XlT1TYGMmhyxZch6sqIlYWpBBPU_u3P8ZuBlNTHegDR-AL0jJ7R_C0U0LO7p_vnwU1CwRtlcs6Xyn9kBjrW6lwbTgPZS_lESziA_fumw6ajwwA6R8KM6V1jsO94WQ3X6gjXm7HatlElFUYQt3teo-sF1HufRj1JZBeZ5X6VLx2MkIjctEdrIdZhEwOxXXp2meUmQzdewLRhMITD_XsVwV7tn2ajXKhOd2tpCFDrVEJB52mXR9rmgDE1Jg9mtxAsvP6-xflu3" alt="diagram">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_real_time_multiplayer_match_pvp">6.4. Real-time Multiplayer Match (PvP)</h3>
+<div class="paragraph">
+<p>This diagram details the WebSocket communication used for real-time multiplayer games, handled by the dedicated Multiplayer service.</p>
+</div>
+<div class="imageblock plantuml">
+<div class="content">
+<img src="https://www.plantuml.com/plantuml/png/fL9VI-D047_VJp7iK_gWa3psGVIiY72LnU0LuQ1CiqDlxvATTJEf-EsFR59jf8hYMvZVtzd9UIiOfMjgXPLm16rgVAO8kGPimUHlniKmBbJ0AAvo0Rs0lZ0tS8r2J_YSyF5xIbfsjRWms9GKTwwYtpuhkVf7SkfubfI9f2mARh0bMBBVyk97ZomsIfaSJixsxdEuPE-f4iXMPJbJuxXd99Svt8TjH4iW32lQ34dA5D_t68kCbAl62UY_xFpwiQEEz9ZnBfo00yOIfVe39WVq5am1sMKa588xvcRsobvivZ0YpS5RDaaTgU9ez-IJCp3vFZeHrkdEP3LaDzw9mneUhcvdXuBYKmB5GU0Q6-hZuITpK000HrvawBTkU4SQiYJkcM-t_uMrisaftX7Kl7NLbDVlNUAEe1KKEiGchJa4zkHb4ZXqAxxSxUFC_CDCylRe7z9sCPAt5FNqflTXM3_TiSzh8JC5h9nlZz_d9VN5aQnMv-HjrzJ_0G00" alt="diagram">
 </div>
 </div>
 <div style="page-break-after: always;"></div>
@@ -2748,7 +2812,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2026-02-16 18:05:26 +0100
+Last updated 2026-02-23 16:48:09 +0100
 </div>
 </div>
 </body>
