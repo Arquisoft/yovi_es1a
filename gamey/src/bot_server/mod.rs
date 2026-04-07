@@ -34,12 +34,29 @@ pub use version::*;
 
 use crate::{GameYError, GroupExpansionBot, MonteCarloBot, PriorityBlockBot, RandomBot, ShortestPathBot, SimpleBlockerBot, TriangleAttackBot, YBotRegistry, state::AppState};
 
+
+
+use prometheus::{Encoder, TextEncoder};
+
+async fn metrics() -> String {
+    let encoder = TextEncoder::new();//Transforma métricas a texto legible
+    let metric_families = prometheus::gather();//Devuelve todas las métricas
+
+    let mut buffer = Vec::new();//Escribe las métricas
+    encoder.encode(&metric_families, &mut buffer).unwrap();//Codifica las métricas para prometheus
+
+    String::from_utf8(buffer).unwrap()//Convierte a string
+}
+
+
+
 /// Creates the Axum router with the given state.
 ///
 /// This is useful for testing the API without binding to a network port.
 pub fn create_router(state: AppState) -> axum::Router {
     axum::Router::new()
         .route("/status", axum::routing::get(status))
+        .route("/metrics", axum::routing::get(metrics))
         .route(
             "/{api_version}/ybot/choose/{bot_id}",
             axum::routing::post(choose::choose),

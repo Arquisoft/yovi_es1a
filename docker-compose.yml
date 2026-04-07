@@ -30,6 +30,8 @@ services:
     build: ./gamey
     container_name: gamey
     image: ghcr.io/arquisoft/yovi_es1a-gamey:latest
+    environment:
+      - PORT=4000
     networks:
       - monitor-net
   multiplayer:

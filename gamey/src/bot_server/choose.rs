@@ -5,6 +5,13 @@ use axum::{
 };
 use serde::{Deserialize, Serialize};
 
+
+use crate::metrics::{GAMES_PLAYED, RESPONSE_TIME};
+use std::time::Instant;
+
+
+
+
 /// Path parameters extracted from the choose endpoint URL.
 #[derive(Deserialize)]
 pub struct ChooseParams {
@@ -50,6 +57,7 @@ pub async fn choose(
     Path(params): Path<ChooseParams>,
     Json(yen): Json<YEN>,
 ) -> Result<Json<MoveResponse>, Json<ErrorResponse>> {
+    let start = Instant::now();
     check_api_version(&params.api_version)?;
     let game_y = match GameY::try_from(yen) {
         Ok(game) => game,
@@ -120,10 +128,19 @@ pub async fn choose(
     };
     let response = MoveResponse {
         api_version: params.api_version,
-        bot_id: params.bot_id,
+        bot_id: params.bot_id.clone(),
         coords,
         game_status: status_str,
     };
+    let duration = start.elapsed();
+
+    // Para Prometheus
+    GAMES_PLAYED
+        .with_label_values(&[&params.bot_id.clone()])
+        .inc();
+
+    RESPONSE_TIME.observe(duration.as_secs_f64());
+    
     Ok(Json(response))
 }
 
