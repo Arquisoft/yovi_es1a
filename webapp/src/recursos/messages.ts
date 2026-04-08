@@ -182,7 +182,13 @@ export const messages = {
     lobbyOnline: "Online Lobby",
     code: "CODE",
     serverCon: "🟢 Connected to server",
-    serverNo: "🔴 Connecting..."
+    serverNo: "🔴 Connecting...",
+
+    botCalc: "The Bot is calculating...",
+    perderas: "You will lose the match automatically.",
+    cancel: "Cancel",
+    siRend: "Yes, surrender",
+    estasSeg: "Are you sure you want to surrender?"
 
 },
   es: {
@@ -559,7 +565,13 @@ export const messages = {
     lobbyOnline: "Lobby en ligne",
     code: "CODE",
     serverCon: "🟢 Connecté au serveur",
-    serverNo: "🔴 Connexion..."
+    serverNo: "🔴 Connexion...",
+
+    botCalc: "Le Bot est en train de calculer...",
+    perderas: "Vous perdrez la partie automatiquement.",
+    cancel: "Annuler",
+    siRend: "Oui, me rendre",
+    estasSeg: "Êtes-vous sûr de vouloir vous rendre ?" 
 
 
   },
@@ -745,7 +757,13 @@ export const messages = {
     lobbyOnline: "Lobby Online",
     code: "CODICE",
     serverCon: "🟢 Connesso al server",
-    serverNo: "🔴 Connessione..."
+    serverNo: "🔴 Connessione...",
+
+    botCalc: "Il Bot sta calcolando...",
+    perderas: "Perderai la partita automaticamente.",
+    cancel: "Annulla",
+    siRend: "Sì, arrendermi",
+    estasSeg: "Sei sicuro di voler arrenderti?"
 
 
   },
@@ -932,7 +950,13 @@ export const messages = {
     lobbyOnline: "Online Lobby",
     code: "CODE",
     serverCon: "🟢 Mit Server verbunden",
-    serverNo: "🔴 Verbinden..."
+    serverNo: "🔴 Verbinden...",
+
+    botCalc: "Der Bot berechnet...",
+    perderas: "Du wirst das Spiel automatisch verlieren.",
+    cancel: "Abbrechen",
+    siRend: "Ja, aufgeben",
+    estasSeg: "Bist du sicher, dass du aufgeben willst?"
     
   }
 } 
