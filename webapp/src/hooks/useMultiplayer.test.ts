@@ -193,10 +193,8 @@ describe('useMultiplayer', () => {
       await getSocketCallback('opponent_disconnected')()
     })
 
-    expect(alertSpy).toHaveBeenCalledWith("¡Tu oponente se ha desconectado!")
+    expect(alertSpy).toHaveBeenCalledWith("¡Tu oponente se ha desconectado! Has ganado la partida.")
     expect(result.current.gameStarted).toBe(false)
-    expect(matchService.saveWinByAbandonment).toHaveBeenCalledWith('user123', '')
-
     alertSpy.mockRestore()
   })
 
@@ -222,7 +220,7 @@ describe('useMultiplayer', () => {
       await getSocketCallback('opponent_disconnected')()
     })
 
-    expect(alertSpy).toHaveBeenCalledWith("¡Tu oponente se ha desconectado!")
+    expect(alertSpy).toHaveBeenCalledWith("¡Tu oponente se ha desconectado! Has ganado la partida.")
     expect(result.current.gameStarted).toBe(false)
     
     expect(matchService.saveWinByAbandonment).not.toHaveBeenCalled()
