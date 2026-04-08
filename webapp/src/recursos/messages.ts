@@ -129,7 +129,30 @@ export const messages = {
     clanes: "Clans",
     ranking: "Ranking",
     rankJugs: "Player ranking",
-    rankClans: "Clan ranking"
+    rankClans: "Clan ranking",
+
+    ord: "Sort by:",
+    pvic: "Win percentage (%)",
+    pg: "Games won",
+    pp: "Games lost",
+    pj: "Games played",
+    ce: "Loading statistics...",
+    pos: "Position",
+    pt: "Total games",
+    vic: "Wins",
+    der: "Losses",
+    wr: "Win Rate",
+    noData: "No data available at the moment.",
+    ant: "Previous",
+    pag: "Page",
+    dePag: "of",
+    sig: "Next",
+
+    mayAmen: "🔽 Highest to Lowest",
+    menAmay: "🔼 Lowest to Highest",
+
+    rankGlobal: "Global Clan Ranking",
+    rankClanes: "Global Player Ranking"
 
 },
   es: {
@@ -261,7 +284,30 @@ export const messages = {
     clanes: "CLANES",
     ranking: "Ranking",
     rankJugs: "Ranking de jugadores",
-    rankClans: "Ranking de clanes"
+    rankClans: "Ranking de clanes",
+
+    ord:"Ordenar por:",
+    pvic:"Porcentaje de victoria (%)",
+    pg:"Partidas ganadas",
+    pp:"Partidas perdidas",
+    pj:"Partidas jugadas",
+    ce:"Cargando estadísticas...",
+    pos:"Posición",
+    pt:"Partidas Totales",
+    vic:"Victorias",
+    der:"Derrotas",
+    wr:"Win Rate",
+    noData:"No hay datos disponibles en este momento.",
+    ant:"Anterior",
+    pag:"Página",
+    dePag:"de",
+    sig:"Siguiente",
+
+    mayAmen:"🔽 Mayor a Menor",
+    menAmay:"🔼 Menor a Mayor",
+
+    rankGlobal:"Ranking Global de Clanes",
+    rankClanes:"Ranking Global de Jugadores"
 
   },
   fr: {
@@ -393,7 +439,31 @@ export const messages = {
     clanes: "Clans",
     ranking: "Classement",
     rankJugs: "Classement des joueurs",
-    rankClans: "Classement des clans"
+    rankClans: "Classement des clans",
+
+    ord: "Trier par :",
+    pvic: "Pourcentage de victoire (%)",
+    pg: "Parties gagnées",
+    pp: "Parties perdues",
+    pj: "Parties jouées",
+    ce: "Chargement des statistiques...",
+    pos: "Position",
+    pt: "Parties totales",
+    vic: "Victoires",
+    der: "Défaites",
+    wr: "Taux de victoire",
+    noData: "Aucune donnée disponible pour le moment.",
+    ant: "Précédent",
+    pag: "Page",
+    dePag: "sur",
+    sig: "Suivant",
+
+    mayAmen: "🔽 Du plus grand au plus petit",
+    menAmay: "🔼 Du plus petit au plus grand",
+
+    rankGlobal: "Classement mondial des clans",
+    rankClanes: "Classement mondial des joueurs"
+
 
   },
   it: {
@@ -525,7 +595,31 @@ export const messages = {
     clanes: "Clans",
     ranking: "Classifica",
     rankJugs: "Classifica giocatori",
-    rankClans: "Classifica clan"
+    rankClans: "Classifica clan",
+
+    ord: "Ordina per:",
+    pvic: "Percentuale di vittoria (%)",
+    pg: "Partite vinte",
+    pp: "Partite perse",
+    pj: "Partite giocate",
+    ce: "Caricamento statistiche...",
+    pos: "Posizione",
+    pt: "Partite totali",
+    vic: "Vittorie",
+    der: "Sconfitte",
+    wr: "Tasso di vittoria",
+    noData: "Nessun dato disponibile al momento.",
+    ant: "Precedente",
+    pag: "Pagina",
+    dePag: "di",
+    sig: "Successivo",
+
+    mayAmen: "🔽 Dal più alto al più basso",
+    menAmay: "🔼 Dal più basso al più alto",
+
+    rankGlobal: "Classifica globale dei clan",
+    rankClanes: "Classifica globale dei giocatori"
+
 
   },
 
@@ -658,7 +752,30 @@ export const messages = {
     clanes: "Clans",
     ranking: "Rangliste",
     rankJugs: "Spielerrangliste",
-    rankClans: "Clan-Rangliste"
+    rankClans: "Clan-Rangliste",
+
+    ord: "Sortieren nach:",
+    pvic: "Siegprozentsatz (%)",
+    pg: "Gewonnene Spiele",
+    pp: "Verlorene Spiele",
+    pj: "Gespeilte Spiele",
+    ce: "Statistiken werden geladen...",
+    pos: "Position",
+    pt: "Gesamtspiele",
+    vic: "Siege",
+    der: "Niederlagen",
+    wr: "Win-Rate",
+    noData: "Derzeit sind keine Daten verfügbar.",
+    ant: "Vorherige",
+    pag: "Seite",
+    dePag: "von",
+    sig: "Nächste",
+
+    mayAmen: "🔽 Höchste zu Niedrigste",
+    menAmay: "🔼 Niedrigste zu Höchste",
+
+    rankGlobal: "Globales Clan-Ranking",
+    rankClanes: "Globales Spieler-Ranking"
         
   }
 } 

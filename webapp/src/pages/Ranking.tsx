@@ -5,6 +5,7 @@ import "../styles/global.css";
 import "../styles/Ranking.css";
 import video from '../assets/videoLinea.mp4';
 import { statsService } from '../services/stats.service';
+import { useLanguage } from '../idiomaConf/LanguageContext';
 
 interface RankItem {
   id: string;
@@ -15,7 +16,10 @@ interface RankItem {
   winRate: number; 
 }
 
+
 const Ranking: React.FC = () => {
+  const { t } = useLanguage();
+  
   const { type } = useParams(); // Pillamos "players" o "clans" de la URL
   const isClanView = type === 'clans';
   
@@ -94,38 +98,38 @@ const Ranking: React.FC = () => {
       <div className="ranking-container">
         {/* Título dinámico según la vista */}
         <h1 className="ranking-title">
-            {isClanView ? 'Ranking Global de Clanes' : 'Ranking Global de Jugadores'}
+            {isClanView ? t("rankGlobal") : t("rankClanes")}
         </h1>
 
         <div className="ranking-controls">
           <div className="control-group-ranking">
-            <label htmlFor="sort-select">Ordenar por:</label>
+            <label htmlFor="sort-select">{t("ord")}</label>
               <select id="sort-select" value={sortBy} onChange={handleSortChange} className="ranking-select">
-              <option value="winRate">Porcentaje de victoria (%)</option>
-              <option value="wins">Partidas ganadas</option>
-              <option value="losses">Partidas perdidas</option>
-              <option value="totalMatches">Partidas jugadas</option>
+              <option value="winRate">{t("pvic")}</option>
+              <option value="wins">{t("pg")}</option>
+              <option value="losses">{t("pp")}</option>
+              <option value="totalMatches">{t("pj")}</option>
             </select>
           </div>
 
           <button onClick={toggleSortOrder} className="btn-sort-order">
-            {sortOrder === 'desc' ? '🔽 Mayor a Menor' : '🔼 Menor a Mayor'}
+            {sortOrder === 'desc' ? t("mayAmen") : t("menAmay")}
           </button>
         </div>
 
         <div className="table-wrapper">
           {loading ? (
-            <div className="ranking-loading">Cargando estadísticas...</div>
+            <div className="ranking-loading">{t("ce")}</div>
           ) : (
             <table className="ranking-table">
               <thead>
                 <tr>
-                  <th>Posición</th>
+                  <th>{t("pos")}</th>
                   <th>{isClanView ? 'Clan' : 'Jugador'}</th>
-                  <th>Partidas Totales</th>
-                  <th>Victorias</th>
-                  <th>Derrotas</th>
-                  <th>Win Rate</th>
+                  <th>{t("pt")}</th>
+                  <th>{t("vic")}</th>
+                  <th>{t("der")}</th>
+                  <th>{t("wr")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -145,7 +149,7 @@ const Ranking: React.FC = () => {
                 {currentItems.length === 0 && (
                   <tr>
                     <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>
-                      No hay datos disponibles en este momento.
+                      {t("noData")}
                     </td>
                   </tr>
                 )}
@@ -161,17 +165,17 @@ const Ranking: React.FC = () => {
               disabled={currentPage === 1}
               className="btn-page"
             >
-              Anterior
+              {t("ant")}
             </button>
             <span className="page-info">
-              Página {currentPage} de {totalPages}
+              {t("pag")} {currentPage} {t("dePag")} {totalPages}
             </span>
             <button 
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
               className="btn-page"
             >
-              Siguiente
+              {t("sig")}
             </button>
           </div>
         )}
