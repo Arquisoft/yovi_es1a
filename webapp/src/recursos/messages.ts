@@ -152,7 +152,14 @@ export const messages = {
     menAmay: "🔼 Lowest to Highest",
 
     rankGlobal: "Global Clan Ranking",
-    rankClanes: "Global Player Ranking"
+    rankClanes: "Global Player Ranking",
+
+    todos: "All",
+    wins: "Wins",
+    lose: "Losses",
+    surrender: "Surrender",
+    durMax: "Maximum Duration (s)",
+    movesMax: "Maximum Moves"
 
 },
   es: {
@@ -307,7 +314,14 @@ export const messages = {
     menAmay:"🔼 Menor a Mayor",
 
     rankGlobal:"Ranking Global de Clanes",
-    rankClanes:"Ranking Global de Jugadores"
+    rankClanes:"Ranking Global de Jugadores",
+    
+    todos:"Todos",
+    wins: "Wins",
+    lose:"Lose",
+    surrender:"Surrender",
+    durMax:"Duración máxima (s)",
+    movesMax:"Movimientos máximos"
 
   },
   fr: {
@@ -462,7 +476,14 @@ export const messages = {
     menAmay: "🔼 Du plus petit au plus grand",
 
     rankGlobal: "Classement mondial des clans",
-    rankClanes: "Classement mondial des joueurs"
+    rankClanes: "Classement mondial des joueurs",
+
+    todos: "Tous",
+    wins: "Victoires",
+    lose: "Défaites",
+    surrender: "Abandonner",
+    durMax: "Durée maximale (s)",
+    movesMax: "Coups maximum"
 
 
   },
@@ -618,7 +639,14 @@ export const messages = {
     menAmay: "🔼 Dal più basso al più alto",
 
     rankGlobal: "Classifica globale dei clan",
-    rankClanes: "Classifica globale dei giocatori"
+    rankClanes: "Classifica globale dei giocatori",
+
+    todos: "Tutti",
+    wins: "Vittorie",
+    lose: "Sconfitte",
+    surrender: "Arrendersi",
+    durMax: "Durata massima (s)",
+    movesMax: "Mosse massime"
 
 
   },
@@ -775,7 +803,14 @@ export const messages = {
     menAmay: "🔼 Niedrigste zu Höchste",
 
     rankGlobal: "Globales Clan-Ranking",
-    rankClanes: "Globales Spieler-Ranking"
+    rankClanes: "Globales Spieler-Ranking",
+
+    todos: "Alle",
+    wins: "Siege",
+    lose: "Niederlagen",
+    surrender: "Aufgeben",
+    durMax: "Maximale Dauer (s)",
+    movesMax: "Maximale Züge"
         
   }
 } 
