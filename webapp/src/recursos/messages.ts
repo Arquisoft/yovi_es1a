@@ -151,8 +151,8 @@ export const messages = {
     mayAmen: "🔽 Highest to Lowest",
     menAmay: "🔼 Lowest to Highest",
 
-    rankGlobal: "Global Clan Ranking",
-    rankClanes: "Global Player Ranking",
+    rankGlobalClanes: "Global Clan Ranking",
+    rankJugadores: "Global Player Ranking",
 
     todos: "All",
     wins: "Wins",
@@ -342,8 +342,8 @@ export const messages = {
     mayAmen:"🔽 Mayor a Menor",
     menAmay:"🔼 Menor a Mayor",
 
-    rankGlobal:"Ranking Global de Clanes",
-    rankClanes:"Ranking Global de Jugadores",
+    rankGlobalClanes:"Ranking Global de Clanes",
+    rankJugadores:"Ranking Global de Jugadores",
     
     todos:"Todos",
     wins: "Wins",
@@ -534,8 +534,8 @@ export const messages = {
     mayAmen: "🔽 Du plus grand au plus petit",
     menAmay: "🔼 Du plus petit au plus grand",
 
-    rankGlobal: "Classement mondial des clans",
-    rankClanes: "Classement mondial des joueurs",
+    rankGlobalClanes: "Classement mondial des clans",
+    rankJugadores: "Classement mondial des joueurs",
 
     todos: "Tous",
     wins: "Victoires",
@@ -726,8 +726,8 @@ export const messages = {
     mayAmen: "🔽 Dal più alto al più basso",
     menAmay: "🔼 Dal più basso al più alto",
 
-    rankGlobal: "Classifica globale dei clan",
-    rankClanes: "Classifica globale dei giocatori",
+    rankGlobalClanes: "Classifica globale dei clan",
+    rankJugadores: "Classifica globale dei giocatori",
 
     todos: "Tutti",
     wins: "Vittorie",
@@ -919,8 +919,8 @@ export const messages = {
     mayAmen: "🔽 Höchste zu Niedrigste",
     menAmay: "🔼 Niedrigste zu Höchste",
 
-    rankGlobal: "Globales Clan-Ranking",
-    rankClanes: "Globales Spieler-Ranking",
+    rankGlobalClanes: "Globales Clan-Ranking",
+    rankJugadores: "Globales Spieler-Ranking",
 
     todos: "Alle",
     wins: "Siege",

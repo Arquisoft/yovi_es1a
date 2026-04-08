@@ -98,7 +98,7 @@ const Ranking: React.FC = () => {
       <div className="ranking-container">
         {/* Título dinámico según la vista */}
         <h1 className="ranking-title">
-            {isClanView ? t("rankGlobal") : t("rankClanes")}
+            {isClanView ? t("rankGlobalClanes") : t("rankJugadores")}
         </h1>
 
         <div className="ranking-controls">
