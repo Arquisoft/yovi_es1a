@@ -1,10 +1,8 @@
-// src/__tests__/SurrenderModal.test.tsx
 import { render, screen, fireEvent } from "@testing-library/react";
 import SurrenderModal from "../components/SurrenderModal";
 import { useLanguage } from "../idiomaConf/LanguageContext";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 
-// Mock del hook useLanguage con Vitest
 vi.mock("../idiomaConf/LanguageContext", () => ({
   useLanguage: vi.fn(),
 }));
