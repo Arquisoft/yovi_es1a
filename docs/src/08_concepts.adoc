@@ -88,6 +88,13 @@ With the move to a web-based architecture, security is applied at multiple layer
 * **Cloud database**: MongoDB Atlas is employed as a highly available, cloud-hosted NoSQL database for persistent storage.
 * **Data validation**: Mongoose schemas enforce strict data types and validation rules before writing to MongoDB.
 
+=== Testing and Quality Assurance Concepts
+To guarantee the reliability and performance of the distributed system, testing is approached at multiple levels:
+
+* **Load and Performance Testing**: We use **Gatling** to simulate concurrent user traffic against our API gateway. This allows us to validate how the microservices (especially the Node.js API and the Rust engine) handle high volumes of simultaneous requests, ensuring the system remains responsive under stress.
+* **Unit and Integration Testing**: Conducted at the microservice level (e.g., Jest for Node.js, `cargo test` for Rust) to ensure individual components behave as expected before being containerized.
+* **Code Quality Analysis**: We integrate static analysis tools (like SonarCloud and CodeScene) within our CI/CD pipelines to monitor code health and prevent the introduction of vulnerabilities.
+
 === User Interface and UX concepts
 * **Single Page Application (SPA)**: Built with React and Vite, offering a smooth, app-like experience without full page reloads.
 * **Real-time Feedback Loop**: The UI leverages WebSockets to update the board instantly when an opponent moves, preventing race conditions and keeping game states synchronized across distributed clients.
