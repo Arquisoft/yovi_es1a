@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { socket } from '../services/socket.service';
-import { matchService } from '../services/match.service';
 import { UserUtils } from '../utils/user.utils';
 
 export const useMultiplayer = () => {
@@ -16,6 +15,12 @@ export const useMultiplayer = () => {
   const [boardSize, setBoardSize] = useState<number>(5);
 
   const opponentNameRef = useRef(opponentName);
+  const roomCodeRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    roomCodeRef.current = roomCode;
+  }, [roomCode]);
+
   useEffect(() => {
     opponentNameRef.current = opponentName;
   }, [opponentName]);
@@ -43,13 +48,19 @@ export const useMultiplayer = () => {
       setErrorMsg('');
     };
     const onRoomError = (msg: string) => setErrorMsg(msg);
-    const onMoveReceived = (moveData: any) => setLastOpponentMove(moveData);
+    const onMoveReceived = (moveData: any) => {
+    if (typeof moveData === 'string' && moveData.includes("|GAMEOVER")) {
+        const realLayout = moveData.split("|GAMEOVER")[0];
+        setLastOpponentMove(realLayout);
+        socket.emit('gameOver', roomCodeRef.current);
+    } else {
+        setLastOpponentMove(moveData);
+    }
+};
 
-    const onOpponentDisconnected = async () => {
-      alert("¡Tu oponente se ha desconectado!");
+   const onOpponentDisconnected = () => { 
+      alert("¡Tu oponente se ha desconectado! Has ganado la partida.");
       setGameStarted(false);
-      const userId = UserUtils.getUserId();
-      if (userId) await matchService.saveWinByAbandonment(userId, opponentNameRef.current);
       navigate('/statistics');
     };
 
@@ -91,9 +102,14 @@ export const useMultiplayer = () => {
     socket.emit('makeMove', { roomCode: code, moveData });
   };
 
+  const notifyGameOver = () => { 
+    const code = roomCodeRef.current;
+    if (code) socket.emit('gameOver', code);
+  };
+
   return { 
     isConnected, roomCode, errorMsg, gameStarted, myColor, 
     opponentName, lastOpponentMove, boardSize, 
-    createRoom, joinRoom, sendMove, leaveMatchGracefully 
+    createRoom, joinRoom, sendMove, leaveMatchGracefully, notifyGameOver
   };
 };

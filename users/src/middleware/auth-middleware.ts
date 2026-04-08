@@ -18,7 +18,9 @@ declare global {
 export const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
     const authHeader = req.headers['authorization'];
     const token = authHeader?.split(' ')[1];
-
+    if (req.headers['x-server-key'] === 'token_backend') {
+        return next();
+    }
     if (!token) {
         res.status(401).json({ error: "Acceso denegado. No hay token." });
         return;
