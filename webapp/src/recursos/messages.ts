@@ -125,7 +125,11 @@ export const messages = {
     chatClan: "Clan Chat",
     enviar: "Send",
     crearClan: "Create a new clan",
-    crearClanBoton: "Create Clan"
+    crearClanBoton: "Create Clan",
+    clanes: "Clans",
+    ranking: "Ranking",
+    rankJugs: "Player ranking",
+    rankClans: "Clan ranking"
 
 },
   es: {
@@ -253,7 +257,11 @@ export const messages = {
     chatClan: "Chat del Clan",
     enviar: "Enviar",
     crearClan:"Crear un nuevo clan",
-    crearClanBoton: "Crear Clan"
+    crearClanBoton: "Crear Clan",
+    clanes: "CLANES",
+    ranking: "Ranking",
+    rankJugs: "Ranking de jugadores",
+    rankClans: "Ranking de clanes"
 
   },
   fr: {
@@ -381,7 +389,11 @@ export const messages = {
     chatClan: "Chat du Clan",
     enviar: "Envoyer",
     crearClan: "Créer un nouveau clan",
-    crearClanBoton: "Créer Clan"
+    crearClanBoton: "Créer Clan",
+    clanes: "Clans",
+    ranking: "Classement",
+    rankJugs: "Classement des joueurs",
+    rankClans: "Classement des clans"
 
   },
   it: {
@@ -509,7 +521,12 @@ export const messages = {
     chatClan: "Chat del Clan",
     enviar: "Invia",
     crearClan: "Crea un nuovo clan",
-    crearClanBoton: "Crea Clan"
+    crearClanBoton: "Crea Clan",
+    clanes: "Clans",
+    ranking: "Classifica",
+    rankJugs: "Classifica giocatori",
+    rankClans: "Classifica clan"
+
   },
 
   de: {
@@ -637,7 +654,11 @@ export const messages = {
     chatClan: "Clan-Chat",
     enviar: "Senden",
     crearClan: "Einen neuen Clan erstellen",
-    crearClanBoton: "Clan erstellen"
+    crearClanBoton: "Clan erstellen",
+    clanes: "Clans",
+    ranking: "Rangliste",
+    rankJugs: "Spielerrangliste",
+    rankClans: "Clan-Rangliste"
         
   }
 } 
