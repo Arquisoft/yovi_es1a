@@ -53,8 +53,8 @@ describe('Ranking Component', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/Cargando estadísticas/i)).toBeInTheDocument();
-    expect(screen.getByText('Ranking Global de Jugadores')).toBeInTheDocument();
+    expect(screen.getByText(/ce/i)).toBeInTheDocument();
+    expect(screen.getByText('rankJugadores')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.getByText('PlayerOne')).toBeInTheDocument();
@@ -78,7 +78,7 @@ describe('Ranking Component', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('Ranking Global de Clanes')).toBeInTheDocument();
+    expect(screen.getByText('rankGlobalClanes')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.getByText('AlphaClan')).toBeInTheDocument();
@@ -99,7 +99,7 @@ describe('Ranking Component', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText(/No hay datos disponibles en este momento/i)).toBeInTheDocument();
+      expect(screen.getByText(/noData/i)).toBeInTheDocument();
     });
   });
 
@@ -147,18 +147,18 @@ describe('Ranking Component', () => {
     await user.selectOptions(sortSelect, 'winRate');
     expect(sortSelect).toHaveValue('winRate');
 
-    const sortButton = screen.getByRole('button', { name: /Mayor a Menor/i });
+    const sortButton = screen.getByRole('button', { name: /mayAmen/i });
     await user.click(sortButton);
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Menor a Mayor/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /menAmay/i })).toBeInTheDocument();
     });
 
-    const ascButton = screen.getByRole('button', { name: /Menor a Mayor/i });
+    const ascButton = screen.getByRole('button', { name: /menAmay/i });
     await user.click(ascButton);
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Mayor a Menor/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /mayAmen/i })).toBeInTheDocument();
     });
   });
 
@@ -181,11 +181,11 @@ describe('Ranking Component', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Página 1 de 2')).toBeInTheDocument();
+      expect(screen.getByText('pag 1 dePag 2')).toBeInTheDocument();
     });
 
-    const nextButton = screen.getByRole('button', { name: /Siguiente/i });
-    const prevButton = screen.getByRole('button', { name: /Anterior/i });
+    const nextButton = screen.getByRole('button', { name: /sig/i });
+    const prevButton = screen.getByRole('button', { name: /ant/i });
 
     expect(prevButton).toBeDisabled();
     expect(nextButton).not.toBeDisabled();
@@ -193,7 +193,7 @@ describe('Ranking Component', () => {
     await user.click(nextButton);
 
     await waitFor(() => {
-      expect(screen.getByText('Página 2 de 2')).toBeInTheDocument();
+      expect(screen.getByText('pag 2 dePag 2')).toBeInTheDocument();
     });
     expect(nextButton).toBeDisabled();
     expect(prevButton).not.toBeDisabled();
@@ -201,7 +201,7 @@ describe('Ranking Component', () => {
     await user.click(prevButton);
 
     await waitFor(() => {
-      expect(screen.getByText('Página 1 de 2')).toBeInTheDocument();
+      expect(screen.getByText('pag 1 dePag 2')).toBeInTheDocument();
     });
   });
 });

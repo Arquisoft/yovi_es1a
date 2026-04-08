@@ -99,7 +99,7 @@ describe('Board - Player Interaction', () => {
     const { container } = renderTablero()
     fireEvent.click(container.querySelectorAll('.casilla')[0])
     await waitFor(() => {
-      expect(screen.getAllByText(/El Bot está calculando/i)[0]).toBeInTheDocument()
+      expect(screen.getAllByText(/botCalc/i)[0]).toBeInTheDocument()
     })
   })
 })

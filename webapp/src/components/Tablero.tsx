@@ -103,7 +103,7 @@ const Tablero: React.FC<TableroProps> = (props) => {
         )}
       </p>
       
-      {loading && modoReal === "bot" && <p style={{ color: '#60a5fa' }}>El Bot está calculando...</p>}
+      {loading && modoReal === "bot" && <p style={{ color: '#60a5fa' }}>{t("botCalc")}</p>}
 
       {showWinnerModal && (
           <div className="modal-overlay">

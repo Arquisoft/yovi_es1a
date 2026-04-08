@@ -70,15 +70,15 @@ const Estadisticas: React.FC = () => {
                 setCurrentPage(1);
               }}
             >
-              <option value="">Todos</option>
-              <option value="win">Wins</option>
-              <option value="lose">Lose</option>
-              <option value="surrender">Surrender</option>
+              <option value="">{t("todos")}</option>
+              <option value="win">{t("wins")}</option>
+              <option value="lose">{t("lose")}</option>
+              <option value="surrender">{t("surrender")}</option>
             </select>
 
             <input
               type="number"
-              placeholder="Duración máxima (s)"
+              placeholder={t("durMax")}
               value={filters.maxDuration || ""}
               onChange={(e) => setFilters({ ...filters, maxDuration: Number(e.target.value) })}
               className="filtroInput"
@@ -86,7 +86,7 @@ const Estadisticas: React.FC = () => {
 
             <input
               type="number"
-              placeholder="Movimientos máximos"
+              placeholder={t("movesMax")}
               value={filters.maxMoves || ""}
               onChange={(e) => setFilters({ ...filters, maxMoves: Number(e.target.value) })}
               className="filtroInput"
@@ -131,11 +131,11 @@ const Estadisticas: React.FC = () => {
 
         <div className="pagination">
           <button disabled={currentPage === 1} onClick={() => setCurrentPage(pag => pag - 1)}>
-            Anterior
+            {t("ant")}
           </button>
-          <span>Página {currentPage} de {totalPages}</span>
+          <span>{t("pag")} {currentPage} {t("dePag")} {totalPages}</span>
           <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(pag => pag + 1)}>
-            Siguiente
+            {t("sig")}
           </button>
         </div>
 
