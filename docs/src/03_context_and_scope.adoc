@@ -3,7 +3,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-context-and-scope]]
 == Context and Scope
 
-
 ifdef::arc42help[]
 [role="arc42help"]
 ****
@@ -22,11 +21,8 @@ Various options:
 * Context diagrams
 * Lists of communication partners and their interfaces.
 
-
 .Further Information
-
 See https://docs.arc42.org/section-3/[Context and Scope] in the arc42 documentation.
-
 ****
 endif::arc42help[]
 
@@ -37,17 +33,6 @@ ifdef::arc42help[]
 ****
 .Contents
 Specification of *all* communication partners (users, IT-systems, ...) with explanations of domain specific inputs and outputs or interfaces.
-Optionally you can add domain specific formats or communication protocols.
-
-.Motivation
-All stakeholders should understand which data are exchanged with the environment of the system.
-
-.Form
-All kinds of diagrams that show the system as a black box and specify the domain interfaces to communication partners.
-
-Alternatively (or additionally) you can use a table.
-The title of the table is the name of your system, the three columns contain the name of the communication partner, the inputs, and the outputs.
-
 ****
 endif::arc42help[]
 
@@ -56,22 +41,25 @@ endif::arc42help[]
 @startuml
 skinparam componentStyle uml2
 
-actor "User" as player
+actor "User" as user
 actor "Administrator" as admin
+actor "Bot (AI)" as bot
 
 component  "Yovi System" as yovi
 
-player --> yovi : Play games
-admin --> yovi : Monitors the system status
+user --> yovi : Registers, configures matches,\nplays and checks stats
+admin --> yovi : Monitors system health & metrics
+bot --> yovi : Consults match state and\nmakes automatic moves
 
 @enduml
 ----
 
-Diagram elements:
+**Diagram elements:**
 
-* **User:** Represents the end-user who interacts with the web application to play games and manage their profile.
-* **Admin:** Represents the technical user responsible for overseeing the system's stability and performance via the internal monitoring dashboards.
-* **Yovi:** Represents the complete system boundary (the scope of this project). It acts as a unified solution that encapsulates the game engine, user management, data persistence, and the observability infrastructure (Prometheus & Grafana).
+* **User:** The end-user who interacts with the web application to play games (against bots or other players in real-time) and manage their profile.
+* **Administrator:** The technical user responsible for overseeing the system's stability and performance via the internal monitoring dashboards.
+* **Bot (AI):** Conceptual actor representing the internal artificial intelligence engine that plays against the user.
+* **Yovi:** The complete system boundary. It acts as a unified solution that encapsulates the game engines, real-time communications, user management, data persistence, and the observability infrastructure.
 
 
 === Technical Context
@@ -81,17 +69,8 @@ ifdef::arc42help[]
 ****
 .Contents
 Technical interfaces (channels and transmission media) linking your system to its environment. In addition a mapping of domain specific input/output to the channels, i.e. an explanation which I/O uses which channel.
-
-.Motivation
-Many stakeholders make architectural decision based on the technical interfaces between the system and its context. Especially infrastructure or hardware designers decide these technical interfaces.
-
-.Form
-E.g. UML deployment diagram describing channels to neighboring systems,
-together with a mapping table showing the relationships between channels and input/output.
-
 ****
 endif::arc42help[]
-
 
 [plantuml]
 ----
@@ -101,58 +80,64 @@ skinparam componentBackgroundColor white
 skinparam packageBackgroundColor #F2F2F2
 skinparam defaultTextAlignment center
 
-' Ponemos a los actores en los extremos para abrir el diagrama
-actor "Player" as player
+actor "User" as user
 actor "Administrator" as admin
+node "Load Tester (Gatling)" as gatling
 
-rectangle "Web Browser (Game Client)" as browser {
+rectangle "Web Browser" as browser {
     component "React App (SPA)" as spa
 }
 
-node "Docker Host (Localhost)" {
-    package "monitor-net (Docker Network)" {
-        component "WebApp (Frontend)" as webapp
-        component "Users Service" as users
-        component "Gamey Service" as gamey
+node "Docker Host (IP: 20.199.88.71)" {
+    component "Nginx\n(:80 Redirect, :443 SSL)" as nginx
+    
+    package "monitor-net (Docker Bridge)" {
+        component "webapp\n(Port 80)" as webapp
+        component "users\n(Node.js API - Port 3000)" as users
+        component "gamey\n(Rust API - Port 4000)" as gamey
+        component "multiplayer\n(Socket.io - Port 5000)" as multi
 
-        component "Grafana" as graf
-        component "Prometheus" as prom
+        component "Grafana\n(:9091)" as graf
+        component "Prometheus\n(:9090)" as prom
     }
 }
 
 database "MongoDB" as mongo
 
-player -> browser : Plays Game
-browser --> webapp : Loads HTML/JS\n[HTTP:80]
+user -> browser : Interacts
+browser -right-> nginx : HTTPS [443] / WSS [443]
+gatling -down-> nginx : Simulates Traffic\n[HTTPS / WSS]
 
-spa ---> users : API Requests\n[HTTP/JSON :3000]
-spa ---> gamey : API Requests\n[HTTP/JSON :4000]
+nginx --> webapp : " / "
+nginx --> users : " /api/ \n /api/bot/ \n /api/matches/ "
+nginx --> gamey : " /api/gamey/ "
+nginx --> multi : " /socket.io/ (Upgrade: websocket)"
 
-users --> mongo : Reads/Writes Data
-gamey --> mongo : Reads/Writes Data
+spa .up.> nginx : HTTP / WS requests
+users -right-> gamey : Internal HTTP requests\n(RUST_API_URL)
 
-admin --> graf : View Dashboards\n[HTTP :9091]
+users --> mongo : Reads/Writes
+gamey --> mongo : Reads/Writes
+multi --> mongo : Reads/Writes
 
-
-graf -> prom : Queries Data\n[:9090]
-prom -up-> users : Scrapes Metrics\n[:3000]
+admin --> graf : HTTP [:9091]
+admin --> prom : HTTP [:9090]
+graf -> prom : Queries Data
+prom -up-> users : Scrapes Metrics
 
 @enduml
 ----
 
+The Yovi system operates behind a reverse proxy that acts as the single point of entry, providing secure interfaces for external communication and managing a private Docker bridge network (`monitor-net`) for internal microservices. The communication channels are detailed below:
 
-The Yovi system uses a set of HTTP interfaces for communication between microservices and to expose data to the actors (Player and Administrator). The communication channels represented in the architecture diagram are detailed below:
+* **External Access Interfaces (Public):**
+** **Nginx Reverse Proxy & TLS Termination:** Binds to ports `80` (redirects to HTTPS) and `443` (SSL). It uses configured certificates (`cert.pem`, `key.pem`) to encrypt all traffic from Users and Gatling load tests.
+** **Frontend Delivery (`/`):** Nginx routes root traffic to the `webapp` container (port 80) to serve the React Single Page Application.
+** **Node.js User & Bot API (`/api/`, `/api/bot/`, `/api/matches/`):** Handled by the `users` service on internal port `3000`. This includes authentication, user stats, and the artificial intelligence bot logic engine.
+** **Rust Game API (`/api/gamey/`):** Routed to the `gamey` service on internal port `4000` for complex game mechanics calculation.
+** **Real-Time Multiplayer (`/socket.io/`):** Nginx upgrades HTTP connections to WebSockets and routes them to the `multiplayer` service on internal port `5000`.
 
-* **External access interfaces:**
-
-** **Frontend Delivery Interface:** The Player's browser connects to the WebApp service via port 80 to download the static files (HTML, CSS, JavaScript) needed to run the Single Page Application (React).
-
-** **User management API and game logic:** The React App (SPA) running in the browser interacts with the Users Service (port 3000) and the Game Service (port 4000), sending and receiving data exclusively in JSON format. These interfaces manage authentication and game mechanics using the HTTP protocol.
-
-** **Display Interface:** This connection delivers the Grafana graphical interface to the Administrator via port 9091. It uses standard HTTP to serve the control panels for system monitoring.
-
-* **Internal interfaces:**
-
-** **Collection and consultation channel within the private network:** Prometheus makes periodic HTTP GET requests to the Users Service's internal port 3000 to collect technical health metrics. Simultaneously, Grafana queries the Prometheus database on port 9090 to retrieve historical data and generate graphs.
-
-** **Data Persistence Interface:** Both the Users Service and the Gamey Service communicate directly with the internal MongoDB database. The Users Service manages user profiles and authentication, while the Gamey Service persists game logs and match history. These connections are strictly internal to the backend environment.
+* **Internal Interfaces (Private `monitor-net` Network):**
+** **Microservice Communication:** The `users` service communicates directly with the `gamey` service using the internal Docker DNS (`http://gamey:4000`) defined via the `RUST_API_URL` environment variable.
+** **Monitoring & Observability:** Prometheus (exposed on port `9090`) scrapes metrics from the internal services. Grafana (exposed on port `9091`) queries Prometheus to build visual dashboards accessed by the Administrator.
+** **Data Persistence:** The core backend services (`users`, `gamey`, `multiplayer`) connect to an internal MongoDB instance to persist user profiles, match history, and active session data.

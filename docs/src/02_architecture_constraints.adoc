@@ -29,10 +29,10 @@ endif::arc42help[]
 [cols="1,2",options="header"]
 |===
 |Constraint |Explanation
-| **Team Size** | The team consists of 5 members: José Iván, Adrián, Fernando, Hugo, and Sergio.
-| **Timeframe** | The project must be tested, code completed and discussed before the final submission.
-| **Meetings** | Weekly meetings will be held during laboratory sessions to track progress, besides possible meetings to discuss some issues or problems throught the week.
-| **Version Control** | GitHub is the chosen platform for repository hosting and version control.
+| **Team Size & Roles** | The team consists of 5 members: José Iván, Adrián, Fernando, Hugo, and Sergio. Responsibilities are distributed across full-stack development, devops, and documentation.
+| **Timeframe & Deadlines** | The project is bound by the academic semester schedule. It must be fully tested, documented, and deployed before the final subject submission.
+| **Methodology & Meetings** | The team follows an iterative, Agile-based approach. Weekly meetings are held during laboratory sessions to track progress, with ad-hoc meetings throughout the week to resolve blockers.
+| **Version Control & Tracking** | GitHub is the mandatory platform for repository hosting, version control, and issue tracking (using GitHub Projects/Issues).
 |===
 
 === Political and Convention Constraints
@@ -40,6 +40,23 @@ endif::arc42help[]
 [cols="1,2",options="header"]
 |===
 |Constraint |Explanation
-| **Arc42** | The documentation must follow the Arc42 template structure.
-| **Language** |  The documentation and code comments must be written in English, as it's the standard.
+| **Arc42 Architecture** | The software architecture documentation must strictly follow the Arc42 template structure to ensure consistency and readability.
+| **Language** | The documentation, code variables, and inline code comments must be written in English, adhering to international software engineering standards.
+| **Coding Standards** | The team must adhere to Clean Code principles, utilizing standard formatting tools (like ESLint/Prettier) to maintain code quality.
+| **Conventional Commits** | All repository commits must follow the Conventional Commits specification (or at least must be clear enough) to maintain a clean and semantic project history.
+|===
+
+=== Technical Constraints
+
+[cols="1,2",options="header"]
+|===
+|Constraint |Explanation
+| **React, TypeScript & Vite** | The frontend must be developed using React and TypeScript, utilizing Vite as the fast build tool and development server.
+| **Node.js & Express** | The backend and user management services will be implemented using Node.js and Express.
+| **MongoDB** | The persistence layer for user profiles, match history, and global statistics must be implemented using MongoDB.
+| **WebSockets (Socket.io)** | Real-time multiplayer synchronization and game state updates must be handled via WebSockets using Socket.io.
+| **Rust Game Engine** | The core logic and AI for the "Game of Y" must be implemented in Rust to ensure maximum computational performance.
+| **Docker** | The entire system (frontend, backend, database, and Rust engine) must be containerized using Docker and orchestrated with Docker Compose.
+| **GitHub Actions** | CI/CD pipelines must be managed using GitHub Actions for automated testing, building, and deployment.
+| **YEN Notation** | Game moves and state representation must strictly follow the standard YEN (Y-Game Extended Notation).
 |===

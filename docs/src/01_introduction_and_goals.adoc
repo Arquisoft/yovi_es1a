@@ -49,17 +49,17 @@ endif::arc42help[]
 
 The main requirements of the system are:
 
-- Provide a usable and functional version of the game with a variable board.
+- **Game Mechanics:** Provide a functional version of the strategic game with a variable hexagonal board, including advanced match controls such as undoing moves, passing turns, and surrendering.
 
-- Available on the web.
+- **Platform:** Available as a responsive web application.
 
-- Offer different strategies for playing the game with different difficulty levels selectable by the player.
+- **Game Modes:** Offer multiplayer capabilities as well as a single-player mode against a computer bot.
 
-- Allow users to register on the system.
+- **AI Integration:** The computer bot must be integrated via an external API (Rust engine) offering different strategies and difficulty levels.
 
-- Allow users to view their game history (statistical data such as the number of games played, win/loss statistics, etc.).
+- **User Management:** Allow users to securely register, log in, and manage their profiles.
 
-- Offer the option to play against a computer or a bot with an API.
+- **Analytics & History:** Allow users to view their personal game history, win/loss statistics, and a global ranking of all players in the system.
 
 === Quality Goals
 
@@ -88,23 +88,24 @@ endif::arc42help[]
 [options="header",cols="1,2"]
 |===
 |Quality goal|Description
-| **Usability**
-| The system should be easy for users to use and learn how to use correctly. This will encourage them to use the application again and enjoy the experience.
 
-| **Functionality**
-| The system must consider and implement the requirements correctly, allowing users to play the game Y with different strategies, register in the application, consult their statistics...
+| **Usability & Accessibility**
+| The system should be intuitive for users to learn and play. It must include clear UI feedback (e.g., turn indicators, neon glow effects) and consider basic accessibility standards so a wider range of users can enjoy the experience.
 
-| **Accessibility**
-| The application must be available from the Web.
+| **Availability (Web)**
+| The application must be highly available and easily accessible via a web browser without requiring local installations by the end-user.
+
+| **Interoperability**
+| The core backend must be able to seamlessly communicate with external microservices, specifically the external Rust-based API engine that calculates the bot's movements.
 
 | **Performance**
-| The app should respond to user requests within a reasonable timeframe. This prevents users from abandoning the app and ensures a positive experience that encourages them to return.
+| The app should respond to user requests (especially AI move calculations and database queries) within a reasonable timeframe. This prevents users from abandoning the app and ensures a smooth gameplay experience.
 
 | **Maintainability**
-| The system should be easy to maintain and extend. This is achieved by following good programming practices, maintaining excellent communication within the development team...
+| The system should be easy to maintain and extend. This is achieved by following good programming practices (Clean Code, JSDoc), modularizing components (e.g., React Modals, CSS variables), and using containerization (Docker).
 
 | **Security**
-| The private data of registered users must be kept safe.
+| The private data and credentials of registered users must be kept safe, securely stored in the database, and authenticated correctly.
 
 |===
 

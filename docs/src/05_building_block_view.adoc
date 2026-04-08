@@ -14,82 +14,88 @@ endif::arc42help[]
 
 === Whitebox Overall System (Level 1)
 
-The following diagram shows the main interaction between the user and the system.
+The following diagram shows the main high-level subsystems of the Yovi System and how they interact to serve the end user.
 
 [plantuml]
 ----
 @startuml
 actor "User" as user
-component "Yovi System" as yovi
 
-user .right.> yovi : Uses
+package "Yovi System Boundary" {
+    component "API Gateway\n(Nginx)" as gateway
+    component "Frontend SPA\n(React)" as frontend
+    component "Backend Microservices\n(Node.js & Rust)" as backend
+    database "Data Persistence\n(MongoDB)" as db
+}
+
+user --> gateway : HTTPS / WSS requests
+gateway --> frontend : Serves static files
+gateway --> backend : Routes API & WebSockets
+backend --> db : Reads / Writes
 @enduml
 ----
 
 Motivation::
-Yovi (refering to our group game) is a web application that allows users to play the "Game of Y". The system acts as a single unit for the end user, providing registration, game logic, and history tracking.
+The system follows a modular, decoupled architecture. Instead of a monolith, it is split into a static frontend, a cluster of backend microservices, and a persistent database, all shielded by a single reverse proxy gateway. This ensures security, scalability, and easier maintenance.
 
 Contained Building Blocks::
 
-[cols="1,2",options="header"]
+[cols="1,3",options="header"]
 |===
 | **Name** | **Responsibility**
-| **User** | End-user interacting with the application via a web browser.
-| **Yovi System** | The complete software solution handling the game logic and user data.
+| **API Gateway** | Acts as the single point of entry, handles SSL termination, and routes traffic to the correct internal block.
+| **Frontend SPA** | Client-side application running in the user's browser, responsible for the UI and UX.
+| **Backend Microservices** | A collection of internal APIs that handle user authentication, real-time multiplayer networking, and heavy game logic.
+| **Data Persistence** | The MongoDB database cluster that securely stores user profiles, encrypted passwords, and match statistics.
 |===
 
-=== Level 2
+=== Level 2: Backend Services Decomposition
 
-This level shows the decomposition of the system into the three main services defined in the project structure.
+This level zooms into the "Backend Microservices" building block, detailing the distinct autonomous services that handle users, real-time gameplay, and heavy AI computation.
 
 [plantuml]
 ----
 @startuml
-package "Frontend" {
-    component "WebApp" as webapp
-}
-
-package "Backend Services" {
-    component "Users Service" as users
-    component "GameY Engine" as gamey
+package "Backend Microservices" {
+    component "Users Service\n(Port 3000)" as users
+    component "Multiplayer Service\n(Port 5000)" as multi
+    component "GameY Engine\n(Port 4000)" as gamey
 }
 
 database "MongoDB" as db
 
-webapp --> users : HTTP /createuser
-webapp --> gamey : HTTP /game
-users ..> db : Reads/Writes
+users --> gamey : Internal HTTP (Bot Logic)
+users ..> db : Profile & Stats queries
+multi ..> db : Active match state updates
 @enduml
 ----
 
 Motivation::
-The system follows a modular architecture to separate the user interface from the logic services.
-* **WebApp**: Handles UI and client-side logic.
-* **Users Service**: Manages user registration and data.
-* **GameY Engine**: Handles the specific rules and logic of the board game.
+To achieve high availability and separation of concerns, the backend is not a single server. Heavy AI calculations (Rust) are isolated from real-time socket connections (Multiplayer) and standard HTTP REST traffic (Users).
 
-Contained Building Blocks
+Contained Building Blocks::
 
 [cols="1,4", options="header"]
 |===
 | **Building Block** | **Description**
 
-| **WebApp**
-| *Responsibility:* Provides the graphical interface for the user. It communicates with the backend services to perform actions. +
-*Technology:* React, Vite, TypeScript. +
-*Location:* `/webapp` directory.
-
 | **Users Service**
-| *Responsibility:* Manages user registration and stores user information. It exposes a REST API. +
-*Technology:* Node.js, Express. +
+| *Responsibility:* Manages user registration, JWT authentication, and historical statistics retrieval. It acts as a standard REST API. +
+*Technology:* Node.js, Express, Mongoose. +
 *Location:* `/users` directory.
 
+| **Multiplayer Service**
+| *Responsibility:* Maintains stateful, real-time WebSocket connections with active players, managing game rooms and broadcasting piece movements instantly. +
+*Technology:* Node.js, Socket.io. +
+*Location:* `/multiplayer` directory.
+
 | **GameY Engine**
-| *Responsibility:* Implements the core logic of the Game of Y, including move validation and bot strategies using Rust for performance. +
+| *Responsibility:* Implements the core logic of the Game of Y. It validates moves, calculates bot strategies (Monte Carlo, Minimax, etc.), and checks win conditions using the YEN notation. +
 *Technology:* Rust. +
 *Location:* `/gamey` directory.
 
 | **MongoDB**
-| *Responsibility:* Database used to persist user data and game history. +
-*Technology:* MongoDB.
+| *Responsibility:* The central database used to persist user profiles, encrypted credentials, active match states, and global ranking statistics. +
+*Technology:* MongoDB (NoSQL Document Database). +
+*Location:* External Docker container / Atlas Cloud.
 |===
