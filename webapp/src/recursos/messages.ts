@@ -367,7 +367,13 @@ export const messages = {
     lobbyOnline:"Lobby Online",
     code:"CÓDIGO",
     serverCon:"🟢 Conectado al servidor",
-    serverNo:"🔴 Conectando..."
+    serverNo:"🔴 Conectando...",
+
+    botCalc:"El Bot está calculando...",
+    perderas:"Perderás la partida automáticamente.",
+    cancel:"Cancelar",
+    siRend:"Sí, rendirme",
+    estasSeg:"¿Estás seguro de que quieres rendirte?"
 
 
   },
