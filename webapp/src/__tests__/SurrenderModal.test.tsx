@@ -1,5 +1,4 @@
 // src/__tests__/SurrenderModal.test.tsx
-import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import SurrenderModal from "../components/SurrenderModal";
 import { useLanguage } from "../idiomaConf/LanguageContext";
@@ -23,7 +22,6 @@ describe("SurrenderModal", () => {
   };
 
   beforeEach(() => {
-    // Asignamos el mock a useLanguage antes de cada test
     (useLanguage as unknown as vi.Mock).mockReturnValue({ t: mockT });
   });
 
