@@ -106,7 +106,7 @@ const GameSettings: React.FC = () => {
       <div className="config-container">
         
         <div className="config-controls">
-          <h2 className="fixed-title">{modo === "online" ? "Lobby Online" : t("conf")}</h2>
+          <h2 className="fixed-title">{modo === "online" ? t("lobbyOnline") : t("conf")}</h2>
 
           <div className="control-group">
             <label className="fixed-label"><strong>{t("modo")}</strong></label>
@@ -116,8 +116,8 @@ const GameSettings: React.FC = () => {
               onChange={(e) => setModo(e.target.value as "humano" | "bot" | "online")}
             >
               <option value="bot">{t("maq")}</option>
-              <option value="humano">Local (1vs1 en este PC)</option>
-              <option value="online">Online (Jugar por Internet)</option>
+              <option value="humano">{t("local")}</option>
+              <option value="online">{t("online")}</option>
             </select>
           </div>
 
@@ -126,7 +126,7 @@ const GameSettings: React.FC = () => {
           {modo === "online" ? (
             <div className="online-options-area">
               <p style={{ color: isConnected ? '#4ade80' : '#f87171', marginBottom: '15px', fontWeight: 'bold' }}>
-                {isConnected ? '🟢 Conectado al servidor' : '🔴 Conectando...'}
+                {isConnected ? t("serverCon") : t("serverNo")}
               </p>
               {errorMsg && <p style={{ color: '#f87171', fontWeight: 'bold', marginBottom: '15px' }}>{errorMsg}</p>}
 
@@ -134,7 +134,7 @@ const GameSettings: React.FC = () => {
                 <>
                   <div className="control-group">
                     <label className="fixed-label">
-                        <strong>Tamaño (Si creas sala)</strong> 
+                        <strong>{t("tamSa")}</strong> 
                         <input 
                           className="size-value"
                           type="number"
@@ -152,31 +152,31 @@ const GameSettings: React.FC = () => {
                   </div>
 
                   <button className="btn-jugar-fixed" onClick={() => createRoom(myUsername, tamano)} style={{ marginBottom: '30px' }}>
-                    Crear Sala
+                    {t("crearSala")}
                   </button>
 
                   <div className="control-group">
-                    <label className="fixed-label"><strong>Unirse a una partida</strong></label>
+                    <label className="fixed-label"><strong>{t("unirse")}</strong></label>
                     <div style={{ display: 'flex', gap: '10px' }}>
                       <input 
                         className="control-input"
                         type="text" 
-                        placeholder="CÓDIGO" 
+                        placeholder={t("code")}
                         value={joinCodeInput}
                         onChange={(e) => setJoinCodeInput(e.target.value)}
                         style={{ textTransform: 'uppercase', flex: 1 }}
                       />
                       <button className="btn-jugar-fixed" onClick={() => joinRoom(joinCodeInput, myUsername)} style={{ width: 'auto', padding: '0 20px' }}>
-                        Unirse
+                        {t("uni")}
                       </button>
                     </div>
                   </div>
                 </>
               ) : (
                 <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                  <h3 style={{ color: 'white' }}>Esperando rival...</h3>
+                  <h3 style={{ color: 'white' }}>{t("esperandoRival")}</h3>
                   <h1 style={{ fontSize: '3.5rem', letterSpacing: '8px', color: '#4ade80', margin: '20px 0' }}>{roomCode}</h1>
-                  <p style={{ color: '#aaa' }}>Comparte este código para jugar.</p>
+                  <p style={{ color: '#aaa' }}>{t("compCode")}</p>
                 </div>
               )}
             </div>
@@ -256,15 +256,15 @@ const GameSettings: React.FC = () => {
               )}
               
               <div className="control-group">
-                <label className="fixed-label"><strong>¿Quién empieza la partida?</strong></label>
+                <label className="fixed-label"><strong>{t("quienEmp")}</strong></label>
                 <select 
                   className="control-input"
                   value={colorUsuario} 
                   onChange={(e) => setColorUsuario(e.target.value as "B" | "R")}
                 >
-                  <option value="B">Empiezo el usuario logeado (Azul)</option>
+                  <option value="B">{t("empUserLog")}</option>
                   <option value="R">
-                    {modo === "bot" ? "Empieza la Máquina (Azul)" : "Empieza el invitado (Azul)"}
+                    {modo === "bot" ? t("empMaqAzul") : t("empInvAzul")}
                   </option>
                 </select>
               </div>
@@ -284,7 +284,7 @@ const GameSettings: React.FC = () => {
             </div>
           </div>
           {tamano > 20 && (
-            <p className="preview-limit-text">Previsualización limitada a 20x20</p>
+            <p className="preview-limit-text">{t("prevLim")}</p>
           )}
         </div>
 

@@ -159,7 +159,30 @@ export const messages = {
     lose: "Losses",
     surrender: "Surrender",
     durMax: "Maximum Duration (s)",
-    movesMax: "Maximum Moves"
+    movesMax: "Maximum Moves",
+
+    local: "Local (1vs1 on this PC)",
+    online: "Online (Play via Internet)",
+    tamSa: "Size (If you create a room)",
+    crearSala: "Create Room",
+    unirse: "Join a match",
+    uni: "Join",
+    esperandoRival: "Waiting for opponent...",
+    compCode: "Share this code to play.",
+    quienEmp: "Who starts the match?",
+    empUserLog: "Logged-in user starts (Blue)",
+    empMaqAzul: "Machine starts (Blue)",
+    empInvAzul: "Guest starts (Blue)",
+    prevLim: "Preview limited to 20x20",
+    jugaContra: "Playing against:",
+    sala: "Room: ",
+    table: " | Board: ",
+    partUnovs: "1vs1 Online Match",
+
+    lobbyOnline: "Online Lobby",
+    code: "CODE",
+    serverCon: "🟢 Connected to server",
+    serverNo: "🔴 Connecting..."
 
 },
   es: {
@@ -321,7 +344,31 @@ export const messages = {
     lose:"Lose",
     surrender:"Surrender",
     durMax:"Duración máxima (s)",
-    movesMax:"Movimientos máximos"
+    movesMax:"Movimientos máximos",
+
+    local:"Local (1vs1 en este PC)",
+    online:"Online (Jugar por Internet)",
+    tamSa:"Tamaño (Si creas sala)",
+    crearSala:"Crear Sala",
+    unirse:"Unirse a una partida",
+    uni:"Unirse",
+    esperandoRival:"Esperando rival...",
+    compCode:"Comparte este código para jugar.",
+    quienEmp:"¿Quién empieza la partida?",
+    empUserLog:"Empiezo el usuario logeado (Azul)",
+    empMaqAzul:"Empieza la Máquina (Azul)",
+    empInvAzul:"Empieza el invitado (Azul)",
+    prevLim:"Previsualización limitada a 20x20",
+    jugaContra:"Jugando contra:",
+    sala: "Sala: ",
+    table:" | Tablero: ",
+    partUnovs:"Partida 1vs1 Online",
+
+    lobbyOnline:"Lobby Online",
+    code:"CÓDIGO",
+    serverCon:"🟢 Conectado al servidor",
+    serverNo:"🔴 Conectando..."
+
 
   },
   fr: {
@@ -483,7 +530,30 @@ export const messages = {
     lose: "Défaites",
     surrender: "Abandonner",
     durMax: "Durée maximale (s)",
-    movesMax: "Coups maximum"
+    movesMax: "Coups maximum",
+
+    local: "Local (1vs1 sur ce PC)",
+    online: "En ligne (Jouer via Internet)",
+    tamSa: "Taille (Si vous créez une salle)",
+    crearSala: "Créer une salle",
+    unirse: "Rejoindre une partie",
+    uni: "Rejoindre",
+    esperandoRival: "En attente de l'adversaire...",
+    compCode: "Partagez ce code pour jouer.",
+    quienEmp: "Qui commence la partie ?",
+    empUserLog: "L'utilisateur connecté commence (Bleu)",
+    empMaqAzul: "La machine commence (Bleu)",
+    empInvAzul: "L’invité commence (Bleu)",
+    prevLim: "Prévisualisation limitée à 20x20",
+    jugaContra: "Joue contre :",
+    sala: "Salle : ",
+    table: " | Plateau : ",
+    partUnovs: "Partie 1vs1 en ligne",
+
+    lobbyOnline: "Lobby en ligne",
+    code: "CODE",
+    serverCon: "🟢 Connecté au serveur",
+    serverNo: "🔴 Connexion..."
 
 
   },
@@ -646,7 +716,30 @@ export const messages = {
     lose: "Sconfitte",
     surrender: "Arrendersi",
     durMax: "Durata massima (s)",
-    movesMax: "Mosse massime"
+    movesMax: "Mosse massime",
+
+    local: "Locale (1vs1 su questo PC)",
+    online: "Online (Gioca via Internet)",
+    tamSa: "Dimensione (Se crei una stanza)",
+    crearSala: "Crea Stanza",
+    unirse: "Unisciti a una partita",
+    uni: "Unisciti",
+    esperandoRival: "In attesa dell'avversario...",
+    compCode: "Condividi questo codice per giocare.",
+    quienEmp: "Chi inizia la partita?",
+    empUserLog: "Inizia l'utente loggato (Blu)",
+    empMaqAzul: "Inizia la Macchina (Blu)",
+    empInvAzul: "Inizia l’ospite (Blu)",
+    prevLim: "Anteprima limitata a 20x20",
+    jugaContra: "Giocando contro:",
+    sala: "Stanza: ",
+    table: " | Tavolo: ",
+    partUnovs: "Partita 1vs1 Online",
+
+    lobbyOnline: "Lobby Online",
+    code: "CODICE",
+    serverCon: "🟢 Connesso al server",
+    serverNo: "🔴 Connessione..."
 
 
   },
@@ -810,7 +903,30 @@ export const messages = {
     lose: "Niederlagen",
     surrender: "Aufgeben",
     durMax: "Maximale Dauer (s)",
-    movesMax: "Maximale Züge"
-        
+    movesMax: "Maximale Züge",
+
+    local: "Lokal (1vs1 auf diesem PC)",
+    online: "Online (Über Internet spielen)",
+    tamSa: "Größe (Wenn du einen Raum erstellst)",
+    crearSala: "Raum erstellen",
+    unirse: "An einem Spiel teilnehmen",
+    uni: "Beitreten",
+    esperandoRival: "Warten auf Gegner...",
+    compCode: "Teile diesen Code, um zu spielen.",
+    quienEmp: "Wer beginnt das Spiel?",
+    empUserLog: "Angemeldeter Benutzer beginnt (Blau)",
+    empMaqAzul: "Maschine beginnt (Blau)",
+    empInvAzul: "Gast beginnt (Blau)",
+    prevLim: "Vorschau auf 20x20 begrenzt",
+    jugaContra: "Spielt gegen:",
+    sala: "Raum: ",
+    table: " | Brett: ",
+    partUnovs: "1vs1 Online Spiel",
+
+    lobbyOnline: "Online Lobby",
+    code: "CODE",
+    serverCon: "🟢 Mit Server verbunden",
+    serverNo: "🔴 Verbinden..."
+    
   }
 } 
