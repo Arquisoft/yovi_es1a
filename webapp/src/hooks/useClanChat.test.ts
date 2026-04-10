@@ -5,7 +5,7 @@ import { authFetch } from '../services/auth.service';
 import { socket } from '../services/socket.service';
 import { UserUtils } from '../utils/user.utils';
 
-// Mockeamos el socket
+// qMockeamos el socket
 vi.mock('../services/socket.service', () => ({
   socket: { on: vi.fn(), off: vi.fn(), emit: vi.fn() }
 }));
