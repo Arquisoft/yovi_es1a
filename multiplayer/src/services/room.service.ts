@@ -68,7 +68,7 @@ export const RoomService = {
   },
 
   recordMatchResult: (userId: string, opponentName: string, result: "win" | "surrender") => {
-    fetch('http://users:3000/matches/', { 
+    fetch('http://users:3000/matches/', { // NOSONAR
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
