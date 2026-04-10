@@ -5,6 +5,7 @@ import "../styles/global.css";
 import "../styles/Clan.css";
 import video from "../assets/videoLinea.mp4";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
+import { useClanChat } from '../hooks/useClanChat'; 
 
 const ClanManager: React.FC = () => {
   const [clans, setClans] = useState<any[]>([]);
@@ -13,28 +14,9 @@ const ClanManager: React.FC = () => {
   const [newClanName, setNewClanName] = useState<string>('');
   const [user, setUser] = useState<{ userId: string; username: string } | null>(null);
   const [selectedClanId, setSelectedClanId] = useState<string | null>(null);
-  const [chatMessages, setChatMessages] = useState<{username: string, text: string}[]>([]);
   const [chatText, setChatText] = useState('');
 
-  const fetchChatMessages = async (clanId: string) => {
-    try {
-      const msgs = await clanService.getClanMessages(clanId);
-      setChatMessages(msgs);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const sendChatMessage = async () => {
-    if (!selectedClanId || !user || !chatText) return;
-    try {
-      const newMessages = await clanService.sendMessage(selectedClanId, user.userId, user.username, chatText);
-      setChatMessages(newMessages);
-      setChatText('');
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const { messages, sendMessage, loadingHistory } = useClanChat(selectedClanId);
 
   const fetchClans = async () => {
     try {
@@ -83,6 +65,12 @@ const ClanManager: React.FC = () => {
     }
   };
 
+  const handleSendChatMessage = () => {
+    if (!chatText.trim()) return;
+    sendMessage(chatText); 
+    setChatText('');
+  };
+
   return (
     <div className='clanesView'>
       <NavBar activeTab="clanes" />
@@ -104,10 +92,9 @@ const ClanManager: React.FC = () => {
                 <li key={clan.clanId}>
                   <strong>{clan.name}</strong> {t("miembros")} {clan.members.join(', ')}
                   <button onClick={() => handleAddMember(clan.clanId)}>{t("unirme")}</button>
-                  <button onClick={async () => {
-                    setSelectedClanId(clan.clanId);
-                    await fetchChatMessages(clan.clanId);
-                  }}>{t("chat")}</button>
+                  <button onClick={() => setSelectedClanId(clan.clanId)}>
+                    {t("chat")}
+                  </button>
                 </li>
               ))}
             </ul>
@@ -129,18 +116,32 @@ const ClanManager: React.FC = () => {
           {selectedClanId && (
             <div className='chat-Contorno'>
               <h2>{t("chatClan")}</h2>
-              <div className="chat">
-                {chatMessages.map((m, i) => (
-                  <div key={i}><strong>{m.username}</strong>: {m.text}</div>
-                ))}
+              
+              <div className="chat" style={{ height: '300px', overflowY: 'auto' }}>
+                {loadingHistory ? (
+                  <p style={{textAlign: 'center', color: '#aaa'}}>Cargando historial...</p>
+                ) : messages.length === 0 ? (
+                  <p style={{textAlign: 'center', color: '#aaa'}}>Aún no hay mensajes. ¡Sé el primero!</p>
+                ) : (
+                  messages.map((m, i) => (
+                    <div key={i} style={{ marginBottom: '8px' }}>
+                      <strong style={{ color: '#4ade80' }}>{m.username}</strong>: <span style={{color: 'white'}}>{m.text}</span>
+                    </div>
+                  ))
+                )}
               </div>
-              <input
-                type="text"
-                value={chatText}
-                onChange={e => setChatText(e.target.value)}
-                placeholder="Escribe un mensaje"
-              />
-              <button onClick={sendChatMessage}>{t("enviar")}</button>
+              
+              <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
+                <input
+                  type="text"
+                  value={chatText}
+                  onChange={e => setChatText(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleSendChatMessage()}
+                  placeholder="Escribe un mensaje"
+                  style={{ flex: 1 }}
+                />
+                <button onClick={handleSendChatMessage}>{t("enviar")}</button>
+              </div>
             </div>
           )}
         </div>

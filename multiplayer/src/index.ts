@@ -5,6 +5,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { registerRoomHandlers } from './handlers/room.handler.js';
 import { RoomService } from './services/room.service.js';
+import { registerClanHandlers } from './handlers/clan.handler.js';
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ io.on('connection', (socket) => {
     RoomService.handleDisconnect(socket.id); 
 
     registerRoomHandlers(io, socket);
+    registerClanHandlers(io, socket);
 });
 
 //Start server

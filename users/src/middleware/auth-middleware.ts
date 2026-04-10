@@ -16,6 +16,7 @@ declare global {
 }
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
+    if (req.headers['x-server-key'] === 'token_backend') { return next(); }
     const authHeader = req.headers['authorization'];
     const token = authHeader?.split(' ')[1];
     if (req.headers['x-server-key'] === 'token_backend') {
