@@ -1,0 +1,65 @@
+{
+  "title": "Simple Game Metrics",
+  "uid": "simple_pie_dashboard",
+  "schemaVersion": 36,
+  "version": 1,
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timezone": "browser",
+  "panels": [
+    {
+      "type": "piechart",
+      "title": "Games Played by Bot",
+      "id": 1,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "games_played",
+          "legendFormat": "{{bot}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "options": {
+        "displayLabels": true,
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 }
+    },
+    {
+      "type": "piechart",
+      "title": "Average Response Time",
+      "id": 2,
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(response_time_seconds_sum[5m]) / rate(response_time_seconds_count[5m])",
+          "legendFormat": "Average Response Time",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "options": {
+        "displayLabels": true,
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 }
+    }
+  ]
+}

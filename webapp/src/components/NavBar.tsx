@@ -85,7 +85,7 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
                 className={`nav-item ${activeTab === "ranking" ? "active" : ""}`}
                 onClick={() => setRankingOpen((prev) => !prev)}
               >
-                RANKING {rankingOpen ? "▴" : "▾"}
+                {t("ranking")} {rankingOpen ? "▴" : "▾"}
               </button>
 
               {rankingOpen && (
@@ -115,7 +115,7 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
                     tabIndex={0}
                     role="button"
                   >
-                    Ranking de jugadores
+                    {t("rankJugs")}
                   </div>
 
                   {/* Opción 2: Ranking de Clanes (Restaurado) */}
@@ -133,7 +133,7 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
                     tabIndex={0}
                     role="button"
                   >
-                    Ranking de clanes
+                    {t("rankClans")}
                   </div>
                 </div>
               )}
@@ -143,7 +143,7 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
               onClick={() => navigate("/clanes")}
               className={`nav-item ${activeTab === "clanes" ? "active" : ""}`}
             >
-              Clanes
+              {t("clanes")}
             </button>
 
             <button 

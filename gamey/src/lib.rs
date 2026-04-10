@@ -40,3 +40,4 @@ pub use core::*;
 pub use gamey_error::*;
 pub use notation::*;
 pub use bot_server::*;
+pub mod metrics;

@@ -135,8 +135,8 @@ describe('Estadisticas Component', () => {
     await waitFor(() => expect(mockGetHistory).toHaveBeenCalledTimes(1));
 
     const resultSelect = screen.getByRole('combobox');
-    const durationInput = screen.getByPlaceholderText('Duración máxima (s)');
-    const movesInput = screen.getByPlaceholderText('Movimientos máximos');
+    const durationInput = screen.getByPlaceholderText('durMax');
+    const movesInput = screen.getByPlaceholderText('movesMax');
 
     await user.selectOptions(resultSelect, 'win');
     await user.type(durationInput, '50');
@@ -165,21 +165,21 @@ describe('Estadisticas Component', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Página 1 de 3')).toBeInTheDocument();
+      expect(screen.getByText('pag 1 dePag 3')).toBeInTheDocument();
     });
 
-    const btnSiguiente = screen.getByText('Siguiente');
-    const btnAnterior = screen.getByText('Anterior');
+    const btnSiguiente = screen.getByText('sig');
+    const btnAnterior = screen.getByText('ant');
 
     await user.click(btnSiguiente);
     await waitFor(() => {
-      expect(screen.getByText('Página 2 de 3')).toBeInTheDocument();
+      expect(screen.getByText('pag 2 dePag 3')).toBeInTheDocument();
       expect(mockGetHistory).toHaveBeenLastCalledWith('user123', 2, 5, expect.any(Object));
     });
 
     await user.click(btnAnterior);
     await waitFor(() => {
-      expect(screen.getByText('Página 1 de 3')).toBeInTheDocument();
+      expect(screen.getByText('pag 1 dePag 3')).toBeInTheDocument();
       expect(mockGetHistory).toHaveBeenLastCalledWith('user123', 1, 5, expect.any(Object));
     });
   });

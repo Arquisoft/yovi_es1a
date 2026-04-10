@@ -16,17 +16,17 @@ const SurrenderModal: React.FC<SurrenderModalProps> = ({ isOpen, onConfirm, onCa
     <div className="custom-modal-overlay">
       <div className="custom-modal-content">
         {}
-        <h3>{t("confirmSurrender") || "¿Estás seguro de que quieres rendirte?"}</h3>
+        <h3>{t("confirmSurrender") || t("estasSeg")}</h3>
         
         {}
-        <p>Perderás la partida automáticamente.</p>
+        <p>{t("perderas")}</p>
         
         <div className="custom-modal-buttons">
           <button className="btn-modal-cancel" onClick={onCancel}>
-            Cancelar
+            {t("cancel")}
           </button>
           <button className="btn-modal-confirm" onClick={onConfirm}>
-            Sí, rendirme
+            {t("siRend")}
           </button>
         </div>
       </div>

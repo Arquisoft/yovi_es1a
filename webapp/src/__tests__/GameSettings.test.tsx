@@ -187,7 +187,7 @@ describe('GameSettings', () => {
     const sizeInput = screen.getAllByRole('spinbutton')[0] as HTMLInputElement
     
     fireEvent.change(sizeInput, { target: { value: '25' } })
-    expect(screen.getByText('Previsualización limitada a 20x20')).toBeInTheDocument()
+    expect(screen.getByText('prevLim')).toBeInTheDocument()
   })
 })
 
@@ -204,7 +204,7 @@ describe('GameSettings - Online Mode', () => {
     const modeSelector = container.querySelector('.config-controls .control-group select') as HTMLSelectElement
     await user.selectOptions(modeSelector, 'online')
 
-    expect(screen.getByText(/Conectando|Conectado/i)).toBeInTheDocument()
+    expect(screen.getByText(/serverCon|serverNo/i)).toBeInTheDocument()
   })
 
   test('updates join room code input and calls joinRoom function when button is clicked', async () => {
@@ -221,13 +221,13 @@ describe('GameSettings - Online Mode', () => {
     const modeSelector = container.querySelector('.config-controls .control-group select') as HTMLSelectElement
     await user.selectOptions(modeSelector, 'online')
 
-    const codeInput = container.querySelector('input[placeholder="CÓDIGO"]') as HTMLInputElement
+    const codeInput = container.querySelector('input[placeholder="code"]') as HTMLInputElement
     fireEvent.change(codeInput, { target: { value: 'room99' } })
     
     // Verificamos que el estado local (joinCodeInput) se ha actualizado (Línea 130)
     expect(codeInput.value).toBe('room99')
 
-    const joinButton = screen.getByText('Unirse')
+    const joinButton = screen.getByText('uni')
     await user.click(joinButton)
 
     expect(joinRoomMock).toHaveBeenCalledWith('room99', expect.any(String))
@@ -338,7 +338,7 @@ describe('GameSettings - Online Mode', () => {
     const modeSelector = container.querySelector('.config-controls .control-group select') as HTMLSelectElement
     await user.selectOptions(modeSelector, 'online')
 
-    const createBtn = screen.getByText('Crear Sala')
+    const createBtn = screen.getByText('crearSala')
     await user.click(createBtn)
     
     expect(createRoomMock).toHaveBeenCalledWith('PlayerX', 5)

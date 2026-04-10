@@ -128,7 +128,7 @@ describe('NavBar', () => {
   test('It navigates to /clanes when clicking "Clanes"', async () => {
     const user = userEvent.setup();
     renderWithUser('help');
-    await user.click(screen.getByText('Clanes'));
+    await user.click(screen.getByText('clanes'));
     expect(mockNavigate).toHaveBeenCalledWith('/clanes');
   });
 
@@ -171,8 +171,8 @@ describe('NavBar', () => {
     const rankingBtn = screen.getByText(/RANKING/i);
     fireEvent.click(rankingBtn);
 
-    expect(screen.getByText('Ranking de jugadores')).toBeInTheDocument();
-    expect(screen.getByText('Ranking de clanes')).toBeInTheDocument();
+    expect(screen.getByText('rankJugs')).toBeInTheDocument();
+    expect(screen.getByText('rankClans')).toBeInTheDocument();
 
     fireEvent.click(rankingBtn);
     expect(screen.queryByText('Ranking de jugadores')).not.toBeInTheDocument();
@@ -183,7 +183,7 @@ describe('NavBar', () => {
 
     fireEvent.click(screen.getByText(/RANKING/i));
 
-    const playerRankingOpt = screen.getByText('Ranking de jugadores');
+    const playerRankingOpt = screen.getByText('rankJugs');
     fireEvent.click(playerRankingOpt);
 
     expect(mockNavigate).toHaveBeenCalledWith('/ranking/players');
@@ -195,7 +195,7 @@ describe('NavBar', () => {
 
     fireEvent.click(screen.getByText(/RANKING/i));
 
-    const clanRankingOpt = screen.getByText('Ranking de clanes');
+    const clanRankingOpt = screen.getByText('rankClans');
     fireEvent.click(clanRankingOpt);
 
     expect(mockNavigate).toHaveBeenCalledWith('/ranking/clans');
@@ -206,7 +206,7 @@ describe('NavBar', () => {
     renderWithUser();
 
     fireEvent.click(screen.getByText(/RANKING/i));
-    expect(screen.getByText('Ranking de jugadores')).toBeInTheDocument();
+    expect(screen.getByText('rankJugs')).toBeInTheDocument();
     fireEvent.click(document.body);
 
     expect(screen.queryByText('Ranking de jugadores')).not.toBeInTheDocument();
