@@ -9,7 +9,7 @@ describe('API Service - authFetch', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorage.clear();
+    sessionStorage.clear();
 
     delete (window as any).location;
     (window as any).location = { ...originalLocation, href: '' };
@@ -20,7 +20,7 @@ describe('API Service - authFetch', () => {
   });
 
   it('debe realizar la petición con el token en los headers si existe', async () => {
-    localStorage.setItem('token', 'mi-token-falso');
+    sessionStorage.setItem('token', 'mi-token-falso');
     
     vi.mocked(fetch).mockResolvedValueOnce({ status: 200 } as Response);
 
@@ -65,28 +65,28 @@ describe('API Service - authFetch', () => {
   });
 
   it('debe limpiar el localStorage y redirigir a /login si recibe un 401', async () => {
-    localStorage.setItem('token', 'token-caducado');
-    localStorage.setItem('user', 'juanito');
+    sessionStorage.setItem('token', 'token-caducado');
+    sessionStorage.setItem('user', 'juanito');
     
     vi.mocked(fetch).mockResolvedValueOnce({ status: 401 } as Response);
 
     await authFetch('/ruta-protegida');
 
-    expect(localStorage.getItem('token')).toBeNull();
-    expect(localStorage.getItem('user')).toBeNull();
+    expect(sessionStorage.getItem('token')).toBeNull();
+    expect(sessionStorage.getItem('user')).toBeNull();
     expect(window.location.href).toBe('/login');
   });
 
   it('debe limpiar el localStorage y redirigir a /login si recibe un 403', async () => {
-    localStorage.setItem('token', 'token-prohibido');
-    localStorage.setItem('user', 'juanito');
+    sessionStorage.setItem('token', 'token-prohibido');
+    sessionStorage.setItem('user', 'juanito');
     
     vi.mocked(fetch).mockResolvedValueOnce({ status: 403 } as Response);
 
     await authFetch('/ruta-secreta');
 
-    expect(localStorage.getItem('token')).toBeNull();
-    expect(localStorage.getItem('user')).toBeNull();
+    expect(sessionStorage.getItem('token')).toBeNull();
+    expect(sessionStorage.getItem('user')).toBeNull();
     expect(window.location.href).toBe('/login');
   });
 });

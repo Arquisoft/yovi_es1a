@@ -21,7 +21,7 @@ vi.mock('../idiomaConf/LanguageContext', () => ({
 }));
 
 const renderWithUser = (activeTab: string = 'play') => {
-  localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'JugadorPro' }));
+  sessionStorage.setItem('user', JSON.stringify({ userId: '123', username: 'JugadorPro' }));
   return render(
     <MemoryRouter>
       <NavBar activeTab={activeTab as any} />
@@ -30,7 +30,7 @@ const renderWithUser = (activeTab: string = 'play') => {
 };
 
 const renderWithoutUser = (activeTab: string = 'home') => {
-  localStorage.removeItem('user');
+  sessionStorage.removeItem('user');
   return render(
     <MemoryRouter>
       <NavBar activeTab={activeTab as any} />
@@ -41,7 +41,7 @@ const renderWithoutUser = (activeTab: string = 'home') => {
 describe('NavBar', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorage.clear();
+    sessionStorage.clear();
   });
 
   test('It loads the user from localStorage and displays their username', () => {

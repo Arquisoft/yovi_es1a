@@ -17,7 +17,7 @@ vi.mock('../services/stats.service');
 describe('useTablero Hook', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }));
     mockLocationState.mockReturnValue({ tamanoSeleccionado: 3 });
     vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'ongoing' });
   });
@@ -42,7 +42,7 @@ describe('useTablero Hook', () => {
     expect(consoleSpy).toHaveBeenCalledWith("Error al guardar en la BD:", expect.any(Error));
 
     consoleSpy.mockClear();
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
     const { result: noUserResult } = renderHook(() => useTablero({}));
     
     vi.mocked(gameService.checkWinner).mockResolvedValueOnce({ status: 'win' });

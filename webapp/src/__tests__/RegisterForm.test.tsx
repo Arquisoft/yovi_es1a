@@ -49,7 +49,7 @@ vi.mock('../components/AuthForm', () => ({
 describe('RegisterForm', () => {
   afterEach(() => {
     vi.clearAllMocks()
-    localStorage.clear()
+    sessionStorage.clear()
   })
 
   test('triggers the internal validation error when all fields are empty', async () => {
@@ -123,7 +123,7 @@ describe('RegisterForm', () => {
       expect(screen.getByText('Pablo')).toBeInTheDocument()
     })
 
-    expect(localStorage.getItem('user')).toBe(JSON.stringify({ userId: 1, username: 'Pablo' }))
+    expect(sessionStorage.getItem('user')).toBe(JSON.stringify({ userId: 1, username: 'Pablo' }))
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/configureGame')

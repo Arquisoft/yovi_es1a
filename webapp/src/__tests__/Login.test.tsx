@@ -36,7 +36,7 @@ vi.mock('../idiomaConf/LanguageContext', () => ({
 describe('LoginForm', () => {
   afterEach(() => {
     vi.clearAllMocks()
-    localStorage.clear()
+    sessionStorage.clear()
     vi.useRealTimers()
   })
 

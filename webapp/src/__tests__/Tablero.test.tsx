@@ -146,12 +146,12 @@ describe('Board - Bot Response', () => {
 
 describe('Board - End of Game', () => {
   beforeEach(() => {
-    localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
+    sessionStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
   })
   afterEach(() => {
     cleanup()
     vi.clearAllMocks()
-    localStorage.clear()
+    sessionStorage.clear()
   })
 
   test('shows victory modal if the human won', async () => {
@@ -185,7 +185,7 @@ describe('Board - End of Game', () => {
   })
 
   test('does not save stats if userId is missing', async () => {
-    localStorage.setItem('user', JSON.stringify({ username: 'JugadorFantasma' }))
+    sessionStorage.setItem('user', JSON.stringify({ username: 'JugadorFantasma' }))
     vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
     const { container } = renderTablero()
     fireEvent.click(container.querySelectorAll('.casilla')[0])
@@ -195,7 +195,7 @@ describe('Board - End of Game', () => {
   })
 
   test('in human mode, saves lose stats for the losing player', async () => {
-    localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
+    sessionStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
     vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
     const { container } = renderTablero(3, 'random_bot', 'humano', 'R')
     fireEvent.click(container.querySelectorAll('.casilla')[0])
@@ -212,7 +212,7 @@ describe('Board - End of Game', () => {
       api_version: '1.0', bot_id: 'test', game_status: 'ongoing',
       coords: { x: 0, y: 0, z: 0 }
     })
-    localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
+    sessionStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
     renderTablero(3, 'random_bot', 'bot', 'R')
     await waitFor(() => {
       expect(screen.getAllByText(/HAS PERDIDO/i)[0]).toBeInTheDocument()
@@ -238,7 +238,7 @@ describe('Board - Error Handling', () => {
   })
 
   test('handles error if database fails to save stats', async () => {
-    localStorage.setItem('user', JSON.stringify({ userId: '123' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: '123' }));
     vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' })
     vi.mocked(statsService.saveMatchResult).mockRejectedValueOnce(new Error('DB is down'))
     const { container } = renderTablero()
@@ -324,11 +324,11 @@ describe('Board - Additional Scenarios', () => {
 describe('Board - Surrender Capability', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
+    sessionStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
   })
   afterEach(() => {
     cleanup()
-    localStorage.clear()
+    sessionStorage.clear()
   })
 
   test('shows defeat modal and saves stats when surrenderTrigger is activated', async () => {
@@ -538,13 +538,13 @@ describe('Board - Timer and Pass Turn Capability', () => {
 describe('Board - Modal Button Actions', () => {
   beforeEach(() => {
     vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'win' });
-    localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }));
   });
 
   afterEach(() => {
     cleanup();
     vi.clearAllMocks();
-    localStorage.clear();
+    sessionStorage.clear();
     vi.useRealTimers();
   });
 
@@ -624,12 +624,12 @@ describe('Board - Modal Button Actions', () => {
 describe('Board - Online Mode', () => {
   beforeEach(() => {
     vi.mocked(gameService.checkWinner).mockResolvedValue({ status: 'ongoing' })
-    localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
+    sessionStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }))
   })
   afterEach(() => {
     cleanup()
     vi.clearAllMocks()
-    localStorage.clear()
+    sessionStorage.clear()
   })
 
   const renderOnline = (lastOpponentLayout?: string) =>
@@ -728,13 +728,13 @@ describe('Board - Online Mode', () => {
 describe('Board - Branch Coverage Perfection', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: '123', username: 'Test' }));
   });
   
   afterEach(() => {
     cleanup();
     vi.clearAllMocks();
-    localStorage.clear();
+    sessionStorage.clear();
   });
 
   test('disables clicked cell in human mode and blocks bot cells when not player turn', async () => {
