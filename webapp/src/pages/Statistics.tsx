@@ -25,7 +25,7 @@ const Estadisticas: React.FC = () => {
   const [filters, setFilters] = useState<{ result?: string; maxMoves?: number; maxDuration?: number }>({});
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = sessionStorage.getItem("user");
     if (storedUser) {
       const user = JSON.parse(storedUser);
       setLoading(true);

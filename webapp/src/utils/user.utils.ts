@@ -1,6 +1,6 @@
 export const UserUtils = {
   getCurrentUser: () => {
-    const userStr = localStorage.getItem("user");
+    const userStr = sessionStorage.getItem("user");
     return userStr ? JSON.parse(userStr) : null;
   },
   getUserId: () => {

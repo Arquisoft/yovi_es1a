@@ -31,7 +31,7 @@ export const useTablero = (props: any) => {
   const isHumanTurn = modoReal === "humano" || modoReal === "online" || turn === miColor;
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = sessionStorage.getItem("user");
     setLayout(getInitialLayout(size));
     setTurn("B");
     setHistory([]);
