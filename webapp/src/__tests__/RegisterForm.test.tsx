@@ -51,6 +51,7 @@ describe('RegisterForm', () => {
   afterEach(() => {
     vi.clearAllMocks()
     localStorage.clear()
+    sessionStorage.clear()
   })
 
   test('triggers the internal validation error when all fields are empty', async () => {
@@ -125,12 +126,11 @@ describe('RegisterForm', () => {
     await waitFor(() => {
       expect(screen.getByText(/bienvenido/i)).toBeInTheDocument()
       expect(screen.getByText('Pablo')).toBeInTheDocument()
+      expect(localStorage.getItem('user')).toBe(JSON.stringify({ userId: 1, username: 'Pablo' })) // ✅ dentro del waitFor
     })
-
-    expect(localStorage.getItem('user')).toBe(JSON.stringify({ userId: 1, username: 'Pablo' }))
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/configureGame')
-    }, { timeout: 4000 }) 
-  })
+    }, { timeout: 4000 })
+    })
 })

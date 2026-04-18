@@ -131,13 +131,12 @@ describe('LoginForm', () => {
     await waitFor(() => {
       expect(screen.getByText(/bienvenido/i)).toBeInTheDocument()
       expect(screen.getByText(/Pablo/i)).toBeInTheDocument()
+      expect(localStorage.getItem('user')).toBe(JSON.stringify({ userId: 1, username: 'Pablo' }))
+      expect(localStorage.getItem('token')).toBe('fake-jwt-token')
     })
-
-    expect(localStorage.getItem('user')).toBe(JSON.stringify({ userId: 1, username: 'Pablo' }))
-    expect(localStorage.getItem('token')).toBe('fake-jwt-token')
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/configureGame')
-    }, { timeout: 4000 }) 
-  })
+    }, { timeout: 4000 })
+      })
 })
