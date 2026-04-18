@@ -115,28 +115,39 @@ describe('LoginForm', () => {
   })
 
   test('shows a welcome message and navigates to game configuration after a successful login', async () => {
-    vi.mocked(authService.login).mockResolvedValueOnce({
-      userId: 1,
-      username: 'Pablo',
-      token: 'fake-jwt-token'
-    })
+  const localStorageMock: Record<string, string> = {};
+  vi.spyOn(Storage.prototype, 'setItem').mockImplementation((key, value) => {
+    localStorageMock[key] = value;
+  });
+  vi.spyOn(Storage.prototype, 'getItem').mockImplementation((key) => {
+    return localStorageMock[key] ?? null;
+  });
 
-    render(<MemoryRouter><LoginForm /></MemoryRouter>)
-    const user = userEvent.setup()
-    
-    await user.type(screen.getByLabelText(/user/i), 'Pablo')
-    await user.type(screen.getByLabelText(/contra/i), 'password123')
-    await user.click(screen.getByRole('button', { name: /log in!/i }))
+  vi.mocked(authService.login).mockResolvedValueOnce({
+    userId: 1,
+    username: 'Pablo',
+    token: 'fake-jwt-token'
+  })
 
-    await waitFor(() => {
-      expect(screen.getByText(/bienvenido/i)).toBeInTheDocument()
-      expect(screen.getByText(/Pablo/i)).toBeInTheDocument()
-      expect(localStorage.getItem('user')).toBe(JSON.stringify({ userId: 1, username: 'Pablo' }))
-      expect(localStorage.getItem('token')).toBe('fake-jwt-token')
-    })
+  render(<MemoryRouter><LoginForm /></MemoryRouter>)
+  const user = userEvent.setup()
+  
+  await user.type(screen.getByLabelText(/user/i), 'Pablo')
+  await user.type(screen.getByLabelText(/contra/i), 'password123')
+  await user.click(screen.getByRole('button', { name: /log in!/i }))
 
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/configureGame')
-    }, { timeout: 4000 })
-      })
+  await waitFor(() => {
+    expect(screen.getByText(/bienvenido/i)).toBeInTheDocument()
+    expect(screen.getByText(/Pablo/i)).toBeInTheDocument()
+  })
+
+  expect(localStorageMock['user']).toBe(JSON.stringify({ userId: 1, username: 'Pablo' }))
+  expect(localStorageMock['token']).toBe('fake-jwt-token')
+
+  await waitFor(() => {
+    expect(mockNavigate).toHaveBeenCalledWith('/configureGame')
+  }, { timeout: 4000 })
+
+  vi.restoreAllMocks()
+})
 })
