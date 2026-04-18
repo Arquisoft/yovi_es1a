@@ -23,7 +23,7 @@ const GameSettings: React.FC = () => {
     createRoom, joinRoom, lastOpponentMove, sendMove, myColor, opponentName, boardSize 
   } = useMultiplayer();
   const [joinCodeInput, setJoinCodeInput] = useState('');
-  const userStr = localStorage.getItem("user");
+  const userStr = sessionStorage.getItem("user");
   const myUsername = userStr ? JSON.parse(userStr).username : "Invitado";
 
   const irAlJuego = () => {

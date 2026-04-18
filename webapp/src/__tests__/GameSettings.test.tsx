@@ -48,7 +48,7 @@ vi.mock('../components/Tablero', () => ({
 describe('GameSettings', () => {
   afterEach(() => {
     vi.clearAllMocks()
-    localStorage.clear()
+    sessionStorage.clear()
   })
 
   test('updates board size using the offline slider', () => {
@@ -194,7 +194,7 @@ describe('GameSettings', () => {
 describe('GameSettings - Online Mode', () => {
   afterEach(() => {
     vi.clearAllMocks()
-    localStorage.clear()
+    sessionStorage.clear()
   })
 
   test('displays the online lobby interface when online mode is selected', async () => {
@@ -332,7 +332,7 @@ describe('GameSettings - Online Mode', () => {
       sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5, leaveMatchGracefully: vi.fn(),notifyGameOver: vi.fn(),
     })
 
-    localStorage.setItem('user', JSON.stringify({ username: 'PlayerX' }))
+    sessionStorage.setItem('user', JSON.stringify({ username: 'PlayerX' }))
 
     const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
     const modeSelector = container.querySelector('.config-controls .control-group select') as HTMLSelectElement

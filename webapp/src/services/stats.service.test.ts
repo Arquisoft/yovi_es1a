@@ -17,12 +17,12 @@ global.fetch = mockFetch;
 
 beforeEach(() => {
   vi.clearAllMocks();
-  localStorage.clear();
-  localStorage.setItem('token', 'fake-token');
+  sessionStorage.clear();
+  sessionStorage.setItem('token', 'fake-token');
 });
 
 afterEach(() => {
-  localStorage.clear();
+  sessionStorage.clear();
 });
 
 describe('statsService.saveMatchResult', () => {

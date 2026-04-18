@@ -63,17 +63,17 @@ router.post('/createuser', async (req: Request, res: Response) => {
 
 router.post('/login', async (req: Request, res: Response) => {
     try {
-        // --- 1. Llamada al Servicio ---
+        // --- Llamada al Servicio ---
         const user = await login(req.body);
 
         // Generar el token
         const token = jwt.sign(
             { userId: user._id.toString(), username: user.username },
             process.env.JWT_SECRET || 'jwt_token_secret',
-            { expiresIn: '24h' }
+            { expiresIn: '8h' }
         );
         
-        // --- 2. Respuesta Exitosa ---
+        // --- Respuesta Exitosa ---
         return res.status(200).json({
             message: 'Login successful',
             userId: user._id,
@@ -82,7 +82,7 @@ router.post('/login', async (req: Request, res: Response) => {
         });
 
     } catch (error: any) {
-        // --- 3. Manejo de Errores ---
+        // --- Manejo de Errores ---
         const msg = error?.message;
 
         if (msg === 'User not found') {

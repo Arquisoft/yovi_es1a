@@ -18,13 +18,13 @@ const Login: React.FC = () => {
     setError(null);
     try {
       const data = await authService.login(username, password);
-      localStorage.setItem("user", JSON.stringify({
+      sessionStorage.setItem("user", JSON.stringify({
         userId: data.userId, 
         username: data.username
       }));
       
       if (data.token) {
-        localStorage.setItem('token', data.token);
+        sessionStorage.setItem('token', data.token);
       }
       setWelcomeUser(data.username);
       setTimeout(() => navigate('/configureGame'), 1500);

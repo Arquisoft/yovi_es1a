@@ -7,7 +7,7 @@ import '@testing-library/jest-dom/vitest';
 describe('Routes', () => {
   
   beforeEach(() => {
-    localStorage.clear();
+    sessionStorage.clear();
     vi.clearAllMocks();
   });
 
@@ -29,7 +29,7 @@ describe('Routes', () => {
     });
 
     test('redirects to /login if the user is the string "null" or "undefined"', () => {
-      localStorage.setItem('user', 'null');
+      sessionStorage.setItem('user', 'null');
 
       render(
         <MemoryRouter initialEntries={['/private']}>
@@ -46,7 +46,7 @@ describe('Routes', () => {
     });
 
     test('allows access if there is a real user in localStorage', () => {
-      localStorage.setItem('user', JSON.stringify({ username: 'testuser' }));
+      sessionStorage.setItem('user', JSON.stringify({ username: 'testuser' }));
 
       render(
         <MemoryRouter initialEntries={['/private']}>
@@ -81,7 +81,7 @@ describe('Routes', () => {
     });
 
     test('Step 2: redirects to /configureGame if logged in BUT has no configuration', () => {
-      localStorage.setItem('user', JSON.stringify({ username: 'testuser' }));
+      sessionStorage.setItem('user', JSON.stringify({ username: 'testuser' }));
 
       render(
         <MemoryRouter initialEntries={['/game']}>
@@ -99,7 +99,7 @@ describe('Routes', () => {
     });
 
     test('Step 3: allows access to the game if LOGGED IN and HAS configuration', () => {
-      localStorage.setItem('user', JSON.stringify({ username: 'testuser' }));
+      sessionStorage.setItem('user', JSON.stringify({ username: 'testuser' }));
       
       const routeState = { tamanoSeleccionado: 5 };
 

@@ -25,7 +25,7 @@ vi.mock('../idiomaConf/LanguageContext.tsx', () => ({
 
 describe('Estadisticas Component', () => {
   beforeEach(() => {
-    localStorage.clear();
+    sessionStorage.clear();
     vi.clearAllMocks();
   });
 
@@ -40,7 +40,7 @@ describe('Estadisticas Component', () => {
   });
 
   test('displays loading state followed by empty state when match history is empty', async () => {
-    localStorage.setItem('user', JSON.stringify({ userId: 'user123', username: 'TestUser' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: 'user123', username: 'TestUser' }));
     
     (statsService.getMatchHistory as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       content: [],
@@ -61,7 +61,7 @@ describe('Estadisticas Component', () => {
   });
 
   test('renders the match history table correctly with provided data', async () => {
-    localStorage.setItem('user', JSON.stringify({ userId: 'user123', username: 'TestUser' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: 'user123', username: 'TestUser' }));
     
     const mockHistory = [
       { _id: '1', result: 'win', opponent: 'random_bot', totalMoves: 10, duration: 60, boardSize: 5, createdAt: '2023-01-01T10:00:00Z' },
@@ -88,7 +88,7 @@ describe('Estadisticas Component', () => {
   });
 
   test('handles server errors with specific error messages', async () => {
-    localStorage.setItem('user', JSON.stringify({ userId: 'user123' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: 'user123' }));
     
     (statsService.getMatchHistory as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Fallo crítico en la BD'));
 
@@ -104,7 +104,7 @@ describe('Estadisticas Component', () => {
   });
 
   test('handles generic server errors', async () => {
-    localStorage.setItem('user', JSON.stringify({ userId: 'user123' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: 'user123' }));
     
     (statsService.getMatchHistory as ReturnType<typeof vi.fn>).mockRejectedValueOnce({});
 
@@ -121,7 +121,7 @@ describe('Estadisticas Component', () => {
 
   test('updates filter states and reloads history when inputs change', async () => {
     const user = userEvent.setup();
-    localStorage.setItem('user', JSON.stringify({ userId: 'user123' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: 'user123' }));
     
     const mockGetHistory = statsService.getMatchHistory as ReturnType<typeof vi.fn>;
     mockGetHistory.mockResolvedValue({ content: [], totalPages: 1 });
@@ -153,7 +153,7 @@ describe('Estadisticas Component', () => {
 
   test('navigates between pages correctly using pagination buttons', async () => {
     const user = userEvent.setup();
-    localStorage.setItem('user', JSON.stringify({ userId: 'user123' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: 'user123' }));
     
     const mockGetHistory = statsService.getMatchHistory as ReturnType<typeof vi.fn>;
     mockGetHistory.mockResolvedValue({ content: [], totalPages: 3 });

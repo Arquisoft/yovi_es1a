@@ -28,7 +28,7 @@ describe('Clan', () => {
   });
 
   beforeEach(() => {
-    localStorage.clear();
+    sessionStorage.clear();
     vi.clearAllMocks();
       (useClanChat as any).mockReturnValue({
       messages: [],
@@ -41,7 +41,7 @@ describe('Clan', () => {
 });
 
   test('carga clanes existentes y los muestra', async () => {
-    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
     (clanService.getAllClans as ReturnType<typeof vi.fn>).mockResolvedValueOnce([
       { clanId: 'c1', name: 'Clan1', members: ['u1'] },
       { clanId: 'c2', name: 'Clan2', members: [] },
@@ -56,7 +56,7 @@ describe('Clan', () => {
   });
 
   test('crear un nuevo clan', async () => {
-    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
     (clanService.createClan as ReturnType<typeof vi.fn>).mockResolvedValueOnce({});
     (clanService.getAllClans as ReturnType<typeof vi.fn>)
     .mockResolvedValueOnce([])//Render inicial
@@ -74,7 +74,7 @@ describe('Clan', () => {
   });
 
   test('unirse a un clan existente', async () => {
-    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
     (clanService.getAllClans as ReturnType<typeof vi.fn>).mockResolvedValue([
       { clanId: 'c1', name: 'ClanExistente', members: [] },
     ]);
@@ -116,7 +116,7 @@ describe('Clan', () => {
 });
 
   test('error si falla fetch de clanes', async () => {
-    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
     (clanService.getAllClans as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Error'));
 
     render(<MemoryRouter><Clan /></MemoryRouter>);
@@ -156,7 +156,7 @@ describe('Clan', () => {
   });
 
   test('no envía mensaje si el input está vacío', async () => {
-    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
     (clanService.getAllClans as ReturnType<typeof vi.fn>).mockResolvedValue([
         { clanId: 'c1', name: 'Clan1', members: ['u1'] },
     ]);
