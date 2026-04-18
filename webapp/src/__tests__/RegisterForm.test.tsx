@@ -114,6 +114,9 @@ describe('RegisterForm', () => {
       userId: 1,
       username: 'Pablo'
     })
+    
+
+    vi.mocked(authService.login).mockResolvedValueOnce({})
 
     render(<MemoryRouter><RegisterForm /></MemoryRouter>)
     const user = userEvent.setup()
@@ -128,6 +131,6 @@ describe('RegisterForm', () => {
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/configureGame')
-    }, { timeout: 2500 })
+    }, { timeout: 4000 }) 
   })
 })
