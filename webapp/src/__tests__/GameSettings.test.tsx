@@ -213,7 +213,7 @@ describe('GameSettings - Online Mode', () => {
     vi.mocked(useMultiplayer).mockReturnValue({
       isConnected: true, roomCode: null, errorMsg: '', gameStarted: false,
       createRoom: vi.fn(), joinRoom: joinRoomMock, lastOpponentMove: null,
-      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5, leaveMatchGracefully: vi.fn()
+      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5, leaveMatchGracefully: vi.fn(),notifyGameOver: vi.fn(),
     })
 
     const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
@@ -274,7 +274,7 @@ describe('GameSettings - Online Mode', () => {
     vi.mocked(useMultiplayer).mockReturnValue({
       isConnected: true, roomCode: 'ROOM123', errorMsg: '', gameStarted: true,
       createRoom: vi.fn(), joinRoom: vi.fn(), lastOpponentMove: null,
-      sendMove: vi.fn(), myColor: 'B', opponentName: 'Rival', boardSize: 5, leaveMatchGracefully: vi.fn()
+      sendMove: vi.fn(), myColor: 'B', opponentName: 'Rival', boardSize: 5, leaveMatchGracefully: vi.fn(),notifyGameOver: vi.fn(),
     })
 
     const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
@@ -290,7 +290,7 @@ describe('GameSettings - Online Mode', () => {
     vi.mocked(useMultiplayer).mockReturnValue({
       isConnected: true, roomCode: 'WAIT99', errorMsg: '', gameStarted: false,
       createRoom: vi.fn(), joinRoom: vi.fn(), lastOpponentMove: null,
-      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5, leaveMatchGracefully: vi.fn()
+      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5, leaveMatchGracefully: vi.fn(),notifyGameOver: vi.fn(),
     })
 
     const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
@@ -309,7 +309,7 @@ describe('GameSettings - Online Mode', () => {
     vi.mocked(useMultiplayer).mockReturnValue({
       isConnected: true, roomCode: 'ROOM123', errorMsg: '', gameStarted: true,
       createRoom: vi.fn(), joinRoom: vi.fn(), lastOpponentMove: null,
-      sendMove: sendMoveMock, myColor: 'B', opponentName: 'Rival', boardSize: 5, leaveMatchGracefully: vi.fn()
+      sendMove: sendMoveMock, myColor: 'B', opponentName: 'Rival', boardSize: 5, leaveMatchGracefully: vi.fn(),notifyGameOver: vi.fn(),
     })
 
     const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
@@ -329,7 +329,7 @@ describe('GameSettings - Online Mode', () => {
     vi.mocked(useMultiplayer).mockReturnValue({
       isConnected: true, roomCode: null, errorMsg: '', gameStarted: false,
       createRoom: createRoomMock, joinRoom: vi.fn(), lastOpponentMove: null,
-      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5, leaveMatchGracefully: vi.fn()
+      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5, leaveMatchGracefully: vi.fn(),notifyGameOver: vi.fn(),
     })
 
     sessionStorage.setItem('user', JSON.stringify({ username: 'PlayerX' }))

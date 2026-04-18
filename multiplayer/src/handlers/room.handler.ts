@@ -16,7 +16,7 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
     if (room.size >= 2) return socket.emit('roomError', 'Sala llena.');
     const hostSocketId = Array.from(room)[0];
     if (!hostSocketId) return;
-    const roomInfo = RoomService.joinRoom(socket.id, roomCode, guestId);
+    const roomInfo = RoomService.joinRoom(socket.id, roomCode, hostSocketId, guestUsername, guestId);
 
     if (roomInfo) {
       socket.join(roomCode);
@@ -29,6 +29,12 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
     socket.to(roomCode).emit('moveReceived', moveData);
   });
 
+  socket.on('gameOver', (roomCode) => {
+    console.log(`🎮 gameOver recibido para sala ${roomCode} desde socket ${socket.id}`);
+    RoomService.endGameByRoom(roomCode);
+    console.log(`🏁 finishedRooms ahora contiene: ${roomCode} → ${RoomService.isRoomFinished(roomCode)}`);
+});
+
   socket.on('leaveMatchGracefully', () => {
     const { roomCode } = RoomService.handleDisconnect(socket.id);
     
@@ -39,20 +45,18 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
     RoomService.cleanExit(socket.id);
   });
 
-  socket.on('disconnect', () => {
-    const { roomCode, userId } = RoomService.handleDisconnect(socket.id);
-
-    setTimeout(() => {
-        if (roomCode) {
-            io.to(roomCode).emit('opponent_disconnected');
-            
-            if (userId) {
-                console.log(`⚖️ Desconexión abrupta. Castigando a ${userId}`);
-                RoomService.applyPunishment(userId);
-            }
-        }
-        
+  // room.handler.ts
+socket.on('disconnect', () => {
+    const { roomCode, userId, opponentName, userName, opponentId } = RoomService.handleDisconnect(socket.id);
+      setTimeout(() => {
+          if (!roomCode || RoomService.isRoomFinished(roomCode)) {
         RoomService.deleteSocketData(socket.id);
+        return;
+      }
+      io.to(roomCode).emit('opponent_disconnected');
+      if (userId) RoomService.recordMatchResult(userId, opponentName, "surrender");
+      if (opponentId) RoomService.recordMatchResult(opponentId, userName, "win");
+      RoomService.deleteSocketData(socket.id);
     }, 500);
 });
 };

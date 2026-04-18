@@ -11,7 +11,8 @@ import { UserUtils } from '../utils/user.utils';
 const Multiplayer: React.FC = () => {
   const { 
     isConnected, roomCode, errorMsg, gameStarted, 
-    createRoom, joinRoom, lastOpponentMove, sendMove, myColor, opponentName, boardSize, leaveMatchGracefully
+    createRoom, joinRoom, lastOpponentMove, sendMove, myColor, opponentName, boardSize, leaveMatchGracefully,
+    notifyGameOver
   } = useMultiplayer();
   
   const [joinCodeInput, setJoinCodeInput] = useState('');
@@ -38,6 +39,7 @@ const Multiplayer: React.FC = () => {
             onSendMove={(newLayout) => sendMove(roomCode, newLayout)}
             opponentName={opponentName}
             onLeave={leaveMatchGracefully}
+            onGameOver={notifyGameOver}
           />
         </div>
       </div>

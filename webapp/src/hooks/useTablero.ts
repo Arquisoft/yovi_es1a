@@ -8,7 +8,7 @@ type Player = "B" | "R";
 const TURN_TIME_LIMIT = 20;
 
 export const useTablero = (props: any) => {
-  const { surrenderTrigger, undoTrigger, passTurnTrigger, onUndoStatusChange, isOnline, onlineColor, lastOpponentLayout, onSendMove, opponentName, tamano } = props;
+  const { surrenderTrigger, undoTrigger, passTurnTrigger, onUndoStatusChange, isOnline, onlineColor, lastOpponentLayout, onSendMove, opponentName, tamano, onGameOver } = props;
   
   const location = useLocation();
   const { tamanoSeleccionado = 5, botSeleccionado = "random_bot", modoSeleccionado = "bot", colorUsuario = "B" } = location.state || {};
@@ -58,14 +58,15 @@ export const useTablero = (props: any) => {
   };
 
   const playOnline = async (updatedLayout: string) => {
-    try {
-      const yenLayout = stringToYenLayout(updatedLayout, size);
-      const data = await gameService.checkWinner(size, yenLayout);
-      if (data.status === "win") {
-        setGameFinished(true);
-        setWinnerMessage(turn === "B" ? "¡GANÓ EL AZUL!" : "¡GANÓ EL ROJO!");
-        setShowWinnerModal(true);
-        await safeSaveStats("win", updatedLayout); 
+  try {
+    const yenLayout = stringToYenLayout(updatedLayout, size);
+    const data = await gameService.checkWinner(size, yenLayout);
+    if (data.status === "win") {
+      if (onSendMove) onSendMove(updatedLayout + "|GAMEOVER");
+      setGameFinished(true);
+          setWinnerMessage(turn === "B" ? "¡GANÓ EL AZUL!" : "¡GANÓ EL ROJO!");
+          setShowWinnerModal(true);
+          await safeSaveStats("win", updatedLayout); 
       } else {
         setTurn(turn === "B" ? "R" : "B");
       }
@@ -244,14 +245,15 @@ export const useTablero = (props: any) => {
       const data = await gameService.checkWinner(size, stringToYenLayout(lastOpponentLayout, size));
       
       if (data.status === "win") {
-        setGameFinished(true);
-        setWinnerMessage("HAS PERDIDO.");
-        setShowWinnerModal(true);
-        await safeSaveStats("lose", lastOpponentLayout); 
-      } else {
-        setTurn(miColor);
-        setLoading(false);
-      }
+        if (onGameOver) onGameOver();
+          setGameFinished(true);
+          setWinnerMessage("HAS PERDIDO.");
+          setShowWinnerModal(true);
+          await safeSaveStats("lose", lastOpponentLayout); 
+        } else {
+          setTurn(miColor);
+          setLoading(false);
+        }
     };
     procesarMovimientoRival();
   }, [lastOpponentLayout, modoReal, size, miColor]);

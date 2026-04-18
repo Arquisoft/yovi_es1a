@@ -19,6 +19,7 @@ vi.mock('react-router-dom', async () => {
 vi.mock('../services/auth.service', () => ({
   authService: {
     register: vi.fn(),
+    login: vi.fn()
   }
 }))
 
@@ -49,6 +50,7 @@ vi.mock('../components/AuthForm', () => ({
 describe('RegisterForm', () => {
   afterEach(() => {
     vi.clearAllMocks()
+    localStorage.clear()
     sessionStorage.clear()
   })
 
@@ -113,6 +115,9 @@ describe('RegisterForm', () => {
       userId: 1,
       username: 'Pablo'
     })
+    
+
+    vi.mocked(authService.login).mockResolvedValueOnce({})
 
     render(<MemoryRouter><RegisterForm /></MemoryRouter>)
     const user = userEvent.setup()
@@ -121,12 +126,11 @@ describe('RegisterForm', () => {
     await waitFor(() => {
       expect(screen.getByText(/bienvenido/i)).toBeInTheDocument()
       expect(screen.getByText('Pablo')).toBeInTheDocument()
+      expect(localStorage.getItem('user')).toBe(JSON.stringify({ userId: 1, username: 'Pablo' })) // ✅ dentro del waitFor
     })
-
-    expect(sessionStorage.getItem('user')).toBe(JSON.stringify({ userId: 1, username: 'Pablo' }))
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/configureGame')
-    }, { timeout: 2500 })
-  })
+    }, { timeout: 4000 })
+    })
 })

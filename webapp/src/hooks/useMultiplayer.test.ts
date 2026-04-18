@@ -143,7 +143,6 @@ describe('useMultiplayer', () => {
     const { result } = renderHook(() => useMultiplayer())
     act(() => { result.current.createRoom('Alice', 7) })
     
-    // CAMBIAMOS null POR undefined
     expect(mockSocket.emit).toHaveBeenCalledWith('createRoom', { hostId: undefined, hostUsername: 'Alice', tamano: 7 })
   })
 
@@ -151,7 +150,6 @@ describe('useMultiplayer', () => {
     const { result } = renderHook(() => useMultiplayer())
     act(() => { result.current.joinRoom('abc123', 'Bob') })
     
-    // CAMBIAMOS null POR undefined
     expect(mockSocket.emit).toHaveBeenCalledWith('joinRoom', { guestId: undefined, roomCode: 'ABC123', guestUsername: 'Bob' })
   })
 
@@ -193,10 +191,8 @@ describe('useMultiplayer', () => {
       await getSocketCallback('opponent_disconnected')()
     })
 
-    expect(alertSpy).toHaveBeenCalledWith("¡Tu oponente se ha desconectado!")
+    expect(alertSpy).toHaveBeenCalledWith("¡Tu oponente se ha desconectado! Has ganado la partida.")
     expect(result.current.gameStarted).toBe(false)
-    expect(matchService.saveWinByAbandonment).toHaveBeenCalledWith('user123', '')
-
     alertSpy.mockRestore()
   })
 
@@ -211,22 +207,38 @@ describe('useMultiplayer', () => {
     expect(result.current.roomCode).toBeNull()
   })
 
-  test('handles opponent_disconnected event correctly when user is not logged in (no userId)', async () => {
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {})
+  test('handles onMoveReceived with GAMEOVER string correctly', () => {
+    const { result } = renderHook(() => useMultiplayer())
     
-    vi.mocked(UserUtils.getUserId).mockReturnValue(null)
+    act(() => { getSocketCallback('roomCreated')('ROOM123') })
 
+    const moveWithGameOver = "TABLERO_DATA|GAMEOVER"
+    act(() => { getSocketCallback('moveReceived')(moveWithGameOver) })
+
+    expect(result.current.lastOpponentMove).toBe("TABLERO_DATA")
+    expect(mockSocket.emit).toHaveBeenCalledWith('gameOver', 'ROOM123')
+  })
+
+  test('notifyGameOver emits "gameOver" event if roomCode exists', () => {
+    const { result } = renderHook(() => useMultiplayer())
+    
+    act(() => { getSocketCallback('roomCreated')('ROOM123') })
+
+    act(() => { result.current.notifyGameOver() })
+    
+    expect(mockSocket.emit).toHaveBeenCalledWith('gameOver', 'ROOM123')
+  })
+
+  test('handles opponent_disconnected event and navigates', async () => {
+    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {})
     const { result } = renderHook(() => useMultiplayer())
 
-    await act(async () => {
-      await getSocketCallback('opponent_disconnected')()
-    })
+    act(() => { getSocketCallback('gameStarted')({ roomCode: 'ABC', color: 'R', opponentName: 'Opo', tamano: 5 }) })
 
-    expect(alertSpy).toHaveBeenCalledWith("¡Tu oponente se ha desconectado!")
+    act(() => { getSocketCallback('opponent_disconnected')() })
+
+    expect(alertSpy).toHaveBeenCalledWith(expect.stringContaining("Tu oponente se ha desconectado"))
     expect(result.current.gameStarted).toBe(false)
-    
-    expect(matchService.saveWinByAbandonment).not.toHaveBeenCalled()
-
     alertSpy.mockRestore()
   })
 })

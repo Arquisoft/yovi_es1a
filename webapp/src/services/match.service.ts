@@ -11,7 +11,7 @@ export const matchService = {
    */
   saveWinByAbandonment: async (userId: string, opponentName: string): Promise<boolean> => {
     try {
-      const response = await authFetch('/matches', {
+      const response = await authFetch('/matches/', {
         method: 'POST',
         body: JSON.stringify({
           user: userId,

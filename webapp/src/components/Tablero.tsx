@@ -19,6 +19,7 @@ interface TableroProps {
   opponentName?: string;
   tamano?: number;
   onLeave?: () => void;
+  onGameOver?: () => void;
 }
 
 const Tablero: React.FC<TableroProps> = (props) => {

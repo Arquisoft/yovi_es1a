@@ -22,12 +22,15 @@ const Register: React.FC = () => {
     }
     try {
       const data = await authService.register(username, email, password);
-      sessionStorage.setItem("user", JSON.stringify({
+      await authService.login(username, password);
+      localStorage.setItem("user", JSON.stringify({
         userId: data.userId, 
         username: data.username
       }));
+      
       setWelcomeUser(data.username);
       setTimeout(() => navigate('/configureGame'), 1500);
+      
     } catch (err: any) {
       const message = err.response?.data?.error || err.message || "An error occurred";
       setError(message);

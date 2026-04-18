@@ -166,10 +166,11 @@ router.get('/', async (req: Request, res: Response) => {
 router.get('/:clanId/messages', async (req: Request, res: Response) => {
     try {
         const { clanId } = req.params;
+        // Llamamos directamente a tu servicio
         const messages = await ClanService.getClanMessages(clanId);
         res.json(messages);
     } catch (err: any) {
-        console.error(err);
+        console.error("Error cargando historial de chat:", err);
         res.status(500).json({ error: err.message || 'Error cargando mensajes' });
     }
 });
