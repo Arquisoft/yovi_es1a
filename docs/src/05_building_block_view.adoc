@@ -90,12 +90,12 @@ Contained Building Blocks::
 *Location:* `/multiplayer` directory.
 
 | **GameY Engine**
-| *Responsibility:* Implements the core logic of the Game of Y. It validates moves, calculates bot strategies (Monte Carlo, Minimax, etc.), and checks win conditions using the YEN notation. +
+| *Responsibility:* Implements the core logic of the Game of Y, validating moves and checking win conditions using YEN notation. It now includes auto-resign logic: if the engine detects no valid moves (e.g., full board), it returns an action: resign status instead of an error, ensuring flow continuity in automated test environments. It also exposes a high-performance endpoint on port 3002 for external competitions. +
 *Technology:* Rust. +
 *Location:* `/gamey` directory.
 
 | **MongoDB**
-| *Responsibility:* The central database used to persist user profiles, encrypted credentials, active match states, and global ranking statistics. +
+| *Responsibility:* The central database used to persist user profiles, encrypted credentials, and global ranking statistics. +
 *Technology:* MongoDB (NoSQL Document Database). +
 *Location:* External Docker container / Atlas Cloud.
 |===
