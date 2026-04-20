@@ -5,7 +5,17 @@ import video from "../assets/videoLinea.mp4";
 const BotTester: React.FC = () => {
   const [layout, setLayout] = useState('./../.../..../...../....../.......');
   const [resultado, setResultado] = useState('');
-  
+
+  const VALID_BOTS = [
+    'random_bot',
+    'simple_blocker_bot',
+    'group_expansion_bot',
+    'shortest_path_bot',
+    'triangle_attack_bot',
+    'priority_block_bot',
+    'monte_carlo_bot'
+  ] as const;
+
   // 1. Añadimos un estado para guardar el bot seleccionado (por defecto "random_bot")
   const [botId, setBotId] = useState('random_bot');
 
@@ -16,8 +26,12 @@ const BotTester: React.FC = () => {
     try {
         const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
         
+        const safeBotId = VALID_BOTS.includes(botId as any)
+          ? botId
+          : 'random_bot';
+
         // 2. Inyectamos la variable botId en la URL
-        const res = await fetch(`${apiEndpoint}/v1/ybot/choose/${botId}`, {
+        const res = await fetch(`${apiEndpoint}/v1/ybot/choose/${safeBotId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
