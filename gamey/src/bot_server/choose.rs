@@ -144,6 +144,86 @@ pub async fn choose(
     Ok(Json(response))
 }
 
+use axum::extract::Query;
+use serde_json::Value;
+
+/// Estructura que define qué parámetros esperamos recibir en la URL (Query String).
+/// Ejemplo de URL esperada: /play?position={"size":3...}&bot_id=monte_carlo_bot
+#[derive(Deserialize)]
+pub struct CompetitionParams {
+    /// Estado del tablero estructurado en formato YEN (llega como texto/string)
+    position: String,
+    /// Identificador opcional del bot. Si no se envía, usaremos uno por defecto.
+    bot_id: Option<String>,
+}
+
+/// GET /play (Exclusivo para la competición)
+/// Handler de Axum que recibe el estado de la aplicación y los parámetros de la URL.
+#[axum::debug_handler]
+pub async fn play_competition(
+    State(state): State<AppState>, // Acceso a los bots guardados en la memoria del servidor
+    Query(params): Query<CompetitionParams>, // Extrae los parámetros ?position=... y ?bot_id=...
+) -> Result<Json<Value>, Json<ErrorResponse>> {
+    
+    // 1. Determinar el bot:
+    // Si la peticion contiene un bot_id, usamos ese. Si contiene la variable vacía (None), 
+    // usamos "random_bot" como estrategia de seguridad.
+    let bot_name = params.bot_id.unwrap_or_else(|| "random_bot".to_string());
+
+    // 2. Deserializar el tablero (De texto a objeto YEN):
+    // Intentamos convertir el texto JSON de la URL en nuestra estructura interna YEN.
+    let yen: YEN = match serde_json::from_str(&params.position) {
+        Ok(y) => y, // Si el JSON está bien formado, lo guardamos en 'yen'
+        Err(e) => return Err(Json(ErrorResponse::error(
+            // Si la peticion contiene un JSON roto, devolvemos un error HTTP detallado
+            &format!("JSON inválido en position: {}", e),
+            Some("v1".to_string()),
+            Some(bot_name),
+        ))),
+    };
+
+    // 3. Convertir al estado del juego (De YEN a GameY):
+    // Traducimos el formato YEN a la estructura lógica 'GameY' que entiende la IA.
+    let game_y = match GameY::try_from(yen) {
+        Ok(game) => game, // Si el tablero es lógicamente válido, lo guardamos en 'game_y'
+        Err(err) => return Err(Json(ErrorResponse::error(
+            // Si el tablero tiene reglas rotas (ej. tamaño negativo), devolvemos error
+            &format!("Formato YEN inválido: {}", err),
+            Some("v1".to_string()),
+            Some(bot_name),
+        ))),
+    };
+    // 4. Escoger la IA:
+    // Buscamos en el registro de nuestro servidor (state) el bot que nos han pedido.
+    let bot = match state.bots().find(&bot_name) {
+        Some(bot) => bot, // Bot encontrado, listo para jugar
+        None => return Err(Json(ErrorResponse::error(
+            &format!("Bot no encontrado: {}", bot_name),
+            Some("v1".to_string()),
+            Some(bot_name.clone()),
+        ))),
+    };
+
+    // 5.Calculo y toma de decision:
+    // Le pasamos el tablero válido a la IA y le pedimos que calcule su siguiente movimiento.
+    let coords = match bot.choose_move(&game_y) {
+        Some(coords) => coords,
+        None => {
+            // Si el bot se ha quedado sin movimientos válidos resigna
+            return Ok(Json(serde_json::json!({
+                "action": "resign"
+            })));
+        }
+    };
+
+    // 6. Respuesta normal:
+    // Si llegamos hasta aquí, es porque la IA tiene un movimiento.
+    // Construimos el JSON exacto con la clave "coords".
+    Ok(Json(serde_json::json!({
+        "coords": coords
+    })))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -32,6 +32,8 @@ services:
     image: ghcr.io/arquisoft/yovi_es1a-gamey:latest
     environment:
       - PORT=4000
+    ports:
+      - "3002:4000"
     networks:
       - monitor-net
   multiplayer:
