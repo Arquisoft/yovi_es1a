@@ -12,6 +12,10 @@ import botRoutes from './controller/bot-controller';
 import connectBD from './database'; 
 import clanRoutes from './controller/clan-controller';
 
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+import path from 'path/win32';
+
 
 const app: Application = express();
 app.disable('x-powered-by');
@@ -48,6 +52,10 @@ const metricsMiddleware = promBundle({
 });
 app.use(metricsMiddleware);
 
+const swaggerPath = path.join(__dirname, '../documentacion_api.yaml'); 
+const swaggerDocument = YAML.load(swaggerPath);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 connectBD(); //conect bd
 
