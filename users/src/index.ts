@@ -38,7 +38,7 @@ app.use(cors({ // NOSONAR
 app.use(express.json()); //convert plain text in json
 
 //metrics so that Prometheus and Grafana can read them and make graphs.
-/**
+
 const metricsMiddleware = promBundle({ 
   includeMethod: true,
   includePath: true,
@@ -47,7 +47,7 @@ const metricsMiddleware = promBundle({
   }
 });
 app.use(metricsMiddleware);
-*/
+
 
 connectBD(); //conect bd
 
