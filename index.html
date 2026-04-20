@@ -1158,7 +1158,15 @@ Refer to details in the following sections.</p>
 <div class="sect2">
 <h3 id="_technology_decisions">4.1. Technology Decisions</h3>
 <div class="sect3">
-<h4 id="_frontend">4.1.1. Frontend</h4>
+<h4 id="_continuous_deployment_github_actions">4.1.1. Continuous Deployment (GitHub Actions)</h4>
+<div class="paragraph">
+<p>Beyond automated testing, we implemented a full Continuous Deployment (CD) pipeline. Upon publishing a GitHub Release, a workflow automatically connects to the Azure VM via SSH to pull the latest images and restart the services.
+<strong>Quality goals:</strong> deployability, maintainability, reliability.
+<strong>Key constraints:</strong> Requires secure management of SSH keys using GitHub Secrets to prevent unauthorized server access.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_frontend">4.1.2. Frontend</h4>
 <div class="paragraph">
 <p>We chose React combined with TypeScript for the user interface development. React&#8217;s component-based architecture is ideal for modularizing the complex visualization of the game board and managing the reactive state of the match. The adoption of TypeScript adds a static typing system that drastically reduces compile-time errors.
 <strong>Quality goals:</strong> usability, maintainability, robustness.
@@ -1166,7 +1174,7 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_backend_microservices">4.1.2. Backend (Microservices)</h4>
+<h4 id="_backend_microservices">4.1.3. Backend (Microservices)</h4>
 <div class="paragraph">
 <p>For the backend, we adopted a polyglot microservices approach:
 1. <strong>Rust (<code>gamey</code>):</strong> Offers native performance and memory safety, guaranteeing low and predictable response times for the complex algorithmic logic of the game and AI bots.
@@ -1177,7 +1185,7 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_real_time_communication_websockets">4.1.3. Real-Time Communication (WebSockets)</h4>
+<h4 id="_real_time_communication_websockets">4.1.4. Real-Time Communication (WebSockets)</h4>
 <div class="paragraph">
 <p>We selected <strong>Socket.io</strong> over standard HTTP polling for multiplayer interactions. Socket.io maintains a persistent, bi-directional TCP connection, allowing the server to push moves to opponents instantly. It also provides built-in "Rooms," which drastically simplifies the logic for matchmaking and isolating 1vs1 games.
 <strong>Quality goals:</strong> low latency, real-time performance, efficiency.
@@ -1185,7 +1193,7 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_api_gateway_security">4.1.4. API Gateway &amp; Security</h4>
+<h4 id="_api_gateway_security">4.1.5. API Gateway &amp; Security</h4>
 <div class="paragraph">
 <p>We implemented <strong>Nginx</strong> as a Reverse Proxy and API Gateway. Instead of exposing multiple microservice ports to the internet, Nginx provides a single, secure entry point (Port 443). It handles SSL/TLS termination, hiding the internal complexity of the Docker network and routing traffic to the correct service based on the URL path.
 <strong>Quality goals:</strong> security, isolation, parity between Dev/Prod environments.
@@ -1193,7 +1201,7 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_database">4.1.5. Database</h4>
+<h4 id="_database">4.1.6. Database</h4>
 <div class="paragraph">
 <p>We chose <strong>MongoDB Atlas</strong> (Cloud NoSQL) as our primary database. Its document-oriented structure perfectly complements Node.js and React. This allows us to achieve agility when evolving game data structures without migrating rigid SQL tables, and ensures high availability in the cloud.
 <strong>Quality goals:</strong> agility in development, high availability, speed of response.
@@ -1201,7 +1209,7 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_containers_and_cloud_deployment">4.1.6. Containers and Cloud Deployment</h4>
+<h4 id="_containers_and_cloud_deployment">4.1.7. Containers and Cloud Deployment</h4>
 <div class="paragraph">
 <p><strong>Docker and Docker Compose</strong> were selected to containerize the services. This guarantees absolute consistency between local development machines and our <strong>Azure Virtual Machine</strong> production environment. It isolates dependencies (Node vs. Rust) and allows us to define the entire infrastructure as code.
 <strong>Quality goals:</strong> portability, deployability, reproducibility.
@@ -1209,7 +1217,7 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_monitoring">4.1.7. Monitoring</h4>
+<h4 id="_monitoring">4.1.8. Monitoring</h4>
 <div class="paragraph">
 <p>We chose the combination of <strong>Prometheus and Grafana</strong>. Prometheus acts as a time-series database scraping technical metrics from the backend, while Grafana visualizes this data on real-time dashboards.
 <strong>Quality goals:</strong> observability, performance validation.
@@ -1217,7 +1225,7 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_modeling_version_control">4.1.8. Modeling &amp; Version Control</h4>
+<h4 id="_modeling_version_control">4.1.9. Modeling &amp; Version Control</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1233,9 +1241,13 @@ Refer to details in the following sections.</p>
 <div class="sect2">
 <h3 id="_high_level_decomposition">4.2. High-level Decomposition</h3>
 <div class="sect3">
-<h4 id="_microservices_architecture">4.2.1. Microservices Architecture</h4>
+<h4 id="_high_performance_bot_interface">4.2.1. High-Performance Bot Interface</h4>
 <div class="paragraph">
-<p>We divided the backend into autonomous services (<code>users</code>, <code>gamey</code>, <code>multiplayer</code>). This decouples user management, real-time networking, and game logic. If the user service experiences high load, the multiplayer game loop remains unaffected.
+<p>We exposed a secondary direct port (3002) for the Rust gamey service. This bypasses the Nginx API Gateway specifically for external competition scripts and automated evaluation tools.
+<strong>Quality goals:</strong> efficiency, interoperability.
+<strong>Key constraints:</strong> Only the /play endpoint is exposed on this port to minimize the attack surface while meeting tournament requirements.
+==== Microservices Architecture
+We divided the backend into autonomous services (<code>users</code>, <code>gamey</code>, <code>multiplayer</code>). This decouples user management, real-time networking, and game logic. If the user service experiences high load, the multiplayer game loop remains unaffected.
 <strong>Quality goals:</strong> modifiability, scalability, technological independence.
 <strong>Key constraints:</strong> Services run in isolated containers, communicating solely over the internal Docker network.</p>
 </div>
@@ -1258,8 +1270,8 @@ Refer to details in the following sections.</p>
 <h4 id="_hybrid_communication_rest_event_driven">4.2.4. Hybrid Communication: REST &amp; Event-Driven</h4>
 <div class="paragraph">
 <p>We use a dual approach:
-* <strong>REST (HTTP/JSON):</strong> Used for stateless, transactional operations (e.g., login, fetching match history, requesting an AI move).
-* <strong>Event-Driven (WebSockets):</strong> Used for stateful, real-time synchronization during active gameplay, pushing events to clients instantly.
+REST (HTTP/JSON):Used for stateless, transactional operations (e.g., login, fetching match history, requesting an AI move).
+Event-Driven (WebSockets): Used for stateful, real-time synchronization during active gameplay, pushing events to clients instantly.
 <strong>Quality goals:</strong> low latency, appropriate tool for the job.</p>
 </div>
 </div>
@@ -1325,6 +1337,16 @@ Refer to details in the following sections.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Developers need to replicate the exact Azure production environment locally.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker Compose:</strong> All infrastructure is defined as code, mimicking the cloud setup locally with a single command.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Deployability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The team needs to push a bug fix to the Azure production server instantly.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Automated CD Pipeline: GitHub Actions handles the SSH connection, git pull, and docker compose restart automatically upon a new Release.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Interoperability (Tournament)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An external evaluation script needs to request moves from the bot via a specific port (3002).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Direct Port Mapping: Docker maps port 3002 directly to the Rust engine, providing a standard, high-speed interface for third-party scripts.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1363,7 +1385,14 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_communication">4.4.3. Communication</h4>
+<h4 id="_automated_quality_assurance">4.4.3. Automated Quality Assurance</h4>
+<div class="paragraph">
+<p>We integrated Static Analysis (SonarCloud) and Automated Testing (Unit &amp; E2E) into the CI pipeline.
+No code reaches the production environment unless it passes the full test suite (Node.js, Rust) and meets the quality gate defined in SonarCloud.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_communication">4.4.4. Communication</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1485,13 +1514,13 @@ Refer to details in the following sections.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GameY Engine</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Implements the core logic of the Game of Y. It validates moves, calculates bot strategies (Monte Carlo, Minimax, etc.), and checks win conditions using the YEN notation.<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Implements the core logic of the Game of Y, validating moves and checking win conditions using YEN notation. It now includes auto-resign logic: if the engine detects no valid moves (e.g., full board), it returns an action: resign status instead of an error, ensuring flow continuity in automated test environments. It also exposes a high-performance endpoint on port 3002 for external competitions.<br>
 <strong>Technology:</strong> Rust.<br>
 <strong>Location:</strong> <code>/gamey</code> directory.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MongoDB</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> The central database used to persist user profiles, encrypted credentials, active match states, and global ranking statistics.<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> The central database used to persist user profiles, encrypted credentials, and global ranking statistics.<br>
 <strong>Technology:</strong> MongoDB (NoSQL Document Database).<br>
 <strong>Location:</strong> External Docker container / Atlas Cloud.</p></td>
 </tr>
@@ -1706,7 +1735,7 @@ when your infrastructure is more complex.</p>
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/VP51Rzim38Nl-XL4JdQ1p8VrvCFGDW7MGnjaJRQYw7PWRCOH8ec6H2SDXlxtGLA3EfVT97wFJ-JJJH3qCbYZH8iXc5Dl-6J92VpIT8GflF11G_703PeT1ocL2dljUlHe8UomvQDs7MpH11gHXctFZfoiv6G8F3M2hZEa53R27du6yaevRWacCwFZUyKpRU3Eyp6GBoU00PeC_Yg0rn7y4zacdzNxsMNEpPuyt7EGyRZ9A9wIpTQZ9PXOTbhOJnq951-D2v8Z-trkY23g0LuNdNPlK3pHWNmWM7f-EvLf11T95ZtJvhRlK_L86-pxN8vR1bYHF-Y64XrY9SFlQEdb0dPewPJXus14zmPFv2yazhEUXKlFbcH7GqYyzsm_x3rkqM4szhXL0EynhSRmqCBaaLt7ypku5OC1Ybcivjrj94h5sM4w_NPE6cfOu45tA1H0-BVRYVIXhYfppbgfipIsfNIWXllrUhc2ecSlS7tzjLGPH4cE2cgeWg3e1Z04aZ1IfBYY07jTNOr0YkeCqkK2Zs9Azl6BvOlcwagfx9bKSLEeuOcmhPwz5e8M1Q5OFwnAbP_uhqvluuHjgLHCE6dZ1q0DFmRocaBIgLGRhpDZOwYH09R4woQe6tBjOCq_" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/NPD1Rziu48Nl_1K3vo8lwjXj0sphGz4aThSjDgxNIXiKRGvZQImJeJZgS6J7BVhV5wJMQxKtWk_Zu-WzwdLG56rhPzIg8vXHu_XGarVuP6aF8_ZCEmlPvVTM29R2PLkePGzplxF2Ff93OyA3zGqArX2sMFBU-Wesw0Brb8BhXZrvpVNW28GAHL-vFh9WfIii7YhXrfVNx5ZWxCtypVnwRWmMoWA3Zu44nh1qU20P00Pe0ybHlULMFARvyq9ieubOiyBPYafZF9S4Wsjd8v5T2Uy3oJ11HRVvmm00VBcZDVmdtoUBRcr-7ZswH3vPqHOTt62njPuWUyj1ExyjX-YMx3Q2DS6WPc-LPUH98PjnyK02xxoIU7Im8DspF7I78z5DagPPLDO_GhQY7Kb8FJmUXcak7vKJU4VhowP9ofxMs3GdAGON82VPsOBkZy654t3JEhLDolKNh8xx9-mlhEappEF51Dcg3TfDKc5DXnEs5Av9jzI6f3R2TSz3S8CUktE2cwJyxBBoh0HYgwq2RtvpdJys7AY4dKLeM1IUJoRFfXUJoUH_PCC2fOslAzMEHK6X-qZoPJAF7HQEsn86D-mhdbt1fJeCAVWwxXWJeu7HwDMnTvZ20dUsGgK0ob_zLhK9q_7usUJywSkNvozUdF_vr1pXU30L0rDuUtkxp25BqrvSF1yQqocHwIg2QOgR0WH5jGLihAFGmr9FC8KLj_7wCJPs_0Tax_CFYs4FIptri10Vc9vRZl1TdlVP5EjlbcdlP6nYVAClPqBbapMxyhvtRDO5VBby1olwrbBGyDLdosCZmox0q8qL4urN4PRZEx5AaFxX6If2TljtFZITRH--GIssuBWAaDbDJA0SclY6VWaaBmIRE7vDAhO89hwbH2Hq2l-q93OsPciQXRGshycNRUt-1G00" alt="diagram">
 </div>
 </div>
 <div class="dlist">
@@ -1736,6 +1765,12 @@ when your infrastructure is more complex.</p>
 </li>
 <li>
 <p>Scalability: services are decoupled and can be scaled independently if needed.</p>
+</li>
+<li>
+<p>High-Performance tournament interface: The gamey container has an explicit port mapping 3002:4000. This creates a direct channel from the Azure host to the Rust engine, optimizing latency for external evaluation scripts.</p>
+</li>
+<li>
+<p>Hybrid security model: While end-user traffic is encrypted and protected by Nginx (port 443), the competition port (3002) acts as a high-performance technical interface. *</p>
 </li>
 </ul>
 </div>
@@ -1773,7 +1808,7 @@ when your infrastructure is more complex.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GameY Service</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host, connected to the internal Docker network.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host. It is accessible via Nginx (port 443) for standard web users and directly via port 3002 for tournament bot interactions.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Multiplayer Service</p></td>
@@ -1843,11 +1878,19 @@ when your infrastructure is more complex.</p>
 <h4 id="_monitoring_stack_prometheus_grafana">7.2.4. <em>Monitoring Stack (Prometheus + Grafana)</em></h4>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/LSv1ImCn48RXUtx5Hq_ri1UFFKX1GOLMbE91nCEGpdR39faocRGKwN-NT0lgBUHvFv9bCLAhAJeB5XdFkLSgfjLRLSQA3nnnYmvhoS54GzvXO-H7vyeOyfwK4if0MpaswYaM_YDUqbuoPzlOAJAKlL7UHNOkovOnUn0_ik99Yc6-4azna68tCr11E-7R0RrIOipIz8Ckis5-7Rwm7KN7QT2WzS3dUs4jsB0UWkUlXhNTJFX8YJ_-uOuIdoPyLKbi0zToaRrAkgwKUieqzKgz0yxkx5mhq7LtqmjOu5vYP6y5YKs3BwxLb-AIBl1MMGF_-fBpjgRu0m00" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/TP1DImD144JlyokAN4mEWKMzw44YAYgeA451n4CxsxiPTZv2JwyXYlzTPZUW25xhlPefUf6LHFlWZJhrZElO26MLtcelZ1j-Puzzp76RejCaBhPOAjdEcDovk2QXWBoYEcqAQiXd_aLi2kiKEUfIjvuXR9LYwzcOc6h6v3pPZWLNAIkcfn_bowVRsGIKiIhPfm4QeS2OX770FB9YkklTiMwIT6EXWE83Bu-P9MF9ykuilnRObsI4bnJu6HUnTN5aBGNUZknUKc1TSPy7ifOKTYMXXYADlb1ZW2_pPSmUVYfOaMLaAxGkjwWP5DvIHXvsk9HBz4QsurYRyZJcyvDn6Ovnbhndgnc1LPpDcDudKHnKLJNxiOUj_zk7Wrq63lPGEyP3p-BuhtjK7LKpi-1Ozy5_0m00" alt="diagram">
 </div>
 </div>
 <div class="paragraph">
-<p>This diagram focuses on observability. Prometheus collects technical metrics exposed by the backend services and stores them internally. Grafana queries Prometheus to display dashboards. This setup supports troubleshooting and performance monitoring during development.</p>
+<p>This diagram focuses on observability. Prometheus collects technical metrics exposed by the backend services and stores them internally. Grafana queries Prometheus to display dashboards.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_competition_interface_direct_port_3002">7.2.5. <em>Competition Interface (Direct Port 3002)</em></h4>
+<div class="imageblock plantuml">
+<div class="content">
+<img src="https://www.plantuml.com/plantuml/png/JOzBIqCn48Nt-HM7kh052w8x5-83KK55QX54N8p9z3QOJAwPYLh5_owtLd0tS1xpdICrgjPoSXOjCIvbKKcjDc-jCgxuZHFsCCLfoJrRj5W4bs9S5-JPENs9qbEb35rIAEzHEYmeAVzJVCbz4HQxirLYLFP6qYLsZhoLYj6yj2gKMGntliRUHY25hazipJWu9oKmHiUV0zJzDSONHMsojYsB6huS03oUK-O7d4aNXJ6UDRN9q-3fAFFAVJktZRFqLqpUSs24k0OQlZCeeMzShI1JpnGAzdTtzzmcCNtSgXnsdaiAJzF3trOSu68-lyMCNnkhONnRggrJau7Q63LsIqDPR2Y0arLFggouwQ9ym8e3M7IObgF4t38I6OiVp2HXWmZ-tJLmgpgMWA7V7R64bjCF" alt="diagram">
+</div>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -2812,7 +2855,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2026-02-16 21:36:32 +0100
+Last updated 2026-02-16 21:13:33 +0100
 </div>
 </div>
 </body>
