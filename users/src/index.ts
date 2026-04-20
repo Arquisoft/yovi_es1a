@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config(); 
 import { verifyToken } from './middleware/auth-middleware';
+import { fileURLToPath } from 'url';
 
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
@@ -14,7 +15,7 @@ import clanRoutes from './controller/clan-controller';
 
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
-import path from 'path/win32';
+import path from 'path';
 
 
 const app: Application = express();
@@ -51,6 +52,9 @@ const metricsMiddleware = promBundle({
   }
 });
 app.use(metricsMiddleware);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const swaggerPath = path.join(__dirname, '../documentacion_api.yaml'); 
 const swaggerDocument = YAML.load(swaggerPath);
