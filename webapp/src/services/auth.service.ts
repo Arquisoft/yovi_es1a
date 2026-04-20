@@ -10,8 +10,9 @@ export const authService = {
     
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Error trying login');
+    
     if (data.token) {
-      sessionStorage.setItem('token', data.token);
+      localStorage.setItem('token', data.token);
     }
     return data;
   },
@@ -28,20 +29,18 @@ export const authService = {
     return data;
   }
 };
+
 export const authFetch = async (endpoint: string, options: RequestInit = {}) => {
   const token = localStorage.getItem('token');
 
   const headers = new Headers(options.headers);
 
-  // Añadimos el Content-Type usando .set()
   headers.set('Content-Type', 'application/json');
 
-  // Añadimos el Token de la misma forma
   if (token) {
     headers.set('Authorization', `Bearer ${token}`);
   }
 
-  // Hacemos la petición real añadiendo el endpoint a la API
   const url = endpoint.startsWith('http') ? endpoint : `${API_URL}${endpoint}`;
   
   const response = await fetch(url, {
