@@ -57,6 +57,7 @@ pub fn create_router(state: AppState) -> axum::Router {
     axum::Router::new()
         .route("/status", axum::routing::get(status))
         .route("/metrics", axum::routing::get(metrics))
+        .route("/play", axum::routing::get(choose::play_competition))
         .route(
             "/{api_version}/ybot/choose/{bot_id}",
             axum::routing::post(choose::choose),
