@@ -180,8 +180,7 @@ describe('useMultiplayer', () => {
     vi.useRealTimers()
   })
 
-  test('handles opponent_disconnected event correctly', async () => {
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {})
+test('handles opponent_disconnected event correctly', async () => {
     vi.mocked(UserUtils.getUserId).mockReturnValue('user123')
     vi.mocked(matchService.saveWinByAbandonment).mockResolvedValue(undefined as any)
 
@@ -191,9 +190,8 @@ describe('useMultiplayer', () => {
       await getSocketCallback('opponent_disconnected')()
     })
 
-    expect(alertSpy).toHaveBeenCalledWith("¡Tu oponente se ha desconectado! Has ganado la partida.")
+    expect(result.current.opponentDisconnected).toBe(true)
     expect(result.current.gameStarted).toBe(false)
-    alertSpy.mockRestore()
   })
 
   test('handles matchFinishedCleanup event correctly', () => {
@@ -229,16 +227,14 @@ describe('useMultiplayer', () => {
     expect(mockSocket.emit).toHaveBeenCalledWith('gameOver', 'ROOM123')
   })
 
-  test('handles opponent_disconnected event and navigates', async () => {
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {})
+test('handles opponent_disconnected event and sets opponentDisconnected', async () => {
     const { result } = renderHook(() => useMultiplayer())
 
     act(() => { getSocketCallback('gameStarted')({ roomCode: 'ABC', color: 'R', opponentName: 'Opo', tamano: 5 }) })
 
     act(() => { getSocketCallback('opponent_disconnected')() })
 
-    expect(alertSpy).toHaveBeenCalledWith(expect.stringContaining("Tu oponente se ha desconectado"))
+    expect(result.current.opponentDisconnected).toBe(true)
     expect(result.current.gameStarted).toBe(false)
-    alertSpy.mockRestore()
   })
 })
