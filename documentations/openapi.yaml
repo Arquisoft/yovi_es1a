@@ -360,11 +360,12 @@ paths:
           required: true
           schema:
             type: string
-            example: '{"size":3,"turn":0,"players":["B","R"],"layout":"........."}'
+            example: '{"size":3,"turn":0,"players":["B","R"],"layout": "./../..."}'
         - name: bot_id
           in: query
           schema:
             type: string
+          example: "monte_carlo_bot"
       responses:
         '200':
           description: Coordenadas calculadas con éxito por Rust.
@@ -408,7 +409,7 @@ paths:
               properties:
                 position:
                   type: object
-                  example: {"size":3,"turn":0,"players":["B","R"],"layout":"........."}
+                  example: {"size":3,"turn":0,"players":["B","R"],"layout":"./../..."}
                 strategy:
                   type: string
                   example: "monte_carlo_bot"
@@ -439,7 +440,7 @@ paths:
                   example: 5
                 layout:
                   type: string
-                  example: "B.R..B.R..B.R..B.R..B.R.."
+                  example: "B/.R/..B/.R../B.R.."
       responses:
         '200':
           description: Estado del tablero evaluado con éxito.

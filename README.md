@@ -7,11 +7,11 @@
 
 This project is a complete microservices-based platform for the Game of Y, developed for the Software Architecture course (2026) at the University of Oviedo.
 
-# URL Deployment: https://20.199.88.71/
+## URL Deployment: https://20.199.88.71/
 
-# API Documentation: https://localhost/api-docs/api
+## API Documentation: https://20.199.88.71/api-docs/api
 
-# ENDPOINTS Documentation: https://localhost/api-docs/endpoints
+## ENDPOINTS Documentation: https://20.199.88.71/api-docs/endpoints
 
 # Contributors
 
