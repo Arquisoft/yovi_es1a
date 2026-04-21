@@ -56,10 +56,15 @@ app.use(metricsMiddleware);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const swaggerPath = path.join(__dirname, '../documentacion_api.yaml'); 
-const swaggerDocument = YAML.load(swaggerPath);
+const swaggerPathIA = path.join(__dirname, '../documentations/doc_ia.yaml'); 
+const swaggerDocumentIA = YAML.load(swaggerPathIA);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+const swaggerPathApp = path.join(__dirname, '../documentations/openapi.yaml'); 
+const swaggerDocumentApp = YAML.load(swaggerPathApp);
+
+app.use('/api-docs/ia', swaggerUi.serveFiles(swaggerDocumentIA), swaggerUi.setup(swaggerDocumentIA));
+
+app.use('/api-docs/app', swaggerUi.serveFiles(swaggerDocumentApp), swaggerUi.setup(swaggerDocumentApp));
 
 connectBD(); //conect bd
 

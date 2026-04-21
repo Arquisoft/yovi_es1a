@@ -11,6 +11,8 @@ services:
       - monitor-net
     env_file:
       - ./users/.env
+    volumes:
+      - ./documentations:/app/documentations
 
   webapp:
     build:
