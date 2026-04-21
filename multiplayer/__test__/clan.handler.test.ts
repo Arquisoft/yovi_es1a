@@ -4,6 +4,8 @@ import { Server } from 'socket.io';
 import { io as Client, Socket as ClientSocket } from 'socket.io-client';
 import { registerClanHandlers } from '../src/handlers/clan.handler.js';
 
+global.fetch = vi.fn();
+
 describe('Integration Tests: Clan Chat Handlers', () => {
   let io: Server;
   let httpServer: HttpServer;
@@ -35,6 +37,12 @@ describe('Integration Tests: Clan Chat Handlers', () => {
   });
 
   beforeEach(() => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ success: true })
+    } as Response);
+
     return new Promise<void>((resolve) => {
       client1 = Client(`http://localhost:${port}`);
       client2 = Client(`http://localhost:${port}`);
@@ -53,7 +61,7 @@ describe('Integration Tests: Clan Chat Handlers', () => {
   afterEach(() => {
     if (client1.connected) client1.disconnect();
     if (client2.connected) client2.disconnect();
-    vi.restoreAllMocks();
+    vi.clearAllMocks();
   });
 
   it('Should allow joining a clan room', () => {
@@ -96,8 +104,6 @@ describe('Integration Tests: Clan Chat Handlers', () => {
 
   it('Should call the persistence API (fetch) when a message is sent', () => {
     return new Promise<void>((resolve) => {
-      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({ ok: true } as any);
-
       const clanId = 'clan-db-test';
       const messageData = {
         clanId,
@@ -112,7 +118,7 @@ describe('Integration Tests: Clan Chat Handlers', () => {
         client1.emit('sendClanMessage', messageData);
 
         setTimeout(() => {
-          expect(fetchSpy).toHaveBeenCalledWith(
+          expect(fetch).toHaveBeenCalledWith(
             expect.stringContaining(`/clans/${clanId}/message`),
             expect.objectContaining({
               method: 'POST',
@@ -149,9 +155,10 @@ describe('Integration Tests: Clan Chat Handlers', () => {
       }, 200);
     });
   });
+
   it('Should handle persistence API error (500) gracefully', () => {
     return new Promise<void>((resolve) => {
-      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      vi.mocked(fetch).mockResolvedValueOnce({
         ok: false,
         status: 500,
         text: () => Promise.resolve('Error interno del servidor de usuarios')
@@ -170,7 +177,7 @@ describe('Integration Tests: Clan Chat Handlers', () => {
         });
 
         setTimeout(() => {
-          expect(fetchSpy).toHaveBeenCalled();
+          expect(fetch).toHaveBeenCalled();
           expect(consoleSpy).toHaveBeenCalledWith(
             expect.stringContaining('Error de persistencia: 500')
           );
@@ -179,6 +186,7 @@ describe('Integration Tests: Clan Chat Handlers', () => {
       }, 50);
     });
   });
+
   it('Should successfully leave a clan room and stop receiving messages', () => {
     return new Promise<void>((resolve) => {
       const clanId = 'clan-exit';
