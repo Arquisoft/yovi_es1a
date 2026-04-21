@@ -226,8 +226,10 @@ pub async fn play_competition(
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use crate::bot_server;
 
+    use super::*;
+    use axum::extract::{State, Path, Json};
     #[test]
     fn test_move_response_creation() {
         let response = MoveResponse {
@@ -299,5 +301,90 @@ mod tests {
         };
         assert_eq!(r1, r2);
         assert_ne!(r1, r3);
+    }
+
+    fn mock_state() -> AppState {
+        bot_server::create_default_state()
+    }
+
+    fn valid_ongoing_yen() -> YEN {
+        let game = GameY::new(2);
+        YEN::from(&game)
+    }
+
+    fn valid_finished_yen() -> YEN {
+        let mut game = GameY::new(1);
+        game.add_move(crate::Movement::Placement {
+            player: crate::PlayerId::new(0),
+            coords: Coordinates::new(0, 0, 0),
+        })
+        .unwrap();
+        YEN::from(&game)
+    }
+
+    #[tokio::test]
+    async fn test_choose_invalid_api_version() {
+        let state = State(mock_state());
+        let params = Path(ChooseParams {
+            api_version: "v_invalida".to_string(),
+            bot_id: "random_bot".to_string(),
+        });
+        let yen = Json(YEN::default());
+
+        let result = choose(state, params, yen).await;
+        
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_choose_bot_not_found() {
+        let state = State(mock_state());
+        let params = Path(ChooseParams {
+            api_version: "v1".to_string(), 
+            bot_id: "bot_inventado".to_string(),
+        });
+
+        let yen = Json(valid_ongoing_yen());
+
+        let result = choose(state, params, yen).await;
+        
+        assert!(result.is_err());
+        let error_msg = result.unwrap_err().0.message;
+        assert!(error_msg.contains("Bot not found"));
+    }
+
+    #[tokio::test]
+    async fn test_choose_game_already_finished() {
+        let state = State(mock_state());
+        let params = Path(ChooseParams {
+            api_version: "v1".to_string(),
+            bot_id: "random_bot".to_string(),
+        });
+        
+        let yen_finished = Json(valid_finished_yen());
+
+        let result = choose(state, params, yen_finished).await;
+        
+        assert!(result.is_ok());
+        let response = result.unwrap().0;
+        assert_eq!(response.coords, crate::Coordinates::new(0, 0, 0));
+        assert!(response.game_status == "bot_won" || response.game_status == "human_won");
+    }
+
+    #[tokio::test]
+    async fn test_choose_success() {
+        let state = State(mock_state());
+        let params = Path(ChooseParams {
+            api_version: "v1".to_string(),
+            bot_id: "random_bot".to_string(),
+        });
+        
+        let yen_ongoing = Json(valid_ongoing_yen());
+
+        let result = choose(state, params, yen_ongoing).await;
+        
+        assert!(result.is_ok());
+        let response = result.unwrap().0;
+        assert!(response.game_status == "ongoing" || response.game_status == "bot_won");
     }
 }
