@@ -1,35 +1,63 @@
 openapi: 3.0.0
 info:
-  title: User Service API
+  title: API - App y Usuarios
   version: 1.0.0
-  description: API for managing users
+  description: Documentación de los endpoints principales del juego (Gestión de Usuarios y Webapp).
+servers:
+  - url: https://localhost
+    description:  Backend Principal (A través de Nginx)
+  - url: http://localhost:3000
+    description:  Backend Directo (Node.js)
+
+tags:
+  - name: Usuarios
+    description: Gestión de cuentas, registro y autenticación.
+  - name: Webapp
+    description: Endpoints principales del juego.
+
 paths:
   /createuser:
     post:
-      summary: Creates a new user
-      description: Creates a new user with the given username.
+      tags:
+        - Usuarios
+      summary: Registrar un nuevo usuario
+      description: Crea un nuevo usuario en la base de datos. Requiere un username, email y contraseña válidos (mínimo 3 caracteres).
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - username
-              properties:
-                username:
-                  type: string
-                  example: "testuser"
+              $ref: '#/components/schemas/UserRegistration'
       responses:
-        '200':
-          description: User created successfully
+        '201':
+          description: Usuario creado exitosamente.
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Hello testuser! welcome to the course!"
+              example:
+                message: "User successfully created"
+                userId: "60d0fe4f5311236168a109ca"
+                username: "jugador1"
         '400':
-          description: Error creating user
+          description: Error de validación (campos faltantes o incorrectos).
+          content:
+            application/json:
+              examples:
+                FaltanCampos:
+                  summary: Faltan campos requeridos
+                  value: { "error": "All fields are required" }
+                PassCorta:
+                  summary: Contraseña muy corta
+                  value: { "error": "Password must be at least 3 characters" }
+        '409':
+          description: Conflicto - El usuario o email ya existen.
+          content:
+            application/json:
+              examples:
+                EmailEnUso:
+                  summary: Email ya registrado
+                  value: { "error": "Email already registered" }
+                UserEnUso:
+                  summary: Username ya en uso
+                  value: { "error": "Username already taken" }
+        '500':
+          description: Error interno del servidor.
