@@ -5,8 +5,10 @@ info:
   description: |
     Esta documentación especifica el funcionamiento del endpoint unificado para la competición entre implementaciones de Yovi. El acceso se realiza directamente al motor de IA, saltando el gateway de seguridad habitual para cumplir con los requisitos de puerto.
 servers:
+  - url: https://20.199.88.71/api/gamey
+    description:  Servidor de Despliegue (Azure)
   - url: http://localhost:3002
-    description: Motor de IA local
+    description:  Servidor Local (Solo para desarrollo)
 paths:
   /play:
     get:

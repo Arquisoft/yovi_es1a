@@ -4,10 +4,10 @@ info:
   version: 1.0.0
   description: Documentación detallada del Backend Node.js. Incluye respuestas de éxito y manejo de errores para Usuarios, Partidas, Clanes y Motor IA.
 servers:
+  - url: https://20.199.88.71/api
+    description: Servidor de Despliegue (Azure)
   - url: https://localhost/api
-    description:  Backend Principal (A través de Nginx /api)
-  - url: http://localhost:3000
-    description:  Backend Directo (Node.js)
+    description: Servidor Local (Solo para desarrollo)
 
 tags:
   - name: Usuarios
