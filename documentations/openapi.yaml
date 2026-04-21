@@ -5,15 +5,15 @@ info:
   description: Documentación de los endpoints principales del juego (Gestión de Usuarios y Webapp).
 servers:
   - url: https://localhost
-    description:  Backend Principal (A través de Nginx)
+    description: 🛡️ Backend Principal (A través de Nginx)
   - url: http://localhost:3000
-    description:  Backend Directo (Node.js)
+    description: ⚙️ Backend Directo (Node.js)
 
 tags:
   - name: Usuarios
     description: Gestión de cuentas, registro y autenticación.
   - name: Webapp
-    description: Endpoints principales del juego.
+    description: Endpoints principales del juego (partidas, movimientos, matchmaking...).
 
 paths:
   /createuser:
@@ -62,7 +62,7 @@ paths:
         '500':
           description: Error interno del servidor.
 
-/login:
+  /login:
     post:
       tags:
         - Usuarios
@@ -96,3 +96,37 @@ paths:
             application/json:
               example:
                 error: "User not found"
+
+components:
+  schemas:
+    UserRegistration:
+      type: object
+      required:
+        - username
+        - email
+        - password
+      properties:
+        username:
+          type: string
+          minLength: 3
+          example: "jugador1"
+        email:
+          type: string
+          format: email
+          example: "jugador1@email.com"
+        password:
+          type: string
+          minLength: 3
+          example: "mipassword123"
+    UserLogin:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: "jugador1@email.com"
+        password:
+          type: string
+          example: "mipassword123"
