@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import { renderHook, act } from '@testing-library/react'
 import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest'
 import { useMultiplayer } from './useMultiplayer'
@@ -33,7 +32,6 @@ vi.mock('../services/socket.service', () => ({
   socket: mockSocket,
 }))
 
-// Helper: obtiene el callback registrado para un evento concreto
 const getSocketCallback = (eventName: string) => {
   const call = mockSocket.on.mock.calls.find((args: string[]) => args[0] === eventName)
   return call?.[1]

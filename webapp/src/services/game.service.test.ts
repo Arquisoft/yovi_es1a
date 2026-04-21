@@ -8,7 +8,6 @@ beforeEach(() => {
   vi.clearAllMocks()
 })
 
-// ── askBotMove ────────────────────────────────────────────────────────────────
 
 describe('gameService.askBotMove', () => {
   test('calls fetch with correct URL, method and headers', async () => {
@@ -87,7 +86,6 @@ describe('gameService.askBotMove', () => {
   })
 })
 
-// ── checkWinner ───────────────────────────────────────────────────────────────
 
 describe('gameService.checkWinner', () => {
   test('calls fetch with correct URL, method and headers', async () => {

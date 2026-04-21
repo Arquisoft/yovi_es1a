@@ -2,23 +2,18 @@ import { Server, Socket } from 'socket.io';
 
 export const registerClanHandlers = (io: Server, socket: Socket) => {
 
-  // 1. Un usuario entra a la pantalla de chat de su clan
   socket.on('joinClanRoom', (clanId: string) => {
     const roomName = `clan_${clanId}`;
     socket.join(roomName);
-    console.log(`Socket ${socket.id} se ha unido al chat del clan ${clanId}`);
   });
 
-  // 2. Un usuario se sale de la pantalla de chat
   socket.on('leaveClanRoom', (clanId: string) => {
     socket.leave(`clan_${clanId}`);
   });
 
-  // 3. Un usuario envía un mensaje por el chat
   socket.on('sendClanMessage', async (data: { clanId: string, userId: string, username: string, text: string }) => {
   const roomName = `clan_${data.clanId}`;
 
-  // Enviamos el mensaje a todos los conectados al clan ya, sin esperar a la base de datos.
   const messageForClient = {
     username: data.username,
     text: data.text,

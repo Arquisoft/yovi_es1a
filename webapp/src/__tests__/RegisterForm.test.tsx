@@ -29,7 +29,6 @@ vi.mock('../idiomaConf/LanguageContext', () => ({
   }))
 }))
 
-// El mock de AuthForm ahora renderiza el outsideError para que los tests lo vean
 vi.mock('../components/AuthForm', () => ({
   default: ({ onSubmit, outsideError }: any) => (
     <div>

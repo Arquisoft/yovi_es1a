@@ -56,17 +56,17 @@ pub async fn choose(
     State(state): State<AppState>,
     Path(params): Path<ChooseParams>,
     Json(yen): Json<YEN>,
-) -> Result<Json<MoveResponse>, Json<ErrorResponse>> {
+) -> Result<Json<MoveResponse>, ErrorResponse> {
     let start = Instant::now();
     check_api_version(&params.api_version)?;
     let game_y = match GameY::try_from(yen) {
         Ok(game) => game,
         Err(err) => {
-            return Err(Json(ErrorResponse::error(
+            return Err(ErrorResponse::error(
                 &format!("Invalid YEN format: {}", err),
                 Some(params.api_version),
                 Some(params.bot_id),
-            )));
+            ));
         }
     };
     if let crate::GameStatus::Finished { winner } = game_y.status() {
@@ -82,25 +82,25 @@ pub async fn choose(
         Some(bot) => bot,
         None => {
             let available_bots = state.bots().names().join(", ");
-            return Err(Json(ErrorResponse::error(
+            return Err(ErrorResponse::error(
                 &format!(
                     "Bot not found: {}, available bots: [{}]",
                     params.bot_id, available_bots
                 ),
                 Some(params.api_version),
                 Some(params.bot_id),
-            )));
+            ));
         }
     };
     let coords = match bot.choose_move(&game_y) {
         Some(coords) => coords,
         None => {
             // Handle the case where the bot has no valid moves
-            return Err(Json(ErrorResponse::error(
+            return Err(ErrorResponse::error(
                 "No valid moves available for the bot",
                 Some(params.api_version),
                 Some(params.bot_id),
-            )));
+            ));
         }
     };
     let mut game_y_mut = game_y;
@@ -110,11 +110,11 @@ pub async fn choose(
         coords: coords,
     };
     if let Err(e) = game_y_mut.add_move(bot_move) {
-        return Err(Json(ErrorResponse::error(
+        return Err(ErrorResponse::error(
             &format!("Failed to apply bot move to calculate state: {:?}", e),
             Some(params.api_version),
             Some(params.bot_id),
-        )));
+        ));
     }
     let status_str = match game_y_mut.status() {
         crate::GameStatus::Ongoing { .. } => "ongoing".to_string(),
@@ -163,7 +163,7 @@ pub struct CompetitionParams {
 pub async fn play_competition(
     State(state): State<AppState>, // Acceso a los bots guardados en la memoria del servidor
     Query(params): Query<CompetitionParams>, // Extrae los parámetros ?position=... y ?bot_id=...
-) -> Result<Json<Value>, Json<ErrorResponse>> {
+) -> Result<Json<Value>, ErrorResponse> {
     
     // 1. Determinar el bot:
     // Si la peticion contiene un bot_id, usamos ese. Si contiene la variable vacía (None), 
@@ -174,34 +174,34 @@ pub async fn play_competition(
     // Intentamos convertir el texto JSON de la URL en nuestra estructura interna YEN.
     let yen: YEN = match serde_json::from_str(&params.position) {
         Ok(y) => y, // Si el JSON está bien formado, lo guardamos en 'yen'
-        Err(e) => return Err(Json(ErrorResponse::error(
+        Err(e) => return Err(ErrorResponse::error(
             // Si la peticion contiene un JSON roto, devolvemos un error HTTP detallado
             &format!("JSON inválido en position: {}", e),
             Some("v1".to_string()),
             Some(bot_name),
-        ))),
+        )),
     };
 
     // 3. Convertir al estado del juego (De YEN a GameY):
     // Traducimos el formato YEN a la estructura lógica 'GameY' que entiende la IA.
     let game_y = match GameY::try_from(yen) {
         Ok(game) => game, // Si el tablero es lógicamente válido, lo guardamos en 'game_y'
-        Err(err) => return Err(Json(ErrorResponse::error(
+        Err(err) => return Err(ErrorResponse::error(
             // Si el tablero tiene reglas rotas (ej. tamaño negativo), devolvemos error
             &format!("Formato YEN inválido: {}", err),
             Some("v1".to_string()),
             Some(bot_name),
-        ))),
+        )),
     };
     // 4. Escoger la IA:
     // Buscamos en el registro de nuestro servidor (state) el bot que nos han pedido.
     let bot = match state.bots().find(&bot_name) {
         Some(bot) => bot, // Bot encontrado, listo para jugar
-        None => return Err(Json(ErrorResponse::error(
+        None => return Err(ErrorResponse::error(
             &format!("Bot no encontrado: {}", bot_name),
             Some("v1".to_string()),
             Some(bot_name.clone()),
-        ))),
+        )),
     };
 
     // 5.Calculo y toma de decision:
@@ -349,7 +349,7 @@ mod tests {
         let result = choose(state, params, yen).await;
         
         assert!(result.is_err());
-        let error_msg = result.unwrap_err().0.message;
+        let error_msg = result.unwrap_err().message;
         assert!(error_msg.contains("Bot not found"));
     }
 
@@ -401,7 +401,7 @@ mod tests {
         let result = choose(state, params, yen).await;
         
         assert!(result.is_err());
-        let error_msg = result.unwrap_err().0.message;
+        let error_msg = result.unwrap_err().message;
         assert!(error_msg.contains("Invalid YEN format"));
     }
 
@@ -418,7 +418,7 @@ mod tests {
         let result = choose(state, params, yen).await;
         
         if let Err(e) = result {
-            assert!(e.0.message.contains("No valid moves") || e.0.message.contains("Invalid YEN"));
+            assert!(e.message.contains("No valid moves") || e.message.contains("Invalid YEN"));
         }
     }
 
@@ -433,7 +433,7 @@ mod tests {
         let result = play_competition(state, params).await;
         
         assert!(result.is_err());
-        let error_msg = result.unwrap_err().0.message;
+        let error_msg = result.unwrap_err().message;
         assert!(error_msg.contains("JSON inválido en position"));
     }
 
@@ -448,7 +448,7 @@ mod tests {
         let result = play_competition(state, params).await;
         
         assert!(result.is_err());
-        let error_msg = result.unwrap_err().0.message;
+        let error_msg = result.unwrap_err().message;
         assert!(error_msg.contains("Formato YEN inválido"));
     }
 
@@ -506,7 +506,7 @@ mod tests {
         let result = play_competition(state, params).await;
         
         assert!(result.is_err());
-        let error_msg = result.unwrap_err().0.message;
+        let error_msg = result.unwrap_err().message;
         assert!(error_msg.contains("Bot no encontrado"));
     }
 }
