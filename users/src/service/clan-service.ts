@@ -5,8 +5,7 @@ import { Types } from 'mongoose';
 export class ClanService {
 
     static async createClan(name: string, memberIds: Types.ObjectId[]): Promise<IClan> {
-    // Validar que los usuarios existen
-    const users = await User.find({ _id: { $in: memberIds } });//{ _id: { $in: memberIds } } --> busca todos los usuarios cuyo _id esté incluido en el array memberIds
+    const users = await User.find({ _id: { $in: memberIds } });
     if (users.length !== memberIds.length) {
       throw new Error('Algunos usuarios no existen');
     }
@@ -19,7 +18,7 @@ export class ClanService {
     return clan.save();
   }
 
-  static async addMemberToClan(clanId: string, userId: Types.ObjectId): Promise<IClan | null> {//async indica q puedes usar awaiy y devolver una promesa
+  static async addMemberToClan(clanId: string, userId: Types.ObjectId): Promise<IClan | null> {
     const clan = await Clan.findById(clanId);
     if (!clan) throw new Error('Clan not found');
 
@@ -31,7 +30,6 @@ export class ClanService {
     return clan;
   }
 
-// Obtener mensajes de un clan
     static async getClanMessages(clanId: string): Promise<{ username: string, text: string, timestamp: Date }[]> {
         const clan = await Clan.findById(clanId).populate('members', 'username');
         if (!clan) throw new Error('Clan no encontrado');
@@ -43,7 +41,6 @@ export class ClanService {
         }));
     }
 
-    // Enviar mensaje a un clan
     static async sendMessage(clanId: string, userId: Types.ObjectId, username: string, text: string): Promise<{ username: string, text: string, timestamp: Date }[]> {
         const clan = await Clan.findById(clanId);
         if (!clan) throw new Error('Clan no encontrado');

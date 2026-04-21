@@ -18,5 +18,5 @@ export const authFetch = async (url: string, options: RequestInit = {}) => {
     globalThis.location.href = '/login';
   }
 
-  return res;
+  return res; 
 };

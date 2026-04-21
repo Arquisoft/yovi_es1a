@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import { renderHook, act } from '@testing-library/react';
 import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest';
 import { useTablero } from './useTablero';
@@ -31,7 +30,7 @@ describe('useTablero Hook', () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     
     vi.mocked(statsService.saveMatchResult).mockRejectedValueOnce(new Error('DB Failed'));
-    vi.mocked(gameService.checkWinner).mockResolvedValueOnce({ status: 'win' }); // Forzamos victoria para guardar
+    vi.mocked(gameService.checkWinner).mockResolvedValueOnce({ status: 'win' });
     
     const { result } = renderHook(() => useTablero({ modoSeleccionado: 'humano' }));
     
@@ -84,7 +83,6 @@ describe('useTablero Hook', () => {
     mockLocationState.mockReturnValue({ modoSeleccionado: 'bot', colorUsuario: 'B' });
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    // 1. El jugador gana directamente en el turno del bot (Línea 108)
     vi.mocked(gameService.checkWinner).mockResolvedValueOnce({ status: 'win' });
     const { result: winResult } = renderHook(() => useTablero({}));
     
@@ -108,7 +106,7 @@ describe('useTablero Hook', () => {
   test('makeRandomMove plays a valid random empty cell', async () => {
     vi.useFakeTimers();
     mockLocationState.mockReturnValue({ modoSeleccionado: 'humano' });
-    const { result } = renderHook(() => useTablero({ tamano: 2 })); // 2x2 = 3 celdas jugables
+    const { result } = renderHook(() => useTablero({ tamano: 2 }));
     
     await act(async () => {
       vi.advanceTimersByTime(21000);

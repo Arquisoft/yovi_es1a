@@ -34,16 +34,13 @@ describe('User service - Register', ()=>{
     });
     it('5.It should create and save the user without any problems.',async()=>
     {
-        //simulate that the database is free (findOne returns null)
         vi.mocked(User.findOne).mockResolvedValue(null);
-        //simulate that bcrypt returns a invented hash
         vi.mocked(bcrypt.hash).mockResolvedValue('secure_hash' as never);
 
         const usersaved= {username:'hugocarbajales',email:'hugo@gmail.com',password:'secure_hash'};
         User.prototype.save = vi.fn().mockResolvedValue(usersaved);
         const result = await createUser({ username: 'hugocarbajales', email: 'hugo@gmail.com', password: '123' });
         expect(result).toEqual(usersaved);
-        //pretend that we have encrypted the password
         expect(bcrypt.hash).toHaveBeenCalledWith('123', 10);
     });
     it('6.It should throw an error if input types are strictly not strings.', async () => {
@@ -88,12 +85,9 @@ describe('User service - Login', ()=>{
         await expect(login({username:'noexist',password:'123'})).rejects.toThrow('User not found');
     })
     it('2.It should give an error when the password is incorrect.',async()=>{
-        //prepare scenary
         vi.mocked(User.findOne).mockResolvedValue({username:'hugocarbajales',password:'fasle_hash'} as any);
         vi.mocked(bcrypt.compare).mockResolvedValue(false as any);
-        //act
         await expect(login({ username: 'hugocarbajales', password: 'incorrect_password' }))
-        //assert
         .rejects.toThrow('Invalid password');
     });
     it('3.It should be able to login since all the information is correct.',async()=>{

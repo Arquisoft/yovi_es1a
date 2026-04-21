@@ -36,6 +36,7 @@ const Ayuda: React.FC = () => {
           <li>{t("estrategia")}</li>
           <li>{t("estadisticasConsultar")}</li>
           <li>{t("tamTablero")}</li>
+          <li>{t("multi")}</li>
         </ul>
 
         <h3>{t("estrategiasDisp")}</h3>

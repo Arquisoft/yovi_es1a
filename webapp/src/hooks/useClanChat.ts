@@ -9,14 +9,12 @@ export interface ClanMessage {
 }
 
 export const useClanChat = (clanId: string | null) => {
-  // Usamos la interfaz en lugar de any[]
   const [messages, setMessages] = useState<ClanMessage[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
 
   useEffect(() => {
     if (!clanId) return;
 
-    // A) Traer mensajes antiguos de la Base de Datos
     const fetchHistory = async () => {
       setLoadingHistory(true);
       try {
@@ -34,24 +32,20 @@ export const useClanChat = (clanId: string | null) => {
     
     fetchHistory();
 
-    // B) Unirse a la sala en tiempo real
     socket.emit('joinClanRoom', clanId);
 
-    // C) Escuchar nuevos mensajes en tiempo real
     const handleNewMessage = (msg: ClanMessage) => {
       setMessages((prevMessages) => [...prevMessages, msg]);
     };
 
     socket.on('newClanMessage', handleNewMessage);
 
-    // Limpieza al desmontar el componente (salir de la pestaña del clan)
     return () => {
       socket.emit('leaveClanRoom', clanId);
       socket.off('newClanMessage', handleNewMessage);
     };
   }, [clanId]);
 
-  // Función para enviar un nuevo mensaje
   const sendMessage = (text: string) => {
     if (!clanId || !text.trim()) return;
     

@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
 
-//need to connect database in cloud (its not instantaneous)
-//i use async and promise, so the system waits for it to finish and notifies when ends or goes wrong
 const connectBD = async (): Promise<void> => { 
     try {
         const mongoURI = process.env.MONGODB_URI;

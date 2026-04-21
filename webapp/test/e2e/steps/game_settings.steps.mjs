@@ -2,15 +2,28 @@ import { Given, When, Then } from '@cucumber/cucumber';
 
 Given('I am logged in and on the game configuration page', async function () {
   await this.page.goto('http://localhost:5173');
+  
   await this.page.evaluate(() => {
-    localStorage.setItem("user", JSON.stringify({ userId: "12345", username: "JugadorPro" }));
+    sessionStorage.setItem("user", JSON.stringify({ userId: "12345", username: "JugadorPro" }));
   });
+  
   await this.page.goto('http://localhost:5173/configureGame');
+  
+  await this.page.waitForSelector('select', { timeout: 20000 });
+  await this.page.waitForFunction(() => {
+    const selects = document.querySelectorAll('select');
+    if (selects.length === 0) return false;
+    const rect = selects[0].getBoundingClientRect();
+    return rect.height > 0 && rect.width > 0;
+  }, { timeout: 20000 });
+  
   await this.page.waitForLoadState('networkidle');
 });
 
 When('I select the mode {string}', async function (modeText) {
-  const selectLocator = this.page.locator('.control-group').filter({ hasText: /Modo de Juego/i }).locator('select');
+  await this.page.waitForSelector('.control-group select', { timeout: 15000 });
+  
+  const selectLocator = this.page.locator('.control-group').first().locator('select');
   
   let valueToSelect = "bot";
   if (modeText.includes("Local") || modeText.includes("2 Jugadores")) {
@@ -20,16 +33,29 @@ When('I select the mode {string}', async function (modeText) {
   }
   
   await selectLocator.selectOption(valueToSelect);
+  await this.page.waitForTimeout(800);
 });
 
 When('I select the difficulty {string}', async function (difficultyText) {
-  const selectLocator = this.page.locator('.control-group').filter({ hasText: /Nivel de Dificultad/i }).locator('select');
+  await this.page.waitForFunction(() => {
+    const groups = document.querySelectorAll('.control-group');
+    for (const g of groups) {
+      if (/Nivel de Dificultad|nivelDif/i.test(g.textContent)) {
+        const select = g.querySelector('select');
+        return select !== null;
+      }
+    }
+    return false;
+  }, { timeout: 10000 });
+  
+  const selectLocator = this.page.locator('.control-group').filter({ hasText: /Nivel de Dificultad|nivelDif/i }).locator('select');
   
   let valueToSelect = "facil";
   if (difficultyText === "Intermedio") valueToSelect = "medio";
   if (difficultyText === "Experto") valueToSelect = "dificil";
   
   await selectLocator.selectOption(valueToSelect);
+  await this.page.waitForTimeout(500);
 });
 
 When('I set the board size to {string}', async function (size) {
@@ -39,17 +65,40 @@ When('I set the board size to {string}', async function (size) {
 });
 
 When('I select the opponent {string}', async function (botName) {
-  const selectLocator = this.page.locator('.control-group').filter({ hasText: /Elige tu oponente/i }).locator('select');
+  await this.page.waitForFunction(() => {
+    const groups = document.querySelectorAll('.control-group');
+    for (const g of groups) {
+      if (/Elige tu oponente|eligeOponente/i.test(g.textContent)) {
+        const select = g.querySelector('select');
+        return select !== null;
+      }
+    }
+    return false;
+  }, { timeout: 10000 });
+  
+  const selectLocator = this.page.locator('.control-group').filter({ hasText: /Elige tu oponente|eligeOponente/i }).locator('select');
   
   let valueToSelect = "random_bot";
   if (botName === "Monte Carlo") valueToSelect = "monte_carlo_bot";
   if (botName.includes("Ataque en Triángulo")) valueToSelect = "triangle_attack_bot";
   
   await selectLocator.selectOption(valueToSelect);
+  await this.page.waitForTimeout(500);
 });
 
 When('I select the starting player {string}', async function (playerText) {
-  const selectLocator = this.page.locator('.control-group').filter({ hasText: /¿Quién empieza la partida\?/i }).locator('select');
+  await this.page.waitForFunction(() => {
+    const groups = document.querySelectorAll('.control-group');
+    for (const g of groups) {
+      if (/¿Quién empieza la partida\?|quienEmp/i.test(g.textContent)) {
+        const select = g.querySelector('select');
+        return select !== null;
+      }
+    }
+    return false;
+  }, { timeout: 10000 });
+  
+  const selectLocator = this.page.locator('.control-group').filter({ hasText: /¿Quién empieza la partida\?|quienEmp/i }).locator('select');
   
   let valueToSelect = "B"; 
   if (playerText.includes("Máquina") || playerText.includes("invitado") || playerText.includes("Rojo")) {
@@ -57,6 +106,7 @@ When('I select the starting player {string}', async function (playerText) {
   }
   
   await selectLocator.selectOption(valueToSelect);
+  await this.page.waitForTimeout(500);
 });
 
 When('I select {string} as the starting player', async function (playerValue) {

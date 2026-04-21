@@ -1,0 +1,499 @@
+openapi: 3.0.0
+info:
+  title: API de Yovi
+  version: 1.0.0
+  description: Documentación detallada del Backend Node.js. Incluye respuestas de éxito y manejo de errores para Usuarios, Partidas, Clanes y Motor IA.
+servers:
+  - url: https://localhost/api
+    description:  Backend Principal (A través de Nginx /api)
+  - url: http://localhost:3000
+    description:  Backend Directo (Node.js)
+
+tags:
+  - name: Usuarios
+    description: Gestión de cuentas, registro y autenticación.
+  - name: Partidas
+    description: Guardado de resultados, historiales y ranking global.
+  - name: Clanes
+    description: Creación de clanes, gestión de miembros y chat interno.
+  - name: Motor IA
+    description: Puente de comunicación con el motor de Rust (Gamey).
+
+paths:
+  # ==========================================
+  # USUARIOS
+  # ==========================================
+  /createuser:
+    post:
+      tags:
+        - Usuarios
+      summary: Registrar un nuevo usuario
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+      responses:
+        '201':
+          description: Usuario creado exitosamente.
+        '400':
+          description: Error de validación (faltan campos o formato inválido).
+        '409':
+          description: El usuario o email ya existen.
+
+  /login:
+    post:
+      tags:
+        - Usuarios
+      summary: Iniciar sesión
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: Login exitoso. Devuelve token JWT.
+        '401':
+          description: Contraseña incorrecta.
+        '404':
+          description: Usuario no encontrado.
+
+  # ==========================================
+  # PARTIDAS
+  # ==========================================
+  /matches:
+    post:
+      tags:
+        - Partidas
+      summary: Guardar una nueva partida
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [user, result]
+              properties:
+                user:
+                  type: string
+                result:
+                  type: string
+                  enum: [win, lose, surrender]
+                boardSize:
+                  type: integer
+                duration:
+                  type: integer
+      responses:
+        '201':
+          description: Partida guardada correctamente.
+        '400':
+          description: Error de validación.
+          content:
+            application/json:
+              example:
+                error: "No user ID received."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              example:
+                error: "Error saving match"
+
+  /matches/ranking/global:
+    get:
+      tags:
+        - Partidas
+      summary: Obtener el ranking global de jugadores
+      responses:
+        '200':
+          description: Ranking calculado exitosamente.
+        '500':
+          description: Error de base de datos.
+          content:
+            application/json:
+              example:
+                error: "Internal server error while fetching ranking"
+
+  /matches/user/{userId}:
+    get:
+      tags:
+        - Partidas
+      summary: Obtener historial de partidas de un usuario
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: size
+          in: query
+          schema:
+            type: integer
+        - name: result
+          in: query
+          schema:
+            type: string
+        - name: maxMoves
+          in: query
+          schema:
+            type: integer
+        - name: maxDuration
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Historial obtenido correctamente.
+        '400':
+          description: Formato de entrada inválido.
+          content:
+            application/json:
+              example:
+                error: "Invalid input format"
+        '404':
+          description: Faltó enviar el ID del usuario.
+          content:
+            application/json:
+              example:
+                error: "User ID is required"
+        '500':
+          description: Error interno obteniendo el historial.
+          content:
+            application/json:
+              example:
+                error: "Internal server error while fetching history"
+
+  # ==========================================
+  # CLANES
+  # ==========================================
+  /clans:
+    get:
+      tags:
+        - Clanes
+      summary: Obtener todos los clanes
+      responses:
+        '200':
+          description: Lista de clanes obtenida.
+        '500':
+          description: Error de servidor.
+          content:
+            application/json:
+              example:
+                error: "Error cargando clanes"
+
+  /clans/ranking/global:
+    get:
+      tags:
+        - Clanes
+      summary: Ranking global de Clanes
+      responses:
+        '200':
+          description: Ranking de clanes obtenido.
+        '500':
+          description: Error en la agregación.
+          content:
+            application/json:
+              example:
+                error: "Error interno obteniendo el ranking de clanes"
+
+  /clans/createClan:
+    post:
+      tags:
+        - Clanes
+      summary: Crear un nuevo clan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, memberIds]
+              properties:
+                name:
+                  type: string
+                memberIds:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Clan creado exitosamente.
+        '400':
+          description: Error de validación.
+          content:
+            application/json:
+              example:
+                error: "Clan name is required"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              example:
+                error: "Error creating clan"
+
+  /clans/{clanId}/addUser:
+    post:
+      tags:
+        - Clanes
+      summary: Añadir usuario a un clan
+      parameters:
+        - name: clanId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId]
+              properties:
+                userId:
+                  type: string
+      responses:
+        '200':
+          description: Usuario añadido correctamente.
+        '400':
+          description: Faltan datos o validación fallida.
+          content:
+            application/json:
+              example:
+                error: "User ID is required"
+        '404':
+          description: El clan no existe.
+          content:
+            application/json:
+              example:
+                error: "Clan not found"
+        '500':
+          description: Error de servidor.
+          content:
+            application/json:
+              example:
+                error: "Error adding member to clan"
+
+  /clans/{clanId}/messages:
+    get:
+      tags:
+        - Clanes
+      summary: Obtener mensajes del chat del clan
+      parameters:
+        - name: clanId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Historial de mensajes cargado.
+        '500':
+          description: Error cargando mensajes.
+          content:
+            application/json:
+              example:
+                error: "Error cargando mensajes"
+
+  /clans/{clanId}/message:
+    post:
+      tags:
+        - Clanes
+      summary: Enviar un mensaje al chat del clan
+      parameters:
+        - name: clanId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, username, text]
+              properties:
+                userId:
+                  type: string
+                username:
+                  type: string
+                text:
+                  type: string
+      responses:
+        '200':
+          description: Mensaje enviado correctamente.
+        '400':
+          description: Faltan datos del mensaje.
+          content:
+            application/json:
+              example:
+                error: "Faltan datos del mensaje"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              example:
+                error: "Error enviando mensaje"
+
+  # ==========================================
+  # MOTOR IA / BOTS (Puente con Rust)
+  # ==========================================
+  /api/bot/play:
+    get:
+      tags:
+        - Motor IA
+      summary: Solicitar movimiento a la IA (vía URL)
+      security: []
+      parameters:
+        - name: position
+          in: query
+          required: true
+          schema:
+            type: string
+            example: '{"size":3,"turn":0,"players":["B","R"],"layout":"........."}'
+        - name: bot_id
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Coordenadas calculadas con éxito por Rust.
+        '400':
+          description: Errores en la validación de entrada.
+          content:
+            application/json:
+              examples:
+                faltaPosicion:
+                  summary: Faltan parámetros
+                  value: { "error": "The 'position' parameter (YEN notation) is mandatory." }
+                jsonInvalido:
+                  summary: JSON mal formado
+                  value: { "error": "Invalid JSON format in position parameter." }
+                botInvalido:
+                  summary: Estrategia desconocida
+                  value: { "error": "Invalid strategy: nombre_falso" }
+        '500':
+          description: Error del motor Rust o del servidor Node.
+          content:
+            application/json:
+              examples:
+                errorRust:
+                  summary: Rechazo del motor
+                  value: { "error": "The Rust engine rejected the play or couldn't find the bot." }
+                errorNode:
+                  summary: Error de comunicación
+                  value: { "error": "Internal error on Node.js server" }
+    post:
+      tags:
+        - Motor IA
+      summary: Solicitar movimiento a la IA (vía Body)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [position]
+              properties:
+                position:
+                  type: object
+                  example: {"size":3,"turn":0,"players":["B","R"],"layout":"........."}
+                strategy:
+                  type: string
+                  example: "monte_carlo_bot"
+      responses:
+        '200':
+          description: Movimiento devuelto correctamente.
+        '400':
+          description: Posición obligatoria no proporcionada o estrategia inválida.
+        '500':
+          description: Error en el servidor o motor de Rust.
+
+  /api/bot/check-winner:
+    post:
+      tags:
+        - Motor IA
+      summary: Comprobar si hay un ganador
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [size, layout]
+              properties:
+                size:
+                  type: integer
+                  example: 5
+                layout:
+                  type: string
+                  example: "B.R..B.R..B.R..B.R..B.R.."
+      responses:
+        '200':
+          description: Estado del tablero evaluado con éxito.
+        '500':
+          description: Fallo de conexión o rechazo del motor.
+          content:
+            application/json:
+              examples:
+                rechazoRust:
+                  summary: Rust rechazó la evaluación
+                  value: { "error": "Rust rechazó la petición" }
+                caidaRust:
+                  summary: Servidor Rust caído
+                  value: { "error": "No se pudo contactar con gamey:4000" }
+
+components:
+  schemas:
+    UserRegistration:
+      type: object
+      required:
+        - username
+        - email
+        - password
+      properties:
+        username:
+          type: string
+          minLength: 3
+          example: "jugador1"
+        email:
+          type: string
+          format: email
+          example: "jugador1@email.com"
+        password:
+          type: string
+          minLength: 3
+          example: "mipassword123"
+    UserLogin:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: "jugador1"
+        password:
+          type: string
+          example: "mipassword123"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []

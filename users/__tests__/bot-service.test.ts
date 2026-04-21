@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach, beforeAll, afterAll } from 'vitest';
 import supertest from 'supertest';
-import app from '../src/index';
+import app from '../src/app';
 import jwt from 'jsonwebtoken';
 import User from '../src/models/user-model';
 const fetchMock = vi.spyOn(globalThis, 'fetch');
@@ -104,7 +104,6 @@ describe('Integration Tests: Bot Controller', () => {
             const res = await supertest(app)
                 .post('/api/bot/play')
                 .set('Authorization', `Bearer ${testToken}`)
-                // FIX: JSON válido
                 .send({ position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." } });
 
             expect(res.status).toBe(500);
@@ -118,7 +117,6 @@ describe('Integration Tests: Bot Controller', () => {
             const res = await supertest(app)
                 .post('/api/bot/play')
                 .set('Authorization', `Bearer ${testToken}`)
-                // FIX: JSON válido
                 .send({ position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." } });
 
             expect(res.status).toBe(500);
@@ -134,7 +132,6 @@ describe('Integration Tests: Bot Controller', () => {
             const res = await supertest(app)
                 .post('/api/bot/play')
                 .set('Authorization', `Bearer ${testToken}`)
-                // FIX: JSON válido
                 .send({ position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." } });
 
             expect(res.status).toBe(500);
@@ -152,7 +149,7 @@ describe('Integration Tests: Bot Controller', () => {
                 .set('Authorization', `Bearer ${testToken}`)
                 .send({ 
                     position: { size: 3, turn: 0, players: ["B", "R"], layout: "B/../..." }, 
-                    strategy: 'monte_carlo_bot' // Estrategia válida
+                    strategy: 'monte_carlo_bot' 
                 });
 
             expect(res.status).toBe(200);
@@ -178,7 +175,7 @@ describe('Integration Tests: Bot Controller', () => {
             const res = await supertest(app)
                 .get('/api/bot/play')
                 .set('Authorization', `Bearer ${testToken}`)
-                .query({ position: '{esto-no-es-un-json-valido}' }); // Al usar .query(), Express lo recibe como texto
+                .query({ position: '{esto-no-es-un-json-valido}' });
 
             expect(res.status).toBe(400);
             expect(res.body).toHaveProperty('error', 'Invalid JSON format in position parameter.');

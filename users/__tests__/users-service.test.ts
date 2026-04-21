@@ -1,6 +1,6 @@
 import { describe, it, expect, afterAll, beforeAll,vi } from 'vitest';
 import supertest from 'supertest';
-import app from '../src/index'; 
+import app from '../src/app'; 
 import User from '../src/models/user-model'; 
 import Match from '../src/models/match-model';
 

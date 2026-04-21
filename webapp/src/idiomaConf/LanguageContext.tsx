@@ -1,5 +1,5 @@
-import { createContext } from "react";     // Para crear un contexto
-import { useContext } from "react";        // Para usar el contexto en los componentes
+import { createContext } from "react";     
+import { useContext } from "react";        
 import { useState } from "react";
 import { useEffect } from "react";
 import type { ReactNode } from "react";
@@ -27,13 +27,11 @@ interface LanguageProviderProps {
 export const LanguageProvider = ({ children }: LanguageProviderProps) => {
   const [lang, setLangState] = useState<Language>("es");
 
-  // Cargar idioma guardado en localStorage
   useEffect(() => {
     const stored = localStorage.getItem("lang");
     if (stored === "es" || stored === "en") setLangState(stored);
   }, []);
 
-  // Cambiar idioma y guardar en localStorage
   const setLang = (newLang: Language) => {
     setLangState(newLang);
     localStorage.setItem("lang", newLang);

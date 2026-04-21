@@ -111,12 +111,11 @@ describe('Match service - Get Match History', () => {
         skip: vi.fn().mockReturnThis(),
         limit: vi.fn().mockReturnThis(),
         populate: vi.fn().mockReturnThis(),
-        countDocuments: vi.fn().mockResolvedValue(1), // Resuelve con 1 página
-        exec: vi.fn().mockResolvedValue(fakeHistory)  // Resuelve con los datos
+        countDocuments: vi.fn().mockResolvedValue(1),
+        exec: vi.fn().mockResolvedValue(fakeHistory)  
       };
       (Match.find as any) = vi.fn().mockReturnValue(queryBuilderMock);
 
-      // 2. Ejecutamos el servicio
       const result = await getMatchHistory(VALID_ID);
       
       expect(result.content).toEqual(fakeHistory);

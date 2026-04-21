@@ -100,7 +100,6 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
                   boxShadow: "0 8px 16px rgba(0,0,0,0.4)",
                   overflow: "hidden",
                 }}>
-                  {/* Opción 1: Ranking de Jugadores */}
                   <div
                     className="nav-item"
                     style={{ display: "block", cursor: "pointer", width: "100%", boxSizing: "border-box" }}
@@ -118,7 +117,6 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab }) => {
                     {t("rankJugs")}
                   </div>
 
-                  {/* Opción 2: Ranking de Clanes (Restaurado) */}
                   <div
                     className="nav-item"
                     style={{ display: "block", cursor: "pointer", width: "100%", boxSizing: "border-box" }}

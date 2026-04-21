@@ -33,7 +33,17 @@ impl ErrorResponse {
 
 impl IntoResponse for ErrorResponse {
     fn into_response(self) -> axum::response::Response {
-        (StatusCode::BAD_REQUEST, Json(self)).into_response()
+        let status = if self.message.contains("not found") || self.message.contains("no encontrado") {
+            StatusCode::NOT_FOUND // 404
+        } else if self.message.contains("Invalid") || self.message.contains("inválido") {
+            StatusCode::BAD_REQUEST // 400
+        } else if self.message.contains("Failed to apply") {
+            StatusCode::INTERNAL_SERVER_ERROR // 500
+        } else {
+            StatusCode::BAD_REQUEST // Por defecto 400
+        };
+
+        (status, Json(self)).into_response()
     }
 }
 

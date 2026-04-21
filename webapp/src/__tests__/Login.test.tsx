@@ -24,7 +24,6 @@ vi.mock('../services/auth.service', () => ({
   }
 }))
 
-// Añadimos lang y setLang para que TypeScript no se queje de LanguageContextProps
 vi.mock('../idiomaConf/LanguageContext', () => ({
   useLanguage: vi.fn(() => ({
     t: (key: string) => key,
@@ -90,7 +89,6 @@ describe('LoginForm', () => {
   })
 
   test('displays the fallback error message when the translation string is missing', async () => {
-    // También le pasamos lang y setLang aquí al forzar el error de traducción
     vi.mocked(useLanguage).mockReturnValue({
       t: (key: string) => key === 'errorLogin' ? '' : key,
       lang: 'es',

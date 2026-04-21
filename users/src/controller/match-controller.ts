@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from 'express';
-import { saveMatch, getMatchHistory } from '../service/match-service'; // Agrupamos los imports del mismo archivo
-import Match, { IMatch } from '../models/match-model.ts';//Tabla base datos de partidas
+import { saveMatch, getMatchHistory } from '../service/match-service'; 
+import Match, { IMatch } from '../models/match-model.ts';
 
 const router: Router = express.Router();
 
@@ -34,18 +34,15 @@ router.post('/', async (req: Request, res: Response) => {
     try {
         const { user, ...rest } = req.body; 
 
-        // --- 1. Validación Básica ---
         if (!user) {
             return res.status(400).json({ error: "No user ID received." });
         }
 
-        // --- 2. Guardado en Base de Datos ---
         const match = await saveMatch({ 
             userId: user, 
             ...rest 
         });
 
-        // --- 3. Respuesta Exitosa ---
         return res.status(201).json({
             message: 'Match successfully saved',
             matchId: match._id,
@@ -53,42 +50,14 @@ router.post('/', async (req: Request, res: Response) => {
         });
 
     } catch (error: any) {
-        // --- 4. Manejo de Errores ---
         if (isValidationError(error?.message)) {
             return res.status(400).json({ error: error.message });
         }
         
-        console.error("Error saving match:", error); // Siempre es bueno tener un log en el servidor para los 500
+        console.error("Error saving match:", error); 
         return res.status(500).json({ error: 'Error saving match' });
     }
 });
-
-
-/*router.get('/user/:userId', async (req: Request, res: Response) => {
-    try {
-        const { userId } = req.params;
-
-        // --- 1. Validación Básica ---
-        if (!userId || userId.trim() === '') {
-            return res.status(404).json({ error: 'User ID is required' });
-        }
-
-        // --- 2. Consulta al Servicio ---
-        const history = await getMatchHistory(userId);
-        
-        // --- 3. Respuesta Exitosa ---
-        return res.status(200).json(history);
-
-    } catch (error: any) {
-        // --- 4. Manejo de Errores ---
-        if (error?.message === 'Invalid input format') {
-            return res.status(400).json({ error: error.message });
-        }
-        
-        console.error("Error fetching match history:", error);
-        return res.status(500).json({ error: 'Internal server error while fetching history' });
-    }
-});*/
 
 router.get('/ranking/global', async (req: Request, res: Response) => {
     try {
@@ -140,31 +109,25 @@ router.get('/user/:userId', async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
 
-    // --- 1. Validación Básica ---
     if (!userId || userId.trim() === '') {
         return res.status(404).json({ error: 'User ID is required' });
     }
 
-    //req.query contiene todos los parámetros de la URL que vienen después del ? que se puso en service (page y size)
-    const page = parseInt(req.query.page as string) || 1;//Página actual
-    const size = parseInt(req.query.size as string) || 5;//Size
-    //const result = req.query.result as string; // filtro opcional
-    const { result, maxMoves, maxDuration } = req.query;//Asigna los valores
+    const page = parseInt(req.query.page as string) || 1;
+    const size = parseInt(req.query.size as string) || 5;
+    //const result = req.query.result as string; 
+    const { result, maxMoves, maxDuration } = req.query;
 
     const filters = {
         result: result as string,
         maxMoves: maxMoves ? parseInt(maxMoves as string) : undefined,
         maxDuration: maxDuration ? parseInt(maxDuration as string) : undefined,
     };
-    // --- 2. Consulta al Servicio ---
     const history = await getMatchHistory(userId, page, size, filters);
         
-    // --- 3. Respuesta Exitosa ---
-    //return res.status(200).json(history);
     res.json(history);
 
   } catch (error: any) {
-        // --- 4. Manejo de Errores ---
         if (error?.message === 'Invalid input format') {
             return res.status(400).json({ error: error.message });
         }

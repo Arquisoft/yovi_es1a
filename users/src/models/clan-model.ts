@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, Types } from 'mongoose';
 
 export interface IClan extends Document {
   name: string;
-  members: Types.ObjectId[]; // referencias a usuarios
+  members: Types.ObjectId[];
     messages: IMessage[];
   createdAt: Date;
 }
