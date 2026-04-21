@@ -1,13 +1,13 @@
 openapi: 3.0.0
 info:
-  title: API - App, Usuarios y Motor Yovi
+  title: API de Yovi
   version: 1.0.0
   description: Documentación detallada del Backend Node.js. Incluye respuestas de éxito y manejo de errores para Usuarios, Partidas, Clanes y Motor IA.
 servers:
   - url: https://localhost/api
-    description: 🛡️ Backend Principal (A través de Nginx /api)
+    description:  Backend Principal (A través de Nginx /api)
   - url: http://localhost:3000
-    description: ⚙️ Backend Directo (Node.js)
+    description:  Backend Directo (Node.js)
 
 tags:
   - name: Usuarios
@@ -489,13 +489,11 @@ components:
           type: string
           example: "mipassword123"
 
-  # Sistema de seguridad para autenticación JWT
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
 
-# Aplica el candado por defecto a todas las rutas que no tengan security: [] explícito
 security:
   - bearerAuth: []
