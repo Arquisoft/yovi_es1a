@@ -12,10 +12,17 @@ servers:
 tags:
   - name: Usuarios
     description: Gestión de cuentas, registro y autenticación.
-  - name: Webapp
-    description: Endpoints principales del juego (partidas, movimientos, matchmaking...).
+  - name: Partidas
+    description: Guardado de resultados, historiales y ranking global.
+  - name: Clanes
+    description: Creación de clanes, gestión de miembros y chat interno.
+  - name: Motor IA
+    description: Puente de comunicación con el motor de Rust para calcular movimientos y victorias.
 
 paths:
+  # ==========================================
+    # USUARIOS
+  # ==========================================
   /createuser:
     post:
       tags:
@@ -96,6 +103,31 @@ paths:
             application/json:
               example:
                 error: "User not found"
+  # ==========================================
+    # PARTIDAS
+  # ==========================================
+  /matches:
+    post:
+      tags:
+        - Partidas
+      summary: Guardar una nueva partida
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [user, result]
+              properties:
+                user:
+                  type: string
+                result:
+                  type: string
+                  enum: [win, lose, surrender]
+                boardSize:
+                  type: integer
+                duration:
+                  type: integer
 
 components:
   schemas:
