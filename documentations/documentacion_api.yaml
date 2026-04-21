@@ -3,13 +3,27 @@ info:
   title: API - Juego Y
   version: 1.0.0
   description: |
-    Esta documentación especifica el funcionamiento del endpoint unificado para la competición entre implementaciones de Yovi. El acceso se realiza directamente al motor de IA, saltando el gateway de seguridad habitual para cumplir con los requisitos de puerto.
+    Documentación oficial del ecosistema de microservicios del Juego Y.
+    Utiliza el menú de 'Servers' para dirigir tus peticiones al servicio correcto.
 servers:
+  - url: https://localhost
+    description:  Backend Principal (A través de Nginx)
+  - url: http://localhost:3000
+    description:  Backend Directo (Node.js)
   - url: http://localhost:3002
-    description: Motor de IA local
+    description:  Motor de IA (Rust/Yovi)
+
+tags:
+  - name: Motor IA
+    description: Endpoints directos para competir contra los bots sin pasar por el gateway.
+  - name: Usuarios
+    description: Gestión de cuentas, registro y autenticación.
+
 paths:
   /play:
     get:
+      tags:
+        - Motor IA
       summary: Acción del Motor de Bots
       description: Calcula y devuelve el siguiente movimiento del bot o una acción especial basándose en el estado actual del juego enviado en formato YEN.
       parameters:
@@ -64,24 +78,3 @@ paths:
                     action: resign
         '400':
           description: Petición incorrecta (ej. falta el parámetro position o formato JSON inválido).
-          
-components:
-  schemas:
-    MoveResponse:
-      type: object
-      properties:
-        coords:
-          type: object
-          properties:
-            x:
-              type: integer
-            y:
-              type: integer
-            z:
-              type: integer
-    ResignResponse:
-      type: object
-      properties:
-        action:
-          type: string
-          example: resign
