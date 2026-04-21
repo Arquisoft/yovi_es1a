@@ -8,7 +8,6 @@ import jwt from 'jsonwebtoken';
 describe('Integration Tests: Matches Service', () => {
     let testUserId: string;
     let testToken: string;
-    //Create an user
     beforeAll(async () => {
         const res = await supertest(app)
             .post('/createuser')
@@ -24,7 +23,6 @@ describe('Integration Tests: Matches Service', () => {
 
     }, 15000);
 
-    //When finish delete user and games
     afterAll(async () => {
         await User.deleteOne({ _id: testUserId });
         await Match.deleteMany({ user: testUserId });

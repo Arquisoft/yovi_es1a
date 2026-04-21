@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from 'express';
-import { saveMatch, getMatchHistory } from '../service/match-service'; // Agrupamos los imports del mismo archivo
-import Match, { IMatch } from '../models/match-model.ts';//Tabla base datos de partidas
+import { saveMatch, getMatchHistory } from '../service/match-service'; 
+import Match, { IMatch } from '../models/match-model.ts';
 
 const router: Router = express.Router();
 
@@ -113,10 +113,10 @@ router.get('/user/:userId', async (req: Request, res: Response) => {
         return res.status(404).json({ error: 'User ID is required' });
     }
 
-    const page = parseInt(req.query.page as string) || 1;//Página actual
-    const size = parseInt(req.query.size as string) || 5;//Size
-    //const result = req.query.result as string; // filtro opcional
-    const { result, maxMoves, maxDuration } = req.query;//Asigna los valores
+    const page = parseInt(req.query.page as string) || 1;
+    const size = parseInt(req.query.size as string) || 5;
+    //const result = req.query.result as string; 
+    const { result, maxMoves, maxDuration } = req.query;
 
     const filters = {
         result: result as string,

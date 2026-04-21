@@ -20,9 +20,9 @@ describe('ClanService - createClan', () => {
       { _id: VALID_ID_1, username: 'User1' },
       { _id: VALID_ID_2, username: 'User2' },
     ] as any);
-    const mockSave = vi.fn().mockResolvedValue({ name: 'TestClan', members: [VALID_ID_1, VALID_ID_2] });//mockSave
+    const mockSave = vi.fn().mockResolvedValue({ name: 'TestClan', members: [VALID_ID_1, VALID_ID_2] });
 
-    vi.spyOn(Clan.prototype, 'save').mockImplementation(mockSave);//Reemplaza el save por el mockSave
+    vi.spyOn(Clan.prototype, 'save').mockImplementation(mockSave);
 
     const result = await ClanService.createClan('TestClan', [VALID_ID_1, VALID_ID_2]);
 

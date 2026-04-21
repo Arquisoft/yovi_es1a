@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 export interface IMatch extends Document{
-    user:mongoose.Types.ObjectId; //Refer to user that plays
+    user:mongoose.Types.ObjectId;
     result: 'win' | 'lose' | 'surrender';
     duration:number;
     boardSize:number;

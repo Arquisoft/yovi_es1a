@@ -5,7 +5,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   createdAt: Date;
-} //to autocomplete and document allow use mongoose
+} 
 
 const userSchema: Schema = new Schema({
   username: {

@@ -1,9 +1,7 @@
 import express, { Request, Response, Router } from 'express';
-import { createUser, login } from '../service/user-service'; // Agrupamos las importaciones
+import { createUser, login } from '../service/user-service';
 import jwt from 'jsonwebtoken';
 
-// Instead of putting all the routes directly into the main index.ts file, 
-// express.Router() creates a mini-server dedicated solely to users.
 const router: Router = express.Router(); 
 
 // ==========================================
@@ -30,13 +28,10 @@ const isConflictError = (msg: string): boolean => {
 // RUTAS
 // ==========================================
 
-// This creates a specific gateway called /createuser that only accepts packets delivered via the POST method
 router.post('/createuser', async (req: Request, res: Response) => {
     try {
-        // --- 1. Llamada al Servicio ---
         const user = await createUser(req.body); 
         
-        // --- 2. Respuesta Exitosa ---
         return res.status(201).json({ 
             message: 'User successfully created',
             userId: user._id,
@@ -44,7 +39,6 @@ router.post('/createuser', async (req: Request, res: Response) => {
         });
         
     } catch (error: any) {
-        // --- 3. Manejo de Errores ---
         const msg = error?.message;
 
         if (isValidationError(msg)) {
@@ -63,17 +57,14 @@ router.post('/createuser', async (req: Request, res: Response) => {
 
 router.post('/login', async (req: Request, res: Response) => {
     try {
-        // --- Llamada al Servicio ---
         const user = await login(req.body);
 
-        // Generar el token
         const token = jwt.sign(
             { userId: user._id.toString(), username: user.username },
             process.env.JWT_SECRET || 'jwt_token_secret',
             { expiresIn: '1h' }
         );
         
-        // --- Respuesta Exitosa ---
         return res.status(200).json({
             message: 'Login successful',
             userId: user._id,
@@ -82,7 +73,6 @@ router.post('/login', async (req: Request, res: Response) => {
         });
 
     } catch (error: any) {
-        // --- Manejo de Errores ---
         const msg = error?.message;
 
         if (msg === 'User not found') {

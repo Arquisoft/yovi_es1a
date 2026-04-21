@@ -2,7 +2,6 @@ import express, { Request, Response, Router } from 'express';
 
 const router: Router = express.Router();
 
-// 1. Las variables de entorno y constantes globales definidas aquí para evitar repetición y facilitar mantenimiento
 const RUST_API_URL = process.env.RUST_API_URL;
 
 const VALID_BOTS = [
@@ -26,7 +25,7 @@ const VALID_BOTS = [
 const getBotId = (strategy?: string): string | null => {
     if (!strategy || strategy === "random") return "random_bot";
     if (VALID_BOTS.includes(strategy)) return strategy;
-    return null; // Estrategia inválida
+    return null; 
 };
 
 /**
@@ -49,9 +48,7 @@ const parseRustError = async (response: any) => {
 
 const playHandler = async (req: Request, res: Response) => {
     try {
-        // 1. Extraemos los datos dependiendo de por dónde lleguen (body o query)
         const rawPosition = req.body?.position || req.query?.position;
-        // El frontend usa 'strategy', la API usa 'bot_id' en la URL
         const rawStrategy = req.body?.strategy || req.query?.bot_id || req.query?.strategy;
 
         if (!rawPosition) {
@@ -59,7 +56,6 @@ const playHandler = async (req: Request, res: Response) => {
         }
 
         let position;
-        // Si viene de la API, será un string y hay que convertirlo a objeto
         if (typeof rawPosition === 'string') {
             try {
                 position = JSON.parse(rawPosition);
@@ -68,7 +64,7 @@ const playHandler = async (req: Request, res: Response) => {
                 return res.status(400).json({ error: "Invalid JSON format in position parameter." });
             }
         } else {
-            position = rawPosition; // Si viene del frontend, ya es un objeto JSON
+            position = rawPosition;  
         }
 
         const botId = getBotId(rawStrategy as string);
@@ -76,7 +72,6 @@ const playHandler = async (req: Request, res: Response) => {
             return res.status(400).json({ error: `Invalid strategy: ${rawStrategy}` });
         }
 
-        // --- 3. Llamada a la API de Rust ---
         const rustResponse = await fetch(`${RUST_API_URL}/v1/ybot/choose/${botId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -106,15 +101,14 @@ const playHandler = async (req: Request, res: Response) => {
 };
 
 
-router.post('/play', playHandler); // Para Frontend
-router.get('/play', playHandler);  // API
+router.post('/play', playHandler); 
+router.get('/play', playHandler);
 
 
 router.post('/check-winner', async (req: Request, res: Response) => {
     try {
         const { size, layout } = req.body;
 
-        // --- 1. Preparación de datos ---
         const position = {
             size,
             layout,
@@ -122,20 +116,17 @@ router.post('/check-winner', async (req: Request, res: Response) => {
             players: ["B", "R"]
         };
 
-        // --- 2. Llamada a la API de Rust ---
         const rustResponse = await fetch(`${RUST_API_URL}/v1/game/check_winner`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(position) 
         });
 
-        // --- 3. Manejo de Errores del Motor ---
         if (!rustResponse.ok) {
             const errorText = await rustResponse.text();
             return res.status(500).json({ error: "Rust rechazó la petición", details: errorText });
         }
 
-        // --- 4. Respuesta Exitosa ---
         const data = await rustResponse.json();
         return res.status(200).json(data);
 

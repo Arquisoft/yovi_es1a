@@ -77,25 +77,21 @@ router.get('/ranking/global', async (req: Request, res: Response) => {
     }
 });
 
-//Crear un clan
 router.post('/createClan', async (req: Request, res: Response) => {
     try {
-        const { name, memberIds } = req.body;//Datos de la petición
+        const { name, memberIds } = req.body;
 
         if (!name || !memberIds) {
             throw new Error('Clan name is required');
         }
 
-        // Convertir a ObjectId si vienen como strings
         const membersObjectId: Types.ObjectId[] = [];
         for (const id of memberIds) {
             membersObjectId.push(new Types.ObjectId(id));
         }
 
-        // --- 1. Llamada al Servicio ---
         const clan = await ClanService.createClan(name, membersObjectId);
 
-        // --- 2. Respuesta Exitosa ---
         return res.status(201).json({
             message: 'Clan successfully created',
             clanId: clan._id,
@@ -115,20 +111,17 @@ router.post('/createClan', async (req: Request, res: Response) => {
     }
 });
 
-//Agregar usuario a un clan
 router.post('/:clanId/addUser', async (req: Request, res: Response) => {
     try {
-        const { clanId } = req.params;//Datos de la petición
-        const { userId } = req.body;//Datos enviados por el cliente
+        const { clanId } = req.params;
+        const { userId } = req.body;
 
         if (!userId) throw new Error('User ID is required');
 
-        // --- 1. Llamada al Servicio ---
         const clan = await ClanService.addMemberToClan(clanId, new Types.ObjectId(userId));
 
         if (!clan) return res.status(404).json({ error: 'Clan not found' });
 
-        // --- 2. Respuesta Exitosa ---
         return res.status(200).json({
             message: 'User added to clan successfully',
             clanId: clan._id,
@@ -147,14 +140,13 @@ router.post('/:clanId/addUser', async (req: Request, res: Response) => {
     }
 });
 
-//Devuelve los clanes
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const clans = await Clan.find().populate('members', 'username email'); //Trae info del usuario
+    const clans = await Clan.find().populate('members', 'username email');
     res.status(200).json(clans.map(c => ({
       clanId: c._id,
       name: c.name,
-      members: c.members.map((m: any) => m.username || m) //Mostrar usuario en vez de id
+      members: c.members.map((m: any) => m.username || m)
     })));
   } catch (err: any) {
     console.error(err);
@@ -162,11 +154,9 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-// Obtener mensajes de un clan
 router.get('/:clanId/messages', async (req: Request, res: Response) => {
     try {
         const { clanId } = req.params;
-        // Llamamos directamente a tu servicio
         const messages = await ClanService.getClanMessages(clanId);
         res.json(messages);
     } catch (err: any) {
@@ -175,7 +165,6 @@ router.get('/:clanId/messages', async (req: Request, res: Response) => {
     }
 });
 
-// Enviar mensaje a un clan
 router.post('/:clanId/message', async (req: Request, res: Response) => {
     try {
         const { clanId } = req.params;

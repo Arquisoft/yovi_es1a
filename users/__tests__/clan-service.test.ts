@@ -1,6 +1,6 @@
 import { describe, it, expect, afterAll, beforeAll, vi } from 'vitest';
 import supertest from 'supertest';
-import app from '../src/index'; // tu Express app
+import app from '../src/index';
 import User from '../src/models/user-model';
 import Clan from '../src/models/clan-model';
 import { Types } from 'mongoose';
@@ -47,7 +47,6 @@ describe('Integration Tests: Clan Service', () => {
 
   }, 20000);
 
-  // Limpiar base de datos después de los tests
   afterAll(async () => {
     await User.deleteMany({ _id: { $in: [testUserId, testUserId2, testUserId3] } });
     await Clan.deleteOne({ _id: testClanId });
@@ -93,7 +92,7 @@ describe('Integration Tests: Clan Service', () => {
       expect(res.body).toHaveProperty('name', 'TestClan');
       expect(res.body.members.length).toBe(2);
 
-      testClanId = res.body.clanId;//Guardar para tests siguientes
+      testClanId = res.body.clanId;
     });
 
     it('should return 400 if name is missing', async () => {
