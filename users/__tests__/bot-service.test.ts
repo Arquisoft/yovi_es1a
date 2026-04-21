@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach, beforeAll, afterAll } from 'vitest';
 import supertest from 'supertest';
-import app from '../src/index';
+import app from '../src/app';
 import jwt from 'jsonwebtoken';
 import User from '../src/models/user-model';
 const fetchMock = vi.spyOn(globalThis, 'fetch');
