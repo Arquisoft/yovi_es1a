@@ -1,11 +1,11 @@
 openapi: 3.0.0
 info:
-  title: API - App y Usuarios
+  title: API - App, Usuarios y Motor Yovi
   version: 1.0.0
-  description: Documentación de los endpoints principales del juego (Gestión de Usuarios y Webapp).
+  description: Documentación detallada del Backend Node.js. Incluye respuestas de éxito y manejo de errores para Usuarios, Partidas, Clanes y Motor IA.
 servers:
-  - url: https://localhost
-    description: 🛡️ Backend Principal (A través de Nginx)
+  - url: https://localhost/api
+    description: 🛡️ Backend Principal (A través de Nginx /api)
   - url: http://localhost:3000
     description: ⚙️ Backend Directo (Node.js)
 
@@ -17,18 +17,18 @@ tags:
   - name: Clanes
     description: Creación de clanes, gestión de miembros y chat interno.
   - name: Motor IA
-    description: Puente de comunicación con el motor de Rust para calcular movimientos y victorias.
+    description: Puente de comunicación con el motor de Rust (Gamey).
 
 paths:
   # ==========================================
-    # USUARIOS
+  # USUARIOS
   # ==========================================
   /createuser:
     post:
       tags:
         - Usuarios
       summary: Registrar un nuevo usuario
-      description: Crea un nuevo usuario en la base de datos. Requiere un username, email y contraseña válidos (mínimo 3 caracteres).
+      security: []
       requestBody:
         required: true
         content:
@@ -38,43 +38,17 @@ paths:
       responses:
         '201':
           description: Usuario creado exitosamente.
-          content:
-            application/json:
-              example:
-                message: "User successfully created"
-                userId: "60d0fe4f5311236168a109ca"
-                username: "jugador1"
         '400':
-          description: Error de validación (campos faltantes o incorrectos).
-          content:
-            application/json:
-              examples:
-                FaltanCampos:
-                  summary: Faltan campos requeridos
-                  value: { "error": "All fields are required" }
-                PassCorta:
-                  summary: Contraseña muy corta
-                  value: { "error": "Password must be at least 3 characters" }
+          description: Error de validación (faltan campos o formato inválido).
         '409':
-          description: Conflicto - El usuario o email ya existen.
-          content:
-            application/json:
-              examples:
-                EmailEnUso:
-                  summary: Email ya registrado
-                  value: { "error": "Email already registered" }
-                UserEnUso:
-                  summary: Username ya en uso
-                  value: { "error": "Username already taken" }
-        '500':
-          description: Error interno del servidor.
+          description: El usuario o email ya existen.
 
   /login:
     post:
       tags:
         - Usuarios
       summary: Iniciar sesión
-      description: Autentica a un usuario y devuelve un token JWT.
+      security: []
       requestBody:
         required: true
         content:
@@ -83,28 +57,14 @@ paths:
               $ref: '#/components/schemas/UserLogin'
       responses:
         '200':
-          description: Login exitoso. Devuelve los datos del usuario y el Token JWT.
-          content:
-            application/json:
-              example:
-                message: "Login successful"
-                userId: "60d0fe4f5311236168a109ca"
-                username: "jugador1"
-                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          description: Login exitoso. Devuelve token JWT.
         '401':
-          description: No autorizado - Contraseña incorrecta.
-          content:
-            application/json:
-              example:
-                error: "Invalid password"
+          description: Contraseña incorrecta.
         '404':
-          description: No encontrado - El usuario no existe en la base de datos.
-          content:
-            application/json:
-              example:
-                error: "User not found"
+          description: Usuario no encontrado.
+
   # ==========================================
-    # PARTIDAS
+  # PARTIDAS
   # ==========================================
   /matches:
     post:
@@ -128,7 +88,7 @@ paths:
                   type: integer
                 duration:
                   type: integer
-responses:
+      responses:
         '201':
           description: Partida guardada correctamente.
         '400':
@@ -159,7 +119,7 @@ responses:
               example:
                 error: "Internal server error while fetching ranking"
 
-/matches/user/{userId}:
+  /matches/user/{userId}:
     get:
       tags:
         - Partidas
@@ -213,7 +173,7 @@ responses:
                 error: "Internal server error while fetching history"
 
   # ==========================================
-    # CLANES
+  # CLANES
   # ==========================================
   /clans:
     get:
@@ -230,7 +190,7 @@ responses:
               example:
                 error: "Error cargando clanes"
 
-/clans/ranking/global:
+  /clans/ranking/global:
     get:
       tags:
         - Clanes
@@ -245,7 +205,7 @@ responses:
               example:
                 error: "Error interno obteniendo el ranking de clanes"
 
-/clans/createClan:
+  /clans/createClan:
     post:
       tags:
         - Clanes
@@ -280,7 +240,7 @@ responses:
               example:
                 error: "Error creating clan"
 
-/clans/{clanId}/addUser:
+  /clans/{clanId}/addUser:
     post:
       tags:
         - Clanes
@@ -323,7 +283,7 @@ responses:
               example:
                 error: "Error adding member to clan"
 
-/clans/{clanId}/messages:
+  /clans/{clanId}/messages:
     get:
       tags:
         - Clanes
@@ -344,7 +304,7 @@ responses:
               example:
                 error: "Error cargando mensajes"
 
-/clans/{clanId}/message:
+  /clans/{clanId}/message:
     post:
       tags:
         - Clanes
@@ -385,7 +345,7 @@ responses:
               example:
                 error: "Error enviando mensaje"
 
-# ==========================================
+  # ==========================================
   # MOTOR IA / BOTS (Puente con Rust)
   # ==========================================
   /api/bot/play:
@@ -460,6 +420,41 @@ responses:
         '500':
           description: Error en el servidor o motor de Rust.
 
+  /api/bot/check-winner:
+    post:
+      tags:
+        - Motor IA
+      summary: Comprobar si hay un ganador
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [size, layout]
+              properties:
+                size:
+                  type: integer
+                  example: 5
+                layout:
+                  type: string
+                  example: "B.R..B.R..B.R..B.R..B.R.."
+      responses:
+        '200':
+          description: Estado del tablero evaluado con éxito.
+        '500':
+          description: Fallo de conexión o rechazo del motor.
+          content:
+            application/json:
+              examples:
+                rechazoRust:
+                  summary: Rust rechazó la evaluación
+                  value: { "error": "Rust rechazó la petición" }
+                caidaRust:
+                  summary: Servidor Rust caído
+                  value: { "error": "No se pudo contactar con gamey:4000" }
+
 components:
   schemas:
     UserRegistration:
@@ -493,3 +488,14 @@ components:
         password:
           type: string
           example: "mipassword123"
+
+  # Sistema de seguridad para autenticación JWT
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+# Aplica el candado por defecto a todas las rutas que no tengan security: [] explícito
+security:
+  - bearerAuth: []
