@@ -323,6 +323,27 @@ responses:
               example:
                 error: "Error adding member to clan"
 
+/clans/{clanId}/messages:
+    get:
+      tags:
+        - Clanes
+      summary: Obtener mensajes del chat del clan
+      parameters:
+        - name: clanId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Historial de mensajes cargado.
+        '500':
+          description: Error cargando mensajes.
+          content:
+            application/json:
+              example:
+                error: "Error cargando mensajes"
+
 components:
   schemas:
     UserRegistration:
