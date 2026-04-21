@@ -1,0 +1,87 @@
+openapi: 3.0.0
+info:
+  title: API - Juego Y
+  version: 1.0.0
+  description: |
+    Esta documentación especifica el funcionamiento del endpoint unificado para la competición entre implementaciones de Yovi. El acceso se realiza directamente al motor de IA, saltando el gateway de seguridad habitual para cumplir con los requisitos de puerto.
+servers:
+  - url: http://localhost:3002
+    description: Motor de IA local
+paths:
+  /play:
+    get:
+      summary: Acción del Motor de Bots
+      description: Calcula y devuelve el siguiente movimiento del bot o una acción especial basándose en el estado actual del juego enviado en formato YEN.
+      parameters:
+        - name: position
+          in: query
+          required: true
+          description: |
+            El estado actual del tablero en notación YEN. Al usarlo desde código, asegúrate de que esté codificado para URL (URL-encoded).
+            Contiene:
+            * `size` (Number): Tamaño del tablero (ej. 4).
+            * `turn` (Number): Índice del jugador actual.
+            * `players` (Array de Strings): Identificadores de las fichas (ej. `["B", "R"]`).
+            * `layout` (String): Disposición actual de las fichas en el tablero.
+          schema:
+            type: string
+            example: '{"size":3,"turn":0,"players":["B","R"],"layout":"./B./..."}'
+        - name: bot_id
+          in: query
+          required: false
+          description: El identificador de la estrategia que usará la IA.
+          schema:
+            type: string
+            default: random_bot
+            enum:
+              - random_bot
+              - monte_carlo_bot
+              - group_expansion_bot
+              - priority_block_bot
+              - shortest_path_bot
+              - simple_blocker_bot
+              - triangle_attack_bot
+      responses:
+        '200':
+          description: Operación exitosa. El motor ha procesado el tablero y devuelve un resultado.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/MoveResponse'
+                  - $ref: '#/components/schemas/ResignResponse'
+              examples:
+                MovimientoEstandar:
+                  summary: A. Movimiento realizado (Coordenadas)
+                  value:
+                    coords:
+                      x: 1
+                      y: 1
+                      z: 0
+                Resign:
+                  summary: B. Resign (No hay movimientos válidos o tablero lleno)
+                  value:
+                    action: resign
+        '400':
+          description: Petición incorrecta (ej. falta el parámetro position o formato JSON inválido).
+          
+components:
+  schemas:
+    MoveResponse:
+      type: object
+      properties:
+        coords:
+          type: object
+          properties:
+            x:
+              type: integer
+            y:
+              type: integer
+            z:
+              type: integer
+    ResignResponse:
+      type: object
+      properties:
+        action:
+          type: string
+          example: resign
