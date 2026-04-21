@@ -385,6 +385,81 @@ responses:
               example:
                 error: "Error enviando mensaje"
 
+# ==========================================
+  # MOTOR IA / BOTS (Puente con Rust)
+  # ==========================================
+  /api/bot/play:
+    get:
+      tags:
+        - Motor IA
+      summary: Solicitar movimiento a la IA (vía URL)
+      security: []
+      parameters:
+        - name: position
+          in: query
+          required: true
+          schema:
+            type: string
+            example: '{"size":3,"turn":0,"players":["B","R"],"layout":"........."}'
+        - name: bot_id
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Coordenadas calculadas con éxito por Rust.
+        '400':
+          description: Errores en la validación de entrada.
+          content:
+            application/json:
+              examples:
+                faltaPosicion:
+                  summary: Faltan parámetros
+                  value: { "error": "The 'position' parameter (YEN notation) is mandatory." }
+                jsonInvalido:
+                  summary: JSON mal formado
+                  value: { "error": "Invalid JSON format in position parameter." }
+                botInvalido:
+                  summary: Estrategia desconocida
+                  value: { "error": "Invalid strategy: nombre_falso" }
+        '500':
+          description: Error del motor Rust o del servidor Node.
+          content:
+            application/json:
+              examples:
+                errorRust:
+                  summary: Rechazo del motor
+                  value: { "error": "The Rust engine rejected the play or couldn't find the bot." }
+                errorNode:
+                  summary: Error de comunicación
+                  value: { "error": "Internal error on Node.js server" }
+    post:
+      tags:
+        - Motor IA
+      summary: Solicitar movimiento a la IA (vía Body)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [position]
+              properties:
+                position:
+                  type: object
+                  example: {"size":3,"turn":0,"players":["B","R"],"layout":"........."}
+                strategy:
+                  type: string
+                  example: "monte_carlo_bot"
+      responses:
+        '200':
+          description: Movimiento devuelto correctamente.
+        '400':
+          description: Posición obligatoria no proporcionada o estrategia inválida.
+        '500':
+          description: Error en el servidor o motor de Rust.
+
 components:
   schemas:
     UserRegistration:
