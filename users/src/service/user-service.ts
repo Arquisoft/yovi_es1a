@@ -14,23 +14,15 @@ interface LoginUserInput {
   password: string;
 }
 
-// ==========================================
-// SERVICIOS DE USUARIO
-// ==========================================
-
 export async function createUser(userData: CreateUserInput): Promise<IUser> {
     const { username, email, password } = userData;
-
-    // --- 1. Validación de Formato Básico ---
     if (typeof username !== 'string' || typeof email !== 'string' || typeof password !== 'string') {
         throw new Error('Invalid input format');
     }
 
-    // --- 2. Sanitización (Quitar espacios en blanco a los extremos) ---
     const sanitizedUsername = username.trim();
     const sanitizedEmail = email.trim();
 
-    // --- 3. Validación de Negocio ---
     if (!sanitizedUsername || !sanitizedEmail || !password) {
         throw new Error('All fields are required');
     }
@@ -39,7 +31,6 @@ export async function createUser(userData: CreateUserInput): Promise<IUser> {
         throw new Error('Password must be at least 3 characters');
     }
 
-    // --- 4. Comprobación de Duplicados ---
     const existingUser = await User.findOne({ 
         $or: [
             { email: sanitizedEmail }, 
@@ -55,8 +46,6 @@ export async function createUser(userData: CreateUserInput): Promise<IUser> {
             throw new Error('Username already taken');
         }
     }
-
-    // --- 5. Encriptación y Guardado ---
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
     const newUser = new User({
@@ -70,31 +59,27 @@ export async function createUser(userData: CreateUserInput): Promise<IUser> {
 
 
 export async function login(userData: LoginUserInput): Promise<IUser> {
-    const { username, password } = userData;
+    console.log(`\n[DEBUG 1] Entrando a login con datos:`, userData);
 
-    // --- 1. Validación de Formato Básico ---
+    const { username, password } = userData;
     if (typeof username !== 'string' || typeof password !== 'string') {
+        console.log(`[DEBUG 2] Falló validación: username es ${typeof username}, password es ${typeof password}`);
         throw new Error('Invalid input format');
     }
-
-    // --- 2. Sanitización y Búsqueda ---
     const sanitizedUsername = username.trim();
     
+    console.log(`[DEBUG 3] Buscando en BD al usuario: "${sanitizedUsername}"`);
     const existingUser = await User.findOne({ 
         username: sanitizedUsername 
     });
 
     if (!existingUser) {
+        console.log(`[DEBUG 4] ❌ Mongoose devolvió NULL. El usuario no está en la BD.`);
         throw new Error('User not found');
     }
-
-    // --- 3. Verificación de Contraseña ---
     const isPasswordValid = await bcrypt.compare(password, existingUser.password);
-
     if (!isPasswordValid) {
         throw new Error('Invalid password');
     }
-
-    // --- 4. Retorno Exitoso ---
     return existingUser;
 }

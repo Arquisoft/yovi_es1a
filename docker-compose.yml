@@ -41,6 +41,8 @@ services:
   multiplayer:
     build: 
       context: ./multiplayer
+    container_name: multiplayer
+    image: ghcr.io/arquisoft/yovi_es1a-multiplayer:latest
     networks:        
       - monitor-net 
     environment:

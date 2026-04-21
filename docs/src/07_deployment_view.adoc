@@ -63,44 +63,53 @@ _**Overview Diagram**_
 [plantuml]
 ----
 @startuml
-title Deployment View - Yovi (Localhost)
+title Deployment View - Yovi (Azure Production Environment)
 
 skinparam shadowing false
 skinparam componentStyle rectangle
+skinparam NoteBackgroundColor #FEFECE
 
-actor User
+actor "User / Player" as user
+actor "Tournament Script" as bot #Red
 
-node "Client (Web Browser)" as client {
-  [Web Browser] as browser
+node "Client (Browser)" as client {
+    [Web Browser] as browser
 }
 
-node "Docker Host (Localhost)" as host {
-  frame "monitor-net (Docker Network)" as net {
-    [Nginx (Reverse Proxy)] as nginx
-    [WebApp] as webapp
-    [Users Service] as users
-    [GameY Service] as gamey
-    [Multiplayer Service] as multiplayer
-    [Prometheus] as prom
-    [Grafana] as graf
-  }
+node "Azure Virtual Machine (Host)" as host {
+    
+    frame "monitor-net (Docker Internal Network)" as net {
+        [Nginx (Reverse Proxy)] as nginx
+        [WebApp] as webapp
+        [Users Service] as users
+        [Multiplayer Service] as multi
+        [GameY Engine (Rust)] as gamey
+        [Prometheus] as prom
+        [Grafana] as graf
+    }
+
+    note right of gamey
+        Exposed via port 3002:4000
+        for direct bot access
+    end note
 }
 
-cloud "MongoDB Atlas (Cloud)" as mongo
+cloud "MongoDB Atlas" as mongo
 
-User --> browser : Navigates to\nhttps://localhost
-
+user --> browser : Navigates to\nhttps://20.199.88.71
 browser --> nginx : HTTPS (port 443)
-nginx --> webapp : /static assets
-nginx --> users : /api/*
-nginx --> gamey : /api/gamey/*
-nginx --> multiplayer : /socket.io/*
 
-users --> mongo : Read/Write data (TLS)
-gamey --> mongo : Read/Write data (if used)
+nginx --> webapp : Serves static files
+nginx --> users : Routes /api/* (JSON)
+nginx --> multi : Routes /socket.io/* (WSS)
+nginx --> gamey : Routes /api/gamey/* (JSON)
 
-graf --> prom : Queries data
-prom --> users : Collects metrics
+bot -[#red,bold]-> gamey : Direct API Requests\n(Port 3002)
+
+users --> mongo : Read/Write User Data (TLS)
+gamey --> mongo : Match logs (if used)
+prom --> users : Scrapes /metrics
+graf --> prom : Queries time-series
 @enduml
 ----
 
@@ -116,7 +125,8 @@ Quality and/or Performance Features::
 * Observability: Prometheus and Grafana enable basic monitoring of the backend services.
 * Maintainability: the separation of responsibilities across containers simplifies troubleshooting and updates.
 * Scalability: services are decoupled and can be scaled independently if needed.
-
+* High-Performance tournament interface: The gamey container has an explicit port mapping 3002:4000. This creates a direct channel from the Azure host to the Rust engine, optimizing latency for external evaluation scripts.
+* Hybrid security model: While end-user traffic is encrypted and protected by Nginx (port 443), the competition port (3002) acts as a high-performance technical interface. *
 Mapping of Building Blocks to Infrastructure::
 [cols="1,2", options="header"]
 |===
@@ -135,7 +145,7 @@ Mapping of Building Blocks to Infrastructure::
 |Container deployed on the Docker Host, connected to the internal Docker network.
 
 |GameY Service
-|Container deployed on the Docker Host, connected to the internal Docker network.
+|Container deployed on the Docker Host. It is accessible via Nginx (port 443) for standard web users and directly via port 3002 for tournament bot interactions.
 
 |Multiplayer Service
 |Container deployed on the Docker Host, connected to the internal Docker network. Manages real-time online game sessions via WebSockets (Socket.io).
@@ -267,18 +277,47 @@ title Infrastructure Level 2 - Monitoring Stack
 skinparam shadowing false
 skinparam componentStyle rectangle
 
-node "Docker Host (Localhost)" as host {
+node "Docker Host (Azure VM)" as host {
   frame "monitor-net (Docker Network)" as net {
     [Users Service] as users
-    [GameY Service] as gamey
+    [GameY Engine] as gamey
     [Prometheus] as prom
     [Grafana] as graf
   }
 }
 
-prom --> users : Collects metrics
-graf --> prom : Queries metrics
+' Prometheus hace scraping de ambos servicios de backend
+prom --> users : Collects metrics (Port 3000)
+prom --> gamey : Collects metrics (Port 4000)
+graf --> prom : Queries metrics (Port 9090)
 @enduml
 ----
 
-This diagram focuses on observability. Prometheus collects technical metrics exposed by the backend services and stores them internally. Grafana queries Prometheus to display dashboards. This setup supports troubleshooting and performance monitoring during development.
+This diagram focuses on observability. Prometheus collects technical metrics exposed by the backend services and stores them internally. Grafana queries Prometheus to display dashboards.
+
+==== _Competition Interface (Direct Port 3002)_
+
+[plantuml]
+----
+@startuml
+title Infrastructure Level 2 - Competition Interface
+
+skinparam shadowing false
+skinparam componentStyle rectangle
+
+actor "Tournament Script" as script #Red
+
+node "Azure VM (Host)" as host {
+    [GameY Engine (Rust)] as gamey
+}
+
+' El script accede directamente al puerto mapeado 3002
+script -[#red,bold]-> gamey : HTTP Request (Port 3002)
+
+note right of gamey
+  Bypasses Nginx to
+  ensure minimum latency
+  and direct engine access
+end note
+@enduml
+----

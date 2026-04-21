@@ -7,6 +7,7 @@ import { useLanguage } from '../idiomaConf/LanguageContext.tsx';
 import video from "../assets/videoLinea.mp4";
 import { useMultiplayer } from '../hooks/useMultiplayer';
 import Tablero from '../components/Tablero';
+import OpponentDisconnectedModal from '../components/OpponentDisconnectedModal';
 
 const GameSettings: React.FC = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const GameSettings: React.FC = () => {
 
   const { 
     isConnected, roomCode, errorMsg, gameStarted, 
-    createRoom, joinRoom, lastOpponentMove, sendMove, myColor, opponentName, boardSize 
+    createRoom, joinRoom, lastOpponentMove, sendMove, myColor, opponentName, boardSize, opponentDisconnected
   } = useMultiplayer();
   const [joinCodeInput, setJoinCodeInput] = useState('');
   const userStr = sessionStorage.getItem("user");
@@ -92,6 +93,10 @@ const GameSettings: React.FC = () => {
             />
           </div>
         </div>
+        <OpponentDisconnectedModal
+          isOpen={opponentDisconnected}
+          onConfirm={() => navigate('/statistics')}
+        />
       </div>
     );
   }
@@ -289,6 +294,11 @@ const GameSettings: React.FC = () => {
         </div>
 
       </div>
+
+      <OpponentDisconnectedModal
+        isOpen={opponentDisconnected}
+        onConfirm={() => navigate('/statistics')}
+      />
     </div>
   );
 };

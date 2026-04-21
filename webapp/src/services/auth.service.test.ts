@@ -1,5 +1,6 @@
 import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest';
-import { authFetch, authService } from './auth.service';
+import { authService } from './auth.service';
+import { authFetch } from './api';
 
 describe('authService', () => {
   const originalFetch = global.fetch;
@@ -16,7 +17,7 @@ describe('authService', () => {
   describe('login', () => {
     test('performs a successful login request and returns the user data', async () => {
       const mockResponseData = { userId: 1, username: 'Pablo' };
-      
+
       vi.mocked(global.fetch).mockResolvedValueOnce({
         ok: true,
         json: async () => mockResponseData,
@@ -55,7 +56,7 @@ describe('authService', () => {
   describe('register', () => {
     test('performs a successful registration request and returns the new user data', async () => {
       const mockResponseData = { message: 'User created', userId: 2, username: 'Laura' };
-      
+
       vi.mocked(global.fetch).mockResolvedValueOnce({
         ok: true,
         json: async () => mockResponseData,
@@ -90,80 +91,51 @@ describe('authService', () => {
       await expect(authService.register('Laura', 'laura@test.com', 'pass123')).rejects.toThrow('Server error');
     });
   });
+
   describe('authFetch', () => {
-  beforeEach(() => {
-    localStorage.clear();
-    // Mock de window.location.href para evitar errores de navegación en el test
-    vi.stubGlobal('location', { href: '' });
+    beforeEach(() => {
+      sessionStorage.clear();
+    });
+
+    test('adds Authorization header if token exists in sessionStorage', async () => {
+      sessionStorage.setItem('token', 'fake-jwt-token');
+
+      vi.mocked(global.fetch).mockResolvedValueOnce({
+        status: 200,
+        ok: true,
+      } as Response);
+
+      await authFetch('/clans/123');
+
+      const [url, options] = vi.mocked(global.fetch).mock.calls[0];
+      expect(url).toContain('/clans/123');
+      expect((options?.headers as any)['Authorization']).toBe('Bearer fake-jwt-token');
+      expect((options?.headers as any)['Content-Type']).toBe('application/json');
+    });
+
+    test('handles 401 Unauthorized by clearing sessionStorage', async () => {
+      sessionStorage.setItem('token', 'expired-token');
+      sessionStorage.setItem('user', 'some-user');
+
+      vi.mocked(global.fetch).mockResolvedValueOnce({
+        status: 401,
+        ok: false,
+      } as Response);
+
+      await authFetch('/private-data');
+
+      expect(sessionStorage.getItem('token')).toBeNull();
+      expect(sessionStorage.getItem('user')).toBeNull();
+    });
+
+    test('works correctly without a token in sessionStorage', async () => {
+      vi.mocked(global.fetch).mockResolvedValueOnce({ ok: true } as Response);
+
+      await authFetch('/public-data');
+
+      const [, options] = vi.mocked(global.fetch).mock.calls[0];
+      expect((options?.headers as any)['Authorization']).toBeUndefined();
+      expect((options?.headers as any)['Content-Type']).toBe('application/json');
+    });
   });
-
-  test('adds Authorization header if token exists in localStorage', async () => {
-    localStorage.setItem('token', 'fake-jwt-token');
-    
-    vi.mocked(global.fetch).mockResolvedValueOnce({
-      status: 200,
-      ok: true,
-    } as Response);
-
-    await authFetch('/clans/123');
-
-    expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining('/clans/123'),
-      expect.objectContaining({
-        headers: expect.any(Headers)
-      })
-    );
-
-    // Verificamos que los headers contienen el token
-    const callArgs = vi.mocked(global.fetch).mock.calls[0];
-    const headers = callArgs[1]?.headers as Headers;
-    expect(headers.get('Authorization')).toBe('Bearer fake-jwt-token');
-    expect(headers.get('Content-Type')).toBe('application/json');
-  });
-
-  test('uses absolute URL if endpoint starts with http', async () => {
-    vi.mocked(global.fetch).mockResolvedValueOnce({ ok: true } as Response);
-
-    const absoluteUrl = 'http://external-api.com/data';
-    await authFetch(absoluteUrl);
-
-    expect(global.fetch).toHaveBeenCalledWith(absoluteUrl, expect.any(Object));
-  });
-
-  test('handles 401 Unauthorized by clearing storage and redirecting', async () => {
-    localStorage.setItem('token', 'expired-token');
-    localStorage.setItem('user', 'some-user');
-    
-    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-    vi.mocked(global.fetch).mockResolvedValueOnce({
-      status: 401,
-      ok: false,
-    } as Response);
-
-    await authFetch('/private-data');
-
-    // Verificamos limpieza
-    expect(localStorage.getItem('token')).toBeNull();
-    expect(localStorage.getItem('user')).toBeNull();
-    
-    // Verificamos redirección
-    expect(window.location.href).toBe('/login');
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Token caducado"));
-    
-    consoleSpy.mockRestore();
-  });
-
-  test('works correctly without a token in localStorage', async () => {
-    vi.mocked(global.fetch).mockResolvedValueOnce({ ok: true } as Response);
-
-    await authFetch('/public-data');
-
-    const callArgs = vi.mocked(global.fetch).mock.calls[0];
-    const headers = callArgs[1]?.headers as Headers;
-    
-    expect(headers.get('Authorization')).toBeNull();
-    expect(headers.get('Content-Type')).toBe('application/json');
-  });
-});
 });

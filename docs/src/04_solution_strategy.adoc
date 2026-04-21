@@ -34,6 +34,10 @@ See https://docs.arc42.org/section-4/[Solution Strategy] in the arc42 documentat
 endif::arc42help[]
 
 === Technology Decisions
+==== Continuous Deployment (GitHub Actions)
+Beyond automated testing, we implemented a full Continuous Deployment (CD) pipeline. Upon publishing a GitHub Release, a workflow automatically connects to the Azure VM via SSH to pull the latest images and restart the services.
+*Quality goals:* deployability, maintainability, reliability.
+*Key constraints:* Requires secure management of SSH keys using GitHub Secrets to prevent unauthorized server access.
 
 ==== Frontend
 We chose React combined with TypeScript for the user interface development. React's component-based architecture is ideal for modularizing the complex visualization of the game board and managing the reactive state of the match. The adoption of TypeScript adds a static typing system that drastically reduces compile-time errors.
@@ -80,6 +84,10 @@ We chose the combination of **Prometheus and Grafana**. Prometheus acts as a tim
 
 === High-level Decomposition
 
+==== High-Performance Bot Interface
+We exposed a secondary direct port (3002) for the Rust gamey service. This bypasses the Nginx API Gateway specifically for external competition scripts and automated evaluation tools.
+*Quality goals:* efficiency, interoperability.
+*Key constraints:* Only the /play endpoint is exposed on this port to minimize the attack surface while meeting tournament requirements.
 ==== Microservices Architecture
 We divided the backend into autonomous services (`users`, `gamey`, `multiplayer`). This decouples user management, real-time networking, and game logic. If the user service experiences high load, the multiplayer game loop remains unaffected.
 *Quality goals:* modifiability, scalability, technological independence.
@@ -95,8 +103,8 @@ The React frontend separates the presentation layer from business logic. By load
 
 ==== Hybrid Communication: REST & Event-Driven
 We use a dual approach:
-* **REST (HTTP/JSON):** Used for stateless, transactional operations (e.g., login, fetching match history, requesting an AI move).
-* **Event-Driven (WebSockets):** Used for stateful, real-time synchronization during active gameplay, pushing events to clients instantly.
+REST (HTTP/JSON):Used for stateless, transactional operations (e.g., login, fetching match history, requesting an AI move).
+Event-Driven (WebSockets): Used for stateful, real-time synchronization during active gameplay, pushing events to clients instantly.
 *Quality goals:* low latency, appropriate tool for the job.
 
 
@@ -141,6 +149,14 @@ We use a dual approach:
 | **Portability**
 | Developers need to replicate the exact Azure production environment locally.
 | **Docker Compose:** All infrastructure is defined as code, mimicking the cloud setup locally with a single command.
+
+| **Deployability**
+| The team needs to push a bug fix to the Azure production server instantly.
+| Automated CD Pipeline: GitHub Actions handles the SSH connection, git pull, and docker compose restart automatically upon a new Release.
+
+| **Interoperability (Tournament)**
+| An external evaluation script needs to request moves from the bot via a specific port (3002).
+| Direct Port Mapping: Docker maps port 3002 directly to the Rust engine, providing a standard, high-speed interface for third-party scripts.
 |===
 
 === Organizational Decisions
@@ -154,6 +170,10 @@ To organize ourselves well and ensure work proceeds without issues, we have agre
 ==== Quality Control
 - *Code Reviews:* To avoid errors, we have decided that no one can upload code to the main branch without another colleague reviewing it first.
 - *Goal:* This serves two purposes: avoiding silly mistakes and ensuring everyone understands everyone else's code, so that no one becomes indispensable in a specific part of the application.
+
+==== Automated Quality Assurance
+We integrated Static Analysis (SonarCloud) and Automated Testing (Unit & E2E) into the CI pipeline. 
+No code reaches the production environment unless it passes the full test suite (Node.js, Rust) and meets the quality gate defined in SonarCloud.
 
 ==== Communication
 - *Weekly Meetings:* We meet once a week (in person during laboratory classes) to see what progress we have made and plan the following week's tasks. This is when we discuss important design decisions.

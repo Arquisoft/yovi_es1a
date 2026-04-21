@@ -50,7 +50,7 @@ vi.mock('../components/AuthForm', () => ({
 describe('RegisterForm', () => {
   afterEach(() => {
     vi.clearAllMocks()
-    localStorage.clear()
+    sessionStorage.clear()
     sessionStorage.clear()
   })
 
@@ -126,7 +126,7 @@ describe('RegisterForm', () => {
     await waitFor(() => {
       expect(screen.getByText(/bienvenido/i)).toBeInTheDocument()
       expect(screen.getByText('Pablo')).toBeInTheDocument()
-      expect(localStorage.getItem('user')).toBe(JSON.stringify({ userId: 1, username: 'Pablo' })) // ✅ dentro del waitFor
+      expect(sessionStorage.getItem('user')).toBe(JSON.stringify({ userId: 1, username: 'Pablo' })) // ✅ dentro del waitFor
     })
 
     await waitFor(() => {
