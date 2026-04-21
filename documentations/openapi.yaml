@@ -128,6 +128,36 @@ paths:
                   type: integer
                 duration:
                   type: integer
+responses:
+        '201':
+          description: Partida guardada correctamente.
+        '400':
+          description: Error de validación.
+          content:
+            application/json:
+              example:
+                error: "No user ID received."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              example:
+                error: "Error saving match"
+
+  /matches/ranking/global:
+    get:
+      tags:
+        - Partidas
+      summary: Obtener el ranking global de jugadores
+      responses:
+        '200':
+          description: Ranking calculado exitosamente.
+        '500':
+          description: Error de base de datos.
+          content:
+            application/json:
+              example:
+                error: "Internal server error while fetching ranking"
 
 components:
   schemas:
