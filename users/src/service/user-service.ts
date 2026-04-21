@@ -59,22 +59,18 @@ export async function createUser(userData: CreateUserInput): Promise<IUser> {
 
 
 export async function login(userData: LoginUserInput): Promise<IUser> {
-    console.log(`\n[DEBUG 1] Entrando a login con datos:`, userData);
 
     const { username, password } = userData;
     if (typeof username !== 'string' || typeof password !== 'string') {
-        console.log(`[DEBUG 2] Falló validación: username es ${typeof username}, password es ${typeof password}`);
         throw new Error('Invalid input format');
     }
     const sanitizedUsername = username.trim();
     
-    console.log(`[DEBUG 3] Buscando en BD al usuario: "${sanitizedUsername}"`);
     const existingUser = await User.findOne({ 
         username: sanitizedUsername 
     });
 
     if (!existingUser) {
-        console.log(`[DEBUG 4] ❌ Mongoose devolvió NULL. El usuario no está en la BD.`);
         throw new Error('User not found');
     }
     const isPasswordValid = await bcrypt.compare(password, existingUser.password);
