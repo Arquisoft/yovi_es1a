@@ -230,6 +230,21 @@ responses:
               example:
                 error: "Error cargando clanes"
 
+/clans/ranking/global:
+    get:
+      tags:
+        - Clanes
+      summary: Ranking global de Clanes
+      responses:
+        '200':
+          description: Ranking de clanes obtenido.
+        '500':
+          description: Error en la agregación.
+          content:
+            application/json:
+              example:
+                error: "Error interno obteniendo el ranking de clanes"
+
 components:
   schemas:
     UserRegistration:
