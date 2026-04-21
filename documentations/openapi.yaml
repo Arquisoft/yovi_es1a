@@ -212,6 +212,24 @@ responses:
               example:
                 error: "Internal server error while fetching history"
 
+  # ==========================================
+    # CLANES
+  # ==========================================
+  /clans:
+    get:
+      tags:
+        - Clanes
+      summary: Obtener todos los clanes
+      responses:
+        '200':
+          description: Lista de clanes obtenida.
+        '500':
+          description: Error de servidor.
+          content:
+            application/json:
+              example:
+                error: "Error cargando clanes"
+
 components:
   schemas:
     UserRegistration:
