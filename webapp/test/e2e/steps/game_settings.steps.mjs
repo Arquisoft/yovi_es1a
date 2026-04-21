@@ -3,19 +3,16 @@ import { Given, When, Then } from '@cucumber/cucumber';
 Given('I am logged in and on the game configuration page', async function () {
   await this.page.goto('http://localhost:5173');
   
-  // Set user in sessionStorage (not localStorage)
   await this.page.evaluate(() => {
     sessionStorage.setItem("user", JSON.stringify({ userId: "12345", username: "JugadorPro" }));
   });
   
   await this.page.goto('http://localhost:5173/configureGame');
   
-  // Wait for the select to be in the DOM and rendered
   await this.page.waitForSelector('select', { timeout: 20000 });
   await this.page.waitForFunction(() => {
     const selects = document.querySelectorAll('select');
     if (selects.length === 0) return false;
-    // Check if it's actually visible (not just in DOM)
     const rect = selects[0].getBoundingClientRect();
     return rect.height > 0 && rect.width > 0;
   }, { timeout: 20000 });
@@ -24,7 +21,6 @@ Given('I am logged in and on the game configuration page', async function () {
 });
 
 When('I select the mode {string}', async function (modeText) {
-  // First ensure the select exists and is rendered
   await this.page.waitForSelector('.control-group select', { timeout: 15000 });
   
   const selectLocator = this.page.locator('.control-group').first().locator('select');
@@ -41,7 +37,6 @@ When('I select the mode {string}', async function (modeText) {
 });
 
 When('I select the difficulty {string}', async function (difficultyText) {
-  // Wait for the select to appear - it's only visible when modo === "bot"
   await this.page.waitForFunction(() => {
     const groups = document.querySelectorAll('.control-group');
     for (const g of groups) {
@@ -70,7 +65,6 @@ When('I set the board size to {string}', async function (size) {
 });
 
 When('I select the opponent {string}', async function (botName) {
-  // Wait for the opponent select to appear
   await this.page.waitForFunction(() => {
     const groups = document.querySelectorAll('.control-group');
     for (const g of groups) {

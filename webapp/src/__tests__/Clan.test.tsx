@@ -50,7 +50,7 @@ describe('Clan', () => {
     render(<MemoryRouter><Clan/></MemoryRouter>);
 
     await waitFor(() => {
-      expect(screen.getByText(/Clan1/i)).toBeInTheDocument();//La i ignora mayusculas o minusculas
+      expect(screen.getByText(/Clan1/i)).toBeInTheDocument();
       expect(screen.getByText(/Clan2/i)).toBeInTheDocument();
     });
   });
@@ -60,7 +60,7 @@ describe('Clan', () => {
     (clanService.createClan as ReturnType<typeof vi.fn>).mockResolvedValueOnce({});
     (clanService.getAllClans as ReturnType<typeof vi.fn>)
     .mockResolvedValueOnce([])//Render inicial
-    .mockResolvedValueOnce([{ clanId: 'c1', name: 'NuevoClan', members: ['u1'] }]);//Después de crear
+    .mockResolvedValueOnce([{ clanId: 'c1', name: 'NuevoClan', members: ['u1'] }]);
 
     render(<MemoryRouter><Clan /></MemoryRouter>);
     const user = userEvent.setup();
@@ -227,7 +227,6 @@ describe('Clan', () => {
     await waitFor(() => expect(screen.getByText(/Clan1/i)).toBeInTheDocument());
     await user.click(screen.getByRole('button', { name: /chat/i }));
 
-    // Verificamos que se muestra el mensaje que provee el Hook
     await waitFor(() => {
       expect(screen.getByText(/Hola desde Socket/i)).toBeInTheDocument();
     });

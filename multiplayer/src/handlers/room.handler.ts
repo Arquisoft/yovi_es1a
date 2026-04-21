@@ -1,4 +1,3 @@
-// handlers/room.handler.ts
 import { Server, Socket } from 'socket.io';
 import { RoomService } from '../services/room.service.js';
 
@@ -10,7 +9,6 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
   });
 
   socket.on('joinRoom', ({ roomCode, guestUsername, guestId }) => {
-    console.log('joinRoom recibido:', { roomCode, guestUsername, guestId });
     const room = io.sockets.adapter.rooms.get(roomCode);
     if (!room || room.size === 0) return socket.emit('roomError', 'La sala no existe.');
     if (room.size >= 2) return socket.emit('roomError', 'Sala llena.');
@@ -30,9 +28,7 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
   });
 
   socket.on('gameOver', (roomCode) => {
-    console.log(`🎮 gameOver recibido para sala ${roomCode} desde socket ${socket.id}`);
     RoomService.endGameByRoom(roomCode);
-    console.log(`🏁 finishedRooms ahora contiene: ${roomCode} → ${RoomService.isRoomFinished(roomCode)}`);
 });
 
   socket.on('leaveMatchGracefully', () => {
@@ -40,12 +36,10 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
     
     if (roomCode) {
         socket.to(roomCode).emit('matchFinishedCleanup');
-        console.log(`🧹 Sala ${roomCode} limpiada pacíficamente.`);
     }
     RoomService.cleanExit(socket.id);
   });
 
-  // room.handler.ts
 socket.on('disconnect', () => {
     const { roomCode, userId, opponentName, userName, opponentId } = RoomService.handleDisconnect(socket.id);
       setTimeout(() => {

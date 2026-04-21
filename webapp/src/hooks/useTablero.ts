@@ -225,7 +225,7 @@ export const useTablero = (props: any) => {
             return;
           }
           setTurn("R");
-        } catch (error) { // <-- AQUÍ ESTÁ LA SOLUCIÓN DEL CRASH MISTERIOSO
+        } catch (error) {
           console.error("Error en el primer movimiento del bot:", error);
         } finally {
           setLoading(false);

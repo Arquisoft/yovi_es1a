@@ -16,7 +16,6 @@ const BotTester: React.FC = () => {
     'monte_carlo_bot'
   ] as const;
 
-  // 1. Añadimos un estado para guardar el bot seleccionado (por defecto "random_bot")
   const [botId, setBotId] = useState('random_bot');
 
   const pedirMovimiento = async (e: React.FormEvent) => {
@@ -30,7 +29,6 @@ const BotTester: React.FC = () => {
           ? botId
           : 'random_bot';
 
-        // 2. Inyectamos la variable botId en la URL
         const res = await fetch(`${apiEndpoint}/v1/ybot/choose/${safeBotId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -67,7 +65,6 @@ const BotTester: React.FC = () => {
       <h1>{t("test")}</h1>
       
       <form onSubmit={pedirMovimiento}>
-        {/* 3. Añadimos el selector de dificultad */}
         <div style={{ marginBottom: '15px' }}>
           <label htmlFor="bot-select" style={{ color: 'white', marginRight: '10px' }}>
             Nivel / Tipo de Bot:

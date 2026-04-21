@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import { describe, test, expect, beforeEach, afterEach } from 'vitest';
 import { UserUtils } from './user.utils';
 
