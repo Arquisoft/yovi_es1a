@@ -280,6 +280,49 @@ responses:
               example:
                 error: "Error creating clan"
 
+/clans/{clanId}/addUser:
+    post:
+      tags:
+        - Clanes
+      summary: Añadir usuario a un clan
+      parameters:
+        - name: clanId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId]
+              properties:
+                userId:
+                  type: string
+      responses:
+        '200':
+          description: Usuario añadido correctamente.
+        '400':
+          description: Faltan datos o validación fallida.
+          content:
+            application/json:
+              example:
+                error: "User ID is required"
+        '404':
+          description: El clan no existe.
+          content:
+            application/json:
+              example:
+                error: "Clan not found"
+        '500':
+          description: Error de servidor.
+          content:
+            application/json:
+              example:
+                error: "Error adding member to clan"
+
 components:
   schemas:
     UserRegistration:
