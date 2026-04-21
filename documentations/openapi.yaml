@@ -479,12 +479,12 @@ components:
     UserLogin:
       type: object
       required:
-        - email
+        - username
         - password
       properties:
-        email:
+        username:
           type: string
-          example: "jugador1@email.com"
+          example: "jugador1"
         password:
           type: string
           example: "mipassword123"

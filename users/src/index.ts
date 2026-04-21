@@ -56,7 +56,7 @@ app.use(metricsMiddleware);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const swaggerPathIA = path.join(__dirname, '../documentations/doc_ia.yaml'); 
+const swaggerPathIA = path.join(__dirname, '../documentations/documentacion_api.yaml'); 
 const swaggerDocumentIA = YAML.load(swaggerPathIA);
 
 const swaggerPathApp = path.join(__dirname, '../documentations/openapi.yaml'); 
