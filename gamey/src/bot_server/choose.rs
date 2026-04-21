@@ -215,7 +215,7 @@ pub async fn play_competition(
             })));
         }
     };
-
+    
     // 6. Respuesta normal:
     // Si llegamos hasta aquí, es porque la IA tiene un movimiento.
     // Construimos el JSON exacto con la clave "coords".
@@ -386,5 +386,127 @@ mod tests {
         assert!(result.is_ok());
         let response = result.unwrap().0;
         assert!(response.game_status == "ongoing" || response.game_status == "bot_won");
+    }
+
+    #[tokio::test]
+    async fn test_choose_invalid_yen_format() {
+        let state = State(mock_state());
+        let params = Path(ChooseParams {
+            api_version: "v1".to_string(),
+            bot_id: "random_bot".to_string(),
+        });
+        
+        let yen = Json(YEN::new(0, 0, vec!['B', 'R'], "".to_string()));
+
+        let result = choose(state, params, yen).await;
+        
+        assert!(result.is_err());
+        let error_msg = result.unwrap_err().0.message;
+        assert!(error_msg.contains("Invalid YEN format"));
+    }
+
+    #[tokio::test]
+    async fn test_choose_no_valid_moves() {
+        let state = State(mock_state());
+        let params = Path(ChooseParams {
+            api_version: "v1".to_string(),
+            bot_id: "random_bot".to_string(),
+        });
+        
+        let yen = Json(YEN::new(1, 1, vec!['B', 'R'], "B".to_string()));
+
+        let result = choose(state, params, yen).await;
+        
+        if let Err(e) = result {
+            assert!(e.0.message.contains("No valid moves") || e.0.message.contains("Invalid YEN"));
+        }
+    }
+
+    #[tokio::test]
+    async fn test_play_competition_invalid_json() {
+        let state = State(mock_state());
+        let params = Query(CompetitionParams {
+            position: r#"{ size: 3, turn: roto }"#.to_string(),
+            bot_id: Some("random_bot".to_string()),
+        });
+
+        let result = play_competition(state, params).await;
+        
+        assert!(result.is_err());
+        let error_msg = result.unwrap_err().0.message;
+        assert!(error_msg.contains("JSON inválido en position"));
+    }
+
+    #[tokio::test]
+    async fn test_play_competition_invalid_yen() {
+        let state = State(mock_state());
+        let params = Query(CompetitionParams {
+            position: r#"{"size": 0, "turn": 0, "players": ["B", "R"], "layout": ""}"#.to_string(),
+            bot_id: Some("random_bot".to_string()),
+        });
+
+        let result = play_competition(state, params).await;
+        
+        assert!(result.is_err());
+        let error_msg = result.unwrap_err().0.message;
+        assert!(error_msg.contains("Formato YEN inválido"));
+    }
+
+    #[tokio::test]
+    async fn test_play_competition_resign() {
+        let state = State(mock_state());
+        let params = Query(CompetitionParams {
+            position: r#"{"size": 1, "turn": 1, "players": ["B", "R"], "layout": "B"}"#.to_string(),
+            bot_id: Some("random_bot".to_string()),
+        });
+
+        let result = play_competition(state, params).await;
+        
+        assert!(result.is_ok());
+        let json_response = result.unwrap().0;
+        assert_eq!(json_response.get("action").unwrap().as_str().unwrap(), "resign");
+    }
+
+    #[tokio::test]
+    async fn test_play_competition_success() {
+        let state = State(mock_state());
+        let params = Query(CompetitionParams {
+            position: r#"{"size": 3, "turn": 0, "players": ["B", "R"], "layout": "B/BR/.R."}"#.to_string(),
+            bot_id: Some("random_bot".to_string()),
+        });
+
+        let result = play_competition(state, params).await;
+        
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_play_competition_default_bot() {
+        let state = State(mock_state());
+        let params = Query(CompetitionParams {
+            position: r#"{"size": 3, "turn": 0, "players": ["B", "R"], "layout": "B/BR/.R."}"#.to_string(),
+            bot_id: None, 
+        });
+
+        let result = play_competition(state, params).await;
+        
+        assert!(result.is_ok());
+        let response = result.unwrap().0;
+        assert!(response.get("coords").is_some());
+    }
+
+    #[tokio::test]
+    async fn test_play_competition_bot_not_found() {
+        let state = State(mock_state());
+        let params = Query(CompetitionParams {
+            position: r#"{"size": 3, "turn": 0, "players": ["B", "R"], "layout": "B/BR/.R."}"#.to_string(),
+            bot_id: Some("bot_que_no_existe".to_string()),
+        });
+
+        let result = play_competition(state, params).await;
+        
+        assert!(result.is_err());
+        let error_msg = result.unwrap_err().0.message;
+        assert!(error_msg.contains("Bot no encontrado"));
     }
 }
