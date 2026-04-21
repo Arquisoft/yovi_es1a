@@ -92,7 +92,7 @@ describe('Clan', () => {
   });
 
   test('envía mensaje en chat del clan', async () => {
-  localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+  sessionStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
   
   (clanService.getAllClans as any).mockResolvedValue([{ clanId: 'c1', name: 'Clan1', members: ['u1'] }]);
   
@@ -175,7 +175,7 @@ describe('Clan', () => {
   });
 
   test('muestra mensajes existentes al abrir chat de clan', async () => {
-    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
     (clanService.getAllClans as any).mockResolvedValue([{ clanId: 'c1', name: 'Clan1', members: ['u1'] }]);
     
     (useClanChat as any).mockReturnValue({
@@ -196,7 +196,7 @@ describe('Clan', () => {
   });
 
   test('carga clanes existentes y los muestra', async () => {
-    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
     (clanService.getAllClans as any).mockResolvedValueOnce([
       { clanId: 'c1', name: 'Clan1', members: ['u1'] },
       { clanId: 'c2', name: 'Clan2', members: [] },
@@ -211,7 +211,7 @@ describe('Clan', () => {
   });
 
   test('muestra mensajes existentes al abrir chat de clan (vía Hook)', async () => {
-    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
     (clanService.getAllClans as any).mockResolvedValue([{ clanId: 'c1', name: 'Clan1', members: ['u1'] }]);
     
     // Simulamos que el hook ya tiene mensajes
@@ -234,7 +234,7 @@ describe('Clan', () => {
   });
 
   test('envía mensaje llamando a la función del Hook', async () => {
-    localStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
+    sessionStorage.setItem('user', JSON.stringify({ userId: 'u1', username: 'User1' }));
     (clanService.getAllClans as any).mockResolvedValue([{ clanId: 'c1', name: 'Clan1', members: ['u1'] }]);
     
     const mockSendMessage = vi.fn();

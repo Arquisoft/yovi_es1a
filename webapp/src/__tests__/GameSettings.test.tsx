@@ -213,7 +213,7 @@ describe('GameSettings - Online Mode', () => {
     vi.mocked(useMultiplayer).mockReturnValue({
       isConnected: true, roomCode: null, errorMsg: '', gameStarted: false,
       createRoom: vi.fn(), joinRoom: joinRoomMock, lastOpponentMove: null,
-      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5, leaveMatchGracefully: vi.fn(),notifyGameOver: vi.fn(),
+      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5, leaveMatchGracefully: vi.fn(),notifyGameOver: vi.fn(), opponentDisconnected: false,
     })
 
     const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
@@ -274,7 +274,7 @@ describe('GameSettings - Online Mode', () => {
     vi.mocked(useMultiplayer).mockReturnValue({
       isConnected: true, roomCode: 'ROOM123', errorMsg: '', gameStarted: true,
       createRoom: vi.fn(), joinRoom: vi.fn(), lastOpponentMove: null,
-      sendMove: vi.fn(), myColor: 'B', opponentName: 'Rival', boardSize: 5, leaveMatchGracefully: vi.fn(),notifyGameOver: vi.fn(),
+      sendMove: vi.fn(), myColor: 'B', opponentName: 'Rival', boardSize: 5, leaveMatchGracefully: vi.fn(),notifyGameOver: vi.fn(), opponentDisconnected: false,
     })
 
     const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
@@ -290,7 +290,7 @@ describe('GameSettings - Online Mode', () => {
     vi.mocked(useMultiplayer).mockReturnValue({
       isConnected: true, roomCode: 'WAIT99', errorMsg: '', gameStarted: false,
       createRoom: vi.fn(), joinRoom: vi.fn(), lastOpponentMove: null,
-      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5, leaveMatchGracefully: vi.fn(),notifyGameOver: vi.fn(),
+      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5, leaveMatchGracefully: vi.fn(),notifyGameOver: vi.fn(), opponentDisconnected: false,
     })
 
     const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
@@ -309,7 +309,7 @@ describe('GameSettings - Online Mode', () => {
     vi.mocked(useMultiplayer).mockReturnValue({
       isConnected: true, roomCode: 'ROOM123', errorMsg: '', gameStarted: true,
       createRoom: vi.fn(), joinRoom: vi.fn(), lastOpponentMove: null,
-      sendMove: sendMoveMock, myColor: 'B', opponentName: 'Rival', boardSize: 5, leaveMatchGracefully: vi.fn(),notifyGameOver: vi.fn(),
+      sendMove: sendMoveMock, myColor: 'B', opponentName: 'Rival', boardSize: 5, leaveMatchGracefully: vi.fn(),notifyGameOver: vi.fn(), opponentDisconnected: false,
     })
 
     const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
@@ -323,24 +323,22 @@ describe('GameSettings - Online Mode', () => {
   })
 
   test('clicking the create room button invokes the createRoom function with current state', async () => {
-    const user = userEvent.setup()
-    const createRoomMock = vi.fn()
+    const createRoomMock = vi.fn();
     
     vi.mocked(useMultiplayer).mockReturnValue({
       isConnected: true, roomCode: null, errorMsg: '', gameStarted: false,
       createRoom: createRoomMock, joinRoom: vi.fn(), lastOpponentMove: null,
-      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5, leaveMatchGracefully: vi.fn(),notifyGameOver: vi.fn(),
-    })
+      sendMove: vi.fn(), myColor: null, opponentName: '', boardSize: 5, 
+      leaveMatchGracefully: vi.fn(), notifyGameOver: vi.fn(), opponentDisconnected: false,
+    });
 
-    sessionStorage.setItem('user', JSON.stringify({ username: 'PlayerX' }))
+    sessionStorage.setItem('user', JSON.stringify({ username: 'PlayerX' }));
+    const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>);
 
-    const { container } = render(<MemoryRouter><GameSettings /></MemoryRouter>)
-    const modeSelector = container.querySelector('.config-controls .control-group select') as HTMLSelectElement
-    await user.selectOptions(modeSelector, 'online')
-
-    const createBtn = screen.getByText('crearSala')
-    await user.click(createBtn)
-    
-    expect(createRoomMock).toHaveBeenCalledWith('PlayerX', 5)
-  })
+    const modeSelector = container.querySelector('.config-controls .control-group select') as HTMLSelectElement;
+    fireEvent.change(modeSelector, { target: { value: 'online' } });
+    const createBtn = screen.getByText('crearSala');
+    fireEvent.click(createBtn);
+    expect(createRoomMock).toHaveBeenCalledWith('PlayerX', 5);
+});
 })

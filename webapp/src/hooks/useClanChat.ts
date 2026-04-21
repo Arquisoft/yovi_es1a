@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { socket } from '../services/socket.service';
 import { UserUtils } from '../utils/user.utils';
-import { authFetch } from '../services/auth.service';
+import { authFetch } from '../services/api';
 export interface ClanMessage {
   username: string;
   text: string;

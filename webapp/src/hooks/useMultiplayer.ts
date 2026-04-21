@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { socket } from '../services/socket.service';
 import { UserUtils } from '../utils/user.utils';
 
 export const useMultiplayer = () => {
-  const navigate = useNavigate();
+  
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [roomCode, setRoomCode] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string>('');
@@ -13,6 +12,7 @@ export const useMultiplayer = () => {
   const [opponentName, setOpponentName] = useState<string>('');
   const [lastOpponentMove, setLastOpponentMove] = useState<any>(null);
   const [boardSize, setBoardSize] = useState<number>(5);
+  const [opponentDisconnected, setOpponentDisconnected] = useState(false);
 
   const opponentNameRef = useRef(opponentName);
   const roomCodeRef = useRef<string | null>(null);
@@ -49,19 +49,18 @@ export const useMultiplayer = () => {
     };
     const onRoomError = (msg: string) => setErrorMsg(msg);
     const onMoveReceived = (moveData: any) => {
-    if (typeof moveData === 'string' && moveData.includes("|GAMEOVER")) {
+      if (typeof moveData === 'string' && moveData.includes("|GAMEOVER")) {
         const realLayout = moveData.split("|GAMEOVER")[0];
         setLastOpponentMove(realLayout);
         socket.emit('gameOver', roomCodeRef.current);
-    } else {
+      } else {
         setLastOpponentMove(moveData);
-    }
-};
+      }
+    };
 
-   const onOpponentDisconnected = () => { 
-      alert("¡Tu oponente se ha desconectado! Has ganado la partida.");
+    const onOpponentDisconnected = () => {
+      setOpponentDisconnected(true);
       setGameStarted(false);
-      navigate('/statistics');
     };
 
     const onMatchFinishedCleanup = () => {
@@ -102,14 +101,14 @@ export const useMultiplayer = () => {
     socket.emit('makeMove', { roomCode: code, moveData });
   };
 
-  const notifyGameOver = () => { 
+  const notifyGameOver = () => {
     const code = roomCodeRef.current;
     if (code) socket.emit('gameOver', code);
   };
 
-  return { 
-    isConnected, roomCode, errorMsg, gameStarted, myColor, 
-    opponentName, lastOpponentMove, boardSize, 
+  return {
+    isConnected, roomCode, errorMsg, gameStarted, myColor,
+    opponentName, lastOpponentMove, boardSize, opponentDisconnected,
     createRoom, joinRoom, sendMove, leaveMatchGracefully, notifyGameOver
   };
 };

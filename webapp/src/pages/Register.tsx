@@ -23,7 +23,7 @@ const Register: React.FC = () => {
     try {
       const data = await authService.register(username, email, password);
       await authService.login(username, password);
-      localStorage.setItem("user", JSON.stringify({
+      sessionStorage.setItem("user", JSON.stringify({
         userId: data.userId, 
         username: data.username
       }));
