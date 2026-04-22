@@ -1,40 +1,9 @@
 ifndef::imagesdir[:imagesdir: ../images]
 
 [[section-context-and-scope]]
-== Context and Scope
+== Context and scope
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-Context and scope - as the name suggests - delimits your system (i.e. your scope) from all its communication partners
-(neighboring systems and users, i.e. the context of your system). It thereby specifies the external interfaces.
-
-If necessary, differentiate the business context (domain specific inputs and outputs) from the technical context (channels, protocols, hardware).
-
-.Motivation
-The domain interfaces and technical interfaces to communication partners are among your system's most critical aspects. Make sure that you completely understand them.
-
-.Form
-Various options:
-
-* Context diagrams
-* Lists of communication partners and their interfaces.
-
-.Further Information
-See https://docs.arc42.org/section-3/[Context and Scope] in the arc42 documentation.
-****
-endif::arc42help[]
-
-=== Business Context
-
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-Specification of *all* communication partners (users, IT-systems, ...) with explanations of domain specific inputs and outputs or interfaces.
-****
-endif::arc42help[]
+=== Business context
 
 [plantuml]
 ----
@@ -44,12 +13,14 @@ skinparam componentStyle uml2
 actor "User" as user
 actor "Administrator" as admin
 actor "Bot (AI)" as bot
+actor "Tournament Script" as tourney #Red
 
 component  "Yovi System" as yovi
 
 user --> yovi : Registers, configures matches,\nplays and checks stats
-admin --> yovi : Monitors system health & metrics
+admin --> yovi : Monitors system health and metrics\nand consults API Docs
 bot --> yovi : Consults match state and\nmakes automatic moves
+tourney --> yovi : Direct API interaction\nfor competitive evaluation
 
 @enduml
 ----
@@ -57,20 +28,13 @@ bot --> yovi : Consults match state and\nmakes automatic moves
 **Diagram elements:**
 
 * **User:** The end-user who interacts with the web application to play games (against bots or other players in real-time) and manage their profile.
-* **Administrator:** The technical user responsible for overseeing the system's stability and performance via the internal monitoring dashboards.
+* **Administrator:** The technical user responsible for overseeing the system's stability and performance via the internal monitoring dashboards and verifying API specifications via Swagger.
 * **Bot (AI):** Conceptual actor representing the internal artificial intelligence engine that plays against the user.
+* **Tournament script (External bot):** An external automated script that interacts directly with the system's game engine to evaluate performance and play matches during competitive tournaments, bypassing standard user interfaces.
 * **Yovi:** The complete system boundary. It acts as a unified solution that encapsulates the game engines, real-time communications, user management, data persistence, and the observability infrastructure.
 
 
-=== Technical Context
-
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-Technical interfaces (channels and transmission media) linking your system to its environment. In addition a mapping of domain specific input/output to the channels, i.e. an explanation which I/O uses which channel.
-****
-endif::arc42help[]
+=== Technical context
 
 [plantuml]
 ----
@@ -82,11 +46,15 @@ skinparam defaultTextAlignment center
 
 actor "User" as user
 actor "Administrator" as admin
+actor "Tournament Script" as tourney #Red
 node "Load Tester (Gatling)" as gatling
 
 rectangle "Web Browser" as browser {
     component "React App (SPA)" as spa
+    component "Swagger UI" as swagger
 }
+
+cloud "MongoDB Atlas" as mongo
 
 node "Docker Host (IP: 20.199.88.71)" {
     component "Nginx\n(:80 Redirect, :443 SSL)" as nginx
@@ -102,23 +70,24 @@ node "Docker Host (IP: 20.199.88.71)" {
     }
 }
 
-database "MongoDB" as mongo
 
 user -> browser : Interacts
 browser -right-> nginx : HTTPS [443] / WSS [443]
+swagger -right-> nginx : API Calls [443]
 gatling -down-> nginx : Simulates Traffic\n[HTTPS / WSS]
+tourney -[#red,bold]down-> gamey : Direct API Requests\n[HTTP :3002]
 
 nginx --> webapp : " / "
-nginx --> users : " /api/ \n /api/bot/ \n /api/matches/ "
+nginx --> users : " /api/ \n /api-docs/endpoints \n /api-docs/api "
 nginx --> gamey : " /api/gamey/ "
 nginx --> multi : " /socket.io/ (Upgrade: websocket)"
 
 spa .up.> nginx : HTTP / WS requests
 users -right-> gamey : Internal HTTP requests\n(RUST_API_URL)
 
-users --> mongo : Reads/Writes
-gamey --> mongo : Reads/Writes
-multi --> mongo : Reads/Writes
+users --> mongo : Reads/Writes (TLS)
+gamey --> mongo : Reads/Writes (TLS)
+multi --> mongo : Reads/Writes (TLS)
 
 admin --> graf : HTTP [:9091]
 admin --> prom : HTTP [:9090]
@@ -130,14 +99,18 @@ prom -up-> users : Scrapes Metrics
 
 The Yovi system operates behind a reverse proxy that acts as the single point of entry, providing secure interfaces for external communication and managing a private Docker bridge network (`monitor-net`) for internal microservices. The communication channels are detailed below:
 
-* **External Access Interfaces (Public):**
-** **Nginx Reverse Proxy & TLS Termination:** Binds to ports `80` (redirects to HTTPS) and `443` (SSL). It uses configured certificates (`cert.pem`, `key.pem`) to encrypt all traffic from Users and Gatling load tests.
-** **Frontend Delivery (`/`):** Nginx routes root traffic to the `webapp` container (port 80) to serve the React Single Page Application.
-** **Node.js User & Bot API (`/api/`, `/api/bot/`, `/api/matches/`):** Handled by the `users` service on internal port `3000`. This includes authentication, user stats, and the artificial intelligence bot logic engine.
-** **Rust Game API (`/api/gamey/`):** Routed to the `gamey` service on internal port `4000` for complex game mechanics calculation.
-** **Real-Time Multiplayer (`/socket.io/`):** Nginx upgrades HTTP connections to WebSockets and routes them to the `multiplayer` service on internal port `5000`.
+* **External access interfaces (Public):**
+** **Nginx reverse proxy and TLS termination:** Binds to ports `80` (redirects to HTTPS) and `443` (SSL). It uses configured certificates (`cert.pem`, `key.pem`) to encrypt all traffic from Users and Gatling load tests.
+** **Frontend delivery (`/`):** Nginx routes root traffic to the `webapp` container (port 80) to serve the React Single Page Application.
+** **API documentation interfaces (Swagger):** 
+*** **Endpoints documentation (`/api-docs/endpoints`):** Serves the main OpenAPI specification for user and match management.
+*** **Tournament API documentation (`/api-docs/api`):** Serves the specific specification for the competition engine.
+** **Node.js user and bot API (`/api/`, `/api/bot/`, `/api/matches/`):** Handled by the `users` service on internal port `3000`. This includes authentication, user stats, and the artificial intelligence bot logic engine.
+** **Rust game API (`/api/gamey/`):** Routed to the `gamey` service on internal port `4000` for complex game mechanics calculation.
+** **Real-time multiplayer (`/socket.io/`):** Nginx upgrades HTTP connections to WebSockets and routes them to the `multiplayer` service on internal port `5000`.
+** **Tournament and evaluation interface (Direct Port):** An exposed port (`3002`) mapped directly to the internal `gamey` service port (`4000`). This completely bypasses Nginx to provide a direct, low-latency HTTP communication channel for external tournament scripts.
 
-* **Internal Interfaces (Private `monitor-net` Network):**
-** **Microservice Communication:** The `users` service communicates directly with the `gamey` service using the internal Docker DNS (`http://gamey:4000`) defined via the `RUST_API_URL` environment variable.
-** **Monitoring & Observability:** Prometheus (exposed on port `9090`) scrapes metrics from the internal services. Grafana (exposed on port `9091`) queries Prometheus to build visual dashboards accessed by the Administrator.
-** **Data Persistence:** The core backend services (`users`, `gamey`, `multiplayer`) connect to an internal MongoDB instance to persist user profiles, match history, and active session data.
+* **Internal interfaces (Private `monitor-net` network):**
+** **Microservice communication:** The `users` service communicates directly with the `gamey` service using the internal Docker DNS (`http://gamey:4000`) defined via the `RUST_API_URL` environment variable.
+** **Monitoring and observability:** Prometheus (exposed on port `9090`) scrapes metrics from the internal services. Grafana (exposed on port `9091`) queries Prometheus to build visual dashboards accessed by the Administrator.
+** **Data persistence:** The core backend services (`users`, `gamey`, `multiplayer`) connect securely via TLS to **MongoDB Atlas**, an external cloud-hosted database, to persist user profiles, match history, and active session data.
