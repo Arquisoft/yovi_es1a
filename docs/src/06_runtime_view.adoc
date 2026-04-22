@@ -142,6 +142,7 @@ end
 
 === External Bot Evaluation (Tournament API)
 
+
 Apart from the standard frontend modes, the system provides a direct, high-performance interface for external tournament evaluations. This bypasses the Node.js layers and interacts directly with the Rust engine via port 3002.
 
 [plantuml]
