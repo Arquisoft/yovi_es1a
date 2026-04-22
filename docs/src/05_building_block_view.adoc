@@ -12,85 +12,94 @@ The building block view shows the static decomposition of the system into buildi
 ****
 endif::arc42help[]
 
-=== Whitebox Overall System (Level 1)
+=== Whitebox overall system (Level 1)
 
-The following diagram shows the main high-level subsystems of the Yovi System and how they interact to serve the end user.
+The following diagram shows the main high-level subsystems of the Yovi System and how they interact to serve both standard users and automated tournament scripts.
 
 [plantuml]
 ----
 @startuml
-actor "User" as user
+actor "User / Developer" as user
+actor "Tournament Script" as tourney #Red
 
 package "Yovi System Boundary" {
     component "API Gateway\n(Nginx)" as gateway
     component "Frontend SPA\n(React)" as frontend
-    component "Backend Microservices\n(Node.js & Rust)" as backend
+    component "Backend Microservices\n(Node.js and Rust)" as backend
     database "Data Persistence\n(MongoDB)" as db
 }
 
 user --> gateway : HTTPS / WSS requests
+tourney -[#red,bold]-> backend : HTTP requests (Direct Port)
 gateway --> frontend : Serves static files
-gateway --> backend : Routes API & WebSockets
+gateway --> backend : Routes APIs, WebSockets and Swagger Docs
 backend --> db : Reads / Writes
 @enduml
 ----
 
 Motivation::
-The system follows a modular, decoupled architecture. Instead of a monolith, it is split into a static frontend, a cluster of backend microservices, and a persistent database, all shielded by a single reverse proxy gateway. This ensures security, scalability, and easier maintenance.
+The system follows a modular, decoupled architecture. Instead of a monolith, it is split into a static frontend, a cluster of backend microservices, and a persistent database, all shielded by a single reverse proxy gateway. This ensures security, scalability, and allows multiple entry points (e.g., standard UI vs. direct Tournament API).
 
-Contained Building Blocks::
+Contained building blocks::
 
 [cols="1,3",options="header"]
 |===
 | **Name** | **Responsibility**
-| **API Gateway** | Acts as the single point of entry, handles SSL termination, and routes traffic to the correct internal block.
+| **API gateway** | Acts as the single point of entry, handles SSL termination, and routes traffic to the correct internal block (Frontend or Backend).
 | **Frontend SPA** | Client-side application running in the user's browser, responsible for the UI and UX.
-| **Backend Microservices** | A collection of internal APIs that handle user authentication, real-time multiplayer networking, and heavy game logic.
-| **Data Persistence** | The MongoDB database cluster that securely stores user profiles, encrypted passwords, and match statistics.
+| **Backend microservices** | A collection of internal APIs that handle user authentication, real-time multiplayer networking, heavy game logic, and serve the OpenAPI documentation.
+| **Data persistence** | The MongoDB database cluster that securely stores user profiles, encrypted passwords, and match statistics.
 |===
 
-=== Level 2: Backend Services Decomposition
+=== Level 2: Backend services decomposition
 
-This level zooms into the "Backend Microservices" building block, detailing the distinct autonomous services that handle users, real-time gameplay, and heavy AI computation.
+This level zooms into the "Backend Microservices" building block, detailing the distinct autonomous services that handle users, real-time gameplay, heavy AI computation, and API documentation.
 
 [plantuml]
 ----
 @startuml
+actor "API Gateway" as gateway
+actor "Tournament Script" as tourney #Red
+
 package "Backend Microservices" {
-    component "Users Service\n(Port 3000)" as users
+    component "Users Service and Swagger UI\n(Port 3000)" as users
     component "Multiplayer Service\n(Port 5000)" as multi
-    component "GameY Engine\n(Port 4000)" as gamey
+    component "GameY Engine\n(Rust)" as gamey
 }
 
 database "MongoDB" as db
 
-users --> gamey : Internal HTTP (Bot Logic)
-users ..> db : Profile & Stats queries
+gateway --> users : Routes /api and /api-docs
+gateway --> multi : Routes /socket.io
+tourney -[#red,bold]-> gamey : Direct HTTP Request\n(External Port 3002)
+
+users --> gamey : Internal HTTP Request\n(Internal Port 4000)
+users ..> db : Profile and Stats queries
 multi ..> db : Active match state updates
 @enduml
 ----
 
 Motivation::
-To achieve high availability and separation of concerns, the backend is not a single server. Heavy AI calculations (Rust) are isolated from real-time socket connections (Multiplayer) and standard HTTP REST traffic (Users).
+To achieve high availability and separation of concerns, the backend is not a single server. Heavy AI calculations (Rust) are isolated from real-time socket connections (Multiplayer) and standard HTTP REST traffic (Users). Furthermore, by embedding Swagger UI within the Users Service, we provide live API documentation without needing an extra container.
 
-Contained Building Blocks::
+Contained building blocks::
 
 [cols="1,4", options="header"]
 |===
-| **Building Block** | **Description**
+| **Building block** | **Description**
 
-| **Users Service**
-| *Responsibility:* Manages user registration, JWT authentication, and historical statistics retrieval. It acts as a standard REST API. +
-*Technology:* Node.js, Express, Mongoose. +
+| **Users service and swagger UI**
+| *Responsibility:* Manages user registration, JWT authentication, and historical statistics retrieval. It acts as a standard REST API and natively serves the OpenAPI specifications (`openapi.yaml` and `api-tournament.yaml`) via Swagger UI. +
+*Technology:* Node.js, Express, Mongoose, Swagger-UI-Express. +
 *Location:* `/users` directory.
 
-| **Multiplayer Service**
+| **Multiplayer service**
 | *Responsibility:* Maintains stateful, real-time WebSocket connections with active players, managing game rooms and broadcasting piece movements instantly. +
 *Technology:* Node.js, Socket.io. +
 *Location:* `/multiplayer` directory.
 
-| **GameY Engine**
-| *Responsibility:* Implements the core logic of the Game of Y, validating moves and checking win conditions using YEN notation. It now includes auto-resign logic: if the engine detects no valid moves (e.g., full board), it returns an action: resign status instead of an error, ensuring flow continuity in automated test environments. It also exposes a high-performance endpoint on port 3002 for external competitions. +
+| **GameY engine**
+| *Responsibility:* Implements the core logic of the Game of Y, validating moves and checking win conditions using YEN notation. It exposes two distinct ports: **Port 4000** for internal, secure communication with the `Users` service, and **Port 3002** directly exposed to the internet for external competitions. It includes auto-resign logic: if the engine detects no valid moves (e.g., full board), it returns an action: resign status instead of an error, ensuring flow continuity in automated test environments. +
 *Technology:* Rust. +
 *Location:* `/gamey` directory.
 
