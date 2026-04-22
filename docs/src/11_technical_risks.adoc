@@ -28,20 +28,26 @@ endif::arc42help[]
 |===
 | Risk | Description
 
-| **Inexperience in Microservices Architectures**
+| **Inexperience in microservices architectures**
 | The team had limited initial experience in designing large-scale software architectures. While the system is now functional, there remains an ongoing risk regarding the maintenance of boundaries between services (WebApp, Users, Gamey, Multiplayer) and avoiding circular dependencies as new features are added.
 
 | **Rust learning curve**
 | Rust is a language we had never used before, introducing a steep learning curve. The risk remains that implementing complex game logic updates or debugging memory safety issues in the `gamey` engine might take longer than expected due to the language's complexity.
 
-| **Inexperience in using Docker & Orchestration**
+| **Inexperience in using docker and orchestration**
 | Setting up internal bridge networks (`monitor-net`), volumes, and multi-container communication was challenging. Misconfigurations in the `docker-compose.yml` or reverse proxy routing could potentially cause downtime during future deployments.
 
-| **WebSocket Scalability (Single Point of Failure)**
+| **WebSocket scalability (Single point of failure)**
 | The new `multiplayer` service uses Socket.io for real-time game state synchronization. Currently, this service runs as a single instance. If traffic scales massively, horizontally scaling Socket.io will require implementing a Redis adapter/backplane, which is currently not configured, posing a risk of dropped connections under heavy load.
 
-| **Data Consistency**
+| **Data consistency**
 | When using a database without a rigid schema like MongoDB, there is a risk of data inconsistency if the domain model evolves and data migrations are not properly performed to update older documents (e.g., legacy user profiles or match records).
+
+|**Exposure of tournament port (3002)**
+| To facilitate the tournament, port 3002 is exposed directly without Nginx's TLS or JWT protection. This creates a security risk where an attacker could potentially flood the gamey service with requests or exploit the lack of authentication in that specific entry point.
+
+|**Documentation drift**
+| We now maintain two separate OpenAPI/Swagger files (openapi.yaml and api-tournament.yaml). There is a risk that as the code evolves, the documentation might not be updated simultaneously, leading to a "drift" where the Swagger UI shows information that doesn't match the actual API behavior.
 |===
 
 
@@ -51,12 +57,12 @@ endif::arc42help[]
 |===
 | Technical debt | Description 
 
-| **Active Match State Volatility (In-Memory)**
-| While completed matches and user stats are now successfully persisted in MongoDB, the *active* live state of a multiplayer game relies heavily on the memory of the `multiplayer` and `gamey` services. A sudden crash or restart of these containers will result in the immediate drop of all ongoing live matches, as there is no real-time caching layer (like Redis) to recover active session states.
+| **Active match state volatility (In-memory)**
+| While completed matches and user stats are now successfully persisted in MongoDB, the active live state of a multiplayer game relies heavily on the memory of the `multiplayer` and `gamey` services. A sudden crash or restart of these containers will result in the immediate drop of all ongoing live matches, as there is no real-time caching layer (like Redis) to recover active session states.
 
-| **Lack of Observability and Monitoring**
-| The system currently lacks a centralized monitoring and metrics solution. Although tools like Prometheus and Grafana are planned and partially scaffolded in the infrastructure, they are not yet fully configured. To diagnose bugs or check system health, developers must manually inspect isolated console logs inside each Docker container.
+| **Manual TLS/SSL and self-signed friction**
+| We have implemented HTTPS via Nginx, enhancing security. However, certificates are managed manually and are self-signed. This introduces two debts: first, tracking expiration dates manually instead of using Let's Encrypt; second, it creates bad developer experience (DX) because browsers block Swagger UI's `Execute` requests until the user manually adds a security exception for the API.
 
-| **Manual TLS/SSL Certificate Management**
-| We have successfully implemented HTTPS via Nginx as a reverse proxy, enhancing security. However, the SSL certificates (`cert.pem`, `key.pem`) are currently managed manually. This introduces the technical debt of having to manually track expiration dates and renew them, instead of using an automated solution like Certbot/Let's Encrypt.
+| **Lack of automated alerting**
+| The system has greatly improved observability by integrating Prometheus and Grafana. However, the current technical debt lies in the lack of an automated alerting logic. We collect and visualize metrics, but we haven't defined thresholds or configured notifications (e.g., email or Slack alerts) to proactively inform administrators if a critical service crashes.
 |===
