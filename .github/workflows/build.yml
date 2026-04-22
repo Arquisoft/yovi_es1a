@@ -54,6 +54,6 @@ jobs:
           -Dsonar.javascript.lcov.reportPaths=webapp/coverage/lcov.info,users/coverage/lcov.info,multiplayer/coverage/lcov.info
           -Dsonar.rust.lcov.reportPaths=gamey/lcov.info
           -Dsonar.sources=webapp/src,users/src,gamey/src,multiplayer/src
-          -Dsonar.tests=webapp/src,users/__tests__,gamey/src,multiplayer/__test__
-          -Dsonar.test.inclusions=**/*.test.tsx,**/*.test.ts,**/*.test.js,**/*.spec.ts
-          -Dsonar.exclusions=webapp/src/recursos/messages.ts,**/*.test.tsx,**/*.test.ts,**/*.test.js,**/*.spec.ts
+          -Dsonar.tests=webapp,users,gamey,multiplayer
+          -Dsonar.test.inclusions=**/*.test.tsx,**/*.test.ts,**/*.test.js,**/*.spec.ts,**/__tests__/**,**/__test__/**
+          -Dsonar.exclusions=webapp/src/recursos/messages.ts,**/node_modules/**,**/dist/**
