@@ -3,120 +3,173 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-runtime-view]]
 == Runtime View
 
-
 ifdef::arc42help[]
 [role="arc42help"]
 ****
 .Contents
-The runtime view describes concrete behavior and interactions of the system’s building blocks in form of scenarios from the following areas:
-
-* important use cases or features: how do building blocks execute them?
-* interactions at critical external interfaces: how do building blocks cooperate with users and neighboring systems?
-* operation and administration: launch, start-up, stop
-* error and exception scenarios
-
-Remark: The main criterion for the choice of possible scenarios (sequences, workflows) is their *architectural relevance*. It is *not* important to describe a large number of scenarios. You should rather document a representative selection.
-
-.Motivation
-You should understand how (instances of) building blocks of your system perform their job and communicate at runtime.
-You will mainly capture scenarios in your documentation to communicate your architecture to stakeholders that are less willing or able to read and understand the static models (building block view, deployment view).
-
-.Form
-There are many notations for describing scenarios, e.g.
-
-* numbered list of steps (in natural language)
-* activity diagrams or flow charts
-* sequence diagrams
-* BPMN or EPCs (event process chains)
-* state machines
-* ...
-
-
-.Further Information
-
-See https://docs.arc42.org/section-6/[Runtime View] in the arc42 documentation.
-
+The runtime view describes concrete behavior and interactions of the system’s building blocks in form of scenarios.
 ****
 endif::arc42help[]
 
-This section displays sequence diagrams. These show the interaction of objects in different scenarios.
+This section displays sequence diagrams illustrating the interaction of the system's components across the most architecturally relevant scenarios. Based on the frontend's `Tablero` logic, the system supports three distinct gameplay modes (`humano`, `bot`, and `online`), each with a unique architectural flow.
 
-=== Game lifecycle against the computer (PvE)
+=== 1. Local 1 vs 1 match (human mode)
 
-This diagram illustrates the standard single-player workflow. The React frontend communicates with the Node.js backend, which internally delegates the heavy AI computation to the Rust Game Engine.
+In this mode, two human players compete on the same physical device. Real-time WebSockets are not required. Instead, the React frontend manages the turn progression and queries the backend solely to validate if the current board layout results in a victory after each move.
 
 [plantuml]
 ----
 @startuml
+autonumber
+actor "Player 1 (Blue)" as P1
+actor "Player 2 (Red)" as P2
+participant "React SPA\n(Tablero/gameService)" as WebApp
+participant "API Gateway\n(Nginx)" as Gateway
+participant "Users API\n(Node.js)" as UsersService
+
+P1 -> WebApp: Places blue piece on board
+WebApp -> WebApp: Update local state & layout
+
+WebApp -> Gateway: POST /api/bot/check-winner (layout)
+Gateway -> UsersService: Forward request
+UsersService --> WebApp: Return status ('ongoing')
+WebApp --> P2: Indicate Player 2's turn
+
+P2 -> WebApp: Places red piece on board
+WebApp -> WebApp: Update local state & layout
+
+WebApp -> Gateway: POST /api/bot/check-winner (layout)
+Gateway -> UsersService: Forward request
+UsersService --> WebApp: Return status ('win')
+
+WebApp --> P1: Render Modal "Player 2 Wins!"
+@enduml
+----
+
+=== 2. Game Lifecycle Against the Computer (PvE / "bot" mode)
+
+This diagram illustrates the single-player workflow. The frontend maintains the game state, validates win conditions, and delegates the heavy AI computation to the isolated Rust Game Engine through the Nginx Gateway.
+
+[plantuml]
+----
+@startuml
+autonumber
 actor User
-participant "React SPA" as WebApp
-participant "API Gateway" as Gateway
+participant "React SPA\n(Tablero/gameService)" as WebApp
+participant "API Gateway\n(Nginx)" as Gateway
 participant "Users API\n(Node.js)" as UsersService
 participant "GameY Engine\n(Rust)" as Gamey
+
+User -> WebApp: Makes move on Hex board
+WebApp -> Gateway: POST /api/bot/check-winner
+Gateway -> UsersService: Forward request
+UsersService -> Gamey: Validate win condition (e.g., /check-winner)
+Gamey --> UsersService: Return status
+UsersService --> WebApp: Status ('ongoing')
+
+WebApp -> Gateway: POST /api/bot/play (YEN & strategy)
+Gateway -> UsersService: Forward request
+UsersService -> Gamey: HTTP POST /play
+Gamey -> Gamey: Process rules & generate Bot move
+Gamey --> UsersService: Return BotMoveResponse
+UsersService --> Gateway: 200 OK
+Gateway --> WebApp: Return BotMoveResponse
+WebApp --> User: Render bot's move on board
+
+alt Game ends (Win/Lose)
+    WebApp -> WebApp: Display Winner Modal
+end
+@enduml
+----
+
+=== 3. Real-time Multiplayer Match (PvP / "online" mode)
+
+This diagram details the WebSocket communication used for real-time multiplayer games. The system utilizes an explicit Room-based matchmaking approach. Notably, the Multiplayer service does not connect to the database directly; instead, it uses internal REST calls to the Users API to persist match results, maintaining strict boundaries between microservices.
+
+[plantuml]
+----
+@startuml
+autonumber
+actor "Host (Player 1)" as P1
+actor "Guest (Player 2)" as P2
+participant "React SPA\n(Multiplayer/Tablero)" as WebApp
+participant "API Gateway\n(Nginx)" as Gateway
+participant "Multiplayer Service\n(Socket.io)" as Multi
+participant "Users API\n(Node.js)" as UsersService
 database MongoDB as Db
 
-User -> WebApp: Select PvE mode & difficulty
-WebApp -> Gateway: POST /api/matches/new
-Gateway -> UsersService: Forward
-UsersService -> Db: Create match record
-UsersService --> WebApp: Match created (Initial YEN)
+P1 -> WebApp: Enters Lobby & selects size
+WebApp -> Gateway: Connect (WSS /socket.io/)
+Gateway -> Multi: Upgrade to WebSocket protocol
+WebApp -> Multi: Emit "createRoom" (size)
+Multi -> Multi: Generate 6-char Room Code
+Multi --> WebApp: Emit "roomCreated" (Code)
+WebApp --> P1: Display Room Code
 
-loop Game loop (Player Turn)
-    User -> WebApp: Makes move on Hex board
-    WebApp -> Gateway: POST /api/bot/play (User YEN)
-    Gateway -> UsersService: Forward
-    UsersService -> Gamey: HTTP POST /api/gamey/calculate
-    Gamey -> Gamey: Process rules & generate Bot move
-    Gamey --> UsersService: Return new state (Bot YEN)
-    UsersService -> Db: Update match state
-    UsersService --> Gateway: 200 OK (New YEN state)
-    Gateway --> WebApp: Display bot move
-    WebApp --> User: Render updated board
+P2 -> WebApp: Enters Lobby & inputs Code
+WebApp -> Gateway: Connect (WSS /socket.io/)
+Gateway -> Multi: Upgrade to WebSocket protocol
+WebApp -> Multi: Emit "joinRoom" (Code)
+Multi -> Multi: Validate Code & Match Players
+Multi --> WebApp: Emit "gameStarted" (to P1 & P2)
+WebApp --> P1: Render Board
+WebApp --> P2: Render Board
 
-    alt Game ends (Win/Lose/Draw)
-        UsersService -> Db: Mark match as finished & update stats
-    end
+group Gameplay Loop
+    P1 -> WebApp: Makes move
+    WebApp -> Multi: Emit "makeMove" (YEN layout)
+    Multi --> WebApp: Emit "moveReceived" (to P2)
+    WebApp --> P2: Render P1's move
+    
+    P2 -> WebApp: Makes move
+    WebApp -> Multi: Emit "makeMove" (YEN layout)
+    Multi --> WebApp: Emit "moveReceived" (to P1)
+    WebApp --> P1: Render P2's move
+end
+
+P1 -> WebApp: Leaves match or disconnects
+WebApp -> Multi: Emit "leaveMatchGracefully" (or socket disconnect)
+Multi --> WebApp: Emit "opponent_disconnected" (to P2)
+WebApp --> P2: Display Victory Modal
+
+group Match Result Persistence
+    Multi -> UsersService: HTTP POST /matches/ (result: "win", user: P2)
+    UsersService -> Db: Save match history & update stats
+    UsersService --> Multi: 200 OK
 end
 @enduml
 ----
 
-=== Bot against Application
+=== External Bot Evaluation (Tournament API)
 
-This diagram shows the life cycle of the game in which a bot participates against the machine.
+Apart from the standard frontend modes, the system provides a direct, high-performance interface for external tournament evaluations. This bypasses the Node.js layers and interacts directly with the Rust engine via port 3002.
 
 [plantuml]
 ----
 @startuml
-actor Bot
-participant API
-participant Gamey
-Bot -> API: Select strategy and game type
-API -> Gamey: Initialize game
-Gamey --> API: Initial board
-loop Game loop
-    Bot -> API: Send move (YEN)
-    API -> Gamey: Apply move
-    Gamey -> Gamey: Check game status
-    alt Game ended
-        Gamey --> API: Result
-        API --> Bot: Return result
-        break
-    else Game continues
-        API -> Gamey: Request machine move
-        Gamey --> API: Returns movement (YEN)
-        API --> Bot: Return move
-    end
+autonumber
+actor "External Bot Script" as Bot
+participant "GameY Engine\n(Rust Port 3002)" as Gamey
+
+Bot -> Gamey: POST /play (Bot's YEN move)
+Gamey -> Gamey: Validate move & apply logic
+
+alt Game ended
+    Gamey --> Bot: Match Result (Win/Loss/Draw)
+else Game continues
+    Gamey -> Gamey: Calculate machine counter-move
+    Gamey --> Bot: Return new board state (YEN)
 end
 @enduml
 ----
 
-=== User registration
+=== User Registration Workflow
 
-This diagram shows the different interactions that take place when a user registers, routing through the API Gateway and securing the password.
-
+This section displays sequence diagrams illustrating the interaction of the system’s components across the most architecturally relevant scenarios. The system supports three distinct gameplay modes (human, bot, and online), each with a unique architectural flow.
 [plantuml]
 ----
 @startuml
+autonumber
 actor User
 participant "React SPA" as WebApp
 participant "API Gateway\n(Nginx)" as Gateway
@@ -127,61 +180,20 @@ User -> WebApp: Submit registration form
 WebApp -> Gateway: POST /api/users/register
 Gateway -> UsersService: Forward request
 UsersService -> Db: Check if user exists
+
 alt User already exists
     Db --> UsersService: User found
-    UsersService --> Gateway: 409 Conflict (User exists)
+    UsersService --> Gateway: 409 Conflict
     Gateway --> WebApp: 409 Conflict
     WebApp --> User: Show error message
 else New user
     Db --> UsersService: User not found
-    UsersService -> UsersService: Hash password (e.g., Bcrypt)
+    UsersService -> UsersService: Hash password (Bcrypt)
     UsersService -> Db: Save new user document
     Db --> UsersService: Confirmation
     UsersService --> Gateway: 201 Created
     Gateway --> WebApp: 201 Created
     WebApp --> User: Show confirmation & redirect to Login
 end
-@enduml
-----
-
-=== Real-time Multiplayer Match (PvP)
-
-This diagram details the WebSocket communication used for real-time multiplayer games, handled by the dedicated Multiplayer service.
-
-[plantuml]
-----
-@startuml
-actor "Player 1" as P1
-actor "Player 2" as P2
-participant "API Gateway" as Gateway
-participant "Multiplayer Service\n(Socket.io)" as Multi
-database MongoDB as Db
-
-P1 -> Gateway: Connect (WSS)
-Gateway -> Multi: Upgrade to WebSocket
-P2 -> Gateway: Connect (WSS)
-Gateway -> Multi: Upgrade to WebSocket
-
-P1 -> Multi: Emit "join_queue"
-P2 -> Multi: Emit "join_queue"
-Multi -> Multi: Match P1 and P2 (Create Room)
-Multi -> Db: Create multiplayer match record
-Multi --> P1: Emit "match_started" (Initial YEN)
-Multi --> P2: Emit "match_started" (Initial YEN)
-
-opt Gameplay Loop
-    P1 -> Multi: Emit "player_move" (YEN)
-    Multi -> Multi: Validate move logic
-    Multi -> Db: Save state
-    Multi --> P2: Emit "opponent_move" (YEN)
-    
-    P2 -> Multi: Emit "player_move" (YEN)
-    Multi -> Db: Save state
-    Multi --> P1: Emit "opponent_move" (YEN)
-end
-
-P1 -> Multi: Emit "surrender"
-Multi -> Db: Update match stats (P2 Wins)
-Multi --> P2: Emit "opponent_surrendered"
 @enduml
 ----
