@@ -18,7 +18,6 @@ These include
 endif::arc42help[]
 
 The video game development company Micrati has decided to begin developing a web-based system where users can play Game Y, an existing strategy board game. The initial idea is to offer an entertaining and intuitive experience. It will also provide various strategies with different difficulty levels to capture users' interest, as well as an online multiplayer experience.
-=== Requirements Overview
 
 ifdef::arc42help[]
 [role="arc42help"]
