@@ -97,6 +97,7 @@ jobs:
       - name: Run E2E tests (start servers and run cucumber)
         env:
           MONGODB_URI: mongodb://localhost:27017/testdb
+          NODE_ENV: development
         run: |
           cd webapp
           npm run test:e2e
