@@ -7,6 +7,7 @@ services:
     image: ghcr.io/arquisoft/yovi_es1a-users:latest
     environment:
       - RUST_API_URL=http://gamey:4000
+      - NODE_ENV=production
     networks:
       - monitor-net
     env_file:
@@ -47,6 +48,7 @@ services:
       - monitor-net 
     environment:
       - PORT=5000
+      - USERS_API_URL=http://users:3000
       - NODE_TLS_REJECT_UNAUTHORIZED=0
       - PRODUCTION_URL=https://20.199.88.71
       - WEBAPP_URL=https://20.199.88.71

@@ -68,7 +68,8 @@ export const RoomService = {
   },
 
   recordMatchResult: (userId: string, opponentName: string, result: "win" | "surrender") => {
-    fetch('http://users:3000/matches/', { // NOSONAR
+    const USERS_SERVICE_URL = process.env.USERS_API_URL;
+    fetch(`${USERS_SERVICE_URL}/matches/`, {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',

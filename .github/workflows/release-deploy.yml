@@ -194,6 +194,8 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             cd ~/yovi_es1a
+            export NODE_ENV="production"
+            export ALLOWED_ORIGINS="${{ secrets.ALLOWED_ORIGINS }}"
             git fetch
             git pull origin master 
             docker compose pull
