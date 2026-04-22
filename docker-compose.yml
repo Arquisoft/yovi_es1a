@@ -8,6 +8,7 @@ services:
     environment:
       - RUST_API_URL=http://gamey:4000
       - NODE_ENV=production
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
     networks:
       - monitor-net
     env_file:
