@@ -67,7 +67,7 @@ endif::arc42help[]
 | Nginx is used as the single HTTPS entry point for all client traffic. It terminates TLS, routes requests to the appropriate internal service based on URL path (/api/*, /socket.io/*, /*), and eliminates CORS issues by proxying all communication through a single origin. Internal service ports are never exposed directly to the client.
 
 | **JWT Authentication**
-| JSON Web Tokens are used to authenticate users after login. The token is signed with a secret key, stored in the client's localStorage, and sent in the `Authorization: Bearer` header on every protected API request. This avoids server-side session state and enables stateless authentication across services.
+| JSON Web Tokens are used to authenticate users after login. The token is signed with a secret key, stored in the client's sessionStorage, and sent in the `Authorization: Bearer` header on every protected API request. This avoids server-side session state and enables stateless authentication across services. The token expires after 1 hour, and the session is automatically cleared when the browser is closed.
 
 | **Socket.io (WebSockets) for Multiplayer**
 | The real-time online multiplayer feature requires bidirectional, low-latency communication between players. Socket.io was chosen over HTTP polling to synchronize game moves instantly. It runs as an independent `multiplayer` service and is proxied through Nginx via WebSocket upgrade.

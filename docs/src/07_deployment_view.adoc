@@ -115,7 +115,11 @@ graf --> prom : Queries time-series
 
 Motivation::
 
-Yovi is executed locally on a single host machine using Docker and Docker Compose. All traffic from the browser is routed through Nginx, which acts as a reverse proxy and terminates HTTPS using TLS certificates generated with mkcert. Nginx forwards requests to the appropriate internal service based on the URL path. All containers communicate through a private Docker network ("monitor-net"), and persistent data is stored in MongoDB Atlas (cloud-hosted). This deployment also includes a real-time multiplayer service based on WebSockets, and a monitoring stack (Prometheus and Grafana).
+Yovi supports two deployment environments:
+
+* **Local development:** The system can be executed on any machine with Docker installed using `docker compose up`. TLS certificates are generated locally with mkcert for HTTPS on localhost.
+
+* **Production (Azure VM):** The system is deployed on a Microsoft Azure Virtual Machine (IP: 20.199.88.71). All traffic is routed through Nginx over HTTPS (port 443). Persistent data is stored in MongoDB Atlas (cloud-hosted). This environment also exposes port 3002 directly to the GameY engine for external tournament scripts.
 
 Quality and/or Performance Features::
 
@@ -126,14 +130,15 @@ Quality and/or Performance Features::
 * Maintainability: the separation of responsibilities across containers simplifies troubleshooting and updates.
 * Scalability: services are decoupled and can be scaled independently if needed.
 * High-Performance tournament interface: The gamey container has an explicit port mapping 3002:4000. This creates a direct channel from the Azure host to the Rust engine, optimizing latency for external evaluation scripts.
-* Hybrid security model: While end-user traffic is encrypted and protected by Nginx (port 443), the competition port (3002) acts as a high-performance technical interface. *
+* Hybrid security model: While end-user traffic is encrypted and protected by Nginx (port 443), the competition port (3002) acts as a high-performance technical interface.
+
 Mapping of Building Blocks to Infrastructure::
 [cols="1,2", options="header"]
 |===
 |Building Block |Infrastructure Element
 
 |Web Browser
-|Runs on the client side. The user accesses the application via HTTPS at https://localhost.
+|Runs on the client side. In local development, the user accesses the application via HTTPS at https://localhost. In production, the application is accessible via the Azure VM public IP at https://20.199.88.71.
 
 |Nginx (Reverse Proxy)
 |Container deployed on the Docker Host. Acts as the single HTTPS entry point, routes requests to internal services based on URL path, and terminates TLS.
@@ -172,17 +177,17 @@ Please copy the structure from level 1 for each selected element.
 ****
 endif::arc42help[]
 
-==== _Docker Host (Localhost)_
+==== _Docker Host_
 
 [plantuml]
 ----
 @startuml
-title Infrastructure Level 2 - Docker Host (Localhost)
+title Infrastructure Level 2 - Docker Host
 
 skinparam shadowing false
 skinparam componentStyle rectangle
 
-node "Docker Host (Localhost)" as host {
+node "Docker Host (Azure VM / Localhost)" as host {
   frame "monitor-net (Docker Network)" as net {
     [Nginx] as nginx
     [WebApp] as webapp
@@ -227,16 +232,16 @@ node "Client" as client {
   [Web Browser] as browser
 }
 
-node "Docker Host (Localhost)" as host {
+node "Docker Host (Azure VM / Localhost)" as host {
   [Nginx (Reverse Proxy)] as nginx
 }
 
-user --> browser : Navigates to https://localhost
+user --> browser : Navigates to https://20.199.88.71\n(or https://localhost in development)
 browser --> nginx : HTTPS request (port 443)
 @enduml
 ----
 
-This diagram isolates the client-side element. The user accesses the application through a web browser navigating to https://localhost. The browser communicates exclusively with Nginx over HTTPS. The TLS certificate, generated with mkcert, must be trusted by the operating system for the browser to show the secure padlock.
+This diagram isolates the client-side element. In local development, the user navigates to https://localhost. In production, the user accesses the application via the Azure VM public IP at https://20.199.88.71. In both cases, the browser communicates exclusively with Nginx over HTTPS, which acts as the single secure entry point to the system.
 
 ==== _Nginx Routing_
 
@@ -286,7 +291,6 @@ node "Docker Host (Azure VM)" as host {
   }
 }
 
-' Prometheus hace scraping de ambos servicios de backend
 prom --> users : Collects metrics (Port 3000)
 prom --> gamey : Collects metrics (Port 4000)
 graf --> prom : Queries metrics (Port 9090)
@@ -311,7 +315,6 @@ node "Azure VM (Host)" as host {
     [GameY Engine (Rust)] as gamey
 }
 
-' El script accede directamente al puerto mapeado 3002
 script -[#red,bold]-> gamey : HTTP Request (Port 3002)
 
 note right of gamey
@@ -321,3 +324,5 @@ note right of gamey
 end note
 @enduml
 ----
+
+This diagram isolates the direct competition interface. External tournament scripts bypass Nginx entirely and connect directly to the Rust game engine via port 3002, which is mapped to the internal container port 4000. This design provides minimum latency for competitive evaluation, avoiding the overhead of the standard API gateway. Only the `/play` endpoint is accessible through this interface.

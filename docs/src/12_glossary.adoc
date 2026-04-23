@@ -121,10 +121,10 @@ endif::arc42help[]
 |Development tool used to generate locally-trusted TLS certificates for HTTPS on localhost.
 
 |JWT (JSON Web Token)
-|Compact, self-contained token used to securely transmit authentication information. Issued on login, stored in localStorage, and sent in the Authorization header on protected API requests.
+|Compact, self-contained token used to securely transmit authentication information. Issued on login, stored in sessionStorage, and sent in the Authorization header on protected API requests. The token expires after 1 hour.
 
 |authFetch
-|Frontend utility function that automatically attaches the JWT Authorization header to all protected API requests, centralizing authentication logic.
+|Frontend utility function that automatically attaches the JWT Authorization header to all protected API requests. Also handles session expiration by clearing sessionStorage and redirecting to the login page if a 401 or 403 response is received.
 
 |Clan
 |Group feature allowing users to create or join named communities. Clans have associated chat functionality and appear in the global clan ranking.
