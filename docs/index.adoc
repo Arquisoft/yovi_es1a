@@ -97,7 +97,11 @@ include::src/10_quality_requirements.adoc[]
 include::src/11_technical_risks.adoc[]
 
 <<<<
-// 12. Glossary
+// 12. Testing Methods
+include::src/13_testing_methods.adoc[]
+<<<<
+
+// 13. Glossary
 include::src/12_glossary.adoc[]
 
 
