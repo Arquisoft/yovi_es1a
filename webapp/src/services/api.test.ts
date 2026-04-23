@@ -34,7 +34,7 @@ describe('API Service - authFetch', () => {
     expect(res.status).toBe(200);
   });
 
-  it('debe realizar la petición SIN el token si no existe en localStorage', async () => {
+  it('debe realizar la petición SIN el token si no existe en sessionStorage', async () => {
     vi.mocked(fetch).mockResolvedValueOnce({ status: 200 } as Response);
 
     await authFetch('/ruta-publica');
@@ -63,7 +63,7 @@ describe('API Service - authFetch', () => {
     });
   });
 
-  it('debe limpiar el localStorage y redirigir a /login si recibe un 401', async () => {
+  it('debe limpiar el sessionStorage y redirigir a /login si recibe un 401', async () => {
     sessionStorage.setItem('token', 'token-caducado');
     sessionStorage.setItem('user', 'juanito');
     
@@ -76,7 +76,7 @@ describe('API Service - authFetch', () => {
     expect(window.location.href).toBe('/login');
   });
 
-  it('debe limpiar el localStorage y redirigir a /login si recibe un 403', async () => {
+  it('debe limpiar el sesionstorage y redirigir a /login si recibe un 403', async () => {
     sessionStorage.setItem('token', 'token-prohibido');
     sessionStorage.setItem('user', 'juanito');
     

@@ -5,6 +5,7 @@ services:
     build: ./users
     container_name: users
     image: ghcr.io/arquisoft/yovi_es1a-users:latest
+    restart: unless-stopped
     environment:
       - RUST_API_URL=http://gamey:4000
       - NODE_ENV=${NODE_ENV:-development}
@@ -25,6 +26,7 @@ services:
         - VITE_MULTIPLAYER_URL=/
     container_name: webapp
     image: ghcr.io/arquisoft/yovi_es1a-webapp:latest
+    restart: unless-stopped
     depends_on:
       - users
     networks:
@@ -34,6 +36,7 @@ services:
     build: ./gamey
     container_name: gamey
     image: ghcr.io/arquisoft/yovi_es1a-gamey:latest
+    restart: unless-stopped
     environment:
       - PORT=4000
     ports:
@@ -66,6 +69,7 @@ services:
 
   nginx:
     image: nginx:alpine
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
