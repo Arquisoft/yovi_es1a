@@ -98,10 +98,9 @@ include::src/11_technical_risks.adoc[]
 
 <<<<
 // 12. Testing Methods
-include::src/13_testing_methods.adoc[]
-<<<<
+include::src/12_testing_methods.adoc[]
 
 // 13. Glossary
-include::src/12_glossary.adoc[]
-
+include::src/13_glossary.adoc[]
+<<<<
 
