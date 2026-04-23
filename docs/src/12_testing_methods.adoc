@@ -1,0 +1,117 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-test-report]]
+== Test Report
+
+ifdef::arc42help[]
+[role="arc42help"]
+****
+.Content
+This section describes the testing strategy, execution, and results validating the software architecture and its quality goals.
+****
+endif::arc42help[]
+
+To guarantee the reliability, performance, and security of the Yovi system, we implemented a comprehensive testing strategy integrated into our development lifecycle.
+
+=== Unit and Integration Testing
+
+Unit tests were implemented across all discrete architectural boundaries to validate individual components, API contracts, and business logic in strict isolation. We utilized **Vitest** for the JavaScript/TypeScript ecosystem (Frontend and Node.js microservices) and the native `cargo test` framework for the Rust engine.
+
+==== Frontend Application (React/Vite)
+The frontend testing strategy focuses on validating user workflows, state management, and network boundaries without requiring a live backend.
+
+* **API Communication & Interceptors:** Tests ensure that custom HTTP clients automatically inject security mechanisms (like JWT tokens) and handle global responses correctly.
+* **Session Management:** We simulate different server responses (e.g., unauthorized access) to validate that the application correctly purges local session data and redirects users, ensuring security on the client side.
+
+==== Core Backend API (Node.js)
+The REST API logic was tested by isolating the business layer from the persistence layer.
+
+* **Database Mocking:** We utilized framework-level mocks (e.g., Mongoose mocks) to simulate database interactions. This ensures that tests evaluating complex domain logic run quickly and deterministically without needing a real MongoDB instance.
+* **Business Constraints:** Tests validate that the services enforce structural integrity, correctly rejecting invalid data or unauthorized actions before they reach the database.
+
+==== Real-Time Multiplayer Service (Node.js/Socket.io)
+Testing the WebSocket microservice focuses heavily on in-memory state management and asynchronous events.
+
+* **Lifecycle & State Management:** Tests validate the integrity of temporary data structures used for matchmaking, ensuring that rooms are created, joined, and cleaned up correctly during connection and disconnection events.
+* **Inter-Service Communication:** We extensively mock external HTTP calls to verify that the real-time service correctly communicates with other internal APIs without actual network overhead.
+
+==== Game Logic Engine (Rust)
+The core algorithmic engine relies on native Rust testing to ensure memory safety, correct game mechanics, and strict data contract adherence.
+
+* **Data Contracts & Serialization:** Tests guarantee that the internal Rust structures serialize and deserialize perfectly into the expected JSON formats, maintaining a reliable contract for the Node.js consumers.
+* **Algorithmic Correctness:** The pure functions responsible for board evaluation, move validation, and win-condition detection are tested against numerous predefined board states to ensure maximum reliability of the core game rules.
+
+=== End-to-End (E2E) Testing
+
+End-to-end tests were implemented using **Playwright** and **Cucumber.js** with a BDD (Behaviour-Driven Development) approach. Tests are written in Gherkin `.feature` files and executed against the real running application at `http://localhost:5173`. The test suite covers the three most critical user flows of the system.
+
+==== User Login
+
+Tests validate the complete authentication flow from the browser's perspective.
+
+[cols="1,2,2", options="header"]
+|===
+|Scenario |Steps |Expected Result
+
+|Successful login
+|User submits valid credentials (`tester_pro` / `Pass123!`)
+|Redirected to `/configureGame`
+
+|Failed login — invalid credentials
+|User submits wrong username and password
+|Error message displayed on screen
+
+|Failed login — empty fields
+|User submits the form without filling any data
+|Error message for empty credentials displayed
+|===
+
+==== User Registration
+
+Tests validate the complete registration flow starting from the home screen.
+
+[cols="1,2,2", options="header"]
+|===
+|Scenario |Steps |Expected Result
+
+|Successful registration
+|User enters a unique username, email and password and clicks "Lets go!"
+|Welcome message "User successfully created" is shown
+
+|Duplicate user
+|User tries to register with an already existing username and email (`alice@test.com`)
+|Error message indicating the user already exists
+
+|Empty fields
+|User leaves all fields empty and clicks "Lets go!"
+|Stays on register page, no redirect
+
+|Password too short
+|User enters a password with only 2 characters
+|Stays on register page, no redirect
+|===
+
+==== Game Settings Configuration
+
+Tests validate the match configuration screen and its dynamic UI behavior.
+
+[cols="1,2,2", options="header"]
+|===
+|Scenario |Steps |Expected Result
+
+|Configure a game against an Expert Bot
+|Select mode "Contra la Máquina", set board size to 7, select difficulty "Experto", select opponent "Monte Carlo", select starting player, click play
+|Redirected to the game board
+
+|Configure a Local Multiplayer game
+|Select mode "Multijugador Local", set board size to 5, select starting player "B", click play
+|Bot difficulty options disappear and user is redirected to the game board
+|===
+
+=== Load Testing (Gatling)
+
+To validate system performance under realistic concurrent load, we implemented load tests using **Gatling**. The simulations target the most critical API endpoints and are executed against the production Azure environment.
+
+* **Target endpoints:** Authentication (`/api/login`), match result saving (`/api/matches/`), and bot move calculation (`/api/bot/play`).
+* **Simulation:** Ramp-up scenarios simulate progressive user load to identify bottlenecks before they affect real users.
+* **Quality goal:** All critical endpoints must respond within acceptable time thresholds under concurrent load, validating the performance requirements defined in Section 1.
