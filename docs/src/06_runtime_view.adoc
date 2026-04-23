@@ -7,7 +7,7 @@ ifdef::arc42help[]
 [role="arc42help"]
 ****
 .Contents
-The runtime view describes concrete behavior and interactions of the system’s building blocks in form of scenarios.
+The runtime view describes concrete behavior and interactions of the system's building blocks in form of scenarios.
 ****
 endif::arc42help[]
 
@@ -42,13 +42,14 @@ WebApp -> Gateway: POST /api/bot/check-winner (layout)
 Gateway -> UsersService: Forward request
 UsersService --> WebApp: Return status ('win')
 
-WebApp --> P1: Render Modal "Player 2 Wins!"
+WebApp -> WebApp: Save match result (statsService)
+WebApp --> P1: Render Winner Modal ("Player 2 Wins!")
 @enduml
 ----
 
 === 2. Game Lifecycle Against the Computer (PvE / "bot" mode)
 
-This diagram illustrates the single-player workflow. The frontend maintains the game state, validates win conditions, and delegates the heavy AI computation to the isolated Rust Game Engine through the Nginx Gateway.
+This diagram illustrates the single-player workflow. The frontend maintains the game state, validates win conditions after each move (both human and bot), and delegates the heavy AI computation to the isolated Rust Game Engine through the Nginx Gateway.
 
 [plantuml]
 ----
@@ -61,22 +62,33 @@ participant "Users API\n(Node.js)" as UsersService
 participant "GameY Engine\n(Rust)" as Gamey
 
 User -> WebApp: Makes move on Hex board
-WebApp -> Gateway: POST /api/bot/check-winner
+WebApp -> WebApp: Update local state & layout
+
+WebApp -> Gateway: POST /api/bot/check-winner (YEN layout)
 Gateway -> UsersService: Forward request
-UsersService -> Gamey: Validate win condition (e.g., /check-winner)
-Gamey --> UsersService: Return status
+UsersService -> Gamey: Validate win condition (/check-winner)
+Gamey --> UsersService: Return status ('ongoing')
 UsersService --> WebApp: Status ('ongoing')
 
-WebApp -> Gateway: POST /api/bot/play (YEN & strategy)
+WebApp -> Gateway: POST /api/bot/play (YEN layout & strategy)
 Gateway -> UsersService: Forward request
 UsersService -> Gamey: HTTP POST /play
 Gamey -> Gamey: Process rules & generate Bot move
-Gamey --> UsersService: Return BotMoveResponse
+Gamey --> UsersService: Return BotMoveResponse (coords)
 UsersService --> Gateway: 200 OK
 Gateway --> WebApp: Return BotMoveResponse
+WebApp -> WebApp: Apply bot move to layout
+
+WebApp -> Gateway: POST /api/bot/check-winner (updated layout)
+Gateway -> UsersService: Forward request
+UsersService -> Gamey: Validate win condition (/check-winner)
+Gamey --> UsersService: Return status
+UsersService --> WebApp: Status ('ongoing' or 'win')
+
 WebApp --> User: Render bot's move on board
 
-alt Game ends (Win/Lose)
+alt Game ends (Win or Lose)
+    WebApp -> WebApp: Save match result (statsService)
     WebApp -> WebApp: Display Winner Modal
 end
 @enduml
@@ -84,7 +96,7 @@ end
 
 === 3. Real-time Multiplayer Match (PvP / "online" mode)
 
-This diagram details the WebSocket communication used for real-time multiplayer games. The system utilizes an explicit Room-based matchmaking approach. Notably, the Multiplayer service does not connect to the database directly; instead, it uses internal REST calls to the Users API to persist match results, maintaining strict boundaries between microservices.
+This diagram details the WebSocket communication used for real-time multiplayer games. The system utilizes an explicit Room-based matchmaking approach. Match result persistence is handled directly by the frontend via the `statsService`, which calls the Users API after the game ends.
 
 [plantuml]
 ----
@@ -111,39 +123,49 @@ WebApp -> Gateway: Connect (WSS /socket.io/)
 Gateway -> Multi: Upgrade to WebSocket protocol
 WebApp -> Multi: Emit "joinRoom" (Code)
 Multi -> Multi: Validate Code & Match Players
-Multi --> WebApp: Emit "gameStarted" (to P1 & P2)
-WebApp --> P1: Render Board
-WebApp --> P2: Render Board
+Multi --> WebApp: Emit "gameStarted" (color, size, opponentName)
+WebApp --> P1: Render Board (color assigned)
+WebApp --> P2: Render Board (color assigned)
 
 group Gameplay Loop
     P1 -> WebApp: Makes move
+    WebApp -> Gateway: POST /api/bot/check-winner (YEN layout)
+    Gateway -> UsersService: Forward request
+    UsersService --> WebApp: Return status ('ongoing')
     WebApp -> Multi: Emit "makeMove" (YEN layout)
     Multi --> WebApp: Emit "moveReceived" (to P2)
     WebApp --> P2: Render P1's move
-    
+
     P2 -> WebApp: Makes move
+    WebApp -> Gateway: POST /api/bot/check-winner (YEN layout)
+    Gateway -> UsersService: Forward request
+    UsersService --> WebApp: Return status ('ongoing')
     WebApp -> Multi: Emit "makeMove" (YEN layout)
     Multi --> WebApp: Emit "moveReceived" (to P1)
     WebApp --> P1: Render P2's move
 end
 
-P1 -> WebApp: Leaves match or disconnects
-WebApp -> Multi: Emit "leaveMatchGracefully" (or socket disconnect)
-Multi --> WebApp: Emit "opponent_disconnected" (to P2)
-WebApp --> P2: Display Victory Modal
+alt Player wins (check-winner returns 'win')
+    WebApp -> Multi: Emit "makeMove" (layout + "|GAMEOVER")
+    Multi --> WebApp: Emit "moveReceived" (|GAMEOVER to opponent)
+    WebApp -> Multi: Emit "gameOver" (roomCode)
+    WebApp -> WebApp: Save match result (statsService)
+    WebApp --> P1: Display Winner Modal
+    WebApp --> P2: Display Loser Modal
+end
 
-group Match Result Persistence
-    Multi -> UsersService: HTTP POST /matches/ (result: "win", user: P2)
-    UsersService -> Db: Save match history & update stats
-    UsersService --> Multi: 200 OK
+alt Player disconnects
+    P1 -> Multi: Socket disconnect / Emit "leaveMatchGracefully"
+    Multi --> WebApp: Emit "opponent_disconnected" (to P2)
+    WebApp --> P2: Display OpponentDisconnected Modal
+    WebApp -> WebApp: Save match result (statsService)
 end
 @enduml
 ----
 
 === External Bot Evaluation (Tournament API)
 
-
-Apart from the standard frontend modes, the system provides a direct, high-performance interface for external tournament evaluations. This bypasses the Node.js layers and interacts directly with the Rust engine via port 3002.
+Apart from the standard frontend modes, the system provides a direct, high-performance interface for external tournament evaluations. This bypasses the Nginx gateway and Node.js layers, interacting directly with the Rust engine via port 3002.
 
 [plantuml]
 ----
@@ -166,7 +188,8 @@ end
 
 === User Registration Workflow
 
-This section displays sequence diagrams illustrating the interaction of the system’s components across the most architecturally relevant scenarios. The system supports three distinct gameplay modes (human, bot, and online), each with a unique architectural flow.
+This diagram illustrates the registration flow. The Users API validates whether the user already exists before storing the new account, and hashes the password using Bcrypt before persisting it to MongoDB Atlas.
+
 [plantuml]
 ----
 @startuml
@@ -175,10 +198,10 @@ actor User
 participant "React SPA" as WebApp
 participant "API Gateway\n(Nginx)" as Gateway
 participant "Users API\n(Node.js)" as UsersService
-database MongoDB as Db
+database "MongoDB Atlas" as Db
 
 User -> WebApp: Submit registration form
-WebApp -> Gateway: POST /api/users/register
+WebApp -> Gateway: POST /api/createuser
 Gateway -> UsersService: Forward request
 UsersService -> Db: Check if user exists
 
