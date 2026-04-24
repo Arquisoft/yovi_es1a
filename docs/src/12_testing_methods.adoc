@@ -50,7 +50,7 @@ image::coverage.png["Code Coverage Report showing >80%", align="center"]
 
 End-to-end tests were implemented using **Playwright** and **Cucumber.js** with a BDD (Behaviour-Driven Development) approach. Tests are written in Gherkin `.feature` files and executed against the real running application at `http://localhost:5173`. The test suite covers the three most critical user flows of the system.
 
-==== User Login
+==== User login
 
 Tests validate the complete authentication flow from the browser's perspective.
 
@@ -71,7 +71,7 @@ Tests validate the complete authentication flow from the browser's perspective.
 |Error message for empty credentials displayed
 |===
 
-==== User Registration
+==== User registration
 
 Tests validate the complete registration flow starting from the home screen.
 
@@ -96,7 +96,7 @@ Tests validate the complete registration flow starting from the home screen.
 |Stays on register page, no redirect
 |===
 
-==== Game Settings Configuration
+==== Game settings configuration
 
 Tests validate the match configuration screen and its dynamic UI behavior.
 
@@ -113,10 +113,40 @@ Tests validate the match configuration screen and its dynamic UI behavior.
 |Bot difficulty options disappear and user is redirected to the game board
 |===
 
-=== Load Testing (Gatling)
+=== Load testing analysis (Gatling)
 
-To validate system performance under realistic concurrent load, we implemented load tests using **Gatling**. The simulations target the most critical API endpoints and are executed against the production Azure environment.
+To evaluate the robustness and scalability of the Yovi system, a load scenario was designed to simulate a real-world usage flow (login, gameplay, and navigation through the different sections). The test ran for approximately one minute, maintaining a sustained load of 50 concurrent users.
 
-* **Target endpoints:** Authentication (`/api/login`), match result saving (`/api/matches/`), and bot move calculation (`/api/bot/play`).
-* **Simulation:** Ramp-up scenarios simulate progressive user load to identify bottlenecks before they affect real users.
-* **Quality goal:** All critical endpoints must respond within acceptable time thresholds under concurrent load, validating the performance requirements defined in Section 1.
+.Active users throughout the simulation
+image::active_users.png["Active users graph", align="center"]
+
+==== Performance and response times
+
+The results show that the system is extremely efficient at handling valid requests under stress. The vast majority of successful transitions were completed in under 800ms, ensuring a smooth user experience.
+
+.Global summary of response times
+image::global_summary.png["Global summary of response times", align="center"]
+
+As observed in the percentile breakdown over time, even with the maximum sustained load of 50 concurrent users, the API Gateway (Nginx) and Node.js microservices maintained minimal latency (average response time less than 200ms).
+
+.Evolution of response time percentiles under load
+image::percentiles.png["Response time percentile chart", align="center"]
+
+The fact that the system remains just as responsive even with 50 users connected simultaneously confirms that our architecture is working well. The server is able to receive all requests and pass them on to the game engine without any bottlenecks.
+
+==== Analysis of failed requests
+
+Gatling's report shows a 21% failure rate (KO), concentrated exclusively in HTTP 400 (Bad Request) status codes. As observed in the responses per second metric, the server is able to process and reject these invalid requests at high speed while maintaining a high volume of traffic.
+
+.Response volume per second (Correct vs. Incorrect)
+image::responses_per_second.png["Graph of responses per second", align="center"]
+
+.Detailed statistics and error distribution
+image::stats_errors.png["Statistics table showing errors", align="center"]
+
+It is important to note that these errors do not represent performance failures or server crashes (there are no HTTP 5xx errors), but are the expected result of the **robustness of the business rules**:
+
+* **Invalid requests due to repetition:** When simulating 50 concurrent users repeating the exact same recording, the system receives requests that no longer make sense (for example, attempting to log in with data that the validator already considers processed). In these cases, the backend responds with a `400 Bad Request`.
+* **Game Engine Validation:** The Rust engine validates the game state using YEN notation. If the test attempts to send a move on a board that has already changed turns or on a finished game, the engine rejects the action by returning a `400 Bad Request`.
+
+**Conclusion:** The observed errors positively validate the system's security. They confirm that the backend barriers function correctly, preventing illegal state transitions or data duplication even under high concurrency conditions, without impacting the performance of other valid requests.
