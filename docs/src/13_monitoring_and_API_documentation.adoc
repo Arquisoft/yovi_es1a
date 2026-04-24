@@ -1,0 +1,49 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-monitoring-documentation]]
+== Observability and documentation of APIs
+
+This section documents the system's observability layer, necessary to monitor its performance in Azure, and the technical specification of its interfaces, key to ensuring integration with third-party services and bot engines.
+
+=== System monitoring and health (Prometheus and Grafana)
+
+The **Yovi** infrastructure integrates an observability stack based on **Prometheus** for metric collection and **Grafana** for real-time data visualization. This system allows monitoring the health of microservices deployed on Azure without impacting their performance.
+
+* **Prometheus (Collection):** The metrics engine periodically queries the `/metrics` endpoints of services such as `gamey-service` and `users-service`. This allows you to validate the status of the targets and ensure that the system is operational.
+** **Access:** http://20.199.88.71:9090/targets
+* **Grafana (Visualization):** Centralizes information in interactive dashboards that allow you to analyze system behavior under load.
+** **Access:** http://20.199.88.71:9091
+** **Credentials:** Username: `admin` / Password: `admin`
+** **Navigation:** Once at the URL, select the **Dashboards > Example Service Dashboard** section to view real-time application monitoring.
+
+.Status of monitored microservices in Prometheus
+image::prometheus_targets.png["State of microservices in Prometheus", align="center"]
+
+**Key observability metrics:**
+
+* **Rate:** Volume of requests per minute to identify traffic patterns.
+* **Errors:** Tracking of failed responses to ensure a near zero error rate (the panel is shown empty as no errors were recorded during the test).
+* **Duration:** Latency analysis (including p90 percentiles) to ensure motor responses in milliseconds.
+
+.Grafana monitoring panel showing traffic, errors and latency (p90)
+image::grafana_dashboard.png["Grafana Dashboard", align="center"]
+
+=== Interface specification (OpenAPI and Swagger)
+
+The architecture exposes its communication contracts using the **OpenAPI 3.0** standard. Interactive **Swagger UI** interfaces have been enabled, allowing external developers and testers to test the endpoints directly from the browser, logically separating business operations from tournament operations.
+
+==== Core API 
+It documents the platform's general management operations: user registration and login, game management, clans, and standard interaction with the AI ​​engine.
+
+* **Access:** http://20.199.88.71/api-docs/endpoints/
+
+.Interactive documentation of business services (Users, games, clans and AI engine)
+image::swagger_main_api.png["Swagger core API", align="center"]
+
+==== Tournament API
+Specifically designed for the competitive phase, this specification details the unified contract for running bots via the `/play` endpoint. To optimize latency, this direct access to the engine bypasses the usual JWT validations.
+
+* **Access:** http://20.199.88.71/api-docs/api/#/
+
+.Unified /play contract specification for bot competition
+image::swagger_tournament_api.png["Swagger tournament API", align="center"]
