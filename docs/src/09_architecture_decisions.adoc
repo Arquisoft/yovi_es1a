@@ -35,50 +35,97 @@ There you will find links and examples about ADR.
 ****
 endif::arc42help[]
 
-[options="header",cols="1,2"]
-|===
-|Decision |Reason
+=== DA-01. NoSQL Database (MongoDB)
+**Context:** We need persistence for the user microservice in a containerized Node.js environment.
 
-| **Microservices Architecture**
-| We separated the application into decoupled services (`users`, `gamey`, `webapp`, `multiplayer`). This allows us to use the best technology for each specific problem (Rust for performance, Node.js for I/O) and enables independent development and deployment cycles.
+**Justification:**
 
-| **React**
-| We use React for the `webapp` frontend because it allows us to build fast, scalable, and easy-to-maintain interfaces using a component-based architecture.
+* **Native JSON Integration:** When using Node.js and React, the entire data flow is JSON. MongoDB stores BSON, eliminating the need for complex mappings and accelerating development.
+* **Schema Flexibility:** Being schema-less allows for quickly adding new fields to user profiles without requiring rigid SQL migrations.
+* **Microservices and Docker:** It's a lightweight database, easy to deploy in independent containers, and scales seamlessly in the cloud (Azure).
 
-| **TypeScript**
-| Applied in the `webapp` to provide static typing. This reduces runtime errors, improves code readability, and enhances developer tooling compared to standard JavaScript.
+=== DA-02. Mongoose
+**Context:** MongoDB offers complete flexibility by not enforcing schemas, but this carries the risk of data inconsistency (e.g., users without email addresses or with disparate formats) and delegates excessive validation to the driver. Therefore, we decided to use Mongoose as an abstraction layer (ODM) over the native MongoDB driver.
 
-| **Vite**
-| Selected as the frontend build tool instead of Create React App (CRA) due to its superior performance in development server startup and Hot Module Replacement (HMR).
+**Justification:**
 
-| **Node.js & Express**
-| The `users` service handles I/O-heavy operations (REST API, database access). Node.js is ideal for this due to its non-blocking event-driven model, and Express provides a minimal and flexible framework.
+* **Data Integrity (Schemas):** Although the database is NoSQL, the application requires a predictable structure. Mongoose allows us to define strong types (String, Date) and rules (required: true, unique: true) in a single place (the Model).
+* **Centralized Validation:** We avoid duplicating validation logic at each endpoint. If the data does not conform to the schema, Mongoose prevents it from reaching the database (Fail Fast pattern).
+* * **Abstraction and Productivity:** It provides us with a simplified API for CRUD operations (.save(), .findOne()) and connection management, accelerating development compared to the use of "raw" native queries.
 
-| **Rust**
-| The `gamey` engine requires high performance for game logic and bot calculations. Rust provides memory safety without a garbage collector and meets the project's core requirements.
+=== DA-03. JSON Web Tokens (JWT) for Authentication
+**Context:** Our application consists of a decoupled frontend (React) and a REST API in the backend that requires protecting certain routes (e.g., saving statistics or querying history). We needed a security mechanism that maintained the "Stateless" philosophy of REST, avoiding overloading server memory with traditional cookie-based sessions. Therefore, we decided to implement JWT, delegating validation to a specific auth-middleware.
 
-| **MongoDB & Mongoose**
-| MongoDB Atlas is the cloud-hosted persistence layer. We use **Mongoose** (in `users/src/database.js`) to manage connections and schemas. The connection string is decoupled using the `MONGODB_URI` environment variable in `.env`, following the 12-Factor App methodology for config.
+**Justification:**
 
-| **Docker & Docker Compose**
-| Used to orchestrate the entire system. It defines independent containers for `webapp`, `users`, `gamey`, `multiplayer`, and monitoring tools, linking them via an internal network. This ensures the environment is reproducible and eliminates configuration issues between development and production.
+* **Scalability (Stateless):** The backend does not store session state. The token itself contains the information necessary for the middleware to verify the user's identity without relying on centralized storage.
+* **Optimized Performance:** By validating the token's cryptographic signature in memory directly in the middleware, we avoid redundant queries to MongoDB in each protected request just to identify the user.
+* **Flexibility and Standardization:** JWT is the de facto standard for Single Page Applications (SPAs). Furthermore, it facilitates architectural evolution: if in the future we separate the API into multiple microservices, they will all be able to validate the same token independently without needing to share a session database.
 
-| **Nginx as Reverse Proxy**
-| Nginx is used as the single HTTPS entry point for all client traffic. It terminates TLS, routes requests to the appropriate internal service based on URL path (/api/*, /socket.io/*, /*), and eliminates CORS issues by proxying all communication through a single origin. Internal service ports are never exposed directly to the client.
+=== DA-04. Bidirectional Communication with WebSockets (Socket.io)
+**Context:** The core of the application is a competitive board game (YEN) that requires a fluid and responsive user experience. Traditional HTTP-based interactions would generate unacceptable latency for a 1v1 game, as well as overload the server with unnecessary requests to check if the opponent has moved. We needed a constant, low-latency communication channel between the clients and a dedicated microservice.
 
-| **JWT Authentication**
-| JSON Web Tokens are used to authenticate users after login. The token is signed with a secret key, stored in the client's localStorage, and sent in the `Authorization: Bearer` header on every protected API request. This avoids server-side session state and enables stateless authentication across services.
+**Justification:**
 
-| **Socket.io (WebSockets) for Multiplayer**
-| The real-time online multiplayer feature requires bidirectional, low-latency communication between players. Socket.io was chosen over HTTP polling to synchronize game moves instantly. It runs as an independent `multiplayer` service and is proxied through Nginx via WebSocket upgrade.
+* **Low Latency and Real-Time:** Unlike REST requests, WebSockets maintain a single open TCP connection. This allows the server to "push" player A's move to player B instantaneously (in milliseconds), which is critical for gameplay and visual feedback.
+* **Abstraction and Reliability (Socket.io):** We opted for Socket.io over the native WebSockets standard because it automatically handles reconnection, fallback to HTTP Long-Polling (on restrictive networks), and, most importantly, natively offers the concept of "Rooms." This drastically simplifies player matchmaking logic using room codes.
+* **Decoupled Microservice:** The multiplayer logic has been implemented as a separate microservice (multiplayer). This allows the socket infrastructure (which consumes a lot of memory by maintaining open connections) to scale independently of the user API or the logic engine in Rust, following the principles of a clean microservices architecture.
+* **Network Traffic Efficiency:** Once the initial handshake is established, the headers in the data packets are minimal compared to HTTP. This reduces bandwidth consumption and processing load on both the client (React) and the server (Node.js).
 
-| **Modular CSS Architecture**
-| Frontend styles are split into a shared `global.css` file (navbar, video background, pagination, typography) and per-page CSS files. This prevents style conflicts between components developed by different team members, reduces specificity issues, and improves maintainability.
+=== DA-05. Reverse Proxy and API Gateway with Nginx
+**Context:** The project architecture consists of multiple independent containers (static frontend, Node.js API, Rust engine, and WebSocket server). Exposing the ports of each service individually to the outside world creates security problems, same-origin policy (CORS) conflicts in the browser, and hinders deployment in cloud environments.
 
-| **GitHub Actions**
-| We use it for CI/CD pipelines to automatically build, test, and check the quality of the code on every push, ensuring continuous integration and early error detection.
+**Justification:**
 
-| **SonarCloud & CodeScene**
-| Integrated to monitor code quality, test coverage, and code health. This helps us manage technical debt and maintain architectural integrity over time.
+* **Single Entry Point:** Nginx acts as a reverse proxy that unifies all microservices under a single domain and IP address. The frontend and clients only interact with port 443.
+* **Path-Based Routing:** It allows routing traffic to the corresponding container based on the URL (e.g., /api/gamey/ to Rust, /socket.io/ to the multiplayer service), abstracting the internal Docker network topology.
+* **Security and isolation:** The microservices operate exclusively within a Docker virtual private network (monitor-net). No backend port is directly exposed to the internet, drastically reducing the attack surface.
 
-|===
+=== DA-06. SSL/TLS Termination and Environment Parity (Local HTTPS)
+**Context:** Modern web browser features, as well as secure WebSocket connections (wss://), require applications to be served over HTTPS. Developing locally using plain HTTP results in "Mixed Content" errors and behavioral discrepancies between the development and production environments (Azure).
+
+**Justification:**
+
+* **Dev/Prod Parity:** By generating self-signed certificates as a local Certificate Authority (CA) using mkcert, we replicate the Azure production environment on developers' machines. This ensures that if network security and routing work locally, they will work in the cloud.
+* **Load Delegation:** Nginx is solely responsible for encrypting and decrypting SSL traffic (SSL Termination). This frees microservices (Node, Rust) from the computational burden of managing certificates, allowing them to communicate efficiently in plain text within Docker's secure private network.
+
+=== DA-07. Choosing Frameworks for Microservices
+**Context:** We needed an architecture that would allow us to separate the heavyweight business logic from user management and real-time communication.
+
+**Justification:**
+
+* **Optimization by Load Type:** Using Node.js with Express for the user service leverages its agility in I/O operations and handling REST APIs. On the other hand, using Rust with Axum for the game engine (gamey) guarantees memory safety and very high performance in heavy AI calculations.
+* **Scalability and Interoperability:** This separation allows independent scaling of each service according to its specific needs (e.g., if there are many registered users but few active games). As a trade-off, this requires us to define clear and strict data contracts (such as YEN Notation) to ensure perfect interoperability between such different languages.
+
+=== DA-08. Competition API Design (Stateless API)
+**Context:** The bot tournament requires a low-latency interface. Furthermore, the professor emphasized the importance of avoiding API calls that inconsistently modify multiple states on the backend.
+
+**Justification:**
+
+* **Dedicated and Stateless Endpoint:** By implementing a stateless endpoint using the GET /play method exposed directly on port 3002, the API simply receives the board state in YEN format and returns an immediate response. By bypassing the Nginx proxy and avoiding any access to MongoDB, performance is maximized and response time for the tournament evaluator script is minimized.
+* **Simplicity and Statelessness:** This decision strictly adheres to the single responsibility principle, as the endpoint acts only as a calculator and does not manage the game session. By not persisting data, the risk of "corrupting" the database with tournament simulations is completely eliminated, complying with the directive of not having calls that unnecessarily modify the information.
+
+=== DA-09. Continuous Deployment (CD) Automation
+**Context:** It is required to ensure that the production environment on the Azure virtual machine is always reliably and quickly synchronized with the main branch without relying on manual interventions that could generate inconsistencies.
+
+**Justification:**
+
+* **Automated Pipeline and Quality Control:** Using GitHub Actions to manage the complete application lifecycle (Test -> Build -> Publish -> Deploy) guarantees that absolutely no change reaches production without first passing the entire suite of tests (unit tests in Node/Rust and E2E tests).
+* **Elimination of Human Error and Reliability:** By configuring the final deployment step to securely connect via SSH to the Azure VM and automatically execute `docker compose pull` and `docker up` after the creation of each release, we achieve true Continuous Deployment (CD). This completely eliminates the risk of failures due to manual execution of commands on the server and ensures that our cloud infrastructure always consistently runs the most stable version.
+
+=== DA-10. Frontend Architecture and State Management (React + Custom Hooks)
+**Context:** The web client (frontend) needs to manage multiple dynamic views (Lobby, Board, Statistics) and handle the complex game state in real time without reloading the page.
+
+**Justification:**
+
+* **Single Page Application (SPA) with React:** Allows for declarative rendering of the interface and optimization of Virtual DOM updates, which is critical for a constantly changing game board.
+* **Decentralized State Management:** The use of heavyweight global state managers (such as Redux) was ruled out to avoid over-engineering. Instead, the complex state of the games and sockets was encapsulated in Custom Hooks (useBoard, useMultiplayer, useClanChat). This promotes the Single Responsibility principle and keeps the visual components completely independent of the network logic.
+* **Context API for internationalization (i18n):** A native LanguageContext was implemented to propagate the language throughout the application, eliminating the need to install third-party libraries and thus reducing the final size of the bundle.
+
+=== DA-11. Inter-Microservice (M2M) Authorization
+**Context:** The multiplayer microservice (Sockets) needs to record wins by forfeit and save clan chat messages in the database managed by the Users microservice. Since this request is made from one server to another, there is no valid client JWT token in this context.
+
+**Justification:**
+
+* **Controlled Bypass (Internal Headers):** A Machine-to-Machine (M2M) communication pattern was implemented using a custom header (x-server-key).
+* **Network Isolation:** The user service middleware detects this key and allows the write operation without validating a JWT. This decision is safe because both microservices coexist within the same private Docker network (monitor-net), where traffic is not exposed to the internet, guaranteeing fast and reliable backend-to-backend transactions.

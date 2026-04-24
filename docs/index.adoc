@@ -7,8 +7,8 @@
 include::src/config.adoc[]
 
 = image:arc42-logo.png[arc42] yovi_es1a
-:revnumber: 8.2 EN
-:revdate: January 2023
+:revnumber: 3.0 EN
+:revdate: April 2026
 :revremark: (based upon AsciiDoc version)
 // toc-title definition MUST follow document title without blank line!
 :toc-title: Table of Contents
@@ -97,7 +97,14 @@ include::src/10_quality_requirements.adoc[]
 include::src/11_technical_risks.adoc[]
 
 <<<<
-// 12. Glossary
-include::src/12_glossary.adoc[]
+// 12. Testing Methods
+include::src/12_testing_methods.adoc[]
 
+<<<<
+// 13. Monitoring and API documentation
+include::src/13_monitoring_and_API_documentation.adoc[]
+
+// 14. Glossary
+include::src/13_glossary.adoc[]
+<<<<
 

@@ -3,7 +3,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-solution-strategy]]
 == Solution Strategy
 
-
 ifdef::arc42help[]
 [role="arc42help"]
 ****
@@ -25,16 +24,14 @@ Motivate what was decided and why it was decided that way,
 based upon problem statement, quality goals and key constraints.
 Refer to details in the following sections.
 
-
 .Further Information
-
 See https://docs.arc42.org/section-4/[Solution Strategy] in the arc42 documentation.
-
 ****
 endif::arc42help[]
 
 === Technology Decisions
-==== Continuous Deployment (GitHub Actions)
+
+==== Continuous deployment (GitHub Actions)
 Beyond automated testing, we implemented a full Continuous Deployment (CD) pipeline. Upon publishing a GitHub Release, a workflow automatically connects to the Azure VM via SSH to pull the latest images and restart the services.
 *Quality goals:* deployability, maintainability, reliability.
 *Key constraints:* Requires secure management of SSH keys using GitHub Secrets to prevent unauthorized server access.
@@ -48,16 +45,16 @@ We chose React combined with TypeScript for the user interface development. Reac
 For the backend, we adopted a polyglot microservices approach:
 1. **Rust (`gamey`):** Offers native performance and memory safety, guaranteeing low and predictable response times for the complex algorithmic logic of the game and AI bots.
 2. **Node.js (`users`):** Excellent for creating fast REST APIs to manage user registration, authentication (JWT), and database interactions.
-3. **Node.js (`multiplayer`):** A dedicated service handling WebSocket connections to ensure low-latency gameplay without blocking the main user API.
+3. **Node.js (`multiplayer`):** A dedicated service handling WebSocket connections to ensure low-latency gameplay.
 *Quality goals:* interoperability, scalability, and robustness.
 *Key constraints:* The Rust engine is restricted to using the strict YEN string format as the contract for game states.
 
-==== Real-Time Communication (WebSockets)
+==== Real-Time communication (WebSockets)
 We selected **Socket.io** over standard HTTP polling for multiplayer interactions. Socket.io maintains a persistent, bi-directional TCP connection, allowing the server to push moves to opponents instantly. It also provides built-in "Rooms," which drastically simplifies the logic for matchmaking and isolating 1vs1 games.
 *Quality goals:* low latency, real-time performance, efficiency.
 *Key constraints:* Requires a stateful connection, demanding a dedicated microservice to manage memory overhead effectively.
 
-==== API Gateway & Security
+==== API Gateway & security
 We implemented **Nginx** as a Reverse Proxy and API Gateway. Instead of exposing multiple microservice ports to the internet, Nginx provides a single, secure entry point (Port 443). It handles SSL/TLS termination, hiding the internal complexity of the Docker network and routing traffic to the correct service based on the URL path.
 *Quality goals:* security, isolation, parity between Dev/Prod environments.
 *Key constraints:* All external traffic must be encrypted via HTTPS using SSL certificates.
@@ -67,7 +64,7 @@ We chose **MongoDB Atlas** (Cloud NoSQL) as our primary database. Its document-o
 *Quality goals:* agility in development, high availability, speed of response.
 *Key constraints:* Must store varied game data without a fixed structure while securing user credentials.
 
-==== Containers and Cloud Deployment
+==== Containers and cloud deployment
 **Docker and Docker Compose** were selected to containerize the services. This guarantees absolute consistency between local development machines and our **Azure Virtual Machine** production environment. It isolates dependencies (Node vs. Rust) and allows us to define the entire infrastructure as code.
 *Quality goals:* portability, deployability, reproducibility.
 *Key constraints:* The host environment (Azure VM) must run a Docker engine to orchestrate the internal `monitor-net` bridge network.
@@ -77,36 +74,35 @@ We chose the combination of **Prometheus and Grafana**. Prometheus acts as a tim
 *Quality goals:* observability, performance validation.
 *Key constraints:* Services must expose metrics at a standard `/metrics` endpoint.
 
-==== Modeling & Version Control
+==== Modeling & version control
 * **PlantUML:** Ensures agile, version-controllable, and consistent UML diagrams purely from text.
 * **GitHub:** Centralizes code, manages parallel development via branches, and enforces quality through mandatory Pull Requests.
 
-
 === High-level Decomposition
 
-==== High-Performance Bot Interface
+==== High-Performance bot interface
 We exposed a secondary direct port (3002) for the Rust gamey service. This bypasses the Nginx API Gateway specifically for external competition scripts and automated evaluation tools.
 *Quality goals:* efficiency, interoperability.
-*Key constraints:* Only the /play endpoint is exposed on this port to minimize the attack surface while meeting tournament requirements.
-==== Microservices Architecture
+*Key constraints:* Only the `/play` endpoint is exposed on this port to  meeting tournament requirements.
+
+==== Microservices architecture
 We divided the backend into autonomous services (`users`, `gamey`, `multiplayer`). This decouples user management, real-time networking, and game logic. If the user service experiences high load, the multiplayer game loop remains unaffected.
 *Quality goals:* modifiability, scalability, technological independence.
 *Key constraints:* Services run in isolated containers, communicating solely over the internal Docker network.
 
-==== API Gateway Pattern
-Nginx acts as the facade for the system. Clients do not know if they are talking to Rust or Node.js; they simply send requests to the Nginx gateway, which routes `/api/gamey/` to Rust and `/socket.io/` to the multiplayer service.
-*Quality goals:* security, simplicity for clients.
+==== API gateway pattern
+Nginx acts as the facade for the system. Clients do not know if they are talking to Rust or Node.js; they simply send requests to the Nginx gateway, which routes `/api/gamey/` to Rust, `/socket.io/` to the multiplayer service, and `/api/` to the users service. Additionally, the backend implements dynamic **CORS (Cross-Origin Resource Sharing)** strategies via environment variables, ensuring that production endpoints only accept traffic from the gateway's IP, while remaining flexible for local development.
+*Quality goals:* security, simplicity for clients, parity between Dev/Prod environments.
 
-==== Single Page Application (SPA)
+==== Single page application (SPA)
 The React frontend separates the presentation layer from business logic. By loading once and updating dynamically via WebSockets and REST, it offers a fluid, app-like experience.
 *Quality goals:* usability, interoperability.
 
-==== Hybrid Communication: REST & Event-Driven
+==== Hybrid communication: REST & Event-Driven
 We use a dual approach:
-REST (HTTP/JSON):Used for stateless, transactional operations (e.g., login, fetching match history, requesting an AI move).
-Event-Driven (WebSockets): Used for stateful, real-time synchronization during active gameplay, pushing events to clients instantly.
+* **REST (HTTP/JSON):** Used for stateless, transactional operations (e.g., login, fetching match history, requesting an AI move).
+* **Event-Driven (WebSockets):** Used for stateful, real-time synchronization during active gameplay, pushing events to clients instantly.
 *Quality goals:* low latency, appropriate tool for the job.
-
 
 === Strategies for Quality Goals
 
@@ -128,10 +124,10 @@ Event-Driven (WebSockets): Used for stateful, real-time synchronization during a
 
 | **Interoperability**
 | Frontend (TypeScript), User Service (Node.js), and Engine (Rust) must exchange data.
-| **JSON Standard:** Strict use of the **YEN notation** as a universal data contract, avoiding language-specific binary formats.
+| **JSON standard:** Strict use of the **YEN notation** as a universal data contract, avoiding language-specific binary formats.
 
 | **Modifiability**
-| The team needs to update the AI or the multiplayer logic without breaking the login system.
+| The team needs to update the multiplayer logic without breaking the login system.
 | **Microservices:** Strict separation of concerns. Services are isolated containers; changing one does not require redeploying the others.
 
 | **Usability**
@@ -152,29 +148,29 @@ Event-Driven (WebSockets): Used for stateful, real-time synchronization during a
 
 | **Deployability**
 | The team needs to push a bug fix to the Azure production server instantly.
-| Automated CD Pipeline: GitHub Actions handles the SSH connection, git pull, and docker compose restart automatically upon a new Release.
+| **Automated CD Pipeline:** GitHub Actions orchestrates an automated workflow upon a new Release. It injects production secrets dynamically, connects via SSH to the Azure VM, pulls the latest code, and orchestrates container recreation using Docker Compose without manual intervention.
 
 | **Interoperability (Tournament)**
 | An external evaluation script needs to request moves from the bot via a specific port (3002).
-| Direct Port Mapping: Docker maps port 3002 directly to the Rust engine, providing a standard, high-speed interface for third-party scripts.
+| **Direct Port Mapping:** Docker maps port 3002 directly to the Rust engine, providing a standard, high-speed interface for third-party scripts.
 |===
 
-=== Organizational Decisions
+=== Organizational decisions
 To organize ourselves well and ensure work proceeds without issues, we have agreed upon the following team rules.
 
-==== Code and Task Management (GitHub)
+==== Code and task management (GitHub)
 - *Main Branch (master):* The master branch always contains the definitive and functional version of the project. We only add changes here when we are sure they work well.
 - *Work Organization:* We use GitHub Projects tools to assign work and see what remains to be done. This way, we all know what everyone is working on.
 - *Meeting Documentation:* We use the GitHub Wiki to store the minutes of our meetings. This creates a record of what we decide each week.
 
-==== Quality Control
+==== Quality control
 - *Code Reviews:* To avoid errors, we have decided that no one can upload code to the main branch without another colleague reviewing it first.
 - *Goal:* This serves two purposes: avoiding silly mistakes and ensuring everyone understands everyone else's code, so that no one becomes indispensable in a specific part of the application.
 
-==== Automated Quality Assurance
+==== Automated quality assurance
 We integrated Static Analysis (SonarCloud) and Automated Testing (Unit & E2E) into the CI pipeline. 
 No code reaches the production environment unless it passes the full test suite (Node.js, Rust) and meets the quality gate defined in SonarCloud.
 
 ==== Communication
-- *Weekly Meetings:* We meet once a week (in person during laboratory classes) to see what progress we have made and plan the following week's tasks. This is when we discuss important design decisions.
-- *WhatsApp and Discord:* We use these groups for quick day-to-day questions. If someone gets stuck programming, they ask for help here to solve it quickly without having to wait for the weekly meeting.
+- *Weekly meetings:* We meet once a week (in person during laboratory classes) to see what progress we have made and plan the following week's tasks. This is when we discuss important design decisions.
+- *WhatsApp and discord:* We use these groups for quick day-to-day questions. If someone gets stuck programming, they ask for help here to solve it quickly without having to wait for the weekly meeting.

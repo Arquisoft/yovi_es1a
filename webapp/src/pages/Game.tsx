@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import NavBar from '../components/NavBar';
 import Tablero from '../components/Tablero';
-import SurrenderModal from '../components/SurrenderModal'; // <-- IMPORTAMOS EL MODAL
+import SurrenderModal from '../components/SurrenderModal';
 import "../styles/global.css";
 import "../styles/Game.css";
 import { useLanguage } from '../idiomaConf/LanguageContext.tsx';

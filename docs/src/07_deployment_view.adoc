@@ -7,56 +7,11 @@ ifdef::arc42help[]
 [role="arc42help"]
 ****
 .Content
-The deployment view describes:
-
- 1. technical infrastructure used to execute your system, with infrastructure elements like geographical locations, environments, computers, processors, channels and net topologies as well as other infrastructure elements and
-
-2. mapping of (software) building blocks to that infrastructure elements.
-
-Often systems are executed in different environments, e.g. development environment, test environment, production environment. In such cases you should document all relevant environments.
-
-Especially document a deployment view if your software is executed as distributed system with more than one computer, processor, server or container or when you design and construct your own hardware processors and chips.
-
-From a software perspective it is sufficient to capture only those elements of an infrastructure that are needed to show a deployment of your building blocks. Hardware architects can go beyond that and describe an infrastructure to any level of detail they need to capture.
-
-.Motivation
-Software does not run without hardware.
-This underlying infrastructure can and will influence a system and/or some
-cross-cutting concepts. Therefore, there is a need to know the infrastructure.
-
-.Form
-
-Maybe a highest level deployment diagram is already contained in section 3.2. as
-technical context with your own infrastructure as ONE black box. In this section one can
-zoom into this black box using additional deployment diagrams:
-
-* UML offers deployment diagrams to express that view. Use it, probably with nested diagrams,
-when your infrastructure is more complex.
-* When your (hardware) stakeholders prefer other kinds of diagrams rather than a deployment diagram, let them use any kind that is able to show nodes and channels of the infrastructure.
-
-
-.Further Information
-
-See https://docs.arc42.org/section-7/[Deployment View] in the arc42 documentation.
-
+The deployment view describes technical infrastructure used to execute your system, with infrastructure elements like geographical locations, environments, computers, processors, channels and net topologies as well as other infrastructure elements and mapping of (software) building blocks to that infrastructure elements.
 ****
 endif::arc42help[]
 
 === Infrastructure Level 1
-
-ifdef::arc42help[]
-[role="arc42help"]
-****
-Describe (usually in a combination of diagrams, tables, and text):
-
-* distribution of a system to multiple locations, environments, computers, processors, .., as well as physical connections between them
-* important justifications or motivations for this deployment structure
-* quality and/or performance features of this infrastructure
-* mapping of software artifacts to elements of this infrastructure
-
-For multiple environments or alternative deployments please copy and adapt this section of arc42 for all relevant environments.
-****
-endif::arc42help[]
 
 _**Overview Diagram**_
 
@@ -106,8 +61,7 @@ nginx --> gamey : Routes /api/gamey/* (JSON)
 
 bot -[#red,bold]-> gamey : Direct API Requests\n(Port 3002)
 
-users --> mongo : Read/Write User Data (TLS)
-gamey --> mongo : Match logs (if used)
+users --> mongo : Read/Write Data (TLS)
 prom --> users : Scrapes /metrics
 graf --> prom : Queries time-series
 @enduml
@@ -115,74 +69,64 @@ graf --> prom : Queries time-series
 
 Motivation::
 
-Yovi is executed locally on a single host machine using Docker and Docker Compose. All traffic from the browser is routed through Nginx, which acts as a reverse proxy and terminates HTTPS using TLS certificates generated with mkcert. Nginx forwards requests to the appropriate internal service based on the URL path. All containers communicate through a private Docker network ("monitor-net"), and persistent data is stored in MongoDB Atlas (cloud-hosted). This deployment also includes a real-time multiplayer service based on WebSockets, and a monitoring stack (Prometheus and Grafana).
+Yovi supports two deployment environments through a single, dynamic `docker-compose.yml` file, leveraging default environment variables (e.g., `${NODE_ENV:-development}`) to adapt seamlessly:
+
+* **Local development:** The system can be executed on any machine with Docker installed using `docker compose up`. TLS certificates are generated locally with mkcert for HTTPS on localhost. CORS policies are relaxed by default.
+* **Production (Azure VM):** The system is deployed on a Microsoft Azure Virtual Machine (IP: 20.199.88.71) via an automated GitHub Actions pipeline. All end-user traffic is securely routed through Nginx over HTTPS (port 443). Persistent data is stored in MongoDB Atlas (cloud-hosted). This environment also exposes port 3002 directly to the GameY engine for external tournament scripts.
 
 Quality and/or Performance Features::
 
-* Security: all client-server communication is encrypted via HTTPS (TLS). Nginx is the single public entry point, hiding internal service ports.
-* Modularity: each service is deployed as an independent container, allowing isolated development and replacement.
-* Portability: the deployment can be reproduced consistently on different machines that support Docker.
-* Observability: Prometheus and Grafana enable basic monitoring of the backend services.
-* Maintainability: the separation of responsibilities across containers simplifies troubleshooting and updates.
-* Scalability: services are decoupled and can be scaled independently if needed.
-* High-Performance tournament interface: The gamey container has an explicit port mapping 3002:4000. This creates a direct channel from the Azure host to the Rust engine, optimizing latency for external evaluation scripts.
-* Hybrid security model: While end-user traffic is encrypted and protected by Nginx (port 443), the competition port (3002) acts as a high-performance technical interface. *
+* **Security:** All client-server communication is encrypted via HTTPS (TLS). Nginx is the single public entry point, hiding internal service ports.
+* **Modularity:** Each service is deployed as an independent container, allowing isolated development and replacement.
+* **Portability:** The deployment can be reproduced consistently on different machines that support Docker.
+* **Observability:** Prometheus and Grafana enable robust monitoring of the backend services.
+* **Availability:** Critical containers enforce the `restart: unless-stopped` policy, ensuring automatic recovery after unexpected crashes or VM reboots.
+* **High-Performance tournament interface:** The `gamey` container has an explicit port mapping (3002:4000). This creates a direct channel from the Azure host to the Rust engine, optimizing latency for external evaluation scripts.
+
 Mapping of Building Blocks to Infrastructure::
 [cols="1,2", options="header"]
 |===
 |Building Block |Infrastructure Element
 
 |Web Browser
-|Runs on the client side. The user accesses the application via HTTPS at https://localhost.
+|Runs on the client side. In local development, the user accesses the application via HTTPS at https://localhost. In production, the application is accessible via the Azure VM public IP at https://20.199.88.71.
 
 |Nginx (Reverse Proxy)
 |Container deployed on the Docker Host. Acts as the single HTTPS entry point, routes requests to internal services based on URL path, and terminates TLS.
 
 |WebApp
-|Container deployed on the Docker Host, connected to the internal Docker network.
+|Container deployed on the Docker Host, serving the React SPA.
 
 |Users Service
-|Container deployed on the Docker Host, connected to the internal Docker network.
+|Container deployed on the Docker Host. Acts as the primary backend logic controller and the sole manager of the database persistence layer.
 
 |GameY Service
 |Container deployed on the Docker Host. It is accessible via Nginx (port 443) for standard web users and directly via port 3002 for tournament bot interactions.
 
 |Multiplayer Service
-|Container deployed on the Docker Host, connected to the internal Docker network. Manages real-time online game sessions via WebSockets (Socket.io).
+|Container deployed on the Docker Host. Manages real-time online game sessions via WebSockets (Socket.io) and delegates match persistence to the Users Service.
 
 |MongoDB Atlas
-|Cloud-hosted database (external to the Docker Host). Stores user data, match history, and clan information. Accessed securely over TLS.
+|Cloud-hosted database (external to the Docker Host). Stores user data, match history, and clan information. Accessed securely over TLS exclusively by the Users Service.
 
-|Prometheus
-|Container deployed on the Docker Host, connected to the internal Docker network. Collects metrics from the services.
-
-|Grafana
-|Container deployed on the Docker Host, connected to the internal Docker network. Visualizes metrics queried from Prometheus.
+|Prometheus & Grafana
+|Containers deployed on the Docker Host to scrape and visualize metrics respectively.
 |===
 
 
 === Infrastructure Level 2
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-Here you can include the internal structure of (some) infrastructure elements from level 1.
-
-Please copy the structure from level 1 for each selected element.
-****
-endif::arc42help[]
-
-==== _Docker Host (Localhost)_
+==== _Docker Host_
 
 [plantuml]
 ----
 @startuml
-title Infrastructure Level 2 - Docker Host (Localhost)
+title Infrastructure Level 2 - Docker Host
 
 skinparam shadowing false
 skinparam componentStyle rectangle
 
-node "Docker Host (Localhost)" as host {
+node "Docker Host (Azure VM / Localhost)" as host {
   frame "monitor-net (Docker Network)" as net {
     [Nginx] as nginx
     [WebApp] as webapp
@@ -202,14 +146,15 @@ nginx --> gamey : /api/gamey/* (JSON)
 nginx --> multiplayer : /socket.io/* (WebSocket)
 
 users --> mongo : Persist user/match/clan data (TLS)
-gamey --> mongo : Persist game data (if used)
+multiplayer -> users : Internal HTTP (save match)
+users -> gamey : Internal HTTP (bot moves)
 
 prom --> users : Metrics data
 graf --> prom : Dashboard queries
 @enduml
 ----
 
-This diagram zooms into the Docker Host and the internal Docker network. Nginx is the entry point for all traffic and routes requests to the correct service. WebApp serves the frontend assets. Users Service and GameY Service handle the backend logic. The Multiplayer Service manages real-time communication via WebSockets. MongoDB Atlas stores all persistent data externally in the cloud. Prometheus and Grafana run alongside the services for monitoring.
+This diagram zooms into the Docker Host and the internal Docker network. Nginx is the entry point for all traffic and routes requests to the correct service. WebApp serves the frontend assets. Users Service handles business logic and acts as the sole bridge to MongoDB Atlas. The Multiplayer Service manages real-time communication via WebSockets and delegates persistence to the Users Service. Prometheus and Grafana run alongside the services for monitoring.
 
 ==== _Client (Web Browser)_
 
@@ -227,16 +172,16 @@ node "Client" as client {
   [Web Browser] as browser
 }
 
-node "Docker Host (Localhost)" as host {
+node "Docker Host (Azure VM / Localhost)" as host {
   [Nginx (Reverse Proxy)] as nginx
 }
 
-user --> browser : Navigates to https://localhost
+user --> browser : Navigates to https://20.199.88.71\n(or https://localhost in development)
 browser --> nginx : HTTPS request (port 443)
 @enduml
 ----
 
-This diagram isolates the client-side element. The user accesses the application through a web browser navigating to https://localhost. The browser communicates exclusively with Nginx over HTTPS. The TLS certificate, generated with mkcert, must be trusted by the operating system for the browser to show the secure padlock.
+This diagram isolates the client-side element. In local development, the user navigates to https://localhost. In production, the user accesses the application via the Azure VM public IP at https://20.199.88.71. In both cases, the browser communicates exclusively with Nginx over HTTPS, which acts as the single secure entry point to the system.
 
 ==== _Nginx Routing_
 
@@ -280,15 +225,14 @@ skinparam componentStyle rectangle
 node "Docker Host (Azure VM)" as host {
   frame "monitor-net (Docker Network)" as net {
     [Users Service] as users
-    [GameY Engine] as gamey
+    [Multiplayer Service] as multi
     [Prometheus] as prom
     [Grafana] as graf
   }
 }
 
-' Prometheus hace scraping de ambos servicios de backend
-prom --> users : Collects metrics (Port 3000)
-prom --> gamey : Collects metrics (Port 4000)
+prom --> users : Collects metrics
+prom --> multi : Collects metrics
 graf --> prom : Queries metrics (Port 9090)
 @enduml
 ----
@@ -311,7 +255,6 @@ node "Azure VM (Host)" as host {
     [GameY Engine (Rust)] as gamey
 }
 
-' El script accede directamente al puerto mapeado 3002
 script -[#red,bold]-> gamey : HTTP Request (Port 3002)
 
 note right of gamey
@@ -321,3 +264,5 @@ note right of gamey
 end note
 @enduml
 ----
+
+This diagram isolates the direct competition interface. External tournament scripts bypass Nginx entirely and connect directly to the Rust game engine via port 3002, which is mapped to the internal container port 4000. This design provides minimum latency for competitive evaluation, avoiding the overhead of the standard API gateway. Only the `/play` endpoint is accessible through this interface.

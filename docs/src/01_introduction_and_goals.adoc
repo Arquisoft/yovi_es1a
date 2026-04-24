@@ -17,9 +17,7 @@ These include
 ****
 endif::arc42help[]
 
-The game development company Micrati has decided to begin developing a web-based system where users can play different variations of Game Y, an existing strategic board game. The initial idea is to offer an entertaining and intuitive experience to users. It will also provide several different strategies with different difficulty levels to attract user interest.
-
-=== Requirements Overview
+The video game development company Micrati has decided to begin developing a web-based system where users can play Game Y, an existing strategy board game. The initial idea is to offer an entertaining and intuitive experience. It will also provide various strategies with different difficulty levels to capture users' interest, as well as an online multiplayer experience.
 
 ifdef::arc42help[]
 [role="arc42help"]
@@ -49,17 +47,17 @@ endif::arc42help[]
 
 The main requirements of the system are:
 
-- **Game Mechanics:** Provide a functional version of the strategic game with a variable hexagonal board, including advanced match controls such as undoing moves, passing turns, and surrendering.
+- **Game mechanics:** Provide a functional version of the strategy game with a variable hexagonal board, including advanced game controls such as undo moves, skip turns, and surrender.
 
-- **Platform:** Available as a responsive web application.
+- **Platform:** Available as a web application.
 
-- **Game Modes:** Offer multiplayer capabilities as well as a single-player mode against a computer bot.
+- **Game modes:** Offer multiplayer capabilities, as well as a single-player mode against a bot and against another player on the same machine.
 
-- **AI Integration:** The computer bot must be integrated via an external API (Rust engine) offering different strategies and difficulty levels.
+- **AI integration:** The computer bot must be integrated via an external API (Rust engine) offering different strategies and difficulty levels.
 
-- **User Management:** Allow users to securely register, log in, and manage their profiles.
+- **User management:** Allow users to securely register, log in, and manage their profiles.
 
-- **Analytics & History:** Allow users to view their personal game history, win/loss statistics, and a global ranking of all players in the system.
+- **Analytics & history:** Allow users to view their personal game history, win/loss statistics, and a global ranking of all players in the system.
 
 === Quality Goals
 
@@ -89,8 +87,8 @@ endif::arc42help[]
 |===
 |Quality goal|Description
 
-| **Usability & Accessibility**
-| The system should be intuitive for users to learn and play. It must include clear UI feedback (e.g., turn indicators, neon glow effects) and consider basic accessibility standards so a wider range of users can enjoy the experience.
+| **Usability & accessibility**
+| The system should be intuitive for users to learn and play. It must include clear UI feedback and consider basic accessibility standards so a wider range of users can enjoy the experience.
 
 | **Availability (Web)**
 | The application must be highly available and easily accessible via a web browser without requiring local installations by the end-user.

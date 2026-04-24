@@ -3,7 +3,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-concepts]]
 == Cross-cutting Concepts
 
-
 ifdef::arc42help[]
 [role="arc42help"]
 ****
@@ -18,13 +17,11 @@ They can include many different topics, such as
 * principal, often technical decisions of an overarching (= cross-cutting) nature
 * implementation rules
 
-
 .Motivation
 Concepts form the basis for _conceptual integrity_ (consistency, homogeneity) of the architecture. 
 Thus, they are an important contribution to achieve inner qualities of your system.
 
 Some of these concepts cannot be assigned to individual building blocks, e.g. security or safety. 
-
 
 .Form
 The form can be varied:
@@ -48,11 +45,7 @@ A potential (but not mandatory) structure for this section could be:
 Note: it might be difficult to assign individual concepts to one specific topic
 on this list.
 
-image::08-concepts-EN.drawio.png["Possible topics for crosscutting concepts"]
-
-
 .Further Information
-
 See https://docs.arc42.org/section-8/[Concepts] in the arc42 documentation.
 ****
 endif::arc42help[]
@@ -60,19 +53,19 @@ endif::arc42help[]
 === Domain concepts
 The domain model revolves around the game of Y, a connection strategy game.
 
-* **GameY**: The central entity representing a game session. It holds the state of the triangular board, tracks the current player, and validates rules. Detect winning paths (connected components touching all three sides) in real-time.
-* **User & Clan**: Entities representing registered players and their social groupings.
-* **Match**: Represents an active or historical multiplayer session between users or bots, tracking scores and turns.
-* **Player**: A participant in the game (Human via Web UI, or Bot/LLM).
-* **Board & Coordinates**: A triangular grid utilizing a 3-dimensional barycentric coordinate system to uniquely identify cells.
-* **Bot**: An AI opponent. The architecture supports pluggable bot strategies (e.g., random, monte carlo, etc) invoked via the API.
+* **GameY**: The central entity representing a game session. It holds the state of the board (a triangular shape made of hexagonal cells), tracks the current player, and validates rules. It detects winning paths (connected components touching all three sides) in real-time.
+* **User and clan**: Entities representing registered players and their social groupings.
+* **Match**: Represents a multiplayer session, including users and games between players and bots, recording the number of moves and game time.
+* **Player**: A participant in the game (Human via Web UI, or Bot).
+* **Board & Coordinates**: A grid utilizing a 3-dimensional barycentric coordinate system to uniquely identify cells.
+* **Bot**: An AI opponent. The architecture supports pluggable bot strategies (e.g., random, monte carlo, etc.).
 
 === Architecture and design patterns
 
-* **Microservices pattern**: The backend is divided into specialized, loosely coupled services (`users`, `multiplayer`, `gamey`,`webapp`) communicating via internal HTTP APIs.
+* **Microservices pattern**: The backend is divided into specialized, loosely coupled services (`users`, `multiplayer`, `gamey`, `webapp`) communicating via internal HTTP APIs.
 * **API gateway / Reverse proxy**: Nginx acts as the single entry point, handling routing, SSL termination, and serving the static frontend, hiding the internal complexity from the client.
 * **Event-Driven architecture (Real-time)**: The `multiplayer` service uses WebSockets (Socket.IO) implementing an event-driven approach (pub/sub) to broadcast moves and game state changes instantly to connected clients in specific "rooms".
-* **Strategy pattern**: Used for the AI ​​system within the Rust engine, allowing different bot algorithms to be swapped at runtime.
+* **Strategy pattern**: Used for the AI system within the Rust engine, allowing different bot algorithms to be swapped at runtime.
 
 === Security concepts
 With the move to a web-based architecture, security is applied at multiple layers:
@@ -80,7 +73,7 @@ With the move to a web-based architecture, security is applied at multiple layer
 * **Authentication & Authorization**: The system uses JSON Web Tokens (JWT) to secure endpoints. The Node.js backend acts as a middleware, verifying tokens before granting access to sensitive routes.
 * **Transport Level Security**: Nginx enforces HTTPS (SSL/TLS) for all external communications, encrypting payloads between the user's browser and the Azure infrastructure.
 * **Network isolation**: Backend services are not exposed directly to the internet. They communicate over a private Docker bridge network (`monitor-net`), only accessible through the Nginx proxy.
-* **CORS management**: Cross-Origin Resource Sharing is strictly configured in the backend to only accept requests from the authorized frontend origin.
+* **CORS management**: Cross-Origin Resource Sharing is strictly configured in the backend to only accept requests from the authorized frontend origin, adapting dynamically between local and production environments via environment variables.
 
 === Data persistence and exchange
 
@@ -88,14 +81,16 @@ With the move to a web-based architecture, security is applied at multiple layer
 * **Cloud database**: MongoDB Atlas is employed as a highly available, cloud-hosted NoSQL database for persistent storage.
 * **Data validation**: Mongoose schemas enforce strict data types and validation rules before writing to MongoDB.
 
-=== Testing and Quality Assurance Concepts
+=== Testing and quality assurance concepts
 To guarantee the reliability and performance of the distributed system, testing is approached at multiple levels:
 
+* **End-to-End (E2E) Testing**: We utilize tools to simulate real user journeys (e.g., registration, login) across the fully deployed stack, ensuring the frontend, API gateway, and backend services integrate seamlessly.
 * **Load and Performance Testing**: We use **Gatling** to simulate concurrent user traffic against our API gateway. This allows us to validate how the microservices (especially the Node.js API and the Rust engine) handle high volumes of simultaneous requests, ensuring the system remains responsive under stress.
-* **Unit and Integration Testing**: Conducted at the microservice level (e.g., Jest for Node.js, `cargo test` for Rust) to ensure individual components behave as expected before being containerized.
+* **Unit and Integration Testing**: Conducted at the microservice level (e.g. `cargo test` for Rust) to ensure individual components behave as expected before being containerized.
 * **Code Quality Analysis**: We integrate static analysis tools (like SonarCloud and CodeScene) within our CI/CD pipelines to monitor code health and prevent the introduction of vulnerabilities.
 
-=== User Interface and UX concepts
+=== User interface and UX concepts
+
 * **Single Page Application (SPA)**: Built with React and Vite, offering a smooth, app-like experience without full page reloads.
-* **Real-time Feedback Loop**: The UI leverages WebSockets to update the board instantly when an opponent moves, preventing race conditions and keeping game states synchronized across distributed clients.
-* **Coordinate Abstraction**: The frontend handles the complex mapping between visual clicks on the screen and the backend's 3D barycentric coordinates.
+* **Real-time feedback loop**: The UI leverages WebSockets to update the board instantly when an opponent moves, preventing race conditions and keeping game states synchronized across distributed clients.
+* **Coordinate abstraction**: The frontend handles the complex mapping between visual clicks on the screen and the backend's 3D barycentric coordinates.

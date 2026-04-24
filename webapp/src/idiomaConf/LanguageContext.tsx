@@ -29,7 +29,7 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
 
   useEffect(() => {
     const stored = localStorage.getItem("lang");
-    if (stored === "es" || stored === "en") setLangState(stored);
+    if (["es", "en", "fr", "it", "de"].includes(stored as string)) setLangState(stored as Language);
   }, []);
 
   const setLang = (newLang: Language) => {
