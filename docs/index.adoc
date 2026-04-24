@@ -100,7 +100,11 @@ include::src/11_technical_risks.adoc[]
 // 12. Testing Methods
 include::src/12_testing_methods.adoc[]
 
-// 13. Glossary
+<<<<
+// 13. Monitoring and API documentation
+include::src/13_monitoring_and_API_documentation.adoc[]
+
+// 14. Glossary
 include::src/13_glossary.adoc[]
 <<<<
 
