@@ -502,7 +502,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_user_interface_and_ux_concepts">8.6. User interface and UX concepts</a></li>
 </ul>
 </li>
-<li><a href="#section-design-decisions">9. Architecture Decisions</a></li>
+<li><a href="#section-design-decisions">9. Architecture Decisions</a>
+<ul class="sectlevel2">
+<li><a href="#_da_01_nosql_database_mongodb">9.1. DA-01. NoSQL Database (MongoDB)</a></li>
+<li><a href="#_da_02_mongoose">9.2. DA-02. Mongoose</a></li>
+<li><a href="#_da_03_json_web_tokens_jwt_for_authentication">9.3. DA-03. JSON Web Tokens (JWT) for Authentication</a></li>
+<li><a href="#_da_04_bidirectional_communication_with_websockets_socket_io">9.4. DA-04. Bidirectional Communication with WebSockets (Socket.io)</a></li>
+<li><a href="#_da_05_reverse_proxy_and_api_gateway_with_nginx">9.5. DA-05. Reverse Proxy and API Gateway with Nginx</a></li>
+<li><a href="#_da_06_ssltls_termination_and_environment_parity_local_https">9.6. DA-06. SSL/TLS Termination and Environment Parity (Local HTTPS)</a></li>
+<li><a href="#_da_07_choosing_frameworks_for_microservices">9.7. DA-07. Choosing Frameworks for Microservices</a></li>
+<li><a href="#_da_08_competition_api_design_stateless_api">9.8. DA-08. Competition API Design (Stateless API)</a></li>
+<li><a href="#_da_09_continuous_deployment_cd_automation">9.9. DA-09. Continuous Deployment (CD) Automation</a></li>
+<li><a href="#_da_10_frontend_architecture_and_state_management_react_custom_hooks">9.10. DA-10. Frontend Architecture and State Management (React + Custom Hooks)</a></li>
+<li><a href="#_da_11_inter_microservice_m2m_authorization">9.11. DA-11. Inter-Microservice (M2M) Authorization</a></li>
+</ul>
+</li>
 <li><a href="#section-quality-scenarios">10. Quality Requirements</a>
 <ul class="sectlevel2">
 <li><a href="#_quality_tree">10.1. Quality Tree</a></li>
@@ -520,7 +534,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_unit_and_integration_testing">12.1. Unit and integration testing</a></li>
 <li><a href="#_code_coverage_results">12.2. Code coverage results</a></li>
 <li><a href="#_end_to_end_e2e_testing">12.3. End-to-End (E2E) Testing</a></li>
-<li><a href="#_load_testing_gatling">12.4. Load Testing (Gatling)</a></li>
+<li><a href="#_load_testing_analysis_gatling">12.4. Load testing analysis (Gatling)</a></li>
 </ul>
 </li>
 <li><a href="#section-glossary">13. Glossary</a></li>
@@ -1993,77 +2007,237 @@ There you will find links and examples about ADR.</p>
 </div>
 </div>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Decision</th>
-<th class="tableblock halign-left valign-top">Reason</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Microservices Architecture</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">We separated the application into decoupled services (<code>users</code>, <code>gamey</code>, <code>webapp</code>, <code>multiplayer</code>). This allows us to use the best technology for each specific problem (Rust for performance, Node.js for I/O) and enables independent development and deployment cycles.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>React</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">We use React for the <code>webapp</code> frontend because it allows us to build fast, scalable, and easy-to-maintain interfaces using a component-based architecture.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>TypeScript</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Applied in the <code>webapp</code> to provide static typing. This reduces runtime errors, improves code readability, and enhances developer tooling compared to standard JavaScript.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Vite</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Selected as the frontend build tool instead of Create React App (CRA) due to its superior performance in development server startup and Hot Module Replacement (HMR).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Node.js &amp; Express</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>users</code> service handles I/O-heavy operations (REST API, database access). Node.js is ideal for this due to its non-blocking event-driven model, and Express provides a minimal and flexible framework.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Rust</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>gamey</code> engine requires high performance for game logic and bot calculations. Rust provides memory safety without a garbage collector and meets the project&#8217;s core requirements.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MongoDB &amp; Mongoose</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">MongoDB Atlas is the cloud-hosted persistence layer. We use <strong>Mongoose</strong> (in <code>users/src/database.js</code>) to manage connections and schemas. The connection string is decoupled using the <code>MONGODB_URI</code> environment variable in <code>.env</code>, following the 12-Factor App methodology for config.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker &amp; Docker Compose</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used to orchestrate the entire system. It defines independent containers for <code>webapp</code>, <code>users</code>, <code>gamey</code>, <code>multiplayer</code>, and monitoring tools, linking them via an internal network. This ensures the environment is reproducible and eliminates configuration issues between development and production.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Nginx as Reverse Proxy</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Nginx is used as the single HTTPS entry point for all client traffic. It terminates TLS, routes requests to the appropriate internal service based on URL path (/api/<strong>, /socket.io/</strong>, /*), and eliminates CORS issues by proxying all communication through a single origin. Internal service ports are never exposed directly to the client.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>JWT Authentication</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JSON Web Tokens are used to authenticate users after login. The token is signed with a secret key, stored in the client&#8217;s sessionStorage, and sent in the <code>Authorization: Bearer</code> header on every protected API request. This avoids server-side session state and enables stateless authentication across services. The token expires after 1 hour, and the session is automatically cleared when the browser is closed.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Socket.io (WebSockets) for Multiplayer</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The real-time online multiplayer feature requires bidirectional, low-latency communication between players. Socket.io was chosen over HTTP polling to synchronize game moves instantly. It runs as an independent <code>multiplayer</code> service and is proxied through Nginx via WebSocket upgrade.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Modular CSS Architecture</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Frontend styles are split into a shared <code>global.css</code> file (navbar, video background, pagination, typography) and per-page CSS files. This prevents style conflicts between components developed by different team members, reduces specificity issues, and improves maintainability.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GitHub Actions</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">We use it for CI/CD pipelines to automatically build, test, and check the quality of the code on every push, ensuring continuous integration and early error detection.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>SonarCloud &amp; CodeScene</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Integrated to monitor code quality, test coverage, and code health. This helps us manage technical debt and maintain architectural integrity over time.</p></td>
-</tr>
-</tbody>
-</table>
+<div class="sect2">
+<h3 id="_da_01_nosql_database_mongodb">9.1. DA-01. NoSQL Database (MongoDB)</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> We need persistence for the user microservice in a containerized Node.js environment.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Native JSON Integration:</strong> When using Node.js and React, the entire data flow is JSON. MongoDB stores BSON, eliminating the need for complex mappings and accelerating development.</p>
+</li>
+<li>
+<p><strong>Schema Flexibility:</strong> Being schema-less allows for quickly adding new fields to user profiles without requiring rigid SQL migrations.</p>
+</li>
+<li>
+<p><strong>Microservices and Docker:</strong> It&#8217;s a lightweight database, easy to deploy in independent containers, and scales seamlessly in the cloud (Azure).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_02_mongoose">9.2. DA-02. Mongoose</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> MongoDB offers complete flexibility by not enforcing schemas, but this carries the risk of data inconsistency (e.g., users without email addresses or with disparate formats) and delegates excessive validation to the driver. Therefore, we decided to use Mongoose as an abstraction layer (ODM) over the native MongoDB driver.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Data Integrity (Schemas):</strong> Although the database is NoSQL, the application requires a predictable structure. Mongoose allows us to define strong types (String, Date) and rules (required: true, unique: true) in a single place (the Model).</p>
+</li>
+<li>
+<p><strong>Centralized Validation:</strong> We avoid duplicating validation logic at each endpoint. If the data does not conform to the schema, Mongoose prevents it from reaching the database (Fail Fast pattern).</p>
+</li>
+<li>
+<p>* <strong>Abstraction and Productivity:</strong> It provides us with a simplified API for CRUD operations (.save(), .findOne()) and connection management, accelerating development compared to the use of "raw" native queries.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_03_json_web_tokens_jwt_for_authentication">9.3. DA-03. JSON Web Tokens (JWT) for Authentication</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> Our application consists of a decoupled frontend (React) and a REST API in the backend that requires protecting certain routes (e.g., saving statistics or querying history). We needed a security mechanism that maintained the "Stateless" philosophy of REST, avoiding overloading server memory with traditional cookie-based sessions. Therefore, we decided to implement JWT, delegating validation to a specific auth-middleware.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Scalability (Stateless):</strong> The backend does not store session state. The token itself contains the information necessary for the middleware to verify the user&#8217;s identity without relying on centralized storage.</p>
+</li>
+<li>
+<p><strong>Optimized Performance:</strong> By validating the token&#8217;s cryptographic signature in memory directly in the middleware, we avoid redundant queries to MongoDB in each protected request just to identify the user.</p>
+</li>
+<li>
+<p><strong>Flexibility and Standardization:</strong> JWT is the de facto standard for Single Page Applications (SPAs). Furthermore, it facilitates architectural evolution: if in the future we separate the API into multiple microservices, they will all be able to validate the same token independently without needing to share a session database.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_04_bidirectional_communication_with_websockets_socket_io">9.4. DA-04. Bidirectional Communication with WebSockets (Socket.io)</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> The core of the application is a competitive board game (YEN) that requires a fluid and responsive user experience. Traditional HTTP-based interactions would generate unacceptable latency for a 1v1 game, as well as overload the server with unnecessary requests to check if the opponent has moved. We needed a constant, low-latency communication channel between the clients and a dedicated microservice.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Low Latency and Real-Time:</strong> Unlike REST requests, WebSockets maintain a single open TCP connection. This allows the server to "push" player A&#8217;s move to player B instantaneously (in milliseconds), which is critical for gameplay and visual feedback.</p>
+</li>
+<li>
+<p><strong>Abstraction and Reliability (Socket.io):</strong> We opted for Socket.io over the native WebSockets standard because it automatically handles reconnection, fallback to HTTP Long-Polling (on restrictive networks), and, most importantly, natively offers the concept of "Rooms." This drastically simplifies player matchmaking logic using room codes.</p>
+</li>
+<li>
+<p><strong>Decoupled Microservice:</strong> The multiplayer logic has been implemented as a separate microservice (multiplayer). This allows the socket infrastructure (which consumes a lot of memory by maintaining open connections) to scale independently of the user API or the logic engine in Rust, following the principles of a clean microservices architecture.</p>
+</li>
+<li>
+<p><strong>Network Traffic Efficiency:</strong> Once the initial handshake is established, the headers in the data packets are minimal compared to HTTP. This reduces bandwidth consumption and processing load on both the client (React) and the server (Node.js).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_05_reverse_proxy_and_api_gateway_with_nginx">9.5. DA-05. Reverse Proxy and API Gateway with Nginx</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> The project architecture consists of multiple independent containers (static frontend, Node.js API, Rust engine, and WebSocket server). Exposing the ports of each service individually to the outside world creates security problems, same-origin policy (CORS) conflicts in the browser, and hinders deployment in cloud environments.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Single Entry Point:</strong> Nginx acts as a reverse proxy that unifies all microservices under a single domain and IP address. The frontend and clients only interact with port 443.</p>
+</li>
+<li>
+<p><strong>Path-Based Routing:</strong> It allows routing traffic to the corresponding container based on the URL (e.g., /api/gamey/ to Rust, /socket.io/ to the multiplayer service), abstracting the internal Docker network topology.</p>
+</li>
+<li>
+<p><strong>Security and isolation:</strong> The microservices operate exclusively within a Docker virtual private network (monitor-net). No backend port is directly exposed to the internet, drastically reducing the attack surface.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_06_ssltls_termination_and_environment_parity_local_https">9.6. DA-06. SSL/TLS Termination and Environment Parity (Local HTTPS)</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> Modern web browser features, as well as secure WebSocket connections (wss://), require applications to be served over HTTPS. Developing locally using plain HTTP results in "Mixed Content" errors and behavioral discrepancies between the development and production environments (Azure).</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Dev/Prod Parity:</strong> By generating self-signed certificates as a local Certificate Authority (CA) using mkcert, we replicate the Azure production environment on developers' machines. This ensures that if network security and routing work locally, they will work in the cloud.</p>
+</li>
+<li>
+<p><strong>Load Delegation:</strong> Nginx is solely responsible for encrypting and decrypting SSL traffic (SSL Termination). This frees microservices (Node, Rust) from the computational burden of managing certificates, allowing them to communicate efficiently in plain text within Docker&#8217;s secure private network.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_07_choosing_frameworks_for_microservices">9.7. DA-07. Choosing Frameworks for Microservices</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> We needed an architecture that would allow us to separate the heavyweight business logic from user management and real-time communication.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Optimization by Load Type:</strong> Using Node.js with Express for the user service leverages its agility in I/O operations and handling REST APIs. On the other hand, using Rust with Axum for the game engine (gamey) guarantees memory safety and very high performance in heavy AI calculations.</p>
+</li>
+<li>
+<p><strong>Scalability and Interoperability:</strong> This separation allows independent scaling of each service according to its specific needs (e.g., if there are many registered users but few active games). As a trade-off, this requires us to define clear and strict data contracts (such as YEN Notation) to ensure perfect interoperability between such different languages.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_08_competition_api_design_stateless_api">9.8. DA-08. Competition API Design (Stateless API)</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> The bot tournament requires a low-latency interface. Furthermore, the professor emphasized the importance of avoiding API calls that inconsistently modify multiple states on the backend.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Dedicated and Stateless Endpoint:</strong> By implementing a stateless endpoint using the GET /play method exposed directly on port 3002, the API simply receives the board state in YEN format and returns an immediate response. By bypassing the Nginx proxy and avoiding any access to MongoDB, performance is maximized and response time for the tournament evaluator script is minimized.</p>
+</li>
+<li>
+<p><strong>Simplicity and Statelessness:</strong> This decision strictly adheres to the single responsibility principle, as the endpoint acts only as a calculator and does not manage the game session. By not persisting data, the risk of "corrupting" the database with tournament simulations is completely eliminated, complying with the directive of not having calls that unnecessarily modify the information.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_09_continuous_deployment_cd_automation">9.9. DA-09. Continuous Deployment (CD) Automation</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> It is required to ensure that the production environment on the Azure virtual machine is always reliably and quickly synchronized with the main branch without relying on manual interventions that could generate inconsistencies.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Automated Pipeline and Quality Control:</strong> Using GitHub Actions to manage the complete application lifecycle (Test &#8594; Build &#8594; Publish &#8594; Deploy) guarantees that absolutely no change reaches production without first passing the entire suite of tests (unit tests in Node/Rust and E2E tests).</p>
+</li>
+<li>
+<p><strong>Elimination of Human Error and Reliability:</strong> By configuring the final deployment step to securely connect via SSH to the Azure VM and automatically execute <code>docker compose pull</code> and <code>docker up</code> after the creation of each release, we achieve true Continuous Deployment (CD). This completely eliminates the risk of failures due to manual execution of commands on the server and ensures that our cloud infrastructure always consistently runs the most stable version.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_10_frontend_architecture_and_state_management_react_custom_hooks">9.10. DA-10. Frontend Architecture and State Management (React + Custom Hooks)</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> The web client (frontend) needs to manage multiple dynamic views (Lobby, Board, Statistics) and handle the complex game state in real time without reloading the page.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Single Page Application (SPA) with React:</strong> Allows for declarative rendering of the interface and optimization of Virtual DOM updates, which is critical for a constantly changing game board.</p>
+</li>
+<li>
+<p><strong>Decentralized State Management:</strong> The use of heavyweight global state managers (such as Redux) was ruled out to avoid over-engineering. Instead, the complex state of the games and sockets was encapsulated in Custom Hooks (useBoard, useMultiplayer, useClanChat). This promotes the Single Responsibility principle and keeps the visual components completely independent of the network logic.</p>
+</li>
+<li>
+<p><strong>Context API for internationalization (i18n):</strong> A native LanguageContext was implemented to propagate the language throughout the application, eliminating the need to install third-party libraries and thus reducing the final size of the bundle.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_11_inter_microservice_m2m_authorization">9.11. DA-11. Inter-Microservice (M2M) Authorization</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> The multiplayer microservice (Sockets) needs to record wins by forfeit and save clan chat messages in the database managed by the Users microservice. Since this request is made from one server to another, there is no valid client JWT token in this context.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Controlled Bypass (Internal Headers):</strong> A Machine-to-Machine (M2M) communication pattern was implemented using a custom header (x-server-key).</p>
+</li>
+<li>
+<p><strong>Network Isolation:</strong> The user service middleware detects this key and allows the write operation without validating a JWT. This decision is safe because both microservices coexist within the same private Docker network (monitor-net), where traffic is not exposed to the internet, guaranteeing fast and reliable backend-to-backend transactions.</p>
+</li>
+</ul>
+</div>
 <div style="page-break-after: always;"></div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -2331,27 +2505,59 @@ There you will find links and examples about ADR.</p>
 </div>
 <div class="paragraph">
 <p><strong>1. Frontend application (React/Vite)</strong>
-The frontend testing strategy focuses on validating user workflows, state management, and network boundaries without requiring a live backend.
-<strong>API communication and interceptors:</strong> Tests ensure that custom HTTP clients automatically inject security mechanisms (like JWT tokens) and handle global responses correctly.
-<strong>Session management:</strong> We simulate different server responses (e.g., unauthorized access) to validate that the application correctly purges local session data and redirects users, ensuring security on the client side.</p>
+The frontend testing strategy focuses on validating user workflows, state management, and network boundaries without requiring a live backend.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>API communication and interceptors:</strong> Tests ensure that custom HTTP clients automatically inject security mechanisms (like JWT tokens) and handle global responses correctly.</p>
+</li>
+<li>
+<p><strong>Session management:</strong> We simulate different server responses (e.g., unauthorized access) to validate that the application correctly purges local session data and redirects users, ensuring security on the client side.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p><strong>2. Core backend API (Node.js)</strong>
-The REST API logic was tested by isolating the business layer from the persistence layer.
-<strong>Database Mocking:</strong> We utilized framework-level mocks (e.g., Mongoose mocks) to simulate database interactions. This ensures that tests evaluating complex domain logic (like user relationships or entity creation) run quickly and deterministically without needing a real MongoDB instance.
-<strong>Business Constraints:</strong> Tests validate that the services enforce structural integrity, correctly rejecting invalid data or unauthorized actions before they reach the database.</p>
+The REST API logic was tested by isolating the business layer from the persistence layer.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Database Mocking:</strong> We utilized framework-level mocks (e.g., Mongoose mocks) to simulate database interactions. This ensures that tests evaluating complex domain logic (like user relationships or entity creation) run quickly and deterministically without needing a real MongoDB instance.</p>
+</li>
+<li>
+<p><strong>Business Constraints:</strong> Tests validate that the services enforce structural integrity, correctly rejecting invalid data or unauthorized actions before they reach the database.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p><strong>3. Real-Time multiplayer service (Node.js/Socket.io)</strong>
-Testing the WebSocket microservice focuses heavily on in-memory state management and asynchronous events.
-<strong>Lifecycle &amp; State Management:</strong> Tests validate the integrity of temporary data structures used for matchmaking, ensuring that rooms are created, joined, and cleaned up correctly during connection and disconnection events.
-<strong>Inter-Service Communication:</strong> We extensively mock external HTTP calls to verify that the real-time service correctly communicates with other internal APIs (like delegating match persistence to the primary database service) without actual network overhead.</p>
+Testing the WebSocket microservice focuses heavily on in-memory state management and asynchronous events.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Lifecycle &amp; State Management:</strong> Tests validate the integrity of temporary data structures used for matchmaking, ensuring that rooms are created, joined, and cleaned up correctly during connection and disconnection events.</p>
+</li>
+<li>
+<p><strong>Inter-Service Communication:</strong> We extensively mock external HTTP calls to verify that the real-time service correctly communicates with other internal APIs (like delegating match persistence to the primary database service) without actual network overhead.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p><strong>4. Game logic engine (Rust)</strong>
-The core algorithmic engine relies on native Rust testing to ensure memory safety, correct game mechanics, and strict data contract adherence.
-<strong>Data Contracts &amp; Serialization:</strong> Tests guarantee that the internal Rust structures serialize and deserialize perfectly into the expected JSON formats, maintaining a reliable contract for the Node.js consumers.
-<strong>Algorithmic Correctness:</strong> The pure functions responsible for board evaluation, move validation, and win-condition detection are tested against numerous predefined board states to ensure maximum reliability of the core game rules.</p>
+The core algorithmic engine relies on native Rust testing to ensure memory safety, correct game mechanics, and strict data contract adherence.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Data Contracts &amp; Serialization:</strong> Tests guarantee that the internal Rust structures serialize and deserialize perfectly into the expected JSON formats, maintaining a reliable contract for the Node.js consumers.</p>
+</li>
+<li>
+<p><strong>Algorithmic Correctness:</strong> The pure functions responsible for board evaluation, move validation, and win-condition detection are tested against numerous predefined board states to ensure maximum reliability of the core game rules.</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
@@ -2374,7 +2580,7 @@ As illustrated in the coverage report below, the project successfully <strong>ex
 <p>End-to-end tests were implemented using <strong>Playwright</strong> and <strong>Cucumber.js</strong> with a BDD (Behaviour-Driven Development) approach. Tests are written in Gherkin <code>.feature</code> files and executed against the real running application at <code><a href="http://localhost:5173" class="bare">http://localhost:5173</a></code>. The test suite covers the three most critical user flows of the system.</p>
 </div>
 <div class="sect3">
-<h4 id="_user_login">12.3.1. User Login</h4>
+<h4 id="_user_login">12.3.1. User login</h4>
 <div class="paragraph">
 <p>Tests validate the complete authentication flow from the browser&#8217;s perspective.</p>
 </div>
@@ -2411,7 +2617,7 @@ As illustrated in the coverage report below, the project successfully <strong>ex
 </table>
 </div>
 <div class="sect3">
-<h4 id="_user_registration">12.3.2. User Registration</h4>
+<h4 id="_user_registration">12.3.2. User registration</h4>
 <div class="paragraph">
 <p>Tests validate the complete registration flow starting from the home screen.</p>
 </div>
@@ -2453,7 +2659,7 @@ As illustrated in the coverage report below, the project successfully <strong>ex
 </table>
 </div>
 <div class="sect3">
-<h4 id="_game_settings_configuration">12.3.3. Game Settings Configuration</h4>
+<h4 id="_game_settings_configuration">12.3.3. Game settings configuration</h4>
 <div class="paragraph">
 <p>Tests validate the match configuration screen and its dynamic UI behavior.</p>
 </div>
@@ -2486,22 +2692,73 @@ As illustrated in the coverage report below, the project successfully <strong>ex
 </div>
 </div>
 <div class="sect2">
-<h3 id="_load_testing_gatling">12.4. Load Testing (Gatling)</h3>
+<h3 id="_load_testing_analysis_gatling">12.4. Load testing analysis (Gatling)</h3>
 <div class="paragraph">
-<p>To validate system performance under realistic concurrent load, we implemented load tests using <strong>Gatling</strong>. The simulations target the most critical API endpoints and are executed against the production Azure environment.</p>
+<p>To evaluate the robustness and scalability of the Yovi system, a load scenario was designed to simulate a real-world usage flow (login, gameplay, and navigation through the different sections). The test ran for approximately one minute, maintaining a sustained load of 50 concurrent users.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/active_users.png" alt="Active users graph">
+</div>
+<div class="title">Figure 2. Active users throughout the simulation</div>
+</div>
+<div class="sect3">
+<h4 id="_performance_and_response_times">12.4.1. Performance and response times</h4>
+<div class="paragraph">
+<p>The results show that the system is extremely efficient at handling valid requests under stress. The vast majority of successful transitions were completed in under 800ms, ensuring a smooth user experience.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/global_summary.png" alt="Global summary of response times">
+</div>
+<div class="title">Figure 3. Global summary of response times</div>
+</div>
+<div class="paragraph">
+<p>As observed in the percentile breakdown over time, even with the maximum sustained load of 50 concurrent users, the API Gateway (Nginx) and Node.js microservices maintained minimal latency (average response time less than 200ms).</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/percentiles.png" alt="Response time percentile chart">
+</div>
+<div class="title">Figure 4. Evolution of response time percentiles under load</div>
+</div>
+<div class="paragraph">
+<p>The fact that the system remains just as responsive even with 50 users connected simultaneously confirms that our architecture is working well. The server is able to receive all requests and pass them on to the game engine without any bottlenecks.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_analysis_of_failed_requests">12.4.2. Analysis of failed requests</h4>
+<div class="paragraph">
+<p>Gatling&#8217;s report shows a 21% failure rate (KO), concentrated exclusively in HTTP 400 (Bad Request) status codes. As observed in the responses per second metric, the server is able to process and reject these invalid requests at high speed while maintaining a high volume of traffic.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/responses_per_second.png" alt="Graph of responses per second">
+</div>
+<div class="title">Figure 5. Response volume per second (Correct vs. Incorrect)</div>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/stats_errors.png" alt="Statistics table showing errors">
+</div>
+<div class="title">Figure 6. Detailed statistics and error distribution</div>
+</div>
+<div class="paragraph">
+<p>It is important to note that these errors do not represent performance failures or server crashes (there are no HTTP 5xx errors), but are the expected result of the <strong>robustness of the business rules</strong>:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Target endpoints:</strong> Authentication (<code>/api/login</code>), match result saving (<code>/api/matches/</code>), and bot move calculation (<code>/api/bot/play</code>).</p>
+<p><strong>Invalid requests due to repetition:</strong> When simulating 50 concurrent users repeating the exact same recording, the system receives requests that no longer make sense (for example, attempting to log in with data that the validator already considers processed). In these cases, the backend responds with a <code>400 Bad Request</code>.</p>
 </li>
 <li>
-<p><strong>Simulation:</strong> Ramp-up scenarios simulate progressive user load to identify bottlenecks before they affect real users.</p>
-</li>
-<li>
-<p><strong>Quality goal:</strong> All critical endpoints must respond within acceptable time thresholds under concurrent load, validating the performance requirements defined in Section 1.</p>
+<p><strong>Game Engine Validation:</strong> The Rust engine validates the game state using YEN notation. If the test attempts to send a move on a board that has already changed turns or on a finished game, the engine rejects the action by returning a <code>400 Bad Request</code>.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p><strong>Conclusion:</strong> The observed errors positively validate the system&#8217;s security. They confirm that the backend barriers function correctly, preventing illegal state transitions or data duplication even under high concurrency conditions, without impacting the performance of other valid requests.</p>
+</div>
 </div>
 </div>
 </div>
@@ -2814,7 +3071,7 @@ As illustrated in the coverage report below, the project successfully <strong>ex
 <div id="footer">
 <div id="footer-text">
 Version 3.0 EN<br>
-Last updated 2026-04-23 18:37:29 +0200
+Last updated 2026-04-24 14:15:08 +0200
 </div>
 </div>
 </body>
