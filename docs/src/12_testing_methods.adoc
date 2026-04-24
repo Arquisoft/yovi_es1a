@@ -19,23 +19,27 @@ Unit tests were implemented across all discrete architectural boundaries to vali
 
 **1. Frontend application (React/Vite)**
 The frontend testing strategy focuses on validating user workflows, state management, and network boundaries without requiring a live backend.
-**API communication and interceptors:** Tests ensure that custom HTTP clients automatically inject security mechanisms (like JWT tokens) and handle global responses correctly.
-**Session management:** We simulate different server responses (e.g., unauthorized access) to validate that the application correctly purges local session data and redirects users, ensuring security on the client side.
+
+* **API communication and interceptors:** Tests ensure that custom HTTP clients automatically inject security mechanisms (like JWT tokens) and handle global responses correctly.
+* **Session management:** We simulate different server responses (e.g., unauthorized access) to validate that the application correctly purges local session data and redirects users, ensuring security on the client side.
 
 **2. Core backend API (Node.js)**
 The REST API logic was tested by isolating the business layer from the persistence layer.
-**Database Mocking:** We utilized framework-level mocks (e.g., Mongoose mocks) to simulate database interactions. This ensures that tests evaluating complex domain logic (like user relationships or entity creation) run quickly and deterministically without needing a real MongoDB instance.
-**Business Constraints:** Tests validate that the services enforce structural integrity, correctly rejecting invalid data or unauthorized actions before they reach the database.
+
+* **Database Mocking:** We utilized framework-level mocks (e.g., Mongoose mocks) to simulate database interactions. This ensures that tests evaluating complex domain logic (like user relationships or entity creation) run quickly and deterministically without needing a real MongoDB instance.
+* **Business Constraints:** Tests validate that the services enforce structural integrity, correctly rejecting invalid data or unauthorized actions before they reach the database.
 
 **3. Real-Time multiplayer service (Node.js/Socket.io)**
 Testing the WebSocket microservice focuses heavily on in-memory state management and asynchronous events.
-**Lifecycle & State Management:** Tests validate the integrity of temporary data structures used for matchmaking, ensuring that rooms are created, joined, and cleaned up correctly during connection and disconnection events.
-**Inter-Service Communication:** We extensively mock external HTTP calls to verify that the real-time service correctly communicates with other internal APIs (like delegating match persistence to the primary database service) without actual network overhead.
+
+* **Lifecycle & State Management:** Tests validate the integrity of temporary data structures used for matchmaking, ensuring that rooms are created, joined, and cleaned up correctly during connection and disconnection events.
+* **Inter-Service Communication:** We extensively mock external HTTP calls to verify that the real-time service correctly communicates with other internal APIs (like delegating match persistence to the primary database service) without actual network overhead.
 
 **4. Game logic engine (Rust)**
 The core algorithmic engine relies on native Rust testing to ensure memory safety, correct game mechanics, and strict data contract adherence.
-**Data Contracts & Serialization:** Tests guarantee that the internal Rust structures serialize and deserialize perfectly into the expected JSON formats, maintaining a reliable contract for the Node.js consumers.
-**Algorithmic Correctness:** The pure functions responsible for board evaluation, move validation, and win-condition detection are tested against numerous predefined board states to ensure maximum reliability of the core game rules.
+
+* **Data Contracts & Serialization:** Tests guarantee that the internal Rust structures serialize and deserialize perfectly into the expected JSON formats, maintaining a reliable contract for the Node.js consumers.
+* **Algorithmic Correctness:** The pure functions responsible for board evaluation, move validation, and win-condition detection are tested against numerous predefined board states to ensure maximum reliability of the core game rules.
 
 === Code coverage results
 
