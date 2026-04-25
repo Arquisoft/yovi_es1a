@@ -437,8 +437,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1><span class="image"><img src="./images/arc42-logo.png" alt="arc42"></span> yovi_es1a</h1>
 <div class="details">
-<span id="revnumber">version 8.2 EN,</span>
-<span id="revdate">January 2023</span>
+<span id="revnumber">version 3.0 EN,</span>
+<span id="revdate">April 2026</span>
 <br><span id="revremark">(based upon AsciiDoc version)</span>
 </div>
 <div id="toc" class="toc">
@@ -446,22 +446,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#section-introduction-and-goals">1. Introduction and Goals</a>
 <ul class="sectlevel2">
-<li><a href="#_requirements_overview">1.1. Requirements Overview</a></li>
-<li><a href="#_quality_goals">1.2. Quality Goals</a></li>
-<li><a href="#_stakeholders">1.3. Stakeholders</a></li>
+<li><a href="#_quality_goals">1.1. Quality Goals</a></li>
+<li><a href="#_stakeholders">1.2. Stakeholders</a></li>
 </ul>
 </li>
 <li><a href="#section-architecture-constraints">2. Architecture Constraints</a>
 <ul class="sectlevel2">
-<li><a href="#_technical_constraints">2.1. Technical Constraints</a></li>
-<li><a href="#_organizational_constraints">2.2. Organizational Constraints</a></li>
-<li><a href="#_political_and_convention_constraints">2.3. Political and Convention Constraints</a></li>
+<li><a href="#_technical_constraints">2.1. Technical constraints</a></li>
+<li><a href="#_organizational_constraints">2.2. Organizational constraints</a></li>
+<li><a href="#_political_and_convention_constraints">2.3. Political and convention constraints</a></li>
 </ul>
 </li>
-<li><a href="#section-context-and-scope">3. Context and Scope</a>
+<li><a href="#section-context-and-scope">3. Context and scope</a>
 <ul class="sectlevel2">
-<li><a href="#_business_context">3.1. Business Context</a></li>
-<li><a href="#_technical_context">3.2. Technical Context</a></li>
+<li><a href="#_business_context">3.1. Business context</a></li>
+<li><a href="#_technical_context">3.2. Technical context</a></li>
 </ul>
 </li>
 <li><a href="#section-solution-strategy">4. Solution Strategy</a>
@@ -469,20 +468,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_technology_decisions">4.1. Technology Decisions</a></li>
 <li><a href="#_high_level_decomposition">4.2. High-level Decomposition</a></li>
 <li><a href="#_strategies_for_quality_goals">4.3. Strategies for Quality Goals</a></li>
-<li><a href="#_organizational_decisions">4.4. Organizational Decisions</a></li>
+<li><a href="#_organizational_decisions">4.4. Organizational decisions</a></li>
 </ul>
 </li>
 <li><a href="#section-building-block-view">5. Building Block View</a>
 <ul class="sectlevel2">
-<li><a href="#_whitebox_overall_system_level_1">5.1. Whitebox Overall System (Level 1)</a></li>
-<li><a href="#_level_2">5.2. Level 2</a></li>
+<li><a href="#_whitebox_overall_system_level_1">5.1. Whitebox overall system (Level 1)</a></li>
+<li><a href="#_level_2_backend_services_decomposition">5.2. Level 2: Backend services decomposition</a></li>
 </ul>
 </li>
 <li><a href="#section-runtime-view">6. Runtime View</a>
 <ul class="sectlevel2">
-<li><a href="#_game_lifecycle_against_the_computer">6.1. Game lifecycle against the computer</a></li>
-<li><a href="#_bot_against_application">6.2. Bot against Application</a></li>
-<li><a href="#_user_registration">6.3. User registration</a></li>
+<li><a href="#_1_local_1_vs_1_match_human_mode">6.1. 1. Local 1 vs 1 match (human mode)</a></li>
+<li><a href="#_2_game_lifecycle_against_the_computer_pve_bot_mode">6.2. 2. Game Lifecycle Against the Computer (PvE / "bot" mode)</a></li>
+<li><a href="#_3_real_time_multiplayer_match_pvp_online_mode">6.3. 3. Real-time Multiplayer Match (PvP / "online" mode)</a></li>
+<li><a href="#_external_bot_evaluation_tournament_api">6.4. External Bot Evaluation (Tournament API)</a></li>
+<li><a href="#_user_registration_workflow">6.5. User Registration Workflow</a></li>
 </ul>
 </li>
 <li><a href="#section-deployment-view">7. Deployment View</a>
@@ -497,11 +498,25 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_architecture_and_design_patterns">8.2. Architecture and design patterns</a></li>
 <li><a href="#_security_concepts">8.3. Security concepts</a></li>
 <li><a href="#_data_persistence_and_exchange">8.4. Data persistence and exchange</a></li>
-<li><a href="#_testing_and_quality_assurance_concepts">8.5. Testing and Quality Assurance Concepts</a></li>
-<li><a href="#_user_interface_and_ux_concepts">8.6. User Interface and UX concepts</a></li>
+<li><a href="#_testing_and_quality_assurance_concepts">8.5. Testing and quality assurance concepts</a></li>
+<li><a href="#_user_interface_and_ux_concepts">8.6. User interface and UX concepts</a></li>
 </ul>
 </li>
-<li><a href="#section-design-decisions">9. Architecture Decisions</a></li>
+<li><a href="#section-design-decisions">9. Architecture Decisions</a>
+<ul class="sectlevel2">
+<li><a href="#_da_01_nosql_database_mongodb">9.1. DA-01. NoSQL Database (MongoDB)</a></li>
+<li><a href="#_da_02_mongoose">9.2. DA-02. Mongoose</a></li>
+<li><a href="#_da_03_json_web_tokens_jwt_for_authentication">9.3. DA-03. JSON Web Tokens (JWT) for Authentication</a></li>
+<li><a href="#_da_04_bidirectional_communication_with_websockets_socket_io">9.4. DA-04. Bidirectional Communication with WebSockets (Socket.io)</a></li>
+<li><a href="#_da_05_reverse_proxy_and_api_gateway_with_nginx">9.5. DA-05. Reverse Proxy and API Gateway with Nginx</a></li>
+<li><a href="#_da_06_ssltls_termination_and_environment_parity_local_https">9.6. DA-06. SSL/TLS Termination and Environment Parity (Local HTTPS)</a></li>
+<li><a href="#_da_07_choosing_frameworks_for_microservices">9.7. DA-07. Choosing Frameworks for Microservices</a></li>
+<li><a href="#_da_08_competition_api_design_stateless_api">9.8. DA-08. Competition API Design (Stateless API)</a></li>
+<li><a href="#_da_09_continuous_deployment_cd_automation">9.9. DA-09. Continuous Deployment (CD) Automation</a></li>
+<li><a href="#_da_10_frontend_architecture_and_state_management_react_custom_hooks">9.10. DA-10. Frontend Architecture and State Management (React + Custom Hooks)</a></li>
+<li><a href="#_da_11_inter_microservice_m2m_authorization">9.11. DA-11. Inter-Microservice (M2M) Authorization</a></li>
+</ul>
+</li>
 <li><a href="#section-quality-scenarios">10. Quality Requirements</a>
 <ul class="sectlevel2">
 <li><a href="#_quality_tree">10.1. Quality Tree</a></li>
@@ -514,7 +529,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_technical_debts">11.2. Technical Debts</a></li>
 </ul>
 </li>
-<li><a href="#section-glossary">12. Glossary</a></li>
+<li><a href="#section-test-report">12. Test Report</a>
+<ul class="sectlevel2">
+<li><a href="#_unit_and_integration_testing">12.1. Unit and integration testing</a></li>
+<li><a href="#_code_coverage_results">12.2. Code coverage results</a></li>
+<li><a href="#_end_to_end_e2e_testing">12.3. End-to-End (E2E) Testing</a></li>
+<li><a href="#_load_testing_analysis_gatling">12.4. Load testing analysis (Gatling)</a></li>
+</ul>
+</li>
+<li><a href="#section-monitoring-documentation">13. Observability and documentation of APIs</a>
+<ul class="sectlevel2">
+<li><a href="#_system_monitoring_and_health_prometheus_and_grafana">13.1. System monitoring and health (Prometheus and Grafana)</a></li>
+<li><a href="#_interface_specification_openapi_and_swagger">13.2. Interface specification (OpenAPI and Swagger)</a></li>
+</ul>
+</li>
+<li><a href="#section-glossary">14. Glossary</a></li>
 </ul>
 </div>
 </div>
@@ -537,7 +566,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>arc42, the template for documentation of software and system architecture.</p>
 </div>
 <div class="paragraph">
-<p>Template Version 8.2 EN. (based upon AsciiDoc version), January 2023</p>
+<p>Template Version 3.0 EN. (based upon AsciiDoc version), April 2026</p>
 </div>
 <div class="paragraph">
 <p>Created, maintained and &#169; by Dr. Peter Hruschka, Dr. Gernot Starke and contributors.
@@ -598,10 +627,8 @@ These include</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The game development company Micrati has decided to begin developing a web-based system where users can play different variations of Game Y, an existing strategic board game. The initial idea is to offer an entertaining and intuitive experience to users. It will also provide several different strategies with different difficulty levels to attract user interest.</p>
+<p>The video game development company Micrati has decided to begin developing a web-based system where users can play Game Y, an existing strategy board game. The initial idea is to offer an entertaining and intuitive experience. It will also provide various strategies with different difficulty levels to capture users' interest, as well as an online multiplayer experience.</p>
 </div>
-<div class="sect2">
-<h3 id="_requirements_overview">1.1. Requirements Overview</h3>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -635,28 +662,27 @@ If requirements documents exist this overview should refer to these documents.</
 <div class="ulist">
 <ul>
 <li>
-<p>Provide a usable and functional version of the game with a variable board.</p>
+<p><strong>Game mechanics:</strong> Provide a functional version of the strategy game with a variable hexagonal board, including advanced game controls such as undo moves, skip turns, and surrender.</p>
 </li>
 <li>
-<p>Available on the web.</p>
+<p><strong>Platform:</strong> Available as a web application.</p>
 </li>
 <li>
-<p>Offer different strategies for playing the game with different difficulty levels selectable by the player.</p>
+<p><strong>Game modes:</strong> Offer multiplayer capabilities, as well as a single-player mode against a bot and against another player on the same machine.</p>
 </li>
 <li>
-<p>Allow users to register on the system.</p>
+<p><strong>AI integration:</strong> The computer bot must be integrated via an external API (Rust engine) offering different strategies and difficulty levels.</p>
 </li>
 <li>
-<p>Allow users to view their game history (statistical data such as the number of games played, win/loss statistics, etc.).</p>
+<p><strong>User management:</strong> Allow users to securely register, log in, and manage their profiles.</p>
 </li>
 <li>
-<p>Offer the option to play against a computer or a bot with an API.</p>
+<p><strong>Analytics &amp; history:</strong> Allow users to view their personal game history, win/loss statistics, and a global ranking of all players in the system.</p>
 </li>
 </ul>
 </div>
-</div>
 <div class="sect2">
-<h3 id="_quality_goals">1.2. Quality Goals</h3>
+<h3 id="_quality_goals">1.1. Quality Goals</h3>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -698,34 +724,34 @@ If you as an architect do not know how the quality of your work will be judged&#
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Usability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system should be easy for users to use and learn how to use correctly. This will encourage them to use the application again and enjoy the experience.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Usability &amp; accessibility</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system should be intuitive for users to learn and play. It must include clear UI feedback and consider basic accessibility standards so a wider range of users can enjoy the experience.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Functionality</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system must consider and implement the requirements correctly, allowing users to play the game Y with different strategies, register in the application, consult their statistics&#8230;&#8203;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Availability (Web)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application must be highly available and easily accessible via a web browser without requiring local installations by the end-user.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Accessibility</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application must be available from the Web.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Interoperability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The core backend must be able to seamlessly communicate with external microservices, specifically the external Rust-based API engine that calculates the bot&#8217;s movements.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Performance</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The app should respond to user requests within a reasonable timeframe. This prevents users from abandoning the app and ensures a positive experience that encourages them to return.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The app should respond to user requests (especially AI move calculations and database queries) within a reasonable timeframe. This prevents users from abandoning the app and ensures a smooth gameplay experience.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Maintainability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system should be easy to maintain and extend. This is achieved by following good programming practices, maintaining excellent communication within the development team&#8230;&#8203;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system should be easy to maintain and extend. This is achieved by following good programming practices (Clean Code, JSDoc), modularizing components (e.g., React Modals, CSS variables), and using containerization (Docker).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Security</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The private data of registered users must be kept safe.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The private data and credentials of registered users must be kept safe, securely stored in the database, and authenticated correctly.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_stakeholders">1.3. Stakeholders</h3>
+<h3 id="_stakeholders">1.2. Stakeholders</h3>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -815,7 +841,7 @@ These stakeholders determine the extent and the level of detail of your work and
 </div>
 </div>
 <div class="sect2">
-<h3 id="_technical_constraints">2.1. Technical Constraints</h3>
+<h3 id="_technical_constraints">2.1. Technical constraints</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -829,34 +855,54 @@ These stakeholders determine the extent and the level of detail of your work and
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>React &amp; TypeScript</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The frontend must be developed using React and TypeScript.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>React, TypeScript &amp; Vite</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The frontend must be developed using React and TypeScript, utilizing Vite as the fast build tool and development server.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Node.js &amp; Express</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The user management service will be implemented using Node.js and Express.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The backend and user management services will be implemented using Node.js and Express.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Rust Game Engine</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The core logic for the "Game of Y" must be implemented in Rust to ensure performance.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MongoDB</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The persistence layer for user profiles, match history, and global statistics must be implemented using MongoDB.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>WebSockets (Socket.io)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Real-time multiplayer synchronization, game status updates, and clan chat must be managed via WebSockets using Socket.io.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Rust game engine</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The core logic and AI for the "Game of Y" must be implemented in Rust to ensure maximum computational performance.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system must be containerized using Docker and orchestrated with Docker Compose.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The entire system (frontend, backend, database, and Rust engine) must be containerized using Docker and orchestrated with Docker Compose.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GitHub Actions</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD pipelines must be managed using GitHub Actions for automated testing and deployment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GitHub actions</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD pipelines must be managed using GitHub Actions for automated testing, building, and deployment.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Deployment environment</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system must be deployed and fully operational on a Microsoft Azure virtual environment, accessible via public IP/domain.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Quality gates &amp; metrics</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Code quality, security hotspots, and test coverage must be continuously analyzed using SonarQube, maintaining an acceptable threshold of code coverage.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Testing frameworks</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The project must include robust testing layers, implementing unit, integration, and end-to-end testing (E2E).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>YEN Notation</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Game moves and state must follow the standard YEN (Y-Game Extended Notation).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Game moves and state representation must strictly follow the standard YEN (Y-Game Extended Notation).</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_organizational_constraints">2.2. Organizational Constraints</h3>
+<h3 id="_organizational_constraints">2.2. Organizational constraints</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -870,26 +916,26 @@ These stakeholders determine the extent and the level of detail of your work and
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Team Size</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The team consists of 5 members: José Iván, Adrián, Fernando, Hugo, and Sergio.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Team size and roles</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The team consists of 5 members: José Iván, Adrián, Fernando, Hugo, and Sergio. Responsibilities are distributed across full-stack development and documentation.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Timeframe</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The project must be tested, code completed and discussed before the final submission.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Timeframe and deadlines</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The project is bound by the academic semester schedule. It must be fully tested, documented, and deployed before the final subject submission.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Meetings</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Weekly meetings will be held during laboratory sessions to track progress, besides possible meetings to discuss some issues or problems throught the week.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Methodology and meetings</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The team follows an iterative, Agile-based approach. Weekly meetings are held during laboratory sessions to track progress, with meetings throughout the week to resolve blockers.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Version Control</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">GitHub is the chosen platform for repository hosting and version control.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Version control and tracking</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GitHub is the mandatory platform for repository hosting, version control, and issue tracking (using GitHub Projects/Issues).</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_political_and_convention_constraints">2.3. Political and Convention Constraints</h3>
+<h3 id="_political_and_convention_constraints">2.3. Political and convention constraints</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -903,12 +949,20 @@ These stakeholders determine the extent and the level of detail of your work and
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Arc42</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The documentation must follow the Arc42 template structure.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Arc42 Architecture</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The software architecture documentation must strictly follow the Arc42 template structure to ensure consistency and readability.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Language</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The documentation and code comments must be written in English, as it&#8217;s the standard.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The documentation must be written in English, adhering to international software engineering standards.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Coding standards</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The team must adhere to Clean Code principles and security best practices (e.g., environment variables for secrets, strict CORS policies).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Conventional commits</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All repository commits must follow the Conventional Commits specification (or at least must be clear enough) to maintain a clean and semantic project history.</p></td>
 </tr>
 </tbody>
 </table>
@@ -917,55 +971,13 @@ These stakeholders determine the extent and the level of detail of your work and
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-context-and-scope">3. Context and Scope</h2>
+<h2 id="section-context-and-scope">3. Context and scope</h2>
 <div class="sectionbody">
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>Context and scope - as the name suggests - delimits your system (i.e. your scope) from all its communication partners
-(neighboring systems and users, i.e. the context of your system). It thereby specifies the external interfaces.</p>
-</div>
-<div class="paragraph">
-<p>If necessary, differentiate the business context (domain specific inputs and outputs) from the technical context (channels, protocols, hardware).</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>The domain interfaces and technical interfaces to communication partners are among your system&#8217;s most critical aspects. Make sure that you completely understand them.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>Various options:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Context diagrams</p>
-</li>
-<li>
-<p>Lists of communication partners and their interfaces.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-3/">Context and Scope</a> in the arc42 documentation.</p>
-</div>
-</div>
-</div>
 <div class="sect2">
-<h3 id="_business_context">3.1. Business Context</h3>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>Specification of <strong>all</strong> communication partners (users, IT-systems, &#8230;&#8203;) with explanations of domain specific inputs and outputs or interfaces.</p>
-</div>
-</div>
-</div>
+<h3 id="_business_context">3.1. Business context</h3>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/JOwnQiD038RtUmhXeRIGB1qxbAITCXHACnMoA6SrFdoIp4bdyDiNNvgIJVpVBttQcMFnoZdOc6J2WWnHUL8XyQClcQ1oVWu1esk1xZFZGgK3D9ZQU0FxdfCayuAkLuvhSiDlwl2uFpmrSbOFuTy2q7thdE2uc1Etmg9p2k4gWEtsjGNm0bzqIUPKR0DHvITTQY43Hey3sUOawuO1IWzne3WQcADRQ9_St_bGIQx5m9eJ1iBi0pm0avSKBPpLx_llAbQp_wdQLLer9s4SoG2hAwEd2AmpMGWxahvo_WK0" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/JP4nQyCm48Lt_OeZNLf8beuTIj9coL0eIJiKl5paItp4kZEway7_lbZ59QFUU_hUGzgQO_QI-c0tbW4p9eYQ1XKIF_dK4vJKFuU0qJN3wjiehm0DYb5Un5sRMDWye-kVYxEos6_gyBWxF5NdhBxeNrgoO29nECNCWzU0pofDy72aDeJ_BG2h7nqPJfCvfPgSTEGGvY6msRpM8xp0aQviJjdM45KkV2sP319wxCZMZGmzJWOeBSIEuit07Dr2NNpF-L1XrsnWjH4wmjwxUZ6HPuxMIAMeMEdTOFTvWBr62sVrUz3x4gWRQXtDc4OItiW0Ysj2vmX9HxAmFC0TOi-PejS65gUCqLcbaOlc-blax3mIq8XzmTaBOKlIbjJ_0W00" alt="diagram">
 </div>
 </div>
 <div class="paragraph">
@@ -974,13 +986,16 @@ These stakeholders determine the extent and the level of detail of your work and
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Player:</strong> The end-user who interacts with the web application to play games (against bots or other players in real-time) and manage their profile.</p>
+<p><strong>User:</strong> The end-user who interacts with the web application to play games (against bots or other players in real-time) and manage their profile.</p>
 </li>
 <li>
-<p><strong>Administrator:</strong> The technical user responsible for overseeing the system&#8217;s stability and performance via the internal monitoring dashboards.</p>
+<p><strong>Administrator:</strong> The technical user responsible for overseeing the system&#8217;s stability and performance via the internal monitoring dashboards and verifying API specifications via Swagger.</p>
 </li>
 <li>
 <p><strong>Bot (AI):</strong> Conceptual actor representing the internal artificial intelligence engine that plays against the user.</p>
+</li>
+<li>
+<p><strong>Tournament script (External bot):</strong> An external automated script that interacts directly with the system&#8217;s game engine to evaluate performance and play matches during competitive tournaments, bypassing standard user interfaces.</p>
 </li>
 <li>
 <p><strong>Yovi:</strong> The complete system boundary. It acts as a unified solution that encapsulates the game engines, real-time communications, user management, data persistence, and the observability infrastructure.</p>
@@ -989,18 +1004,10 @@ These stakeholders determine the extent and the level of detail of your work and
 </div>
 </div>
 <div class="sect2">
-<h3 id="_technical_context">3.2. Technical Context</h3>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>Technical interfaces (channels and transmission media) linking your system to its environment. In addition a mapping of domain specific input/output to the channels, i.e. an explanation which I/O uses which channel.</p>
-</div>
-</div>
-</div>
+<h3 id="_technical_context">3.2. Technical context</h3>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/TLHDJzj04BtlhnYv5oFLIO1KJNn0XAAsI83SE8W3YT34dfWjzgwxEnQWYlzUUTVvW0RvCZlptdozaKyje-6cAeLzbAf6WnLakggr8iKflvG4JLKUxOkUOVPO6Dse_9ikjO6d1ycq0wmnUyI2tiC-VJzglnrWJYjiIfxHCqzAMQYA54D6Yia8WHbh0q5IuWkP0D12xSnrO99NKadB1bdxEBOUeNHE45ngp656bZjkWLnALGXXA6DKHKaGtD8Ipen-iXrcwMtuAm1WEou4KyACOLBN4AR9vC21ROtYLNJLpdNsI0P-QiiGNYGn70rwX-DnRpJgVJqy2FxFU5r8zJnNOJmQm9HosNRr6UBXy1ZIzD9NK2r6E6QtKGWghIHh4obY2BkgPqRc1MsglAlqH4kiwxaA4sqOHWEVstltuHjBnivLUArpwlssC4ak8097FXuCEhe3xMCNMD7BN8NJnl8kTRYXEiG-QjMKBBt4SnMcxMpSatgTuSicWmEAVIb-65oXmdQluy7ui2jeSBKFd1XT4JzGOpjybxuskdBurrRV71cNQ0c2AwqAVNxcMsXj8Not49riJYU6Y_PwCMChrhx8oEA1enClACJmSpPBKhWR3eyNq8VRjBD5TwCGvVf9xU1JMJKbCbcO6LojP3PNTpw7Oo-4yCWeEkc4XHW2w4Em4t2IUJ_MiWzpvOsbvksZGiuUoBvbEiMsJFTyYt2AU8HTwzQ7yAOk3EOKjqrv_q4WXAqHUatTUxiFDmeO-jEGPIjyjvlDhLjmorLOUieQtTxRJJgxdoGNzpVJomEnfhUjjKf135F2tFPlZMIomgVxCEp7-J0it7_6hyRWQZt0dRkvnKwqlQGtqS52ECOszgiX8yd2EJ8AvukQUaUjD3DOauKhOYCpAyGfgRofody0" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/RLHDRziu4BtpLmoKYmnKjfEus4I7e4w3jWRImclPo24sYeauLhYXI9Qau0P5__j2fEJQgQ4BEVFUcq_nW_DeVLDBvbw4CcYnXbBNHYjIll2lag2fvSKfxosMBvNLZU8VjTGMTi_2qm7GOFc25Rs5dNswQBy38ASjDj8lwQUVIb6fcfI7afGdonYMNbj8Levi0kYWSMHxuvJNGWddBNeTlTXQUlTIDrPXK2jAAumF4DzQwHNE5iIPqfmWkTV8OKdEauNqCtefL3K8u2fU6BDKUbIL94WUw0bkhTxr6Jt5C_nY0F2dFP0i24iFKsCWBURJAEWCleKLEwmgih2QHKIyij-CbL8t79AlMbNwxXQcNg8BcBgri2xxErs-a8Klsdb8P_CSBiR3y-lhuTNLy9_pGV9tNjygeNwkLPfVZM51NBIrlODyChc4ehYFUQeMmmApcoCajLR2Qvifyf1sKM-ju1Njexo9jACdD6Qjqhcs7gx6KJjQJ-7RuRgrIhzfJiF_74pdCyWWa2_7uuuUGAVO5TRqkbRfed7-a3hPKmFY5BLkf1T6uYlPjKgBjZO_5BfNUBzN241sIkApnIqgRFjwFRu-xm9Qt9u2pwskoJzJupfy9s-ihWF-Tpj_rfOAsSr-nNAOjNy5bjwntfPPKJtxx2QE37BuibpE2tYSJ2utC8A7eZkpRh7-9hIj-eXIkWxOBJraNE_K0QuGTIFHauEbnUrMb6lr68E5C1lM_rhPuvab_kv9IxxfD4Bd8OUxi6qXv89-DEIywrGWlnoFBpQCnN1PTjCj2kIGm0YI0qTOWMX78qQmLk6GSLsw4Ibkj53U7PlHY2EDFgDE8roFeuHPHuJhDs84wSfK5ZdbRNhHFaWOSmPXs9ZXyHn2Py1sbRAOztu0VGfXg0fbfDXzNzB5gbX-dyvdtrUB-m7hwMrgxGC0EIm8kHizMD5E9LtU5mF6mXiOIxIuxHDv35kvEV2sktRa7MzOOFpn_TkG5UJW3ZsoOCiQSz3_ehHeoC5NybQKZh4Ff7XJo_y1" alt="diagram">
 </div>
 </div>
 <div class="paragraph">
@@ -1009,39 +1016,55 @@ These stakeholders determine the extent and the level of detail of your work and
 <div class="ulist">
 <ul>
 <li>
-<p><strong>External Access Interfaces (Public):</strong></p>
+<p><strong>External access interfaces (Public):</strong></p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Nginx Reverse Proxy &amp; TLS Termination:</strong> Binds to ports <code>80</code> (redirects to HTTPS) and <code>443</code> (SSL). It uses configured certificates (<code>cert.pem</code>, <code>key.pem</code>) to encrypt all traffic from Players and Gatling load tests.</p>
+<p><strong>Nginx reverse proxy and TLS termination:</strong> Binds to ports <code>80</code> (redirects to HTTPS) and <code>443</code> (SSL). It uses configured certificates (<code>cert.pem</code>, <code>key.pem</code>) to encrypt all traffic from Users and Gatling load tests.</p>
 </li>
 <li>
-<p><strong>Frontend Delivery (<code>/</code>):</strong> Nginx routes root traffic to the <code>webapp</code> container (port 80) to serve the React Single Page Application.</p>
+<p><strong>Frontend delivery (<code>/</code>):</strong> Nginx routes root traffic to the <code>webapp</code> container (port 80) to serve the React Single Page Application.</p>
 </li>
 <li>
-<p><strong>Node.js User &amp; Bot API (<code>/api/</code>, <code>/api/bot/</code>, <code>/api/matches/</code>):</strong> Handled by the <code>users</code> service on internal port <code>3000</code>. This includes authentication, user stats, and the artificial intelligence bot logic engine.</p>
+<p><strong>API documentation interfaces (Swagger):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Endpoints documentation (<code>/api-docs/endpoints</code>):</strong> Serves the main OpenAPI specification for user and match management.</p>
 </li>
 <li>
-<p><strong>Rust Game API (<code>/api/gamey/</code>):</strong> Routed to the <code>gamey</code> service on internal port <code>4000</code> for complex game mechanics calculation.</p>
-</li>
-<li>
-<p><strong>Real-Time Multiplayer (<code>/socket.io/</code>):</strong> Nginx upgrades HTTP connections to WebSockets and routes them to the <code>multiplayer</code> service on internal port <code>5000</code>.</p>
+<p><strong>Tournament API documentation (<code>/api-docs/api</code>):</strong> Serves the specific specification for the competition engine.</p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><strong>Internal Interfaces (Private <code>monitor-net</code> Network):</strong></p>
+<p><strong>Node.js user and bot API (<code>/api/</code>, <code>/api/bot/</code>, <code>/api/matches/</code>):</strong> Handled by the <code>users</code> service on internal port <code>3000</code>. This includes authentication, user stats, and the artificial intelligence bot logic engine.</p>
+</li>
+<li>
+<p><strong>Rust game API (<code>/api/gamey/</code>):</strong> Routed to the <code>gamey</code> service on internal port <code>4000</code> for complex game mechanics calculation.</p>
+</li>
+<li>
+<p><strong>Real-time multiplayer (<code>/socket.io/</code>):</strong> Nginx upgrades HTTP connections to WebSockets and routes them to the <code>multiplayer</code> service on internal port <code>5000</code>.</p>
+</li>
+<li>
+<p><strong>Tournament and evaluation interface (Direct Port):</strong> An exposed port (<code>3002</code>) mapped directly to the internal <code>gamey</code> service port (<code>4000</code>). This completely bypasses Nginx to provide a direct, low-latency HTTP communication channel for external tournament scripts.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Internal interfaces (Private <code>monitor-net</code> network):</strong></p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Microservice Communication:</strong> The <code>users</code> service communicates directly with the <code>gamey</code> service using the internal Docker DNS (<code><a href="http://gamey:4000" class="bare">http://gamey:4000</a></code>) defined via the <code>RUST_API_URL</code> environment variable.</p>
+<p><strong>Microservice communication:</strong> The <code>users</code> service communicates directly with the <code>gamey</code> service using the internal Docker DNS (<code><a href="http://gamey:4000" class="bare">http://gamey:4000</a></code>) defined via the <code>RUST_API_URL</code> environment variable.</p>
 </li>
 <li>
-<p><strong>Monitoring &amp; Observability:</strong> Prometheus (exposed on port <code>9090</code>) scrapes metrics from the internal services. Grafana (exposed on port <code>9091</code>) queries Prometheus to build visual dashboards accessed by the Administrator.</p>
+<p><strong>Monitoring and observability:</strong> Prometheus (exposed on port <code>9090</code>) scrapes metrics from the internal services. Grafana (exposed on port <code>9091</code>) queries Prometheus to build visual dashboards accessed by the Administrator.</p>
 </li>
 <li>
-<p><strong>Data Persistence:</strong> The core backend services (<code>users</code>, <code>gamey</code>, <code>multiplayer</code>) connect to an internal MongoDB instance to persist user profiles, match history, and active session data.</p>
+<p><strong>Data persistence:</strong> The users service connects securely via TLS to MongoDB Atlas, an external cloud-hosted database, to persist user profiles, match history, clan data, and authentication tokens. The gamey and multiplayer services do not access the database directly — any persistence they require is delegated to the users service via internal HTTP calls.</p>
 </li>
 </ul>
 </div>
@@ -1099,7 +1122,15 @@ Refer to details in the following sections.</p>
 <div class="sect2">
 <h3 id="_technology_decisions">4.1. Technology Decisions</h3>
 <div class="sect3">
-<h4 id="_frontend">4.1.1. Frontend</h4>
+<h4 id="_continuous_deployment_github_actions">4.1.1. Continuous deployment (GitHub Actions)</h4>
+<div class="paragraph">
+<p>Beyond automated testing, we implemented a full Continuous Deployment (CD) pipeline. Upon publishing a GitHub Release, a workflow automatically connects to the Azure VM via SSH to pull the latest images and restart the services.
+<strong>Quality goals:</strong> deployability, maintainability, reliability.
+<strong>Key constraints:</strong> Requires secure management of SSH keys using GitHub Secrets to prevent unauthorized server access.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_frontend">4.1.2. Frontend</h4>
 <div class="paragraph">
 <p>We chose React combined with TypeScript for the user interface development. React&#8217;s component-based architecture is ideal for modularizing the complex visualization of the game board and managing the reactive state of the match. The adoption of TypeScript adds a static typing system that drastically reduces compile-time errors.
 <strong>Quality goals:</strong> usability, maintainability, robustness.
@@ -1107,18 +1138,18 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_backend_microservices">4.1.2. Backend (Microservices)</h4>
+<h4 id="_backend_microservices">4.1.3. Backend (Microservices)</h4>
 <div class="paragraph">
 <p>For the backend, we adopted a polyglot microservices approach:
 1. <strong>Rust (<code>gamey</code>):</strong> Offers native performance and memory safety, guaranteeing low and predictable response times for the complex algorithmic logic of the game and AI bots.
 2. <strong>Node.js (<code>users</code>):</strong> Excellent for creating fast REST APIs to manage user registration, authentication (JWT), and database interactions.
-3. <strong>Node.js (<code>multiplayer</code>):</strong> A dedicated service handling WebSocket connections to ensure low-latency gameplay without blocking the main user API.
+3. <strong>Node.js (<code>multiplayer</code>):</strong> A dedicated service handling WebSocket connections to ensure low-latency gameplay.
 <strong>Quality goals:</strong> interoperability, scalability, and robustness.
 <strong>Key constraints:</strong> The Rust engine is restricted to using the strict YEN string format as the contract for game states.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_real_time_communication_websockets">4.1.3. Real-Time Communication (WebSockets)</h4>
+<h4 id="_real_time_communication_websockets">4.1.4. Real-Time communication (WebSockets)</h4>
 <div class="paragraph">
 <p>We selected <strong>Socket.io</strong> over standard HTTP polling for multiplayer interactions. Socket.io maintains a persistent, bi-directional TCP connection, allowing the server to push moves to opponents instantly. It also provides built-in "Rooms," which drastically simplifies the logic for matchmaking and isolating 1vs1 games.
 <strong>Quality goals:</strong> low latency, real-time performance, efficiency.
@@ -1126,7 +1157,7 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_api_gateway_security">4.1.4. API Gateway &amp; Security</h4>
+<h4 id="_api_gateway_security">4.1.5. API Gateway &amp; security</h4>
 <div class="paragraph">
 <p>We implemented <strong>Nginx</strong> as a Reverse Proxy and API Gateway. Instead of exposing multiple microservice ports to the internet, Nginx provides a single, secure entry point (Port 443). It handles SSL/TLS termination, hiding the internal complexity of the Docker network and routing traffic to the correct service based on the URL path.
 <strong>Quality goals:</strong> security, isolation, parity between Dev/Prod environments.
@@ -1134,7 +1165,7 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_database">4.1.5. Database</h4>
+<h4 id="_database">4.1.6. Database</h4>
 <div class="paragraph">
 <p>We chose <strong>MongoDB Atlas</strong> (Cloud NoSQL) as our primary database. Its document-oriented structure perfectly complements Node.js and React. This allows us to achieve agility when evolving game data structures without migrating rigid SQL tables, and ensures high availability in the cloud.
 <strong>Quality goals:</strong> agility in development, high availability, speed of response.
@@ -1142,7 +1173,7 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_containers_and_cloud_deployment">4.1.6. Containers and Cloud Deployment</h4>
+<h4 id="_containers_and_cloud_deployment">4.1.7. Containers and cloud deployment</h4>
 <div class="paragraph">
 <p><strong>Docker and Docker Compose</strong> were selected to containerize the services. This guarantees absolute consistency between local development machines and our <strong>Azure Virtual Machine</strong> production environment. It isolates dependencies (Node vs. Rust) and allows us to define the entire infrastructure as code.
 <strong>Quality goals:</strong> portability, deployability, reproducibility.
@@ -1150,7 +1181,7 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_monitoring">4.1.7. Monitoring</h4>
+<h4 id="_monitoring">4.1.8. Monitoring</h4>
 <div class="paragraph">
 <p>We chose the combination of <strong>Prometheus and Grafana</strong>. Prometheus acts as a time-series database scraping technical metrics from the backend, while Grafana visualizes this data on real-time dashboards.
 <strong>Quality goals:</strong> observability, performance validation.
@@ -1158,7 +1189,7 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_modeling_version_control">4.1.8. Modeling &amp; Version Control</h4>
+<h4 id="_modeling_version_control">4.1.9. Modeling &amp; version control</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1174,7 +1205,15 @@ Refer to details in the following sections.</p>
 <div class="sect2">
 <h3 id="_high_level_decomposition">4.2. High-level Decomposition</h3>
 <div class="sect3">
-<h4 id="_microservices_architecture">4.2.1. Microservices Architecture</h4>
+<h4 id="_high_performance_bot_interface">4.2.1. High-Performance bot interface</h4>
+<div class="paragraph">
+<p>We exposed a secondary direct port (3002) for the Rust gamey service. This bypasses the Nginx API Gateway specifically for external competition scripts and automated evaluation tools.
+<strong>Quality goals:</strong> efficiency, interoperability.
+<strong>Key constraints:</strong> Only the <code>/play</code> endpoint is exposed on this port to  meeting tournament requirements.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_microservices_architecture">4.2.2. Microservices architecture</h4>
 <div class="paragraph">
 <p>We divided the backend into autonomous services (<code>users</code>, <code>gamey</code>, <code>multiplayer</code>). This decouples user management, real-time networking, and game logic. If the user service experiences high load, the multiplayer game loop remains unaffected.
 <strong>Quality goals:</strong> modifiability, scalability, technological independence.
@@ -1182,21 +1221,21 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_api_gateway_pattern">4.2.2. API Gateway Pattern</h4>
+<h4 id="_api_gateway_pattern">4.2.3. API gateway pattern</h4>
 <div class="paragraph">
-<p>Nginx acts as the facade for the system. Clients do not know if they are talking to Rust or Node.js; they simply send requests to the Nginx gateway, which routes <code>/api/gamey/</code> to Rust and <code>/socket.io/</code> to the multiplayer service.
-<strong>Quality goals:</strong> security, simplicity for clients.</p>
+<p>Nginx acts as the facade for the system. Clients do not know if they are talking to Rust or Node.js; they simply send requests to the Nginx gateway, which routes <code>/api/gamey/</code> to Rust, <code>/socket.io/</code> to the multiplayer service, and <code>/api/</code> to the users service. Additionally, the backend implements dynamic <strong>CORS (Cross-Origin Resource Sharing)</strong> strategies via environment variables, ensuring that production endpoints only accept traffic from the gateway&#8217;s IP, while remaining flexible for local development.
+<strong>Quality goals:</strong> security, simplicity for clients, parity between Dev/Prod environments.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_single_page_application_spa">4.2.3. Single Page Application (SPA)</h4>
+<h4 id="_single_page_application_spa">4.2.4. Single page application (SPA)</h4>
 <div class="paragraph">
 <p>The React frontend separates the presentation layer from business logic. By loading once and updating dynamically via WebSockets and REST, it offers a fluid, app-like experience.
 <strong>Quality goals:</strong> usability, interoperability.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_hybrid_communication_rest_event_driven">4.2.4. Hybrid Communication: REST &amp; Event-Driven</h4>
+<h4 id="_hybrid_communication_rest_event_driven">4.2.5. Hybrid communication: REST &amp; Event-Driven</h4>
 <div class="paragraph">
 <p>We use a dual approach:
 * <strong>REST (HTTP/JSON):</strong> Used for stateless, transactional operations (e.g., login, fetching match history, requesting an AI move).
@@ -1239,11 +1278,11 @@ Refer to details in the following sections.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Interoperability</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Frontend (TypeScript), User Service (Node.js), and Engine (Rust) must exchange data.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>JSON Standard:</strong> Strict use of the <strong>YEN notation</strong> as a universal data contract, avoiding language-specific binary formats.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>JSON standard:</strong> Strict use of the <strong>YEN notation</strong> as a universal data contract, avoiding language-specific binary formats.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Modifiability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The team needs to update the AI or the multiplayer logic without breaking the login system.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The team needs to update the multiplayer logic without breaking the login system.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Microservices:</strong> Strict separation of concerns. Services are isolated containers; changing one does not require redeploying the others.</p></td>
 </tr>
 <tr>
@@ -1266,16 +1305,26 @@ Refer to details in the following sections.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Developers need to replicate the exact Azure production environment locally.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker Compose:</strong> All infrastructure is defined as code, mimicking the cloud setup locally with a single command.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Deployability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The team needs to push a bug fix to the Azure production server instantly.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Automated CD Pipeline:</strong> GitHub Actions orchestrates an automated workflow upon a new Release. It injects production secrets dynamically, connects via SSH to the Azure VM, pulls the latest code, and orchestrates container recreation using Docker Compose without manual intervention.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Interoperability (Tournament)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An external evaluation script needs to request moves from the bot via a specific port (3002).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Direct Port Mapping:</strong> Docker maps port 3002 directly to the Rust engine, providing a standard, high-speed interface for third-party scripts.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_organizational_decisions">4.4. Organizational Decisions</h3>
+<h3 id="_organizational_decisions">4.4. Organizational decisions</h3>
 <div class="paragraph">
 <p>To organize ourselves well and ensure work proceeds without issues, we have agreed upon the following team rules.</p>
 </div>
 <div class="sect3">
-<h4 id="_code_and_task_management_github">4.4.1. Code and Task Management (GitHub)</h4>
+<h4 id="_code_and_task_management_github">4.4.1. Code and task management (GitHub)</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1291,7 +1340,7 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_quality_control">4.4.2. Quality Control</h4>
+<h4 id="_quality_control">4.4.2. Quality control</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1304,14 +1353,21 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_communication">4.4.3. Communication</h4>
+<h4 id="_automated_quality_assurance">4.4.3. Automated quality assurance</h4>
+<div class="paragraph">
+<p>We integrated Static Analysis (SonarCloud) and Automated Testing (Unit &amp; E2E) into the CI pipeline.
+No code reaches the production environment unless it passes the full test suite (Node.js, Rust) and meets the quality gate defined in SonarCloud.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_communication">4.4.4. Communication</h4>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Weekly Meetings:</strong> We meet once a week (in person during laboratory classes) to see what progress we have made and plan the following week&#8217;s tasks. This is when we discuss important design decisions.</p>
+<p><strong>Weekly meetings:</strong> We meet once a week (in person during laboratory classes) to see what progress we have made and plan the following week&#8217;s tasks. This is when we discuss important design decisions.</p>
 </li>
 <li>
-<p><strong>WhatsApp and Discord:</strong> We use these groups for quick day-to-day questions. If someone gets stuck programming, they ask for help here to solve it quickly without having to wait for the weekly meeting.</p>
+<p><strong>WhatsApp and discord:</strong> We use these groups for quick day-to-day questions. If someone gets stuck programming, they ask for help here to solve it quickly without having to wait for the weekly meeting.</p>
 </li>
 </ul>
 </div>
@@ -1332,28 +1388,28 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_whitebox_overall_system_level_1">5.1. Whitebox Overall System (Level 1)</h3>
+<h3 id="_whitebox_overall_system_level_1">5.1. Whitebox overall system (Level 1)</h3>
 <div class="paragraph">
-<p>The following diagram shows the main interaction between the user and the system.</p>
+<p>The following diagram shows the main high-level subsystems of the Yovi System and how they interact to serve both standard users and automated tournament scripts.</p>
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/7Sh12O0m343HUwO87Q03U11ta1uybXgqq3IIf8BRYrx_-ujvLX_S81SNnP2CD60s74OAHVYIJjqnR79NN1zpujyVkIl0Ts7KUfmUvx_XXCd8OA6-3sul" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/NP11RzD048Nl-okUt4igDVJUGzL45j13aHK7LOXm6EzEhINsRfWPfqI8_uuSno1wdNtVDpllGOt4Xhvpv2qBYi_AWbkKVEGk7rWAa69GbZcmpOCawZaPQY_nOEU4ZLC-uMh3mRa3-JsrZE9BFaRK9pNkiSv32YId0hyS0FZS7t8QFSMgUiG7CdwbqoujFhKn_Rm-Qzjf-3R_Nd8oJW5rjTgbnOR9smIyN5xU4clo-n5uYbwoiXoZPnrtvS3llYie1Mm6lLYQANsM139gI1b5IKQeM3IgSVAyIukddDfShYSgDEwtSsDNM2xlvx_Z3X-tswh6BPxh6i8_1bPJDpUs_7eb76wQt8Llo_jvzONw6yUYZCBUK6MnQpUxnptpoRX3pN9aXHfPz7Y97Uj_qN_oJHwC5QlgKM_mp4sT_Pvjwg5-fRPbGPczkXaPyT2C95FGyHY9nkeUE8MXx_u0" alt="diagram">
 </div>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Motivation</dt>
 <dd>
-<p>Yovi (refering to our group game) is a web application that allows users to play the "Game of Y". The system acts as a single unit for the end user, providing registration, game logic, and history tracking.</p>
+<p>The system follows a modular, decoupled architecture. Instead of a monolith, it is split into a static frontend, a cluster of backend microservices, and a persistent database, all shielded by a single reverse proxy gateway. This ensures security, scalability, and allows multiple entry points (e.g., standard UI vs. direct Tournament API).</p>
 </dd>
-<dt class="hdlist1">Contained Building Blocks</dt>
+<dt class="hdlist1">Contained building blocks</dt>
 </dl>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
+<col style="width: 25%;">
+<col style="width: 75%;">
 </colgroup>
 <thead>
 <tr>
@@ -1363,49 +1419,42 @@ Refer to details in the following sections.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>User</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">End-user interacting with the application via a web browser.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>API gateway</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Acts as the single point of entry, handles SSL termination, and routes traffic to the correct internal block (Frontend or Backend).</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Yovi System</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The complete software solution handling the game logic and user data.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Frontend SPA</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Client-side application running in the user&#8217;s browser, responsible for the UI and UX.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Backend microservices</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A collection of internal APIs that handle user authentication, real-time multiplayer networking, heavy game logic, and serve the OpenAPI documentation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Data persistence</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The MongoDB database cluster that securely stores user profiles, encrypted passwords, and match statistics.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_level_2">5.2. Level 2</h3>
+<h3 id="_level_2_backend_services_decomposition">5.2. Level 2: Backend services decomposition</h3>
 <div class="paragraph">
-<p>This level shows the decomposition of the system into the three main services defined in the project structure.</p>
+<p>This level zooms into the "Backend Microservices" building block, detailing the distinct autonomous services that handle users, real-time gameplay, heavy AI computation, and API documentation.</p>
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/ROwxQWCn44LxVSL5lUtUXN5CNaqWn0ucvKYwB8kjaP2q3Y7atyFkaWSXvTmvzyniQvFIXdWsMVn9EiBUbgID6YpU3G3u57DIQeCzqbtbR24LhtIIi_amFyMT-1CrOCzowJthFuBdobA_WCapZCbVx4uYNt2ZNQyprKdastWiI1CdbR0FIRjqlPlMmHapFuJ5OZCxiSRzuV28bI-KnZ7xpKp6RsQSp5nRBZS83ciyKK9T7KlVMCsM6ePu_WG0" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/NL7BJYCn4BpxAqh39P58Y5Yuv81O169p62bAmW717ZfsCrYPiGUxlMo4zjzNyq99RgrsLNLL-JOA1KbLgKYB3yX-BXTu9E5FscUWYAARX-UDJy5HnKwmri7MqeAasV8UPoisIjMaTrGmiZlIEtO6kTN1Hmv_hEQOuKi1WFPLxLqZb3r53X7h3W1o1kjFAWeEU5gykj7I1y6FsMmsRe-b1dqgaQTIR5tIdiCWD32llvbL0pfbFbB5ptXmXNKDPPMYZFla5U_LFwKC2MqfChBSkyBVtxNFPgjKNmucavlE5kPO-IGSSK6rRQCqmyHu7O_GhPK3TFHwnpAr_WZLMZZMlEXi3OrFNiu2c_EjBytl0yAz3Qm5lpQR9LRyaJZAgniz_1KEZaeCZLwEbUfy7rvRk1vsGl_Uj_IhfbRLvJZCVymUvPSvAXBzZbGR4exZ_k9qUWEpnHpBuDzisV-xa4Hy90wMexfbPr9L_WS0" alt="diagram">
 </div>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Motivation</dt>
 <dd>
-<p>The system follows a modular architecture to separate the user interface from the logic services.</p>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>WebApp</strong>: Handles UI and client-side logic.</p>
-</li>
-<li>
-<p><strong>Users Service</strong>: Manages user registration and data.</p>
-</li>
-<li>
-<p><strong>GameY Engine</strong>: Handles the specific rules and logic of the board game.</p>
-</li>
-</ul>
-</div>
+<p>To achieve high availability and separation of concerns, the backend is not a single server. Heavy AI calculations (Rust) are isolated from real-time socket connections (Multiplayer) and standard HTTP REST traffic (Users). Furthermore, by embedding Swagger UI within the Users Service, we provide live API documentation without needing an extra container.</p>
 </dd>
+<dt class="hdlist1">Contained building blocks</dt>
 </dl>
-</div>
-<div class="paragraph">
-<p>Contained Building Blocks</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1414,33 +1463,34 @@ Refer to details in the following sections.</p>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top"><strong>Building Block</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Building block</strong></th>
 <th class="tableblock halign-left valign-top"><strong>Description</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>WebApp</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Provides the graphical interface for the user. It communicates with the backend services to perform actions.<br>
-<strong>Technology:</strong> React, Vite, TypeScript.<br>
-<strong>Location:</strong> <code>/webapp</code> directory.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Users Service</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Manages user registration and stores user information. It exposes a REST API.<br>
-<strong>Technology:</strong> Node.js, Express.<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Users service and swagger UI</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Manages user registration, JWT authentication, and historical statistics retrieval. It acts as a standard REST API and natively serves the OpenAPI specifications (<code>openapi.yaml</code> and <code>api-tournament.yaml</code>) via Swagger UI. It is the only service with direct access to MongoDB.<br>
+<strong>Technology:</strong> Node.js, Express, Mongoose, Swagger-UI-Express.<br>
 <strong>Location:</strong> <code>/users</code> directory.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GameY Engine</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Implements the core logic of the Game of Y, including move validation and bot strategies using Rust for performance.<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Multiplayer service</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Maintains stateful, real-time WebSocket connections with active players, managing game rooms and broadcasting piece movements instantly. It does not access MongoDB directly — match result persistence is delegated to the Users service via internal HTTP calls using a machine-to-machine authentication header (<code>x-server-key</code>).<br>
+<strong>Technology:</strong> Node.js, Socket.io.<br>
+<strong>Location:</strong> <code>/multiplayer</code> directory.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GameY engine</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Implements the core logic of the Game of Y, validating moves and checking win conditions using YEN notation. It exposes two distinct ports: <strong>Port 4000</strong> for internal communication (routed via Nginx at <code>/api/gamey/</code> and used directly by the <code>Users</code> service), and <strong>Port 3002</strong> directly exposed to the internet for external competitions. It includes auto-resign logic: if the engine detects no valid moves (e.g., full board), it returns an action: resign status instead of an error, ensuring flow continuity in automated test environments.<br>
 <strong>Technology:</strong> Rust.<br>
 <strong>Location:</strong> <code>/gamey</code> directory.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MongoDB</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> Database used to persist user data and game history.<br>
-<strong>Technology:</strong> MongoDB.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Responsibility:</strong> The central database used to persist user profiles, encrypted credentials, and global ranking statistics. Only the Users service connects to it directly.<br>
+<strong>Technology:</strong> MongoDB (NoSQL Document Database).<br>
+<strong>Location:</strong> External Docker container / Atlas Cloud.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1455,97 +1505,65 @@ Refer to details in the following sections.</p>
 <div class="content">
 <div class="paragraph">
 <div class="title">Contents</div>
-<p>The runtime view describes concrete behavior and interactions of the system’s building blocks in form of scenarios from the following areas:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>important use cases or features: how do building blocks execute them?</p>
-</li>
-<li>
-<p>interactions at critical external interfaces: how do building blocks cooperate with users and neighboring systems?</p>
-</li>
-<li>
-<p>operation and administration: launch, start-up, stop</p>
-</li>
-<li>
-<p>error and exception scenarios</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Remark: The main criterion for the choice of possible scenarios (sequences, workflows) is their <strong>architectural relevance</strong>. It is <strong>not</strong> important to describe a large number of scenarios. You should rather document a representative selection.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>You should understand how (instances of) building blocks of your system perform their job and communicate at runtime.
-You will mainly capture scenarios in your documentation to communicate your architecture to stakeholders that are less willing or able to read and understand the static models (building block view, deployment view).</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>There are many notations for describing scenarios, e.g.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>numbered list of steps (in natural language)</p>
-</li>
-<li>
-<p>activity diagrams or flow charts</p>
-</li>
-<li>
-<p>sequence diagrams</p>
-</li>
-<li>
-<p>BPMN or EPCs (event process chains)</p>
-</li>
-<li>
-<p>state machines</p>
-</li>
-<li>
-<p>&#8230;&#8203;</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-6/">Runtime View</a> in the arc42 documentation.</p>
+<p>The runtime view describes concrete behavior and interactions of the system&#8217;s building blocks in form of scenarios.</p>
 </div>
 </div>
 </div>
 <div class="paragraph">
-<p>This section displays sequence diagrams. These show the interaction of objects in different scenarios.</p>
+<p>This section displays sequence diagrams illustrating the interaction of the system&#8217;s components across the most architecturally relevant scenarios. Based on the frontend&#8217;s <code>Tablero</code> logic, the system supports three distinct gameplay modes (<code>humano</code>, <code>bot</code>, and <code>online</code>), each with a unique architectural flow.</p>
 </div>
 <div class="sect2">
-<h3 id="_game_lifecycle_against_the_computer">6.1. Game lifecycle against the computer</h3>
+<h3 id="_1_local_1_vs_1_match_human_mode">6.1. 1. Local 1 vs 1 match (human mode)</h3>
 <div class="paragraph">
-<p>This diagram shows the game life cycle in its standard form (playing against the machine).</p>
+<p>In this mode, two human players compete on the same physical device. Real-time WebSockets are not required. Instead, the React frontend manages the turn progression and queries the backend solely to validate if the current board layout results in a victory after each move.</p>
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/TLB1Rjim3BtpAtXiWHIx-r2qQ8PXmBP3ZMxeaPROMAWi6IALmllwGNASEiboC629Z-yzFl51b9BcmGCPZGbVX1ECbDGPDr9G_CFTupYUN1MCj9pspl19uHiDF84bfOw4STi101GqtjqVY1hy4NVe0ip7KbZJDVYRlBEaZ2QnvQ2ElC0QKbgsNODFFPjtp8MzACAsmxiBjfTZ-PHYvUSnQrzq3AcB0HDBzdhXkcNFHb4qaV9ksk0hxcXWr6da3LhtzkPCzZfja8B5BbAoAEulh-QiwJJubBYCLxjlNh_-keLQEF7qFRWo-CAZf0pWOnmh2PO_G4GyT_apxddWeBLueTnoi3Z4_Q9RG0VjJtSrrMgko6Q12YC_lovoi6phrQfxvU2vneSt7ovyyL7uzeXTx1pUgC6jaz7Jj2I-uBh4z5vFx8LdLHE3kf1PpfK_VSTXpCg20vdU1Qvp7gEuvbLp2dA4hcBvh-6sZnzN13XOAD_LjPwp9pNzUiFETxhLcERWdQWp0l30mUR1_mC0" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/vLCzRzim4DtvAwuUQdfm3NlK4CG5si13My9EQXJmSY8F2blggF8Zglvz8Kj6v3GTEdSJ-3xktIDr6nE6b6idC2VFkIuf2DJ91vWfXnq5M8Dyxp8jPe0HrFe5kW6v9pE26z5WI5RR1Zd1R4-e4npKziJo7aj7mQyghEb0uSdgqV58vRPfheLRjOCxJDHYTsBvkRByQo2FXzViXqWXmbRjUgutzEvx7DXdO1nsBRd3chx11wuiqudbFiTq6L1J9uHQm_9cZ5Q0SgWfGkaoGMD94tY6qcCmOg1CoG-DmKJWl4O7CVNVRy5XvtCI4_guIG7go-4ULjZOLUdJIZ-I_h5iBJC5a8Di8KPohvlkLC177reC1WBzp1IJcAB3b9gw0hwYi-TKhMNGderDrhCuex3ymtLFAGS-XyyHvDnpvIrNyyKB_ydMVvTSLbxUWDeKi6DZTH_bydxc4Ngf46hpIkU1p7zPUMlvN-eUwAzKSy0dWXgJVeH0CRi4iXTTJA-lPzqRiw40nw6DJzwW0_dyhnyjnpUpXRWbDhbslm40" alt="diagram">
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_bot_against_application">6.2. Bot against Application</h3>
+<h3 id="_2_game_lifecycle_against_the_computer_pve_bot_mode">6.2. 2. Game Lifecycle Against the Computer (PvE / "bot" mode)</h3>
 <div class="paragraph">
-<p>This diagram shows the life cycle of the game in which a bot participates against the machine.</p>
+<p>This diagram illustrates the single-player workflow. The frontend maintains the game state, validates win conditions after each move (both human and bot), and delegates the heavy AI computation to the isolated Rust Game Engine through the Nginx Gateway.</p>
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/TP2nRW8n38RtF8N7Tk056117LLMtL8XE7St5WeZ42ObJwVhqLNnmvQHsY9Ju--t_TxP5C4iDtk0WCSCkYacOnGqk8Gjq-txnViD0ezb5WTMcmJLyaAT1e4X6eTC8o1PE60XaJ6IwVT-KshQ6dfquzEwRL6Aq3Alxg1k6OyHiZOynQIEqcm40MFgoXH2_29u-Nz-VbI_TkfJyg1A5DxCPlvnfk4nHYw3KeYhqqv90RCbgwQ7vRdwWKhtCL7rNcvQlCQcP8IybnqnuqHVvGfF545aSLohBGNF20rqh5O60mzan_QxoPwBcMbGJYENXL_vBE8yZjgQTBR6jmVy0" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/pLDDJzjG4Bo_Nx7YG9n36jHZ3XL1fO3QW9K48gHSrlRAlFAywxwF1F_xoXy1fqc5sbvwixmpEplZyRdpQ7qeZCBWXKEHa5MOUh5mxyYg4gtNgIwHFPpC2LCFYtYwvcY9YI4hunmBMf3Tw9I69u0ELfHCotAVE8rlu0ezRR5QStIRQtvfmTtBVNGjx60QtzHOoUZ3TzUYcq4dja-vme8UuP9ppRJcQ1wStmaKL2bLCs7qgJjk0ZDy9WU5R0Y4uPfU816qcMhdVUHzcQ4dC9AY0UVhvrCmM4dmgWVlZ4mWlbiiOOob7YVYn-aJfS-ZhMOc2z7ZvMr77QgEK7FxjYRmHUmMRGQMVWHoNlMdhL91rGGUqEZcigrcI8KpxRKmH7kIjKn15OmELERaW-N6K70G3OHpqPmFXh_ezP9O76BV3w0qMFMDmoauRz5JNlrx1jVBPTpfrJexiw_ps4fApe4DXXoSGavCjJPSY6y-_dlnN8YVoORcv4fXHn2b8ZPpHq9wjV_nx0pklhvPwmLuVEcHpatBqbIGT4U2bxyjN6ZAc_sNfVk3ee5O66mrznlNBQ-NSaQsJclmzaUtVxD2uvlJWJXp4Aqqrwk-YQEX0W0uZ7w16u82VVe4bbmm7gBwtDsTlwDzrgvf-geDVYOP6aMSgNFYB1Jc9m00" alt="diagram">
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_user_registration">6.3. User registration</h3>
+<h3 id="_3_real_time_multiplayer_match_pvp_online_mode">6.3. 3. Real-time Multiplayer Match (PvP / "online" mode)</h3>
 <div class="paragraph">
-<p>This diagram shows the different interactions that take place when a user registers.</p>
+<p>This diagram details the WebSocket communication used for real-time multiplayer games. The system utilizes an explicit Room-based matchmaking approach. For normal game endings, match result persistence is handled by the frontend via the <code>statsService</code>. For player disconnections, the Multiplayer Service acts as the arbiter and persists the result via a secure machine-to-machine (M2M) call to the Users API.</p>
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/XP0zRiCm38LtdUADxP0BU2XIs5sx64LcIgOJePPaa5BIthwmd00EYgOh-V7zSA-P99Sm6N8v2JwKnSmasJi_Kymui7sTvxlHmcZFSlQEpK2PB2cZiyOi6-nUhaSD-cA3pn0-Uir2sQU8CKamAx2WMx46hJ1bHbbIR3SBsTa6xOdT9_nO2V2Nrwo6fZKJQ1AcuVis1u3EOlVBfS9ZAd6epBtH9lwRI18yRRoUwy4j_LMuGNzA5t2b0wlIaGrFodZdozhbSPIOyfznrjuzdHdnNxKsnT5Bg8z-NAqlph7gWpfkgyLnC7kEGmdJ3m00" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/xLLDRzj64BtpLmnuY2aqYY0TUj0XY6AfgW7J9gGaHW03nN0vaJSYTzZTfHGM_V75BacPZBzQe4KklNBUVBptPeVlZ4Ljgo8FiBAigY8b7Q2mh27ybOs5ACcn9WtJKGXe89bsqNL5lV2i3S-24hMLGfQeB8GRGc5XconkLHHNkPMbXqy-O9gJvYRfXj95MGuJ5ya5hD7I4UjR5LtjfFhMWDkFGtIlD6n97wIWMnLjMUp9lf5j6myQvdqqf0qiaWlNWpDwyzKqM1zeAmrJrbZGPrYfdLIknwOojXkie3h8q6AAXY2CMUru-HuMDaVZ4Siq298fZD-sZEUmKjODSCbfMiChC9IJi0QC_8E21kFGBUKvdBDI92n4DzijJ4n7Rp8AMeX3Uvfp-5ZkD6O4bbstHWeeDLiMdFUAj_1L8Is4GXDQsZ0N8KHkYb7WuptWcXHfj0G_ZyKTQd1WEEUCEcIVdY-gcOjpNpWB8NBGqQd_-2qaqpaifN7kzOe5oUmPeQGgAsiQv8_GwIjBrQhKyFbUfK-OoyofvCBm2cAquWwQjsAUL6g71MtTU_HA2SvPl_RBy1guB5cHibTOF9HlGoeZ3UyPTTRc0HeZTugo8NZs4ZZOQQvAlypUaKlcCW0062vkZ7ioKF21VF0H3vBhxGUOO2adATk9k2En7n-bKgGX-howWXnhhkp8f_TSwJ-yEVp2-kZ6rFIxkpOUt4Sq7GkgUueVfGB1AfDMichB5rHx_iFg6xALLc0isif0TEOUh5Ixiz4ZVNhSdqzxOcCAt5FC1meVidzg6vow6n8a3tuTB4Co6_OOEffCprfB6iDc_nlsmmsRFZJi_hqciyumKbaGO6xR2-4aCH0DFD2UX86perH_U_9cQlW9mZ_NYtXr_Mcr2VyHXrEQku_T3NgskxjXrmVI8KJ-yFlp-EBA5Uu-ae78cTIP-2_isZATmuKof6rxWfSige9KWrwcZopPEQilKXTusiOd_bKtZIynPvW_zYext2MR4-nxdpDfHFElChqZs-hP_elkCJ1fDSu93-Jvh3KA-bBbUHq-QsjdtM_trLuuAjturstcifVO8ttwyGr5R9mzkHhFOlWsDgGFfCTxgaV_YLbEtNUaigh8_m80" alt="diagram">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_external_bot_evaluation_tournament_api">6.4. External Bot Evaluation (Tournament API)</h3>
+<div class="paragraph">
+<p>Apart from the standard frontend modes, the system provides a direct, high-performance interface for external tournament evaluations. This bypasses the Nginx gateway and Node.js layers, interacting directly with the Rust engine via port 3002.</p>
+</div>
+<div class="imageblock plantuml">
+<div class="content">
+<img src="https://www.plantuml.com/plantuml/png/ROunJm9148Nx_HKl57fN48Xs58IW5nj50aP3OZFiJM2JlTdBxgp8lpTx64DX-JBVz-OjabBKt7b3MOFaRi_HaDKGCMg-bQEGnp8ejZQwNaUWLABfAQgphYTHZ9weunqQEJZXJwasEIdM8IhkfzExUd0ASZQcD8tdbpJ3-dNxXadlwOng6VGsOTUiq8Klhis0NB7lv5rBoiCPDw2-zsVuS73M6F8wS61fkJK0yEkFvsNk32-azeWDf-mLrOUJoND8QV8OwLGRzeallWsYJZAdwuw_3G_aRVR32B979uNFeXp7PTH_RpUiEGg4JzW7YYsI5htQDQlQiBHcmTBcply0" alt="diagram">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_user_registration_workflow">6.5. User Registration Workflow</h3>
+<div class="paragraph">
+<p>This diagram illustrates the registration flow. The Users API validates whether the user already exists before storing the new account, and hashes the password using Bcrypt before persisting it to MongoDB Atlas.</p>
+</div>
+<div class="imageblock plantuml">
+<div class="content">
+<img src="https://www.plantuml.com/plantuml/png/XP5DJzj048Rl-ojUvO3WGA5LB_MXmYHgYzJIgARgXSjuT-9iQ--wisDC_drbOoe7YBZkFBFlnrma9T6kgGrr6aFNb2o6h4R1pyHYMXBrrhSK58iVJ5PHhFC5AE4NbtdRxXFv-WgVIRcdtMqulgvyk3yPuUbndnuK4lBrrS16nsz-fmTw71GiTzwoSQHKKc8iliLGnTKbSgqfZU2gD6Q0SVfnyfEXwCh6AuGhdrH8VGpOH6dC0p2WaviCw-_53SwezMTMc9Ix8VCq7S2vaGoVelGa3i9_EqvgvjE1NfKPbbksV-0t6Bu2t_kaoHYgTVmBL0kJspqE061LulIPr0XlOXVSoEmhpHEyF_-0PGoRsbiTqV_kPvKyWnwhc7Gp5DlOWqMYeE6Kg6B3TM9SSpycUSLfY7hGxTE5BvIsQ2cbFeh3yQMLNQidBouEXHPqnmYJ3RXekuQ37lOpvFJIZ7T_fRjtvs-n7E_k3bRtb7cvEJiJnH64dHUs2etu6YiV30TdBZYuhgd_0G00" alt="diagram">
 </div>
 </div>
 <div style="page-break-after: always;"></div>
@@ -1559,119 +1577,57 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <div class="content">
 <div class="paragraph">
 <div class="title">Content</div>
-<p>The deployment view describes:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>technical infrastructure used to execute your system, with infrastructure elements like geographical locations, environments, computers, processors, channels and net topologies as well as other infrastructure elements and</p>
-</li>
-<li>
-<p>mapping of (software) building blocks to that infrastructure elements.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Often systems are executed in different environments, e.g. development environment, test environment, production environment. In such cases you should document all relevant environments.</p>
-</div>
-<div class="paragraph">
-<p>Especially document a deployment view if your software is executed as distributed system with more than one computer, processor, server or container or when you design and construct your own hardware processors and chips.</p>
-</div>
-<div class="paragraph">
-<p>From a software perspective it is sufficient to capture only those elements of an infrastructure that are needed to show a deployment of your building blocks. Hardware architects can go beyond that and describe an infrastructure to any level of detail they need to capture.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>Software does not run without hardware.
-This underlying infrastructure can and will influence a system and/or some
-cross-cutting concepts. Therefore, there is a need to know the infrastructure.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>Maybe a highest level deployment diagram is already contained in section 3.2. as
-technical context with your own infrastructure as ONE black box. In this section one can
-zoom into this black box using additional deployment diagrams:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>UML offers deployment diagrams to express that view. Use it, probably with nested diagrams,
-when your infrastructure is more complex.</p>
-</li>
-<li>
-<p>When your (hardware) stakeholders prefer other kinds of diagrams rather than a deployment diagram, let them use any kind that is able to show nodes and channels of the infrastructure.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-7/">Deployment View</a> in the arc42 documentation.</p>
+<p>The deployment view describes technical infrastructure used to execute your system, with infrastructure elements like geographical locations, environments, computers, processors, channels and net topologies as well as other infrastructure elements and mapping of (software) building blocks to that infrastructure elements.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_infrastructure_level_1">7.1. Infrastructure Level 1</h3>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>Describe (usually in a combination of diagrams, tables, and text):</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>distribution of a system to multiple locations, environments, computers, processors, .., as well as physical connections between them</p>
-</li>
-<li>
-<p>important justifications or motivations for this deployment structure</p>
-</li>
-<li>
-<p>quality and/or performance features of this infrastructure</p>
-</li>
-<li>
-<p>mapping of software artifacts to elements of this infrastructure</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>For multiple environments or alternative deployments please copy and adapt this section of arc42 for all relevant environments.</p>
-</div>
-</div>
-</div>
 <div class="paragraph">
 <p><em><strong>Overview Diagram</strong></em></p>
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/VP51Rzim38Nl-XL4JdQ1p8VrvCFGDW7MGnjaJRQYw7PWRCOH8ec6H2SDXlxtGLA3EfVT97wFJ-JJJH3qCbYZH8iXc5Dl-6J92VpIT8GflF11G_703PeT1ocL2dljUlHe8UomvQDs7MpH11gHXctFZfoiv6G8F3M2hZEa53R27du6yaevRWacCwFZUyKpRU3Eyp6GBoU00PeC_Yg0rn7y4zacdzNxsMNEpPuyt7EGyRZ9A9wIpTQZ9PXOTbhOJnq951-D2v8Z-trkY23g0LuNdNPlK3pHWNmWM7f-EvLf11T95ZtJvhRlK_L86-pxN8vR1bYHF-Y64XrY9SFlQEdb0dPewPJXus14zmPFv2yazhEUXKlFbcH7GqYyzsm_x3rkqM4szhXL0EynhSRmqCBaaLt7ypku5OC1Ybcivjrj94h5sM4w_NPE6cfOu45tA1H0-BVRYVIXhYfppbgfipIsfNIWXllrUhc2ecSlS7tzjLGPH4cE2cgeWg3e1Z04aZ1IfBYY07jTNOr0YkeCqkK2Zs9Azl6BvOlcwagfx9bKSLEeuOcmhPwz5e8M1Q5OFwnAbP_uhqvluuHjgLHCE6dZ1q0DFmRocaBIgLGRhpDZOwYH09R4woQe6tBjOCq_" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/NP9RRnCn48NV_Ij6wSi6aIP09I0Fg9U4csW8sK9LjNsOx4uIgrxFCfvD6X3_7TbBIE3DylbyF3x7fq5HjAcSKQkEO4Irusr5Nk6RfGtqu8RN5hAp7uqGJ8NBfb3B7iP-ROLz9Bl6X0VhQnIi8Aomv8trIrYW2tIW55pLxCbhhbj785Ge-gKxH2QiT8x5mrAuyUK5EnOuUZj-ExuO6uE5ia3dQo21FamTRaawW06QGB9JhxWHZsd-l11RQoBch70qez8OpoL1vyBPI6Jdmfj0qarGqMx-D000jzSqXp_oVR9er-RNpgDDv9iLRT319HOhwmcoznoqzLjnY6x9RY5O4NGgzbPPUfuKiX4N3oJmmIk9HmSJqWtBGtiu4kqaQPh9qlf7o6Qq9WcfXyTjDytbex87hsb-LjT9sT0SwtelnU02v2HhMz3zBhYm1ouRfxPEkVw3LN5_Zxt3YcvW72yco6PDq7QI9LQqtMDJuOfqHKr8QYrS7NW8Bj1ZUqvmaPHVRLQUbK3iSgN0Y_zSnuyr1ofXRH5g5eKNWy7puSbWCFYBB5YWjF5tfTgnA2YqZoHV9lFOOU6uAQ5poNx9etCuKuSX1L_57MDYDD3hlTdr3aEOuDekKIc0yfrVgTPXsEy_7nm_U_tw-DMhuvVFp0wE1rCnC8JtLrVJ7B8qxSd9YwunhHAPjY8OfhWfG51KMy32EWe7MEe9XZ3Z9bxVnzhsdq3sCVyywHvWgQS3BCGFfiUM8toTvuTiYlK_oxItDpOnljxjaL3vTCwkl3yuDce3Ffj-W1bzRoXekFFPTDT8jmqmj6F5HEDLX6N_MgmIZ50HigjFUTV4V_7F8_D2i8uZLQHYYs3Y_qX4GeVmfI6niGLRKI-ajJabNpQL-mq0" alt="diagram">
 </div>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Motivation</dt>
 <dd>
-<p>Yovi is executed locally on a single host machine using Docker and Docker Compose. All traffic from the browser is routed through Nginx, which acts as a reverse proxy and terminates HTTPS using TLS certificates generated with mkcert. Nginx forwards requests to the appropriate internal service based on the URL path. All containers communicate through a private Docker network ("monitor-net"), and persistent data is stored in MongoDB Atlas (cloud-hosted). This deployment also includes a real-time multiplayer service based on WebSockets, and a monitoring stack (Prometheus and Grafana).</p>
+<p>Yovi supports two deployment environments through a single, dynamic <code>docker-compose.yml</code> file, leveraging default environment variables (e.g., <code>${NODE_ENV:-development}</code>) to adapt seamlessly:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Local development:</strong> The system can be executed on any machine with Docker installed using <code>docker compose up</code>. TLS certificates are generated locally with mkcert for HTTPS on localhost. CORS policies are relaxed by default.</p>
+</li>
+<li>
+<p><strong>Production (Azure VM):</strong> The system is deployed on a Microsoft Azure Virtual Machine (IP: 20.199.88.71) via an automated GitHub Actions pipeline. All end-user traffic is securely routed through Nginx over HTTPS (port 443). Persistent data is stored in MongoDB Atlas (cloud-hosted). This environment also exposes port 3002 directly to the GameY engine for external tournament scripts.</p>
+</li>
+</ul>
+</div>
 </dd>
 <dt class="hdlist1">Quality and/or Performance Features</dt>
 <dd>
 <div class="ulist">
 <ul>
 <li>
-<p>Security: all client-server communication is encrypted via HTTPS (TLS). Nginx is the single public entry point, hiding internal service ports.</p>
+<p><strong>Security:</strong> All client-server communication is encrypted via HTTPS (TLS). Nginx is the single public entry point, hiding internal service ports.</p>
 </li>
 <li>
-<p>Modularity: each service is deployed as an independent container, allowing isolated development and replacement.</p>
+<p><strong>Modularity:</strong> Each service is deployed as an independent container, allowing isolated development and replacement.</p>
 </li>
 <li>
-<p>Portability: the deployment can be reproduced consistently on different machines that support Docker.</p>
+<p><strong>Portability:</strong> The deployment can be reproduced consistently on different machines that support Docker.</p>
 </li>
 <li>
-<p>Observability: Prometheus and Grafana enable basic monitoring of the backend services.</p>
+<p><strong>Observability:</strong> Prometheus and Grafana enable robust monitoring of the backend services.</p>
 </li>
 <li>
-<p>Maintainability: the separation of responsibilities across containers simplifies troubleshooting and updates.</p>
+<p><strong>Availability:</strong> Critical containers enforce the <code>restart: unless-stopped</code> policy, ensuring automatic recovery after unexpected crashes or VM reboots.</p>
 </li>
 <li>
-<p>Scalability: services are decoupled and can be scaled independently if needed.</p>
+<p><strong>High-Performance tournament interface:</strong> The <code>gamey</code> container has an explicit port mapping (3002:4000). This creates a direct channel from the Azure host to the Rust engine, optimizing latency for external evaluation scripts.</p>
 </li>
 </ul>
 </div>
@@ -1693,7 +1649,7 @@ when your infrastructure is more complex.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Web Browser</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Runs on the client side. The user accesses the application via HTTPS at <a href="https://localhost" class="bare">https://localhost</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Runs on the client side. In local development, the user accesses the application via HTTPS at <a href="https://localhost" class="bare">https://localhost</a>. In production, the application is accessible via the Azure VM public IP at <a href="https://20.199.88.71" class="bare">https://20.199.88.71</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Nginx (Reverse Proxy)</p></td>
@@ -1701,67 +1657,53 @@ when your infrastructure is more complex.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">WebApp</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host, connected to the internal Docker network.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host, serving the React SPA.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Users Service</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host, connected to the internal Docker network.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host. Acts as the primary backend logic controller and the sole manager of the database persistence layer.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GameY Service</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host, connected to the internal Docker network.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host. It is accessible via Nginx (port 443) for standard web users and directly via port 3002 for tournament bot interactions.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Multiplayer Service</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host, connected to the internal Docker network. Manages real-time online game sessions via WebSockets (Socket.io).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host. Manages real-time online game sessions via WebSockets (Socket.io) and delegates match persistence to the Users Service.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">MongoDB Atlas</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Cloud-hosted database (external to the Docker Host). Stores user data, match history, and clan information. Accessed securely over TLS.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cloud-hosted database (external to the Docker Host). Stores user data, match history, and clan information. Accessed securely over TLS exclusively by the Users Service.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prometheus</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host, connected to the internal Docker network. Collects metrics from the services.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Grafana</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Container deployed on the Docker Host, connected to the internal Docker network. Visualizes metrics queried from Prometheus.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prometheus &amp; Grafana</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Containers deployed on the Docker Host to scrape and visualize metrics respectively.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
 <h3 id="_infrastructure_level_2">7.2. Infrastructure Level 2</h3>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>Here you can include the internal structure of (some) infrastructure elements from level 1.</p>
-</div>
-<div class="paragraph">
-<p>Please copy the structure from level 1 for each selected element.</p>
-</div>
-</div>
-</div>
 <div class="sect3">
-<h4 id="_docker_host_localhost">7.2.1. <em>Docker Host (Localhost)</em></h4>
+<h4 id="_docker_host">7.2.1. <em>Docker Host</em></h4>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/TP5FQnin4CNl-XI3Jxi1rz2Z3oLf3KcBxGOs9PJGmrWxkokiFzlHR1mJyjsB99VQaDuqx_TcD4-wZe8iaxDAZ5Y2hxvZZCAJbea9rlHC5Zx275P1xudXBaI1QXqqsY54gPMAU-D7P7GG1sp3mVWUEhIHpeWERWoUl3Hoj0HCMj3tbfJoeIMO_MVu3312Ei6h0kWO7S7C1MyayDoJG7Lgt98S0kzBGmB93_2qxOr_-PN5T2hY8-rknZ6h1zhXE1RvHoIEq10_6qsPJaafy1OT_Ro0FJew5hYPh9ZHuf7umkB-wSLupy6H33J5p4SExZIUiKEFPJ1Zfm3Ur9jIseQfXTac-3wiFiEDM8nGVKbgoUeIKIgdW_dyqoaHBA4H5AEXCvRY6S-PO0aB7CtY2gflpVTjVSPphByy5--vpf8bRqo_81zCIDv7sZMvhfKgj-MEj2WiuPuucYXvZuL3qSD2M_JGeY1K3-kcLcM5zveIEJbDbqQqjLBf5I-YRKZOw9YDAhrcfjcsX1N6OHUGM_Wz4HkAwffyEpdx1m00" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/RP5FZzem4CNl_XHFd4WbYjGZXsffaRfR0KKAxMfLzJ0a4x3mdzIUG6crtxsomsf3rPlzViypyyPtKIX8PuqIBORnu9f0KK9NIHSOIpwnmJjCiF3LaGFkVHIbub6xbW9Pn0FL_gpT7WsPo0DIUTjwnqvAkHX6u4h8xGqhvNpD60qAOZp_dRfzMs6AfQ_877oKOWIAI2VyKK0Jo396rZijFamS2yRN6ckMim_7_a42oGzyN--r-_KZY-dKYu-ycxTjLi-yexRjvQ-HGqJ9uQGhphHBIWy_aUMd6xWdovSUhZeZkZLquN1ZiQzwRzm4RraEtCNCs-3jjNoWXXprXGCr2dXMpqfLndSrHYllzdxn0NCn537-cDG-gqr4gPmEaydxQoBCK0g9hj1emt70SoRCCALMJzzW_BdyiYu6FCTwuVdoFzSWMVB6z0loLllaVUHTcU-5Kdst_28DYXas7AAEakUOMfBgCAqCETGaXF5sMHPgM7mmyOCJ3euCxhVR3SQHJenSe7XfyphzFzwT5rX_ubWebPP-iuaLIz1Lp1EejFnCiss61SN3pbEeyRFZe3cgEtPrPyrV" alt="diagram">
 </div>
 </div>
 <div class="paragraph">
-<p>This diagram zooms into the Docker Host and the internal Docker network. Nginx is the entry point for all traffic and routes requests to the correct service. WebApp serves the frontend assets. Users Service and GameY Service handle the backend logic. The Multiplayer Service manages real-time communication via WebSockets. MongoDB Atlas stores all persistent data externally in the cloud. Prometheus and Grafana run alongside the services for monitoring.</p>
+<p>This diagram zooms into the Docker Host and the internal Docker network. Nginx is the entry point for all traffic and routes requests to the correct service. WebApp serves the frontend assets. Users Service handles business logic and acts as the sole bridge to MongoDB Atlas. The Multiplayer Service manages real-time communication via WebSockets and delegates persistence to the Users Service. Prometheus and Grafana run alongside the services for monitoring.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_client_web_browser">7.2.2. <em>Client (Web Browser)</em></h4>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/JOwxQiD044Nx_OgBAwamXiILYc2I50uOOsA75275UZMMXLUxoip83qB-FQo4mDrbximvin2rh5tZZTRg2M_Xm5QKEwST4rPq9ey7JF7YQmgAx9FsUEPu4UBS63dLeRLi6yZHbl5IXme7wuNk6XURDWOAkjMR9p0vjQ7oP8nr6XcJ3o6Um0ew8JOcn98m6Npzs0tgNmDytUc_KxSVilaRxrwZEn5Z6KMHhQAp_XX5ynwKqe1PLtMu8dkdCx4GDXoljxm7XjGaN7e6q-dJg421jJtNbLKIQCHHjPLYDlEZmuoBwQZ7eC1ojzjimVJJKNgeZQoOpnzpiw1GTet_1m00" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/JP1DJy9048Rl-olUS6eFW229mC7Wnm4J94HG3-fXQOVIiDsjirC-DFvtisqmtYRpPfvdPYPUD4jL62Mv6CA3tR3smbKY5HDcj2U3FjguCpbPGVHAQzooEtZYM2c_ossfMHVmMvswGsupRBJnz2z9N54wIrQMSZ84faIqpGmffHDnZDQp9sv1UrIUM2dhKaAhyTNjf55_A-3jd_uZPEkcLZ_dkNkNx8WnTLuGtNo58ruUqSNC9TfidPUuPeQg8Swpt1uHFT6Us1CMx8wdk6RRa0Hos0ljzlNPXZ7cUfzdMiX37BOYfHztk_sBJcyqwWo7dQlUkuqS_oNcR4TkaOQdkh8WAx4w8mE-5cACwMgrM8Bfiw9mHUbOC1XSncf2DgqAymi0" alt="diagram">
 </div>
 </div>
 <div class="paragraph">
-<p>This diagram isolates the client-side element. The user accesses the application through a web browser navigating to <a href="https://localhost" class="bare">https://localhost</a>. The browser communicates exclusively with Nginx over HTTPS. The TLS certificate, generated with mkcert, must be trusted by the operating system for the browser to show the secure padlock.</p>
+<p>This diagram isolates the client-side element. In local development, the user navigates to <a href="https://localhost" class="bare">https://localhost</a>. In production, the user accesses the application via the Azure VM public IP at <a href="https://20.199.88.71" class="bare">https://20.199.88.71</a>. In both cases, the browser communicates exclusively with Nginx over HTTPS, which acts as the single secure entry point to the system.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1779,11 +1721,22 @@ when your infrastructure is more complex.</p>
 <h4 id="_monitoring_stack_prometheus_grafana">7.2.4. <em>Monitoring Stack (Prometheus + Grafana)</em></h4>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/LSv1ImCn48RXUtx5Hq_ri1UFFKX1GOLMbE91nCEGpdR39faocRGKwN-NT0lgBUHvFv9bCLAhAJeB5XdFkLSgfjLRLSQA3nnnYmvhoS54GzvXO-H7vyeOyfwK4if0MpaswYaM_YDUqbuoPzlOAJAKlL7UHNOkovOnUn0_ik99Yc6-4azna68tCr11E-7R0RrIOipIz8Ckis5-7Rwm7KN7QT2WzS3dUs4jsB0UWkUlXhNTJFX8YJ_-uOuIdoPyLKbi0zToaRrAkgwKUieqzKgz0yxkx5mhq7LtqmjOu5vYP6y5YKs3BwxLb-AIBl1MMGF_-fBpjgRu0m00" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/ROxBIWD144Nt_HMNh9958BXB5X9HKC589EX6N1ITcgIPVWpLrGbHyk_IC-83tDvpRjrQPYNH4hnHfvvn7nkXh5Ai5c4yy84zBZ35AaMdILpSOQDaMsDows97GW5vJzjqhAWXd_aNiIbqANBKZPuyGzWgnPrdOsBQCaOtoROik4jPCRvwhvClgya8bB6lsOS16g7068NXWMbanVYhzyXwJD8EXGgg3xm-PvQC3Sl1MNwhiDHaWAlYrNMUJYn_b53pGLbB2gnxBhaddQGmW5kXXYBrwKweCS3Pd8sf1gRJos472rmdxzbgHc0LP_EFqS_yPzHxlT6h2pmL5iVV7EDr4iLyDfzDp9BZjWJ_2G00" alt="diagram">
 </div>
 </div>
 <div class="paragraph">
-<p>This diagram focuses on observability. Prometheus collects technical metrics exposed by the backend services and stores them internally. Grafana queries Prometheus to display dashboards. This setup supports troubleshooting and performance monitoring during development.</p>
+<p>This diagram focuses on observability. Prometheus collects technical metrics exposed by the backend services and stores them internally. Grafana queries Prometheus to display dashboards.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_competition_interface_direct_port_3002">7.2.5. <em>Competition Interface (Direct Port 3002)</em></h4>
+<div class="imageblock plantuml">
+<div class="content">
+<img src="https://www.plantuml.com/plantuml/png/JOzDIqCn44Nt-HMNkcd1WjIT2_43iGMLKeiWuc9Cfg_1PFBCJDGg_dTvwiBTmBsSU-P4ZQgrd9n5Iuo5R2gfrUQjLSOLltB235ESbzopHOj5i13ZkY7Fpkbpb9ugPUYMGdcBqc53IVbVualkYx3OhUqIex8taYwnS-IjL8pMfLMXp6AuzJNsDW8fzEV4teg3Sr82OtJwCKZTNMCyBsgJdzgsgE7J0S339MM-nuLqKHZZLLERF0wTZZBlt9TpVypfmrxbiFzKKdYS7l_6EC9ylLvYnI-DrJ1UbceuF3YOJOPvOzJORGrbyuS3pdOzgRBYfelo3YiEOD71CKU9kMKaCXO_b4a2GXoU1_yAalUiwbW21huxOGajfsy0" alt="diagram">
+</div>
+</div>
+<div class="paragraph">
+<p>This diagram isolates the direct competition interface. External tournament scripts bypass Nginx entirely and connect directly to the Rust game engine via port 3002, which is mapped to the internal container port 4000. This design provides minimum latency for competitive evaluation, avoiding the overhead of the standard API gateway. Only the <code>/play</code> endpoint is accessible through this interface.</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1881,11 +1834,6 @@ Thus, they are an important contribution to achieve inner qualities of your syst
 <p>Note: it might be difficult to assign individual concepts to one specific topic
 on this list.</p>
 </div>
-<div class="imageblock">
-<div class="content">
-<img src="./images/08-concepts-EN.drawio.png" alt="Possible topics for crosscutting concepts">
-</div>
-</div>
 <div class="paragraph">
 <div class="title">Further Information</div>
 <p>See <a href="https://docs.arc42.org/section-8/">Concepts</a> in the arc42 documentation.</p>
@@ -1900,22 +1848,22 @@ on this list.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>GameY</strong>: The central entity representing a game session. It holds the state of the triangular board, tracks the current player, and validates rules. Detect winning paths (connected components touching all three sides) in real-time.</p>
+<p><strong>GameY</strong>: The central entity representing a game session. It holds the state of the board (a triangular shape made of hexagonal cells), tracks the current player, and validates rules. It detects winning paths (connected components touching all three sides) in real-time.</p>
 </li>
 <li>
-<p><strong>User &amp; Clan</strong>: Entities representing registered players and their social groupings.</p>
+<p><strong>User and clan</strong>: Entities representing registered players and their social groupings.</p>
 </li>
 <li>
-<p><strong>Match</strong>: Represents an active or historical multiplayer session between users or bots, tracking scores and turns.</p>
+<p><strong>Match</strong>: Represents a multiplayer session, including users and games between players and bots, recording the number of moves and game time.</p>
 </li>
 <li>
-<p><strong>Player</strong>: A participant in the game (Human via Web UI, or Bot/LLM).</p>
+<p><strong>Player</strong>: A participant in the game (Human via Web UI, or Bot).</p>
 </li>
 <li>
-<p><strong>Board &amp; Coordinates</strong>: A triangular grid utilizing a 3-dimensional barycentric coordinate system to uniquely identify cells.</p>
+<p><strong>Board &amp; Coordinates</strong>: A grid utilizing a 3-dimensional barycentric coordinate system to uniquely identify cells.</p>
 </li>
 <li>
-<p><strong>Bot</strong>: An AI opponent. The architecture supports pluggable bot strategies (e.g., random, monte carlo, etc) invoked via the API.</p>
+<p><strong>Bot</strong>: An AI opponent. The architecture supports pluggable bot strategies (e.g., random, monte carlo, etc.).</p>
 </li>
 </ul>
 </div>
@@ -1925,7 +1873,7 @@ on this list.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Microservices pattern</strong>: The backend is divided into specialized, loosely coupled services (<code>users</code>, <code>multiplayer</code>, <code>gamey</code>,<code>webapp</code>) communicating via internal HTTP APIs.</p>
+<p><strong>Microservices pattern</strong>: The backend is divided into specialized, loosely coupled services (<code>users</code>, <code>multiplayer</code>, <code>gamey</code>, <code>webapp</code>) communicating via internal HTTP APIs.</p>
 </li>
 <li>
 <p><strong>API gateway / Reverse proxy</strong>: Nginx acts as the single entry point, handling routing, SSL termination, and serving the static frontend, hiding the internal complexity from the client.</p>
@@ -1934,7 +1882,7 @@ on this list.</p>
 <p><strong>Event-Driven architecture (Real-time)</strong>: The <code>multiplayer</code> service uses WebSockets (Socket.IO) implementing an event-driven approach (pub/sub) to broadcast moves and game state changes instantly to connected clients in specific "rooms".</p>
 </li>
 <li>
-<p><strong>Strategy pattern</strong>: Used for the AI ​​system within the Rust engine, allowing different bot algorithms to be swapped at runtime.</p>
+<p><strong>Strategy pattern</strong>: Used for the AI system within the Rust engine, allowing different bot algorithms to be swapped at runtime.</p>
 </li>
 </ul>
 </div>
@@ -1956,7 +1904,7 @@ on this list.</p>
 <p><strong>Network isolation</strong>: Backend services are not exposed directly to the internet. They communicate over a private Docker bridge network (<code>monitor-net</code>), only accessible through the Nginx proxy.</p>
 </li>
 <li>
-<p><strong>CORS management</strong>: Cross-Origin Resource Sharing is strictly configured in the backend to only accept requests from the authorized frontend origin.</p>
+<p><strong>CORS management</strong>: Cross-Origin Resource Sharing is strictly configured in the backend to only accept requests from the authorized frontend origin, adapting dynamically between local and production environments via environment variables.</p>
 </li>
 </ul>
 </div>
@@ -1978,17 +1926,20 @@ on this list.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_testing_and_quality_assurance_concepts">8.5. Testing and Quality Assurance Concepts</h3>
+<h3 id="_testing_and_quality_assurance_concepts">8.5. Testing and quality assurance concepts</h3>
 <div class="paragraph">
 <p>To guarantee the reliability and performance of the distributed system, testing is approached at multiple levels:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
+<p><strong>End-to-End (E2E) Testing</strong>: We utilize tools to simulate real user journeys (e.g., registration, login) across the fully deployed stack, ensuring the frontend, API gateway, and backend services integrate seamlessly.</p>
+</li>
+<li>
 <p><strong>Load and Performance Testing</strong>: We use <strong>Gatling</strong> to simulate concurrent user traffic against our API gateway. This allows us to validate how the microservices (especially the Node.js API and the Rust engine) handle high volumes of simultaneous requests, ensuring the system remains responsive under stress.</p>
 </li>
 <li>
-<p><strong>Unit and Integration Testing</strong>: Conducted at the microservice level (e.g., Jest for Node.js, <code>cargo test</code> for Rust) to ensure individual components behave as expected before being containerized.</p>
+<p><strong>Unit and Integration Testing</strong>: Conducted at the microservice level (e.g. <code>cargo test</code> for Rust) to ensure individual components behave as expected before being containerized.</p>
 </li>
 <li>
 <p><strong>Code Quality Analysis</strong>: We integrate static analysis tools (like SonarCloud and CodeScene) within our CI/CD pipelines to monitor code health and prevent the introduction of vulnerabilities.</p>
@@ -1997,17 +1948,17 @@ on this list.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_user_interface_and_ux_concepts">8.6. User Interface and UX concepts</h3>
+<h3 id="_user_interface_and_ux_concepts">8.6. User interface and UX concepts</h3>
 <div class="ulist">
 <ul>
 <li>
 <p><strong>Single Page Application (SPA)</strong>: Built with React and Vite, offering a smooth, app-like experience without full page reloads.</p>
 </li>
 <li>
-<p><strong>Real-time Feedback Loop</strong>: The UI leverages WebSockets to update the board instantly when an opponent moves, preventing race conditions and keeping game states synchronized across distributed clients.</p>
+<p><strong>Real-time feedback loop</strong>: The UI leverages WebSockets to update the board instantly when an opponent moves, preventing race conditions and keeping game states synchronized across distributed clients.</p>
 </li>
 <li>
-<p><strong>Coordinate Abstraction</strong>: The frontend handles the complex mapping between visual clicks on the screen and the backend&#8217;s 3D barycentric coordinates.</p>
+<p><strong>Coordinate abstraction</strong>: The frontend handles the complex mapping between visual clicks on the screen and the backend&#8217;s 3D barycentric coordinates.</p>
 </li>
 </ul>
 </div>
@@ -2062,77 +2013,237 @@ There you will find links and examples about ADR.</p>
 </div>
 </div>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Decision</th>
-<th class="tableblock halign-left valign-top">Reason</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Microservices Architecture</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">We separated the application into decoupled services (<code>users</code>, <code>gamey</code>, <code>webapp</code>, <code>multiplayer</code>). This allows us to use the best technology for each specific problem (Rust for performance, Node.js for I/O) and enables independent development and deployment cycles.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>React</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">We use React for the <code>webapp</code> frontend because it allows us to build fast, scalable, and easy-to-maintain interfaces using a component-based architecture.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>TypeScript</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Applied in the <code>webapp</code> to provide static typing. This reduces runtime errors, improves code readability, and enhances developer tooling compared to standard JavaScript.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Vite</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Selected as the frontend build tool instead of Create React App (CRA) due to its superior performance in development server startup and Hot Module Replacement (HMR).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Node.js &amp; Express</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>users</code> service handles I/O-heavy operations (REST API, database access). Node.js is ideal for this due to its non-blocking event-driven model, and Express provides a minimal and flexible framework.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Rust</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>gamey</code> engine requires high performance for game logic and bot calculations. Rust provides memory safety without a garbage collector and meets the project&#8217;s core requirements.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MongoDB &amp; Mongoose</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">MongoDB Atlas is the cloud-hosted persistence layer. We use <strong>Mongoose</strong> (in <code>users/src/database.js</code>) to manage connections and schemas. The connection string is decoupled using the <code>MONGODB_URI</code> environment variable in <code>.env</code>, following the 12-Factor App methodology for config.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Docker &amp; Docker Compose</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used to orchestrate the entire system. It defines independent containers for <code>webapp</code>, <code>users</code>, <code>gamey</code>, <code>multiplayer</code>, and monitoring tools, linking them via an internal network. This ensures the environment is reproducible and eliminates configuration issues between development and production.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Nginx as Reverse Proxy</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Nginx is used as the single HTTPS entry point for all client traffic. It terminates TLS, routes requests to the appropriate internal service based on URL path (/api/<strong>, /socket.io/</strong>, /*), and eliminates CORS issues by proxying all communication through a single origin. Internal service ports are never exposed directly to the client.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>JWT Authentication</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JSON Web Tokens are used to authenticate users after login. The token is signed with a secret key, stored in the client&#8217;s localStorage, and sent in the <code>Authorization: Bearer</code> header on every protected API request. This avoids server-side session state and enables stateless authentication across services.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Socket.io (WebSockets) for Multiplayer</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The real-time online multiplayer feature requires bidirectional, low-latency communication between players. Socket.io was chosen over HTTP polling to synchronize game moves instantly. It runs as an independent <code>multiplayer</code> service and is proxied through Nginx via WebSocket upgrade.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Modular CSS Architecture</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Frontend styles are split into a shared <code>global.css</code> file (navbar, video background, pagination, typography) and per-page CSS files. This prevents style conflicts between components developed by different team members, reduces specificity issues, and improves maintainability.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GitHub Actions</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">We use it for CI/CD pipelines to automatically build, test, and check the quality of the code on every push, ensuring continuous integration and early error detection.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>SonarCloud &amp; CodeScene</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Integrated to monitor code quality, test coverage, and code health. This helps us manage technical debt and maintain architectural integrity over time.</p></td>
-</tr>
-</tbody>
-</table>
+<div class="sect2">
+<h3 id="_da_01_nosql_database_mongodb">9.1. DA-01. NoSQL Database (MongoDB)</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> We need persistence for the user microservice in a containerized Node.js environment.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Native JSON Integration:</strong> When using Node.js and React, the entire data flow is JSON. MongoDB stores BSON, eliminating the need for complex mappings and accelerating development.</p>
+</li>
+<li>
+<p><strong>Schema Flexibility:</strong> Being schema-less allows for quickly adding new fields to user profiles without requiring rigid SQL migrations.</p>
+</li>
+<li>
+<p><strong>Microservices and Docker:</strong> It&#8217;s a lightweight database, easy to deploy in independent containers, and scales seamlessly in the cloud (Azure).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_02_mongoose">9.2. DA-02. Mongoose</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> MongoDB offers complete flexibility by not enforcing schemas, but this carries the risk of data inconsistency (e.g., users without email addresses or with disparate formats) and delegates excessive validation to the driver. Therefore, we decided to use Mongoose as an abstraction layer (ODM) over the native MongoDB driver.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Data Integrity (Schemas):</strong> Although the database is NoSQL, the application requires a predictable structure. Mongoose allows us to define strong types (String, Date) and rules (required: true, unique: true) in a single place (the Model).</p>
+</li>
+<li>
+<p><strong>Centralized Validation:</strong> We avoid duplicating validation logic at each endpoint. If the data does not conform to the schema, Mongoose prevents it from reaching the database (Fail Fast pattern).</p>
+</li>
+<li>
+<p>* <strong>Abstraction and Productivity:</strong> It provides us with a simplified API for CRUD operations (.save(), .findOne()) and connection management, accelerating development compared to the use of "raw" native queries.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_03_json_web_tokens_jwt_for_authentication">9.3. DA-03. JSON Web Tokens (JWT) for Authentication</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> Our application consists of a decoupled frontend (React) and a REST API in the backend that requires protecting certain routes (e.g., saving statistics or querying history). We needed a security mechanism that maintained the "Stateless" philosophy of REST, avoiding overloading server memory with traditional cookie-based sessions. Therefore, we decided to implement JWT, delegating validation to a specific auth-middleware.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Scalability (Stateless):</strong> The backend does not store session state. The token itself contains the information necessary for the middleware to verify the user&#8217;s identity without relying on centralized storage.</p>
+</li>
+<li>
+<p><strong>Optimized Performance:</strong> By validating the token&#8217;s cryptographic signature in memory directly in the middleware, we avoid redundant queries to MongoDB in each protected request just to identify the user.</p>
+</li>
+<li>
+<p><strong>Flexibility and Standardization:</strong> JWT is the de facto standard for Single Page Applications (SPAs). Furthermore, it facilitates architectural evolution: if in the future we separate the API into multiple microservices, they will all be able to validate the same token independently without needing to share a session database.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_04_bidirectional_communication_with_websockets_socket_io">9.4. DA-04. Bidirectional Communication with WebSockets (Socket.io)</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> The core of the application is a competitive board game (YEN) that requires a fluid and responsive user experience. Traditional HTTP-based interactions would generate unacceptable latency for a 1v1 game, as well as overload the server with unnecessary requests to check if the opponent has moved. We needed a constant, low-latency communication channel between the clients and a dedicated microservice.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Low Latency and Real-Time:</strong> Unlike REST requests, WebSockets maintain a single open TCP connection. This allows the server to "push" player A&#8217;s move to player B instantaneously (in milliseconds), which is critical for gameplay and visual feedback.</p>
+</li>
+<li>
+<p><strong>Abstraction and Reliability (Socket.io):</strong> We opted for Socket.io over the native WebSockets standard because it automatically handles reconnection, fallback to HTTP Long-Polling (on restrictive networks), and, most importantly, natively offers the concept of "Rooms." This drastically simplifies player matchmaking logic using room codes.</p>
+</li>
+<li>
+<p><strong>Decoupled Microservice:</strong> The multiplayer logic has been implemented as a separate microservice (multiplayer). This allows the socket infrastructure (which consumes a lot of memory by maintaining open connections) to scale independently of the user API or the logic engine in Rust, following the principles of a clean microservices architecture.</p>
+</li>
+<li>
+<p><strong>Network Traffic Efficiency:</strong> Once the initial handshake is established, the headers in the data packets are minimal compared to HTTP. This reduces bandwidth consumption and processing load on both the client (React) and the server (Node.js).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_05_reverse_proxy_and_api_gateway_with_nginx">9.5. DA-05. Reverse Proxy and API Gateway with Nginx</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> The project architecture consists of multiple independent containers (static frontend, Node.js API, Rust engine, and WebSocket server). Exposing the ports of each service individually to the outside world creates security problems, same-origin policy (CORS) conflicts in the browser, and hinders deployment in cloud environments.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Single Entry Point:</strong> Nginx acts as a reverse proxy that unifies all microservices under a single domain and IP address. The frontend and clients only interact with port 443.</p>
+</li>
+<li>
+<p><strong>Path-Based Routing:</strong> It allows routing traffic to the corresponding container based on the URL (e.g., /api/gamey/ to Rust, /socket.io/ to the multiplayer service), abstracting the internal Docker network topology.</p>
+</li>
+<li>
+<p><strong>Security and isolation:</strong> The microservices operate exclusively within a Docker virtual private network (monitor-net). No backend port is directly exposed to the internet, drastically reducing the attack surface.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_06_ssltls_termination_and_environment_parity_local_https">9.6. DA-06. SSL/TLS Termination and Environment Parity (Local HTTPS)</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> Modern web browser features, as well as secure WebSocket connections (wss://), require applications to be served over HTTPS. Developing locally using plain HTTP results in "Mixed Content" errors and behavioral discrepancies between the development and production environments (Azure).</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Dev/Prod Parity:</strong> By generating self-signed certificates as a local Certificate Authority (CA) using mkcert, we replicate the Azure production environment on developers' machines. This ensures that if network security and routing work locally, they will work in the cloud.</p>
+</li>
+<li>
+<p><strong>Load Delegation:</strong> Nginx is solely responsible for encrypting and decrypting SSL traffic (SSL Termination). This frees microservices (Node, Rust) from the computational burden of managing certificates, allowing them to communicate efficiently in plain text within Docker&#8217;s secure private network.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_07_choosing_frameworks_for_microservices">9.7. DA-07. Choosing Frameworks for Microservices</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> We needed an architecture that would allow us to separate the heavyweight business logic from user management and real-time communication.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Optimization by Load Type:</strong> Using Node.js with Express for the user service leverages its agility in I/O operations and handling REST APIs. On the other hand, using Rust with Axum for the game engine (gamey) guarantees memory safety and very high performance in heavy AI calculations.</p>
+</li>
+<li>
+<p><strong>Scalability and Interoperability:</strong> This separation allows independent scaling of each service according to its specific needs (e.g., if there are many registered users but few active games). As a trade-off, this requires us to define clear and strict data contracts (such as YEN Notation) to ensure perfect interoperability between such different languages.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_08_competition_api_design_stateless_api">9.8. DA-08. Competition API Design (Stateless API)</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> The bot tournament requires a low-latency interface. Furthermore, the professor emphasized the importance of avoiding API calls that inconsistently modify multiple states on the backend.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Dedicated and Stateless Endpoint:</strong> By implementing a stateless endpoint using the GET /play method exposed directly on port 3002, the API simply receives the board state in YEN format and returns an immediate response. By bypassing the Nginx proxy and avoiding any access to MongoDB, performance is maximized and response time for the tournament evaluator script is minimized.</p>
+</li>
+<li>
+<p><strong>Simplicity and Statelessness:</strong> This decision strictly adheres to the single responsibility principle, as the endpoint acts only as a calculator and does not manage the game session. By not persisting data, the risk of "corrupting" the database with tournament simulations is completely eliminated, complying with the directive of not having calls that unnecessarily modify the information.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_09_continuous_deployment_cd_automation">9.9. DA-09. Continuous Deployment (CD) Automation</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> It is required to ensure that the production environment on the Azure virtual machine is always reliably and quickly synchronized with the main branch without relying on manual interventions that could generate inconsistencies.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Automated Pipeline and Quality Control:</strong> Using GitHub Actions to manage the complete application lifecycle (Test &#8594; Build &#8594; Publish &#8594; Deploy) guarantees that absolutely no change reaches production without first passing the entire suite of tests (unit tests in Node/Rust and E2E tests).</p>
+</li>
+<li>
+<p><strong>Elimination of Human Error and Reliability:</strong> By configuring the final deployment step to securely connect via SSH to the Azure VM and automatically execute <code>docker compose pull</code> and <code>docker up</code> after the creation of each release, we achieve true Continuous Deployment (CD). This completely eliminates the risk of failures due to manual execution of commands on the server and ensures that our cloud infrastructure always consistently runs the most stable version.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_10_frontend_architecture_and_state_management_react_custom_hooks">9.10. DA-10. Frontend Architecture and State Management (React + Custom Hooks)</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> The web client (frontend) needs to manage multiple dynamic views (Lobby, Board, Statistics) and handle the complex game state in real time without reloading the page.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Single Page Application (SPA) with React:</strong> Allows for declarative rendering of the interface and optimization of Virtual DOM updates, which is critical for a constantly changing game board.</p>
+</li>
+<li>
+<p><strong>Decentralized State Management:</strong> The use of heavyweight global state managers (such as Redux) was ruled out to avoid over-engineering. Instead, the complex state of the games and sockets was encapsulated in Custom Hooks (useBoard, useMultiplayer, useClanChat). This promotes the Single Responsibility principle and keeps the visual components completely independent of the network logic.</p>
+</li>
+<li>
+<p><strong>Context API for internationalization (i18n):</strong> A native LanguageContext was implemented to propagate the language throughout the application, eliminating the need to install third-party libraries and thus reducing the final size of the bundle.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_da_11_inter_microservice_m2m_authorization">9.11. DA-11. Inter-Microservice (M2M) Authorization</h3>
+<div class="paragraph">
+<p><strong>Context:</strong> The multiplayer microservice (Sockets) needs to record wins by forfeit and save clan chat messages in the database managed by the Users microservice. Since this request is made from one server to another, there is no valid client JWT token in this context.</p>
+</div>
+<div class="paragraph">
+<p><strong>Justification:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Controlled Bypass (Internal Headers):</strong> A Machine-to-Machine (M2M) communication pattern was implemented using a custom header (x-server-key).</p>
+</li>
+<li>
+<p><strong>Network Isolation:</strong> The user service middleware detects this key and allows the write operation without validating a JWT. This decision is safe because both microservices coexist within the same private Docker network (monitor-net), where traffic is not exposed to the internet, guaranteeing fast and reliable backend-to-backend transactions.</p>
+</li>
+</ul>
+</div>
 <div style="page-break-after: always;"></div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -2144,56 +2255,13 @@ There you will find links and examples about ADR.</p>
 <div class="title">Content</div>
 <p>This section contains all quality requirements as quality tree with scenarios. The most important ones have already been described in section 1.2. (quality goals)</p>
 </div>
-<div class="paragraph">
-<p>Here you can also capture quality requirements with lesser priority,
-which will not create high risks when they are not fully achieved.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>Since quality requirements will have a lot of influence on architectural
-decisions you should know for every stakeholder what is really important to them,
-concrete and measurable.</p>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-10/">Quality Requirements</a> in the arc42 documentation.</p>
-</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_quality_tree">10.1. Quality Tree</h3>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/RP91Rvj048Nl_XLpYYYIrUJUGwX9QbSXfYnArEEmZ64Ks4MpirRTNry1RXLLkQwUlc_Uqzu7HT6HNJlYj4dXHyI1zR99Kp1aex1U8Dbprt_Qf6aAtrzhoABsv9GjAdi7Dr3vg0IbU2KxFor9Ovu-rqy67foLoxGaa-UEtQyLP4ZE90lBhvBCAMztFQ723RpWmEt2d-EGdP47R7ZuxvpSspSIs7cdo6xb-QtGKcf9x0OVMyXHiS50iCyWARphVFuLCXqmBFYIvEHbH6VfFRqY7BRA8y4hDMPMAPYBiv1ykRkz7SEQUiIWO1ILe2BhNL29zhfCYHBOTRFZu9J4JoJ_QXJKSXolSoYw5gNbtzJ2puTdU9plKJWpmhwkIyZAGrWBYGzXUnJks455mKUn1AP7OTT1iZjMPkbK-9PF_A6iO2i-a9pPKe2Sh8_Ji9wPGZd4hiDc8CWEO5HGgMCAa5GnADI2hEjensP6V2WenO-aFSK01Qcm3M2iuFJNyKtmX0xV3PnZw1kFqeRDFRds-X__0000" alt="diagram">
-</div>
-</div>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Content</div>
-<p>The quality tree (as defined in ATAM – Architecture Tradeoff Analysis Method) with quality/evaluation scenarios as leafs.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>The tree structure with priorities provides an overview for a sometimes large number of quality requirements.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>The quality tree is a high-level overview of the quality goals and requirements:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>tree-like refinement of the term "quality". Use "quality" or "usefulness" as a root</p>
-</li>
-<li>
-<p>a mind map with quality categories as main branches</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>In any case the tree should include links to the scenarios of the following section.</p>
-</div>
+<img src="https://www.plantuml.com/plantuml/png/RP91ZzD038Nl_HK-XaZLBdSE6rhO5crtIrC9BJTdnaqiCkF8uocKNu-Ib1L2lTfFttj-Cm_9K2rmz067HGbVC_PibqLPGaqkAzi5YWsttRj5MPRmvTiHC5j7qTYXiKJ0w44b6y5UnSYDmqbRrqztnwSQA3gz39EsU6uv_ffHDUcPTAB9R5D5u-Mg8xHH0TKPkSU6-_yohCNz80KdqP3ZZ92bqdJ9f5ZraZruD6mm4HGxYQsiFq9bFQQ9lISzYGQCZlv57mZxfN4W-4bDFVeOf4jqK7nuVtyVqgpwZCcWseAJC6IRMoWEESsnrpJqShcHkyec0OqyhBPtgpKKZsoRt40rLNPbVoULfKbs7TJr1lm42nGjZUnjD58PID_mE_ASmxLHm-XHFVyc3w-Vdc4wqU3C2DL-cwuYPMUmUZdK431YIoDzXE_4yubladViL1BfcHqbyEGa3pt7Tbhk-zossFGqTf9CqQXbIdCbS5Hacqj_QKR4JOEzIY3hA2S8D2PCa9pYyDVZKV644K7V7iXZwXf1zMdnGD5VV_0V" alt="diagram">
 </div>
 </div>
 </div>
@@ -2231,7 +2299,7 @@ concrete and measurable.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Unauthenticated User / Script</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Attempts to request a bot move without a valid JWT token via API</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Node.js Backend (<code>users</code> microservice)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Normal operation (runtime)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Normal operation</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The API gateway routes the request, but the middleware intercepts and rejects it with a 401/403 status.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0 unauthorized engine executions; &lt; 50ms rejection time</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">High, Low</p></td>
@@ -2239,10 +2307,10 @@ concrete and measurable.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC-02</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Availability</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Internal System Fault</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>gamey</code> Rust container crashes unexpectedly due to an unhandled panic or OOM</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Docker Engine (Host)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Normal Operation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Internal system fault</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>gamey</code> Rust container crashes unexpectedly due to an unhandled panic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Docker engine (Host)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Normal operation</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Docker detects the container exit and automatically restarts it via the <code>unless-stopped</code> policy.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">System recovers without manual intervention; Downtime &lt; 5 seconds</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">High, Low</p></td>
@@ -2250,10 +2318,10 @@ concrete and measurable.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC-03</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Performance</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Connected Player</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Connected player</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Makes a valid move on the board</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">WebSocket Server (<code>multiplayer</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Peak Load (Multiple active matches)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WebSocket server (<code>multiplayer</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Peak load (Multiple active matches)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The server validates the move, updates the state, and broadcasts the event to the opponent in the same Room.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">End-to-end sync latency &lt; 100 ms</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">High, Medium</p></td>
@@ -2285,9 +2353,9 @@ concrete and measurable.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Security (Anti-Cheat)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Malicious Client</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sends a fake request claiming victory ("winner": true) or an illegal move</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Backend (Validation Logic in Rust)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Backend (Validation Logic in Node/Rust)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Normal Operation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The server ignores the client&#8217;s claim, re-evaluates the board state using Union-Find, and rejects the illegal state.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The server ignores the client&#8217;s claim, re-evaluates the true board state, and rejects the illegal state.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0% of corrupted games persisted to MongoDB; Server authority maintained</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">High, High</p></td>
 </tr>
@@ -2302,46 +2370,19 @@ concrete and measurable.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0 lines of core game logic modified</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Medium, Medium</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SC-08</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deployability</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CI/CD Pipeline (GitHub Actions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A new Release is published in the main branch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Azure Production Environment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deployment phase</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The pipeline securely connects via SSH, injects environment variables, pulls the latest images, and recreates the containers automatically.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0 manual server interventions required; Deployment completes in &lt; 3 minutes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">High, High</p></td>
+</tr>
 </tbody>
 </table>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>Concretization of (sometimes vague or implicit) quality requirements using (quality) scenarios.</p>
-</div>
-<div class="paragraph">
-<p>These scenarios describe what should happen when a stimulus arrives at the system.</p>
-</div>
-<div class="paragraph">
-<p>For architects, two kinds of scenarios are important:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Usage scenarios (also called application scenarios or use case scenarios) describe the system’s runtime reaction to a certain stimulus. This also includes scenarios that describe the system’s efficiency or performance. Example: The system reacts to a user’s request within one second.</p>
-</li>
-<li>
-<p>Change scenarios describe a modification of the system or of its immediate environment. Example: Additional functionality is implemented or requirements for a quality attribute change.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>Scenarios make quality requirements concrete and allow to
-more easily measure or decide whether they are fulfilled.</p>
-</div>
-<div class="paragraph">
-<p>Especially when you want to assess your architecture using methods like
-ATAM you need to describe your quality goals (from section 1.2)
-more precisely down to a level of scenarios that can be discussed and evaluated.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>Tabular or free form text.</p>
-</div>
-</div>
-</div>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -2387,7 +2428,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Inexperience in Microservices Architectures</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Inexperience in microservices architectures</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The team had limited initial experience in designing large-scale software architectures. While the system is now functional, there remains an ongoing risk regarding the maintenance of boundaries between services (WebApp, Users, Gamey, Multiplayer) and avoiding circular dependencies as new features are added.</p></td>
 </tr>
 <tr>
@@ -2395,16 +2436,24 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <td class="tableblock halign-left valign-top"><p class="tableblock">Rust is a language we had never used before, introducing a steep learning curve. The risk remains that implementing complex game logic updates or debugging memory safety issues in the <code>gamey</code> engine might take longer than expected due to the language&#8217;s complexity.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Inexperience in using Docker &amp; Orchestration</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Inexperience in using docker and orchestration</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Setting up internal bridge networks (<code>monitor-net</code>), volumes, and multi-container communication was challenging. Misconfigurations in the <code>docker-compose.yml</code> or reverse proxy routing could potentially cause downtime during future deployments.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>WebSocket Scalability (Single Point of Failure)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>WebSocket scalability (Single point of failure)</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The new <code>multiplayer</code> service uses Socket.io for real-time game state synchronization. Currently, this service runs as a single instance. If traffic scales massively, horizontally scaling Socket.io will require implementing a Redis adapter/backplane, which is currently not configured, posing a risk of dropped connections under heavy load.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Data Consistency</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Data consistency</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When using a database without a rigid schema like MongoDB, there is a risk of data inconsistency if the domain model evolves and data migrations are not properly performed to update older documents (e.g., legacy user profiles or match records).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Exposure of tournament port (3002)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">To facilitate the tournament, port 3002 is exposed directly without Nginx&#8217;s TLS or JWT protection. This creates a security risk where an attacker could potentially flood the gamey service with requests or exploit the lack of authentication in that specific entry point.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Documentation drift</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">We now maintain two separate OpenAPI/Swagger files (openapi.yaml and api-tournament.yaml). There is a risk that as the code evolves, the documentation might not be updated simultaneously, leading to a "drift" where the Swagger UI shows information that doesn&#8217;t match the actual API behavior.</p></td>
 </tr>
 </tbody>
 </table>
@@ -2424,16 +2473,16 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Active Match State Volatility (In-Memory)</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">While completed matches and user stats are now successfully persisted in MongoDB, the <strong>active</strong> live state of a multiplayer game relies heavily on the memory of the <code>multiplayer</code> and <code>gamey</code> services. A sudden crash or restart of these containers will result in the immediate drop of all ongoing live matches, as there is no real-time caching layer (like Redis) to recover active session states.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Active match state volatility (In-memory)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">While completed matches and user stats are now successfully persisted in MongoDB, the active live state of a multiplayer game relies heavily on the memory of the <code>multiplayer</code> and <code>gamey</code> services. A sudden crash or restart of these containers will result in the immediate drop of all ongoing live matches, as there is no real-time caching layer (like Redis) to recover active session states.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Lack of Observability and Monitoring</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system currently lacks a centralized monitoring and metrics solution. Although tools like Prometheus and Grafana are planned and partially scaffolded in the infrastructure, they are not yet fully configured. To diagnose bugs or check system health, developers must manually inspect isolated console logs inside each Docker container.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Manual TLS/SSL and self-signed friction</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">We have implemented HTTPS via Nginx, enhancing security. However, certificates are managed manually and are self-signed. This introduces two debts: first, tracking expiration dates manually instead of using Let&#8217;s Encrypt; second, it creates bad developer experience (DX) because browsers block Swagger UI&#8217;s <code>Execute</code> requests until the user manually adds a security exception for the API.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Manual TLS/SSL Certificate Management</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">We have successfully implemented HTTPS via Nginx as a reverse proxy, enhancing security. However, the SSL certificates (<code>cert.pem</code>, <code>key.pem</code>) are currently managed manually. This introduces the technical debt of having to manually track expiration dates and renew them, instead of using an automated solution like Certbot/Let&#8217;s Encrypt.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Lack of automated alerting</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system has greatly improved observability by integrating Prometheus and Grafana. However, the current technical debt lies in the lack of an automated alerting logic. We collect and visualize metrics, but we haven&#8217;t defined thresholds or configured notifications (e.g., email or Slack alerts) to proactively inform administrators if a critical service crashes.</p></td>
 </tr>
 </tbody>
 </table>
@@ -2442,7 +2491,403 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-glossary">12. Glossary</h2>
+<h2 id="section-test-report">12. Test Report</h2>
+<div class="sectionbody">
+<div class="sidebarblock arc42help">
+<div class="content">
+<div class="paragraph">
+<div class="title">Content</div>
+<p>This section describes the testing strategy, execution, and results validating the software architecture and its quality goals.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>To guarantee the reliability, performance, and security of the Yovi system, we implemented a comprehensive testing strategy integrated into our development lifecycle.</p>
+</div>
+<div class="sect2">
+<h3 id="_unit_and_integration_testing">12.1. Unit and integration testing</h3>
+<div class="paragraph">
+<p>Unit tests were implemented across all discrete architectural boundaries to validate individual components, API contracts, and business logic in strict isolation. We utilized <strong>Vitest</strong> for the JavaScript/TypeScript ecosystem (Frontend and Node.js microservices) and the native <code>cargo test</code> framework for the Rust engine.</p>
+</div>
+<div class="paragraph">
+<p><strong>1. Frontend application (React/Vite)</strong>
+The frontend testing strategy focuses on validating user workflows, state management, and network boundaries without requiring a live backend.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>API communication and interceptors:</strong> Tests ensure that custom HTTP clients automatically inject security mechanisms (like JWT tokens) and handle global responses correctly.</p>
+</li>
+<li>
+<p><strong>Session management:</strong> We simulate different server responses (e.g., unauthorized access) to validate that the application correctly purges local session data and redirects users, ensuring security on the client side.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>2. Core backend API (Node.js)</strong>
+The REST API logic was tested by isolating the business layer from the persistence layer.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Database Mocking:</strong> We utilized framework-level mocks (e.g., Mongoose mocks) to simulate database interactions. This ensures that tests evaluating complex domain logic (like user relationships or entity creation) run quickly and deterministically without needing a real MongoDB instance.</p>
+</li>
+<li>
+<p><strong>Business Constraints:</strong> Tests validate that the services enforce structural integrity, correctly rejecting invalid data or unauthorized actions before they reach the database.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>3. Real-Time multiplayer service (Node.js/Socket.io)</strong>
+Testing the WebSocket microservice focuses heavily on in-memory state management and asynchronous events.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Lifecycle &amp; State Management:</strong> Tests validate the integrity of temporary data structures used for matchmaking, ensuring that rooms are created, joined, and cleaned up correctly during connection and disconnection events.</p>
+</li>
+<li>
+<p><strong>Inter-Service Communication:</strong> We extensively mock external HTTP calls to verify that the real-time service correctly manages room lifecycle and player synchronization without direct database access, as match persistence is handled by the frontend layer via the stats service.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>4. Game logic engine (Rust)</strong>
+The core algorithmic engine relies on native Rust testing to ensure memory safety, correct game mechanics, and strict data contract adherence.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Data Contracts &amp; Serialization:</strong> Tests guarantee that the internal Rust structures serialize and deserialize perfectly into the expected JSON formats, maintaining a reliable contract for the Node.js consumers.</p>
+</li>
+<li>
+<p><strong>Algorithmic Correctness:</strong> The pure functions responsible for board evaluation, move validation, and win-condition detection are tested against numerous predefined board states to ensure maximum reliability of the core game rules.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_code_coverage_results">12.2. Code coverage results</h3>
+<div class="paragraph">
+<p>As part of our strict quality assurance constraints, the project is required to maintain a minimum code coverage threshold of <strong>80%</strong>. This metric ensures that the vast majority of our core business logic, edge cases, and critical execution paths are actively validated by our automated test suites.
+We enforce this metric across our microservices ecosystem. By maintaining this standard, we minimize technical debt and significantly reduce the risk of regressions when introducing new features.
+As illustrated in the coverage report below, the project successfully <strong>exceeds the 80% mandatory threshold</strong>, providing high confidence in the stability, security, and maintainability of the deployed system.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/coverage.png" alt="Code Coverage Report showing &gt;80%">
+</div>
+<div class="title">Figure 1. Overall Code Coverage Report</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_end_to_end_e2e_testing">12.3. End-to-End (E2E) Testing</h3>
+<div class="paragraph">
+<p>End-to-end tests were implemented using <strong>Playwright</strong> and <strong>Cucumber.js</strong> with a BDD (Behaviour-Driven Development) approach. Tests are written in Gherkin <code>.feature</code> files and executed against the real running application at <code><a href="http://localhost:5173" class="bare">http://localhost:5173</a></code>. The test suite covers the three most critical user flows of the system.</p>
+</div>
+<div class="sect3">
+<h4 id="_user_login">12.3.1. User login</h4>
+<div class="paragraph">
+<p>Tests validate the complete authentication flow from the browser&#8217;s perspective.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Scenario</th>
+<th class="tableblock halign-left valign-top">Steps</th>
+<th class="tableblock halign-left valign-top">Expected Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Successful login</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User submits valid credentials (<code>tester_pro</code> / <code>Pass123!</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redirected to <code>/configureGame</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Failed login — invalid credentials</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User submits wrong username and password</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Error message displayed on screen</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Failed login — empty fields</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User submits the form without filling any data</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Error message for empty credentials displayed</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_user_registration">12.3.2. User registration</h4>
+<div class="paragraph">
+<p>Tests validate the complete registration flow starting from the home screen.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Scenario</th>
+<th class="tableblock halign-left valign-top">Steps</th>
+<th class="tableblock halign-left valign-top">Expected Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Successful registration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User enters a unique username, email and password and clicks "Lets go!"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Welcome message "User successfully created" is shown</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Duplicate user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User tries to register with an already existing username and email (<code>alice@test.com</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Error message indicating the user already exists</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Empty fields</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User leaves all fields empty and clicks "Lets go!"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stays on register page, no redirect</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password too short</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User enters a password with only 2 characters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stays on register page, no redirect</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_game_settings_configuration">12.3.3. Game settings configuration</h4>
+<div class="paragraph">
+<p>Tests validate the match configuration screen and its dynamic UI behavior.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Scenario</th>
+<th class="tableblock halign-left valign-top">Steps</th>
+<th class="tableblock halign-left valign-top">Expected Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configure a game against an Expert Bot</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Select mode "Contra la Máquina", set board size to 7, select difficulty "Experto", select opponent "Monte Carlo", select starting player, click play</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redirected to the game board</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configure a Local Multiplayer game</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Select mode "Multijugador Local", set board size to 5, select starting player "B", click play</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bot difficulty options disappear and user is redirected to the game board</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_load_testing_analysis_gatling">12.4. Load testing analysis (Gatling)</h3>
+<div class="paragraph">
+<p>To evaluate the robustness and scalability of the Yovi system, a load scenario was designed to simulate a real-world usage flow (login, gameplay, and navigation through the different sections). The test ran for approximately one minute, maintaining a sustained load of 50 concurrent users.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/active_users.png" alt="Active users graph">
+</div>
+<div class="title">Figure 2. Active users throughout the simulation</div>
+</div>
+<div class="sect3">
+<h4 id="_performance_and_response_times">12.4.1. Performance and response times</h4>
+<div class="paragraph">
+<p>The results show that the system is extremely efficient at handling valid requests under stress. The vast majority of successful transitions were completed in under 800ms, ensuring a smooth user experience.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/global_summary.png" alt="Global summary of response times">
+</div>
+<div class="title">Figure 3. Global summary of response times</div>
+</div>
+<div class="paragraph">
+<p>As observed in the percentile breakdown over time, even with the maximum sustained load of 50 concurrent users, the API Gateway (Nginx) and Node.js microservices maintained minimal latency (average response time less than 200ms).</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/percentiles.png" alt="Response time percentile chart">
+</div>
+<div class="title">Figure 4. Evolution of response time percentiles under load</div>
+</div>
+<div class="paragraph">
+<p>The fact that the system remains just as responsive even with 50 users connected simultaneously confirms that our architecture is working well. The server is able to receive all requests and pass them on to the game engine without any bottlenecks.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_analysis_of_failed_requests">12.4.2. Analysis of failed requests</h4>
+<div class="paragraph">
+<p>Gatling&#8217;s report shows a 21% failure rate (KO), concentrated exclusively in HTTP 400 (Bad Request) status codes. As observed in the responses per second metric, the server is able to process and reject these invalid requests at high speed while maintaining a high volume of traffic.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/responses_per_second.png" alt="Graph of responses per second">
+</div>
+<div class="title">Figure 5. Response volume per second (Correct vs. Incorrect)</div>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/stats_errors.png" alt="Statistics table showing errors">
+</div>
+<div class="title">Figure 6. Detailed statistics and error distribution</div>
+</div>
+<div class="paragraph">
+<p>It is important to note that these errors do not represent performance failures or server crashes (there are no HTTP 5xx errors), but are the expected result of the <strong>robustness of the business rules</strong>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Invalid requests due to repetition:</strong> When simulating 50 concurrent users repeating the exact same recording, the system receives requests that no longer make sense (for example, attempting to log in with data that the validator already considers processed). In these cases, the backend responds with a <code>400 Bad Request</code>.</p>
+</li>
+<li>
+<p><strong>Game Engine Validation:</strong> The Rust engine validates the game state using YEN notation. If the test attempts to send a move on a board that has already changed turns or on a finished game, the engine rejects the action by returning a <code>400 Bad Request</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Conclusion:</strong> The observed errors positively validate the system&#8217;s security. They confirm that the backend barriers function correctly, preventing illegal state transitions or data duplication even under high concurrency conditions, without impacting the performance of other valid requests.</p>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="section-monitoring-documentation">13. Observability and documentation of APIs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section documents the system&#8217;s observability layer, necessary to monitor its performance in Azure, and the technical specification of its interfaces, key to ensuring integration with third-party services and bot engines.</p>
+</div>
+<div class="sect2">
+<h3 id="_system_monitoring_and_health_prometheus_and_grafana">13.1. System monitoring and health (Prometheus and Grafana)</h3>
+<div class="paragraph">
+<p>The <strong>Yovi</strong> infrastructure integrates an observability stack based on <strong>Prometheus</strong> for metric collection and <strong>Grafana</strong> for real-time data visualization. This system allows monitoring the health of microservices deployed on Azure without impacting their performance.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Prometheus (Collection):</strong> The metrics engine periodically queries the <code>/metrics</code> endpoints of services such as <code>gamey-service</code> and <code>users-service</code>. This allows you to validate the status of the targets and ensure that the system is operational.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Access:</strong> <a href="http://20.199.88.71:9090/targets" class="bare">http://20.199.88.71:9090/targets</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Grafana (Visualization):</strong> Centralizes information in interactive dashboards that allow you to analyze system behavior under load.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Access:</strong> <a href="http://20.199.88.71:9091" class="bare">http://20.199.88.71:9091</a></p>
+</li>
+<li>
+<p><strong>Credentials:</strong> Username: <code>admin</code> / Password: <code>admin</code></p>
+</li>
+<li>
+<p><strong>Navigation:</strong> Once at the URL, select the <strong>Dashboards &gt; Example Service Dashboard</strong> section to view real-time application monitoring.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/prometheus_targets.png" alt="State of microservices in Prometheus">
+</div>
+<div class="title">Figure 7. Status of monitored microservices in Prometheus</div>
+</div>
+<div class="paragraph">
+<p><strong>Key observability metrics:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Rate:</strong> Volume of requests per minute to identify traffic patterns.</p>
+</li>
+<li>
+<p><strong>Errors:</strong> Tracking of failed responses to ensure a near zero error rate (the panel is shown empty as no errors were recorded during the test).</p>
+</li>
+<li>
+<p><strong>Duration:</strong> Latency analysis (including p90 percentiles) to ensure motor responses in milliseconds.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/grafana_dashboard.png" alt="Grafana Dashboard">
+</div>
+<div class="title">Figure 8. Grafana monitoring panel showing traffic, errors and latency (p90)</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_interface_specification_openapi_and_swagger">13.2. Interface specification (OpenAPI and Swagger)</h3>
+<div class="paragraph">
+<p>The architecture exposes its communication contracts using the <strong>OpenAPI 3.0</strong> standard. Interactive <strong>Swagger UI</strong> interfaces have been enabled, allowing external developers and testers to test the endpoints directly from the browser, logically separating business operations from tournament operations.</p>
+</div>
+<div class="sect3">
+<h4 id="_core_api">13.2.1. Core API</h4>
+<div class="paragraph">
+<p>It documents the platform&#8217;s general management operations: user registration and login, game management, clans, and standard interaction with the AI ​​engine.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Access:</strong> <a href="http://20.199.88.71/api-docs/endpoints/" class="bare">http://20.199.88.71/api-docs/endpoints/</a></p>
+</li>
+</ul>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/swagger_main_api.png" alt="Swagger core API">
+</div>
+<div class="title">Figure 9. Interactive documentation of business services (Users, games, clans and AI engine)</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_tournament_api">13.2.2. Tournament API</h4>
+<div class="paragraph">
+<p>Specifically designed for the competitive phase, this specification details the unified contract for running bots via the <code>/play</code> endpoint. To optimize latency, this direct access to the engine bypasses the usual JWT validations.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Access:</strong> <a href="http://20.199.88.71/api-docs/api/#/" class="bare">http://20.199.88.71/api-docs/api/#/</a></p>
+</li>
+</ul>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/swagger_tournament_api.png" alt="Swagger tournament API">
+</div>
+<div class="title">Figure 10. Unified /play contract specification for bot competition</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="section-glossary">14. Glossary</h2>
 <div class="sectionbody">
 <div class="sidebarblock arc42help">
 <div class="content">
@@ -2476,7 +2921,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 </div>
 <div class="paragraph">
 <div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-12/">Glossary</a> in the arc42 documentation.</p>
+<p>See <a href="https://docs.arc42.org/section-13/">Glossary</a> in the arc42 documentation.</p>
 </div>
 </div>
 </div>
@@ -2606,11 +3051,11 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>JWT (JSON Web Token)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Compact, self-contained token used to securely transmit authentication information. Issued on login, stored in localStorage, and sent in the Authorization header on protected API requests.</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Compact, self-contained token used to securely transmit authentication information. Issued on login, stored in sessionStorage, and sent in the Authorization header on protected API requests. The token expires after 1 hour.</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>authFetch</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Frontend utility function that automatically attaches the JWT Authorization header to all protected API requests, centralizing authentication logic.</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Frontend utility function that automatically attaches the JWT Authorization header to all protected API requests. Also handles session expiration by clearing sessionStorage and redirecting to the login page if a 401 or 403 response is received.</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Clan</em></p></td>
@@ -2742,13 +3187,14 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 </tr>
 </tbody>
 </table>
+<div style="page-break-after: always;"></div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 8.2 EN<br>
-Last updated 2026-02-16 18:05:26 +0100
+Version 3.0 EN<br>
+Last updated 2026-04-25 23:06:56 +0200
 </div>
 </div>
 </body>
