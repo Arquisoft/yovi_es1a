@@ -86,8 +86,6 @@ spa .up.> nginx : HTTP / WS requests
 users -right-> gamey : Internal HTTP requests\n(RUST_API_URL)
 
 users --> mongo : Reads/Writes (TLS)
-gamey --> mongo : Reads/Writes (TLS)
-multi --> mongo : Reads/Writes (TLS)
 
 admin --> graf : HTTP [:9091]
 admin --> prom : HTTP [:9090]
@@ -113,4 +111,4 @@ The Yovi system operates behind a reverse proxy that acts as the single point of
 * **Internal interfaces (Private `monitor-net` network):**
 ** **Microservice communication:** The `users` service communicates directly with the `gamey` service using the internal Docker DNS (`http://gamey:4000`) defined via the `RUST_API_URL` environment variable.
 ** **Monitoring and observability:** Prometheus (exposed on port `9090`) scrapes metrics from the internal services. Grafana (exposed on port `9091`) queries Prometheus to build visual dashboards accessed by the Administrator.
-** **Data persistence:** The core backend services (`users`, `gamey`, `multiplayer`) connect securely via TLS to **MongoDB Atlas**, an external cloud-hosted database, to persist user profiles, match history, and active session data.
+** **Data persistence:** The users service connects securely via TLS to MongoDB Atlas, an external cloud-hosted database, to persist user profiles, match history, clan data, and authentication tokens. The gamey and multiplayer services do not access the database directly — any persistence they require is delegated to the users service via internal HTTP calls.

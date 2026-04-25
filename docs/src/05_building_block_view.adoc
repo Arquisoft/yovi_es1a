@@ -71,11 +71,12 @@ database "MongoDB" as db
 
 gateway --> users : Routes /api and /api-docs
 gateway --> multi : Routes /socket.io
+gateway --> gamey : Routes /api/gamey
 tourney -[#red,bold]-> gamey : Direct HTTP Request\n(External Port 3002)
 
 users --> gamey : Internal HTTP Request\n(Internal Port 4000)
+multi --> users : Internal HTTP (M2M match updates)
 users ..> db : Profile and Stats queries
-multi ..> db : Active match state updates
 @enduml
 ----
 
@@ -89,22 +90,22 @@ Contained building blocks::
 | **Building block** | **Description**
 
 | **Users service and swagger UI**
-| *Responsibility:* Manages user registration, JWT authentication, and historical statistics retrieval. It acts as a standard REST API and natively serves the OpenAPI specifications (`openapi.yaml` and `api-tournament.yaml`) via Swagger UI. +
+| *Responsibility:* Manages user registration, JWT authentication, and historical statistics retrieval. It acts as a standard REST API and natively serves the OpenAPI specifications (`openapi.yaml` and `api-tournament.yaml`) via Swagger UI. It is the only service with direct access to MongoDB. +
 *Technology:* Node.js, Express, Mongoose, Swagger-UI-Express. +
 *Location:* `/users` directory.
 
 | **Multiplayer service**
-| *Responsibility:* Maintains stateful, real-time WebSocket connections with active players, managing game rooms and broadcasting piece movements instantly. +
+| *Responsibility:* Maintains stateful, real-time WebSocket connections with active players, managing game rooms and broadcasting piece movements instantly. It does not access MongoDB directly — match result persistence is delegated to the Users service via internal HTTP calls using a machine-to-machine authentication header (`x-server-key`). +
 *Technology:* Node.js, Socket.io. +
 *Location:* `/multiplayer` directory.
 
 | **GameY engine**
-| *Responsibility:* Implements the core logic of the Game of Y, validating moves and checking win conditions using YEN notation. It exposes two distinct ports: **Port 4000** for internal, secure communication with the `Users` service, and **Port 3002** directly exposed to the internet for external competitions. It includes auto-resign logic: if the engine detects no valid moves (e.g., full board), it returns an action: resign status instead of an error, ensuring flow continuity in automated test environments. +
+| *Responsibility:* Implements the core logic of the Game of Y, validating moves and checking win conditions using YEN notation. It exposes two distinct ports: **Port 4000** for internal communication (routed via Nginx at `/api/gamey/` and used directly by the `Users` service), and **Port 3002** directly exposed to the internet for external competitions. It includes auto-resign logic: if the engine detects no valid moves (e.g., full board), it returns an action: resign status instead of an error, ensuring flow continuity in automated test environments. +
 *Technology:* Rust. +
 *Location:* `/gamey` directory.
 
 | **MongoDB**
-| *Responsibility:* The central database used to persist user profiles, encrypted credentials, and global ranking statistics. +
+| *Responsibility:* The central database used to persist user profiles, encrypted credentials, and global ranking statistics. Only the Users service connects to it directly. +
 *Technology:* MongoDB (NoSQL Document Database). +
 *Location:* External Docker container / Atlas Cloud.
 |===

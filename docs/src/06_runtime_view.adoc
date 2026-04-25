@@ -26,12 +26,15 @@ actor "Player 2 (Red)" as P2
 participant "React SPA\n(Tablero/gameService)" as WebApp
 participant "API Gateway\n(Nginx)" as Gateway
 participant "Users API\n(Node.js)" as UsersService
+participant "GameY Engine\n(Rust)" as Gamey
 
 P1 -> WebApp: Places blue piece on board
 WebApp -> WebApp: Update local state & layout
 
 WebApp -> Gateway: POST /api/bot/check-winner (layout)
 Gateway -> UsersService: Forward request
+UsersService -> Gamey: Validate win condition
+Gamey --> UsersService: Return status ('ongoing')
 UsersService --> WebApp: Return status ('ongoing')
 WebApp --> P2: Indicate Player 2's turn
 
@@ -40,6 +43,8 @@ WebApp -> WebApp: Update local state & layout
 
 WebApp -> Gateway: POST /api/bot/check-winner (layout)
 Gateway -> UsersService: Forward request
+UsersService -> Gamey: Validate win condition
+Gamey --> UsersService: Return status ('win')
 UsersService --> WebApp: Return status ('win')
 
 WebApp -> WebApp: Save match result (statsService)
@@ -96,7 +101,7 @@ end
 
 === 3. Real-time Multiplayer Match (PvP / "online" mode)
 
-This diagram details the WebSocket communication used for real-time multiplayer games. The system utilizes an explicit Room-based matchmaking approach. Match result persistence is handled directly by the frontend via the `statsService`, which calls the Users API after the game ends.
+This diagram details the WebSocket communication used for real-time multiplayer games. The system utilizes an explicit Room-based matchmaking approach. For normal game endings, match result persistence is handled by the frontend via the `statsService`. For player disconnections, the Multiplayer Service acts as the arbiter and persists the result via a secure machine-to-machine (M2M) call to the Users API.
 
 [plantuml]
 ----
@@ -108,7 +113,8 @@ participant "React SPA\n(Multiplayer/Tablero)" as WebApp
 participant "API Gateway\n(Nginx)" as Gateway
 participant "Multiplayer Service\n(Socket.io)" as Multi
 participant "Users API\n(Node.js)" as UsersService
-database MongoDB as Db
+participant "GameY Engine\n(Rust)" as Gamey
+database "MongoDB Atlas" as Db
 
 P1 -> WebApp: Enters Lobby & selects size
 WebApp -> Gateway: Connect (WSS /socket.io/)
@@ -131,6 +137,8 @@ group Gameplay Loop
     P1 -> WebApp: Makes move
     WebApp -> Gateway: POST /api/bot/check-winner (YEN layout)
     Gateway -> UsersService: Forward request
+    UsersService -> Gamey: Validate win condition
+    Gamey --> UsersService: Return status ('ongoing')
     UsersService --> WebApp: Return status ('ongoing')
     WebApp -> Multi: Emit "makeMove" (YEN layout)
     Multi --> WebApp: Emit "moveReceived" (to P2)
@@ -139,6 +147,8 @@ group Gameplay Loop
     P2 -> WebApp: Makes move
     WebApp -> Gateway: POST /api/bot/check-winner (YEN layout)
     Gateway -> UsersService: Forward request
+    UsersService -> Gamey: Validate win condition
+    Gamey --> UsersService: Return status ('ongoing')
     UsersService --> WebApp: Return status ('ongoing')
     WebApp -> Multi: Emit "makeMove" (YEN layout)
     Multi --> WebApp: Emit "moveReceived" (to P1)
@@ -149,7 +159,10 @@ alt Player wins (check-winner returns 'win')
     WebApp -> Multi: Emit "makeMove" (layout + "|GAMEOVER")
     Multi --> WebApp: Emit "moveReceived" (|GAMEOVER to opponent)
     WebApp -> Multi: Emit "gameOver" (roomCode)
-    WebApp -> WebApp: Save match result (statsService)
+    WebApp -> Gateway: POST /api/matches (statsService)
+    Gateway -> UsersService: Forward request
+    UsersService -> Db: Insert Match Document
+    Db --> UsersService: Confirmation
     WebApp --> P1: Display Winner Modal
     WebApp --> P2: Display Loser Modal
 end
@@ -158,7 +171,9 @@ alt Player disconnects
     P1 -> Multi: Socket disconnect / Emit "leaveMatchGracefully"
     Multi --> WebApp: Emit "opponent_disconnected" (to P2)
     WebApp --> P2: Display OpponentDisconnected Modal
-    WebApp -> WebApp: Save match result (statsService)
+    Multi -> UsersService: POST /matches (M2M x-server-key)
+    UsersService -> Db: Insert Match Document
+    Db --> UsersService: Confirmation
 end
 @enduml
 ----
