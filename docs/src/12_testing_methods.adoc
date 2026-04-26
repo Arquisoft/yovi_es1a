@@ -150,7 +150,7 @@ image::stats_errors.png["Statistics table showing errors", align="center"]
 
 It is important to note that these errors do not represent performance failures or server crashes (there are no HTTP 5xx errors), but are the expected result of the **robustness of the business rules**:
 
-* **Invalid requests due to repetition:** When simulating 50 concurrent users repeating the exact same recording, the system receives requests that no longer make sense (for example, attempting to log in with data that the validator already considers processed). In these cases, the backend responds with a `400 Bad Request`.
+* **Uniqueness conflicts (Registration and creation):** The Gatling script triggers simulations using static (hardcoded) data. By simulating 50 concurrent users attempting to register the same email address or username in the same millisecond, the backend processes the first one and correctly rejects the remaining 49 to avoid data duplication in the database.
 * **Game Engine Validation:** The Rust engine validates the game state using YEN notation. If the test attempts to send a move on a board that has already changed turns or on a finished game, the engine rejects the action by returning a `400 Bad Request`.
 
 **Conclusion:** The observed errors positively validate the system's security. They confirm that the backend barriers function correctly, preventing illegal state transitions or data duplication even under high concurrency conditions, without impacting the performance of other valid requests.

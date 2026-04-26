@@ -30,7 +30,7 @@ image::grafana_dashboard.png["Grafana Dashboard", align="center"]
 
 === Interface specification (OpenAPI and Swagger)
 
-The architecture exposes its communication contracts using the **OpenAPI 3.0** standard. Interactive **Swagger UI** interfaces have been enabled, allowing external developers and testers to test the endpoints directly from the browser, logically separating business operations from tournament operations.
+The architecture exposes its communication contracts using the *OpenAPI 3.0* standard. Interactive *Swagger UI* interfaces have been enabled, allowing external developers and testers to test the endpoints directly from the browser, logically separating business operations from tournament operations.
 
 ==== Core API 
 It documents the platform's general management operations: user registration and login, game management, clans, and standard interaction with the AI ​​engine.

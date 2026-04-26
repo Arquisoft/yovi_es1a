@@ -83,14 +83,18 @@ nginx --> gamey : " /api/gamey/ "
 nginx --> multi : " /socket.io/ (Upgrade: websocket)"
 
 spa .up.> nginx : HTTP / WS requests
+
 users -right-> gamey : Internal HTTP requests\n(RUST_API_URL)
+multi -up-> users : Internal HTTP\n(M2M x-server-key)
 
 users --> mongo : Reads/Writes (TLS)
 
 admin --> graf : HTTP [:9091]
 admin --> prom : HTTP [:9090]
 graf -> prom : Queries Data
-prom -up-> users : Scrapes Metrics
+
+prom -up-> users : Scrapes Metrics (/metrics)
+prom -up-> gamey : Scrapes Metrics (/metrics)
 
 @enduml
 ----
@@ -103,7 +107,7 @@ The Yovi system operates behind a reverse proxy that acts as the single point of
 ** **API documentation interfaces (Swagger):** 
 *** **Endpoints documentation (`/api-docs/endpoints`):** Serves the main OpenAPI specification for user and match management.
 *** **Tournament API documentation (`/api-docs/api`):** Serves the specific specification for the competition engine.
-** **Node.js user and bot API (`/api/`, `/api/bot/`, `/api/matches/`):** Handled by the `users` service on internal port `3000`. This includes authentication, user stats, and the artificial intelligence bot logic engine.
+** **Node.js user and bot API (`/api/`, `/api/bot/`, `/api/matches/`):** Handled by the `users` service on internal port `3000`. This includes authentication, user stats, and the application's logic motor controller
 ** **Rust game API (`/api/gamey/`):** Routed to the `gamey` service on internal port `4000` for complex game mechanics calculation.
 ** **Real-time multiplayer (`/socket.io/`):** Nginx upgrades HTTP connections to WebSockets and routes them to the `multiplayer` service on internal port `5000`.
 ** **Tournament and evaluation interface (Direct Port):** An exposed port (`3002`) mapped directly to the internal `gamey` service port (`4000`). This completely bypasses Nginx to provide a direct, low-latency HTTP communication channel for external tournament scripts.
@@ -111,4 +115,4 @@ The Yovi system operates behind a reverse proxy that acts as the single point of
 * **Internal interfaces (Private `monitor-net` network):**
 ** **Microservice communication:** The `users` service communicates directly with the `gamey` service using the internal Docker DNS (`http://gamey:4000`) defined via the `RUST_API_URL` environment variable.
 ** **Monitoring and observability:** Prometheus (exposed on port `9090`) scrapes metrics from the internal services. Grafana (exposed on port `9091`) queries Prometheus to build visual dashboards accessed by the Administrator.
-** **Data persistence:** The users service connects securely via TLS to MongoDB Atlas, an external cloud-hosted database, to persist user profiles, match history, clan data, and authentication tokens. The gamey and multiplayer services do not access the database directly — any persistence they require is delegated to the users service via internal HTTP calls.
+** **Data persistence:** The users service connects securely via TLS to MongoDB Atlas, an external cloud-hosted database, to persist user profiles, match history and clan data. The gamey and multiplayer services do not access the database directly — any persistence they require is delegated to the users service via internal HTTP calls.

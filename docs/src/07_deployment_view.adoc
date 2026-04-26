@@ -225,7 +225,7 @@ skinparam componentStyle rectangle
 node "Docker Host (Azure VM)" as host {
   frame "monitor-net (Docker Network)" as net {
     [Users Service] as users
-    [Multiplayer Service] as multi
+    [GameY Service] as multi
     [Prometheus] as prom
     [Grafana] as graf
   }

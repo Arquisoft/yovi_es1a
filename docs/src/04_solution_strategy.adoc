@@ -33,45 +33,64 @@ endif::arc42help[]
 
 ==== Continuous deployment (GitHub Actions)
 Beyond automated testing, we implemented a full Continuous Deployment (CD) pipeline. Upon publishing a GitHub Release, a workflow automatically connects to the Azure VM via SSH to pull the latest images and restart the services.
+
 *Quality goals:* deployability, maintainability, reliability.
+
 *Key constraints:* Requires secure management of SSH keys using GitHub Secrets to prevent unauthorized server access.
 
 ==== Frontend
 We chose React combined with TypeScript for the user interface development. React's component-based architecture is ideal for modularizing the complex visualization of the game board and managing the reactive state of the match. The adoption of TypeScript adds a static typing system that drastically reduces compile-time errors.
+
 *Quality goals:* usability, maintainability, robustness.
+
 *Key constraints:* The system must be accessible from any modern web browser, managing communication with the backend asynchronously via JSON and WebSockets.
 
 ==== Backend (Microservices)
 For the backend, we adopted a polyglot microservices approach:
+
 1. **Rust (`gamey`):** Offers native performance and memory safety, guaranteeing low and predictable response times for the complex algorithmic logic of the game and AI bots.
+
 2. **Node.js (`users`):** Excellent for creating fast REST APIs to manage user registration, authentication (JWT), and database interactions.
+
 3. **Node.js (`multiplayer`):** A dedicated service handling WebSocket connections to ensure low-latency gameplay.
+
 *Quality goals:* interoperability, scalability, and robustness.
+
 *Key constraints:* The Rust engine is restricted to using the strict YEN string format as the contract for game states.
 
 ==== Real-Time communication (WebSockets)
 We selected **Socket.io** over standard HTTP polling for multiplayer interactions. Socket.io maintains a persistent, bi-directional TCP connection, allowing the server to push moves to opponents instantly. It also provides built-in "Rooms," which drastically simplifies the logic for matchmaking and isolating 1vs1 games.
+
 *Quality goals:* low latency, real-time performance, efficiency.
+
 *Key constraints:* Requires a stateful connection, demanding a dedicated microservice to manage memory overhead effectively.
 
 ==== API Gateway & security
 We implemented **Nginx** as a Reverse Proxy and API Gateway. Instead of exposing multiple microservice ports to the internet, Nginx provides a single, secure entry point (Port 443). It handles SSL/TLS termination, hiding the internal complexity of the Docker network and routing traffic to the correct service based on the URL path.
+
 *Quality goals:* security, isolation, parity between Dev/Prod environments.
+
 *Key constraints:* All external traffic must be encrypted via HTTPS using SSL certificates.
 
 ==== Database
 We chose **MongoDB Atlas** (Cloud NoSQL) as our primary database. Its document-oriented structure perfectly complements Node.js and React. This allows us to achieve agility when evolving game data structures without migrating rigid SQL tables, and ensures high availability in the cloud.
+
 *Quality goals:* agility in development, high availability, speed of response.
+
 *Key constraints:* Must store varied game data without a fixed structure while securing user credentials.
 
 ==== Containers and cloud deployment
-**Docker and Docker Compose** were selected to containerize the services. This guarantees absolute consistency between local development machines and our **Azure Virtual Machine** production environment. It isolates dependencies (Node vs. Rust) and allows us to define the entire infrastructure as code.
+*Docker and Docker Compose* were selected to containerize the services. This guarantees absolute consistency between local development machines and our **Azure Virtual Machine** production environment. It isolates dependencies (Node vs. Rust) and allows us to define the entire infrastructure as code.
+
 *Quality goals:* portability, deployability, reproducibility.
+
 *Key constraints:* The host environment (Azure VM) must run a Docker engine to orchestrate the internal `monitor-net` bridge network.
 
 ==== Monitoring
 We chose the combination of **Prometheus and Grafana**. Prometheus acts as a time-series database scraping technical metrics from the backend, while Grafana visualizes this data on real-time dashboards.
+
 *Quality goals:* observability, performance validation.
+
 *Key constraints:* Services must expose metrics at a standard `/metrics` endpoint.
 
 ==== Modeling & version control
@@ -82,26 +101,35 @@ We chose the combination of **Prometheus and Grafana**. Prometheus acts as a tim
 
 ==== High-Performance bot interface
 We exposed a secondary direct port (3002) for the Rust gamey service. This bypasses the Nginx API Gateway specifically for external competition scripts and automated evaluation tools.
+
 *Quality goals:* efficiency, interoperability.
+
 *Key constraints:* Only the `/play` endpoint is exposed on this port to  meeting tournament requirements.
 
 ==== Microservices architecture
 We divided the backend into autonomous services (`users`, `gamey`, `multiplayer`). This decouples user management, real-time networking, and game logic. If the user service experiences high load, the multiplayer game loop remains unaffected.
+
 *Quality goals:* modifiability, scalability, technological independence.
+
 *Key constraints:* Services run in isolated containers, communicating solely over the internal Docker network.
 
 ==== API gateway pattern
 Nginx acts as the facade for the system. Clients do not know if they are talking to Rust or Node.js; they simply send requests to the Nginx gateway, which routes `/api/gamey/` to Rust, `/socket.io/` to the multiplayer service, and `/api/` to the users service. Additionally, the backend implements dynamic **CORS (Cross-Origin Resource Sharing)** strategies via environment variables, ensuring that production endpoints only accept traffic from the gateway's IP, while remaining flexible for local development.
+
 *Quality goals:* security, simplicity for clients, parity between Dev/Prod environments.
 
 ==== Single page application (SPA)
 The React frontend separates the presentation layer from business logic. By loading once and updating dynamically via WebSockets and REST, it offers a fluid, app-like experience.
+
 *Quality goals:* usability, interoperability.
 
 ==== Hybrid communication: REST & Event-Driven
 We use a dual approach:
-* **REST (HTTP/JSON):** Used for stateless, transactional operations (e.g., login, fetching match history, requesting an AI move).
-* **Event-Driven (WebSockets):** Used for stateful, real-time synchronization during active gameplay, pushing events to clients instantly.
+
+**REST (HTTP/JSON):** Used for stateless, transactional operations (e.g., login, fetching match history, requesting an AI move).
+
+**Event-Driven (WebSockets):** Used for stateful, real-time synchronization during active gameplay, pushing events to clients instantly.
+
 *Quality goals:* low latency, appropriate tool for the job.
 
 === Strategies for Quality Goals

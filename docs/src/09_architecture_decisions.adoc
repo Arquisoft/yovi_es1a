@@ -51,7 +51,7 @@ endif::arc42help[]
 
 * **Data Integrity (Schemas):** Although the database is NoSQL, the application requires a predictable structure. Mongoose allows us to define strong types (String, Date) and rules (required: true, unique: true) in a single place (the Model).
 * **Centralized Validation:** We avoid duplicating validation logic at each endpoint. If the data does not conform to the schema, Mongoose prevents it from reaching the database (Fail Fast pattern).
-* * **Abstraction and Productivity:** It provides us with a simplified API for CRUD operations (.save(), .findOne()) and connection management, accelerating development compared to the use of "raw" native queries.
+* **Abstraction and Productivity:** It provides us with a simplified API for CRUD operations (.save(), .findOne()) and connection management, accelerating development compared to the use of "raw" native queries.
 
 === DA-03. JSON Web Tokens (JWT) for Authentication
 **Context:** Our application consists of a decoupled frontend (React) and a REST API in the backend that requires protecting certain routes (e.g., saving statistics or querying history). We needed a security mechanism that maintained the "Stateless" philosophy of REST, avoiding overloading server memory with traditional cookie-based sessions. Therefore, we decided to implement JWT, delegating validation to a specific auth-middleware.

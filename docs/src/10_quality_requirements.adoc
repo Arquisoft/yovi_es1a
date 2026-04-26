@@ -60,7 +60,7 @@ endif::arc42help[]
 
 | SC-06 | Security (Anti-Cheat) | Malicious Client | Sends a fake request claiming victory ("winner": true) or an illegal move | Backend (Validation Logic in Node/Rust) | Normal Operation | The server ignores the client's claim, re-evaluates the true board state, and rejects the illegal state. | 0% of corrupted games persisted to MongoDB; Server authority maintained | High, High
 
-| SC-07 | Modifiability | Backend Developer | Needs to add a new "Minimax" AI bot | Rust Engine Source Code | Design/Maintenance time | The new strategy is added by implementing the existing `YBot` trait and registering it in the Factory. | 0 lines of core game logic modified | Medium, Medium
+| SC-07 | Modifiability | Backend Developer | Needs to add a new "Minimax" AI bot | Rust Engine Source Code | Design/Maintenance time | The new strategy is added by implementing the existing `YBot` trait and registering it. | 0 lines of core game logic modified | Medium, Medium
 
-| SC-08 | Deployability | CI/CD Pipeline (GitHub Actions) | A new Release is published in the main branch | Azure Production Environment | Deployment phase | The pipeline securely connects via SSH, injects environment variables, pulls the latest images, and recreates the containers automatically. | 0 manual server interventions required; Deployment completes in < 3 minutes | High, High
+| SC-08 | Deployability | CI/CD Pipeline (GitHub Actions) | A new Release is published in the main branch | Azure Production Environment | Deployment phase | The pipeline securely connects via SSH, injects environment variables, pulls the latest images, and recreates the containers automatically. | 0 manual server interventions required; Deployment completes in < 5 minutes | High, High
 |===

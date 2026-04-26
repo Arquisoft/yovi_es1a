@@ -6,7 +6,7 @@
 // configure EN settings for asciidoc
 include::src/config.adoc[]
 
-= image:arc42-logo.png[arc42] yovi_es1a
+= image:yovi_logo.png[Logo Yovi, width=60] Game Y : yovi_es1a
 :revnumber: 3.0 EN
 :revdate: April 2026
 :revremark: (based upon AsciiDoc version)

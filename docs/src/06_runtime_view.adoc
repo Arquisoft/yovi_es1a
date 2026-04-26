@@ -77,7 +77,7 @@ UsersService --> WebApp: Status ('ongoing')
 
 WebApp -> Gateway: POST /api/bot/play (YEN layout & strategy)
 Gateway -> UsersService: Forward request
-UsersService -> Gamey: HTTP POST /play
+UsersService -> Gamey: POST /v1/ybot/choose/{bot_id}
 Gamey -> Gamey: Process rules & generate Bot move
 Gamey --> UsersService: Return BotMoveResponse (coords)
 UsersService --> Gateway: 200 OK
