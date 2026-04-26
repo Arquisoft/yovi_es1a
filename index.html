@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
-<title>yovi_es1a</title>
+<title>Game Y : yovi_es1a</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -435,7 +435,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1><span class="image"><img src="./images/arc42-logo.png" alt="arc42"></span> yovi_es1a</h1>
+<h1><span class="image"><img src="./images/yovi_logo.png" alt="Logo Yovi" width="60"></span> Game Y : yovi_es1a</h1>
 <div class="details">
 <span id="revnumber">version 3.0 EN,</span>
 <span id="revdate">April 2026</span>
@@ -1124,68 +1124,110 @@ Refer to details in the following sections.</p>
 <div class="sect3">
 <h4 id="_continuous_deployment_github_actions">4.1.1. Continuous deployment (GitHub Actions)</h4>
 <div class="paragraph">
-<p>Beyond automated testing, we implemented a full Continuous Deployment (CD) pipeline. Upon publishing a GitHub Release, a workflow automatically connects to the Azure VM via SSH to pull the latest images and restart the services.
-<strong>Quality goals:</strong> deployability, maintainability, reliability.
-<strong>Key constraints:</strong> Requires secure management of SSH keys using GitHub Secrets to prevent unauthorized server access.</p>
+<p>Beyond automated testing, we implemented a full Continuous Deployment (CD) pipeline. Upon publishing a GitHub Release, a workflow automatically connects to the Azure VM via SSH to pull the latest images and restart the services.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> deployability, maintainability, reliability.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> Requires secure management of SSH keys using GitHub Secrets to prevent unauthorized server access.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_frontend">4.1.2. Frontend</h4>
 <div class="paragraph">
-<p>We chose React combined with TypeScript for the user interface development. React&#8217;s component-based architecture is ideal for modularizing the complex visualization of the game board and managing the reactive state of the match. The adoption of TypeScript adds a static typing system that drastically reduces compile-time errors.
-<strong>Quality goals:</strong> usability, maintainability, robustness.
-<strong>Key constraints:</strong> The system must be accessible from any modern web browser, managing communication with the backend asynchronously via JSON and WebSockets.</p>
+<p>We chose React combined with TypeScript for the user interface development. React&#8217;s component-based architecture is ideal for modularizing the complex visualization of the game board and managing the reactive state of the match. The adoption of TypeScript adds a static typing system that drastically reduces compile-time errors.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> usability, maintainability, robustness.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> The system must be accessible from any modern web browser, managing communication with the backend asynchronously via JSON and WebSockets.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_backend_microservices">4.1.3. Backend (Microservices)</h4>
 <div class="paragraph">
-<p>For the backend, we adopted a polyglot microservices approach:
-1. <strong>Rust (<code>gamey</code>):</strong> Offers native performance and memory safety, guaranteeing low and predictable response times for the complex algorithmic logic of the game and AI bots.
-2. <strong>Node.js (<code>users</code>):</strong> Excellent for creating fast REST APIs to manage user registration, authentication (JWT), and database interactions.
-3. <strong>Node.js (<code>multiplayer</code>):</strong> A dedicated service handling WebSocket connections to ensure low-latency gameplay.
-<strong>Quality goals:</strong> interoperability, scalability, and robustness.
-<strong>Key constraints:</strong> The Rust engine is restricted to using the strict YEN string format as the contract for game states.</p>
+<p>For the backend, we adopted a polyglot microservices approach:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Rust (<code>gamey</code>):</strong> Offers native performance and memory safety, guaranteeing low and predictable response times for the complex algorithmic logic of the game and AI bots.</p>
+</li>
+<li>
+<p><strong>Node.js (<code>users</code>):</strong> Excellent for creating fast REST APIs to manage user registration, authentication (JWT), and database interactions.</p>
+</li>
+<li>
+<p><strong>Node.js (<code>multiplayer</code>):</strong> A dedicated service handling WebSocket connections to ensure low-latency gameplay.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> interoperability, scalability, and robustness.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> The Rust engine is restricted to using the strict YEN string format as the contract for game states.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_real_time_communication_websockets">4.1.4. Real-Time communication (WebSockets)</h4>
 <div class="paragraph">
-<p>We selected <strong>Socket.io</strong> over standard HTTP polling for multiplayer interactions. Socket.io maintains a persistent, bi-directional TCP connection, allowing the server to push moves to opponents instantly. It also provides built-in "Rooms," which drastically simplifies the logic for matchmaking and isolating 1vs1 games.
-<strong>Quality goals:</strong> low latency, real-time performance, efficiency.
-<strong>Key constraints:</strong> Requires a stateful connection, demanding a dedicated microservice to manage memory overhead effectively.</p>
+<p>We selected <strong>Socket.io</strong> over standard HTTP polling for multiplayer interactions. Socket.io maintains a persistent, bi-directional TCP connection, allowing the server to push moves to opponents instantly. It also provides built-in "Rooms," which drastically simplifies the logic for matchmaking and isolating 1vs1 games.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> low latency, real-time performance, efficiency.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> Requires a stateful connection, demanding a dedicated microservice to manage memory overhead effectively.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_api_gateway_security">4.1.5. API Gateway &amp; security</h4>
 <div class="paragraph">
-<p>We implemented <strong>Nginx</strong> as a Reverse Proxy and API Gateway. Instead of exposing multiple microservice ports to the internet, Nginx provides a single, secure entry point (Port 443). It handles SSL/TLS termination, hiding the internal complexity of the Docker network and routing traffic to the correct service based on the URL path.
-<strong>Quality goals:</strong> security, isolation, parity between Dev/Prod environments.
-<strong>Key constraints:</strong> All external traffic must be encrypted via HTTPS using SSL certificates.</p>
+<p>We implemented <strong>Nginx</strong> as a Reverse Proxy and API Gateway. Instead of exposing multiple microservice ports to the internet, Nginx provides a single, secure entry point (Port 443). It handles SSL/TLS termination, hiding the internal complexity of the Docker network and routing traffic to the correct service based on the URL path.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> security, isolation, parity between Dev/Prod environments.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> All external traffic must be encrypted via HTTPS using SSL certificates.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_database">4.1.6. Database</h4>
 <div class="paragraph">
-<p>We chose <strong>MongoDB Atlas</strong> (Cloud NoSQL) as our primary database. Its document-oriented structure perfectly complements Node.js and React. This allows us to achieve agility when evolving game data structures without migrating rigid SQL tables, and ensures high availability in the cloud.
-<strong>Quality goals:</strong> agility in development, high availability, speed of response.
-<strong>Key constraints:</strong> Must store varied game data without a fixed structure while securing user credentials.</p>
+<p>We chose <strong>MongoDB Atlas</strong> (Cloud NoSQL) as our primary database. Its document-oriented structure perfectly complements Node.js and React. This allows us to achieve agility when evolving game data structures without migrating rigid SQL tables, and ensures high availability in the cloud.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> agility in development, high availability, speed of response.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> Must store varied game data without a fixed structure while securing user credentials.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_containers_and_cloud_deployment">4.1.7. Containers and cloud deployment</h4>
 <div class="paragraph">
-<p><strong>Docker and Docker Compose</strong> were selected to containerize the services. This guarantees absolute consistency between local development machines and our <strong>Azure Virtual Machine</strong> production environment. It isolates dependencies (Node vs. Rust) and allows us to define the entire infrastructure as code.
-<strong>Quality goals:</strong> portability, deployability, reproducibility.
-<strong>Key constraints:</strong> The host environment (Azure VM) must run a Docker engine to orchestrate the internal <code>monitor-net</code> bridge network.</p>
+<p><strong>Docker and Docker Compose</strong> were selected to containerize the services. This guarantees absolute consistency between local development machines and our <strong>Azure Virtual Machine</strong> production environment. It isolates dependencies (Node vs. Rust) and allows us to define the entire infrastructure as code.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> portability, deployability, reproducibility.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> The host environment (Azure VM) must run a Docker engine to orchestrate the internal <code>monitor-net</code> bridge network.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_monitoring">4.1.8. Monitoring</h4>
 <div class="paragraph">
-<p>We chose the combination of <strong>Prometheus and Grafana</strong>. Prometheus acts as a time-series database scraping technical metrics from the backend, while Grafana visualizes this data on real-time dashboards.
-<strong>Quality goals:</strong> observability, performance validation.
-<strong>Key constraints:</strong> Services must expose metrics at a standard <code>/metrics</code> endpoint.</p>
+<p>We chose the combination of <strong>Prometheus and Grafana</strong>. Prometheus acts as a time-series database scraping technical metrics from the backend, while Grafana visualizes this data on real-time dashboards.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> observability, performance validation.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> Services must expose metrics at a standard <code>/metrics</code> endpoint.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1207,40 +1249,58 @@ Refer to details in the following sections.</p>
 <div class="sect3">
 <h4 id="_high_performance_bot_interface">4.2.1. High-Performance bot interface</h4>
 <div class="paragraph">
-<p>We exposed a secondary direct port (3002) for the Rust gamey service. This bypasses the Nginx API Gateway specifically for external competition scripts and automated evaluation tools.
-<strong>Quality goals:</strong> efficiency, interoperability.
-<strong>Key constraints:</strong> Only the <code>/play</code> endpoint is exposed on this port to  meeting tournament requirements.</p>
+<p>We exposed a secondary direct port (3002) for the Rust gamey service. This bypasses the Nginx API Gateway specifically for external competition scripts and automated evaluation tools.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> efficiency, interoperability.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> Only the <code>/play</code> endpoint is exposed on this port to  meeting tournament requirements.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_microservices_architecture">4.2.2. Microservices architecture</h4>
 <div class="paragraph">
-<p>We divided the backend into autonomous services (<code>users</code>, <code>gamey</code>, <code>multiplayer</code>). This decouples user management, real-time networking, and game logic. If the user service experiences high load, the multiplayer game loop remains unaffected.
-<strong>Quality goals:</strong> modifiability, scalability, technological independence.
-<strong>Key constraints:</strong> Services run in isolated containers, communicating solely over the internal Docker network.</p>
+<p>We divided the backend into autonomous services (<code>users</code>, <code>gamey</code>, <code>multiplayer</code>). This decouples user management, real-time networking, and game logic. If the user service experiences high load, the multiplayer game loop remains unaffected.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> modifiability, scalability, technological independence.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key constraints:</strong> Services run in isolated containers, communicating solely over the internal Docker network.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_api_gateway_pattern">4.2.3. API gateway pattern</h4>
 <div class="paragraph">
-<p>Nginx acts as the facade for the system. Clients do not know if they are talking to Rust or Node.js; they simply send requests to the Nginx gateway, which routes <code>/api/gamey/</code> to Rust, <code>/socket.io/</code> to the multiplayer service, and <code>/api/</code> to the users service. Additionally, the backend implements dynamic <strong>CORS (Cross-Origin Resource Sharing)</strong> strategies via environment variables, ensuring that production endpoints only accept traffic from the gateway&#8217;s IP, while remaining flexible for local development.
-<strong>Quality goals:</strong> security, simplicity for clients, parity between Dev/Prod environments.</p>
+<p>Nginx acts as the facade for the system. Clients do not know if they are talking to Rust or Node.js; they simply send requests to the Nginx gateway, which routes <code>/api/gamey/</code> to Rust, <code>/socket.io/</code> to the multiplayer service, and <code>/api/</code> to the users service. Additionally, the backend implements dynamic <strong>CORS (Cross-Origin Resource Sharing)</strong> strategies via environment variables, ensuring that production endpoints only accept traffic from the gateway&#8217;s IP, while remaining flexible for local development.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> security, simplicity for clients, parity between Dev/Prod environments.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_single_page_application_spa">4.2.4. Single page application (SPA)</h4>
 <div class="paragraph">
-<p>The React frontend separates the presentation layer from business logic. By loading once and updating dynamically via WebSockets and REST, it offers a fluid, app-like experience.
-<strong>Quality goals:</strong> usability, interoperability.</p>
+<p>The React frontend separates the presentation layer from business logic. By loading once and updating dynamically via WebSockets and REST, it offers a fluid, app-like experience.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> usability, interoperability.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_hybrid_communication_rest_event_driven">4.2.5. Hybrid communication: REST &amp; Event-Driven</h4>
 <div class="paragraph">
-<p>We use a dual approach:
-* <strong>REST (HTTP/JSON):</strong> Used for stateless, transactional operations (e.g., login, fetching match history, requesting an AI move).
-* <strong>Event-Driven (WebSockets):</strong> Used for stateful, real-time synchronization during active gameplay, pushing events to clients instantly.
-<strong>Quality goals:</strong> low latency, appropriate tool for the job.</p>
+<p>We use a dual approach:</p>
+</div>
+<div class="paragraph">
+<p><strong>REST (HTTP/JSON):</strong> Used for stateless, transactional operations (e.g., login, fetching match history, requesting an AI move).</p>
+</div>
+<div class="paragraph">
+<p><strong>Event-Driven (WebSockets):</strong> Used for stateful, real-time synchronization during active gameplay, pushing events to clients instantly.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quality goals:</strong> low latency, appropriate tool for the job.</p>
 </div>
 </div>
 </div>
@@ -1530,7 +1590,7 @@ No code reaches the production environment unless it passes the full test suite 
 </div>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/pLDDJzjG4Bo_Nx7YG9n36jHZ3XL1fO3QW9K48gHSrlRAlFAywxwF1F_xoXy1fqc5sbvwixmpEplZyRdpQ7qeZCBWXKEHa5MOUh5mxyYg4gtNgIwHFPpC2LCFYtYwvcY9YI4hunmBMf3Tw9I69u0ELfHCotAVE8rlu0ezRR5QStIRQtvfmTtBVNGjx60QtzHOoUZ3TzUYcq4dja-vme8UuP9ppRJcQ1wStmaKL2bLCs7qgJjk0ZDy9WU5R0Y4uPfU816qcMhdVUHzcQ4dC9AY0UVhvrCmM4dmgWVlZ4mWlbiiOOob7YVYn-aJfS-ZhMOc2z7ZvMr77QgEK7FxjYRmHUmMRGQMVWHoNlMdhL91rGGUqEZcigrcI8KpxRKmH7kIjKn15OmELERaW-N6K70G3OHpqPmFXh_ezP9O76BV3w0qMFMDmoauRz5JNlrx1jVBPTpfrJexiw_ps4fApe4DXXoSGavCjJPSY6y-_dlnN8YVoORcv4fXHn2b8ZPpHq9wjV_nx0pklhvPwmLuVEcHpatBqbIGT4U2bxyjN6ZAc_sNfVk3ee5O66mrznlNBQ-NSaQsJclmzaUtVxD2uvlJWJXp4Aqqrwk-YQEX0W0uZ7w16u82VVe4bbmm7gBwtDsTlwDzrgvf-geDVYOP6aMSgNFYB1Jc9m00" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/pLDDJzj04BtlhnXn8Cw1XlQOGqLGAKKj42LGX1If6dj7PijwnjqT9rYe_xto1yKfLAZjfJVByzwyDqzl3w9YqAhm1YiLhegKWi5C9S1bf61A3EeoLo8hx2m8CuNbVBRYv09JJq4cEHQqfB1s6Ort02DSKJehostYR7u2nwYqmNh5oLdk-Au3zp-tqOrmXDdyfC6AfLTVOuTk1xtODkKO2xg68yuTqugJHHNrGQ2WsfY62NjlUtDJECLRYb38ca0OFj0Tf8B1ccu-H5wM5fN0IuOUeZRVk-2nbahD0DuVCeNv-V829bYwIIewoMuekztRE6OAa5mVdVNKiUa93NTurXJUIzXWi13eMqLHpN3QAHLKJ-4pUjSwspY6JDWwTSAGR4asCWNLiFT4PK5Q1MuFgY8a8-5S7EUZyIzwWoIMJx4l1r1wh8U7mov43QYKr_-UGIUrVZsfkwn58atkKz4lpdv_EFqH7IIZ625KdYBiGavCZHCu56shy59OXwAdigO5nL8u4YIPIB3ncSX-Xl5cVn_EFpuUEeZp-QNFD71Mbhw6j3S9AdzRlwgjilqlA_W7jGC9CDeu7lQlNzuiPKkXIMlq-BwxjstGQsiTY6s4vCfni-gJH1eR082dqIznJL2WPZSGA5PU8MdiFlZy7UsTYstlhxhWJyMYDyJM713Rgl0_0000" alt="diagram">
 </div>
 </div>
 </div>
@@ -1721,7 +1781,7 @@ No code reaches the production environment unless it passes the full test suite 
 <h4 id="_monitoring_stack_prometheus_grafana">7.2.4. <em>Monitoring Stack (Prometheus + Grafana)</em></h4>
 <div class="imageblock plantuml">
 <div class="content">
-<img src="https://www.plantuml.com/plantuml/png/ROxBIWD144Nt_HMNh9958BXB5X9HKC589EX6N1ITcgIPVWpLrGbHyk_IC-83tDvpRjrQPYNH4hnHfvvn7nkXh5Ai5c4yy84zBZ35AaMdILpSOQDaMsDows97GW5vJzjqhAWXd_aNiIbqANBKZPuyGzWgnPrdOsBQCaOtoROik4jPCRvwhvClgya8bB6lsOS16g7068NXWMbanVYhzyXwJD8EXGgg3xm-PvQC3Sl1MNwhiDHaWAlYrNMUJYn_b53pGLbB2gnxBhaddQGmW5kXXYBrwKweCS3Pd8sf1gRJos472rmdxzbgHc0LP_EFqS_yPzHxlT6h2pmL5iVV7EDr4iLyDfzDp9BZjWJ_2G00" alt="diagram">
+<img src="https://www.plantuml.com/plantuml/png/ROxBIWD144Nt_HMNh9B5WBXB5X9HKC5892Y8k2WwDKap_GZLrGag-NVfcU03tDvpRjsQPoNH4hnHfvvn5rkXh5Ai5c7Syvuzpj5WaQBJ92vki5AodJ6vSt57GW5vI-jqgAWbd_aNiIdiKkIeAttt366h53UUZObfpHXT9zknu3PbnVZoequ-BoOZKCQsPfy6Q8K2OnI61vh8Yl6fzy1wID8DXGgg3xm-PPQC5SlUMNwhiDHaW3SK-EKF3CMh6-1IKc3TSiazsKaAfvPGIv7wT2FK6k1eZiPK0qrpCInWXglaFLlD2ApYRFun-fd_Z7glDtfrXiV2ulYROxnCefYUJSycPivnNOB_0W00" alt="diagram">
 </div>
 </div>
 <div class="paragraph">
@@ -2052,7 +2112,7 @@ There you will find links and examples about ADR.</p>
 <p><strong>Centralized Validation:</strong> We avoid duplicating validation logic at each endpoint. If the data does not conform to the schema, Mongoose prevents it from reaching the database (Fail Fast pattern).</p>
 </li>
 <li>
-<p>* <strong>Abstraction and Productivity:</strong> It provides us with a simplified API for CRUD operations (.save(), .findOne()) and connection management, accelerating development compared to the use of "raw" native queries.</p>
+<p><strong>Abstraction and Productivity:</strong> It provides us with a simplified API for CRUD operations (.save(), .findOne()) and connection management, accelerating development compared to the use of "raw" native queries.</p>
 </li>
 </ul>
 </div>
@@ -2366,7 +2426,7 @@ There you will find links and examples about ADR.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Needs to add a new "Minimax" AI bot</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Rust Engine Source Code</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Design/Maintenance time</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The new strategy is added by implementing the existing <code>YBot</code> trait and registering it in the Factory.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new strategy is added by implementing the existing <code>YBot</code> trait and registering it.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0 lines of core game logic modified</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Medium, Medium</p></td>
 </tr>
@@ -2378,7 +2438,7 @@ There you will find links and examples about ADR.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Azure Production Environment</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deployment phase</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The pipeline securely connects via SSH, injects environment variables, pulls the latest images, and recreates the containers automatically.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0 manual server interventions required; Deployment completes in &lt; 3 minutes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0 manual server interventions required; Deployment completes in &lt; 5 minutes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">High, High</p></td>
 </tr>
 </tbody>
@@ -2755,7 +2815,7 @@ As illustrated in the coverage report below, the project successfully <strong>ex
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Invalid requests due to repetition:</strong> When simulating 50 concurrent users repeating the exact same recording, the system receives requests that no longer make sense (for example, attempting to log in with data that the validator already considers processed). In these cases, the backend responds with a <code>400 Bad Request</code>.</p>
+<p><strong>Uniqueness conflicts (Registration and creation):</strong> The Gatling script triggers simulations using static (hardcoded) data. By simulating 50 concurrent users attempting to register the same email address or username in the same millisecond, the backend processes the first one and correctly rejects the remaining 49 to avoid data duplication in the database.</p>
 </li>
 <li>
 <p><strong>Game Engine Validation:</strong> The Rust engine validates the game state using YEN notation. If the test attempts to send a move on a board that has already changed turns or on a finished game, the engine rejects the action by returning a <code>400 Bad Request</code>.</p>
@@ -3194,7 +3254,7 @@ As illustrated in the coverage report below, the project successfully <strong>ex
 <div id="footer">
 <div id="footer-text">
 Version 3.0 EN<br>
-Last updated 2026-04-26 19:33:34 +0200
+Last updated 2026-04-26 20:16:59 +0200
 </div>
 </div>
 </body>
